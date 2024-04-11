@@ -95,10 +95,12 @@ $$
 $$
 (x+y)^n=\sum_{j=0}^n C(n,j)x^{n-j}y^j
 $$
+
 [Corollary 1]
 $$
 \sum_{k=0}^{n}C(n,k)=2^n
 $$
+
 [Corollary 2]
 $$
 \sum_{k=0}^{n}(-1)^kC(n,k)=0
@@ -110,7 +112,7 @@ C(n+1,k)=C(n,k)+C(n,k-1)
 $$
 
 > [!NOTE] PASCAL's triangle
-> ![[Pasted image 20240410193551.png]]
+> ![[ObsiProject/docs/离散数学/image/杨辉三角.png]]
 
 [Theorem] 
 $$
@@ -118,10 +120,13 @@ C(m+n,r)=\sum_{k=0}^rC(m,r-k)C(n,k)
 $$
 
 [Corollary 4] $$
-C(2n,n)=\sum_{k=0}^nC^2(n,k)$$
+C(2n,n)=\sum_{k=0}^nC^2(n,k)
+$$
+
 [Theorem] $$
 C(n+1,r+1)=\sum_{j=r}^nC(j,r)
 $$
+
 证明:
 假设第 j+1 个元素被选上，但是j+1后面的所有元素都没被悬赏，则共有$C(j,r)$种选择，同理，j可从r选取到n，Q.E.D
 
