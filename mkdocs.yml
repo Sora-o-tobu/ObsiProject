@@ -1,6 +1,10 @@
 site_name: Nimisora's Notewebsite
 
 theme:
+  features:
+    - navigation.path
+  features:
+    - navigation.top
     name: 'material'
     palette:
 
