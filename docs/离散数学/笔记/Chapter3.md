@@ -1,4 +1,4 @@
-# Algorithms
+# Chapter 3 : Algorithms
 # 3.1 Algorithms
 **[Definition]** An algorithm is a finite set of precise instructions for performing a computation or for solving a problem.
 ## Some common properties of algorithms 算法的性质

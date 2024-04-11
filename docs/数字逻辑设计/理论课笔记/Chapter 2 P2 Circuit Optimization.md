@@ -1,3 +1,4 @@
+电路优化
 # Canonical Forms 规范型
 **Two common Canonical Forms:**
 - Sum of Minterms (SOM)

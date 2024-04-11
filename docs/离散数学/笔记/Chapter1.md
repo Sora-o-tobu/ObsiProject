@@ -1,4 +1,4 @@
-# The Foundations: Logic and Proofs
+# Chapter 1 :The Foundations: Logic and Proofs
 # 1.1 Propositional Logic （命题逻辑）
 
 ## **Definition**

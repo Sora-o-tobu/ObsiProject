@@ -1,4 +1,4 @@
-# Basic Structure
+# Chapter 2 : Basic Structure
 # 2.1 Sets
 A set is an unordered collection of objects.
 通常用大写字母表示集合，小写字母表示集合里的元素

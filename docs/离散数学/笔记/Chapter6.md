@@ -1,4 +1,4 @@
-# Counting
+# Chapter 6 : Counting
 # 6.1 The Basic of Counting
 ## Basic Counting Principles
 
