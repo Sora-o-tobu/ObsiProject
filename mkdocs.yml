@@ -1,9 +1,8 @@
 site_name: Nimisora's Notewebsite
 
 theme:
-  features:
+    features:
     - navigation.path
-  features:
     - navigation.top
     name: 'material'
     palette:
