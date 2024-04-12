@@ -56,11 +56,9 @@ git config --global --unset https.proxy
 然后在GitHub仓库Setting->Pages中勾选`Enforce HTTPS`来强制走HTTPS
 
 
->[!!!NOTE] Tips
-> 
 
 ```markdown
-!!!note 
+!!! note 
 
 其中对DNS的配置不一定立即生效，可以稍微等待几分钟
 ```
@@ -70,3 +68,6 @@ Latex内联公式缺陷，似乎并不能很好地支持换行，并且会将几
 章节标题错误，公式如此，请自加占位行（如本文档的最上方）
 
 Mkdocs-material不支持Obsidian的Note格式，不过它自带了其它note方式
+
+不支持嵌套无序列表，或者说第二次需要用 `*` 而不是 `-`
+

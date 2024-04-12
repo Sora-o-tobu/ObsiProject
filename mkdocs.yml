@@ -9,6 +9,10 @@ theme:
     - content.code.copy #代码复制
 
     name: 'material'
+    font:
+      code: Roboto Mono
+      text: Noto Serif Simplified Chinese
+
     icon: 
       logo: material/lumx
     palette:
