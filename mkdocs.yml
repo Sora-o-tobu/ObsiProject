@@ -29,7 +29,7 @@ theme:
         name: Switch to light mode
     
     extra:
-      generator: true
+      generator: false 
 
 # Extensions
 markdown_extensions:
@@ -37,6 +37,10 @@ markdown_extensions:
   # - attr_list
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.highlight: # 代码块高亮
+      anchor_linenums: true
+      linenums: true # 显示行号
+      auto_title: true # 显示编程语言名称
   # - pymdownx.superfences
   # - pymdownx.details
   # - pymdownx.magiclink
