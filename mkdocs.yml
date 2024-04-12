@@ -30,10 +30,6 @@ theme:
     
     extra:
       generator: true
-      social:
-        - type: github
-        link: #
-        
 
 # Extensions
 markdown_extensions:
