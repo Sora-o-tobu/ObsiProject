@@ -1,3 +1,4 @@
-# Obsidian Notes
+# 首页
 
 我尝试使用Mkdocs+Obsidian来搭建一个笔记网站，虽然我的笔记部分可能瑕疵较多，请勿在意
+

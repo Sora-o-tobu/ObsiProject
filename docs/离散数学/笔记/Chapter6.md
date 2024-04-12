@@ -112,7 +112,9 @@ C(n+1,k)=C(n,k)+C(n,k-1)
 $$
 
 > [!NOTE] PASCAL's triangle
-> ![[ObsiProject/docs/离散数学/image/杨辉三角.png]]
+> 
+![[ObsiProject/docs/离散数学/image/杨辉三角.png]]
+
 
 [Theorem] 
 $$
