@@ -4,6 +4,9 @@ theme:
     features:
     - navigation.path
     - navigation.top
+    - search.highlight # 搜索出的文章关键词加入高亮
+    - content.code.copy #代码复制
+
     name: 'material'
     palette:
 
@@ -24,6 +27,12 @@ theme:
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
+    extra:
+    generator: true
+        social:
+          - type: github
+          link: #
+        
 
 # Extensions
 markdown_extensions:
@@ -54,7 +63,13 @@ markdown_extensions:
 plugins:
   - search
   - roamlinks
-  - blog
+  - blog:
+      post_date_format: full #时间
+      draft: true
+      draft_if_future_date: true #自动将具有未来日期的帖子标记为草稿
+      post_readtime: true
+      post_readtime_words_per_minute: 265  #计算帖子的阅读时间时读者每分钟预计阅读的字数
+      post_url_format: "{date}/{slug}"
   - rss:
       match_path: blog/posts/.* 
       date_from_meta:
