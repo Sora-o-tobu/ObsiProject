@@ -4,10 +4,13 @@ theme:
     features:
     - navigation.path
     - navigation.top
+    - navigation.tabs
     - search.highlight # 搜索出的文章关键词加入高亮
     - content.code.copy #代码复制
 
     name: 'material'
+    icon: 
+      logo: material/lumx
     palette:
 
     # Light mode
