@@ -63,11 +63,8 @@ git config --global http.proxy http://127.0.0.1:7890
 然后在GitHub仓库Setting->Pages中勾选`Enforce HTTPS`来强制走HTTPS
 
 
-```markdown
 !!! note 
-
 其中对DNS的配置不一定立即生效，可以稍微等待几分钟
-```
 
 ## 注意
 每次push完后要重新填一遍github仓库中的custom domains
