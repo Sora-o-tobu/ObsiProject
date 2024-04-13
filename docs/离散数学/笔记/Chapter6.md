@@ -136,3 +136,48 @@ $$
 
 # 6.5 Generalized Permutations and Combinations
 
+## r-permutation with repetition
+
+[Theorem 1] The number of r-permutations of a set of n objects with repetition allowed is $n^r$.
+将r个元素可重复的排列进n个对象中，共有$n^r$种排列方法
+
+> 如果每个元素可重复多少次不一样，那就另当别论，比如:
+> 将String `SUCCESS` 重新排列(Reordering)，共有:
+> $C(7,3)C(4,2)C(2,1)C(1,1)=\frac{{7!}}{{3!2!1!1!}}$ 
+
+
+[Theorem 2] The number of r- Circle permutations of a set of n objects is P(n,r)/r .
+r个元素排入长为n的圈中，共有P(n,r)/r种排法。
+
+>[!NOTE] 例子
+>将七个同学围成一圈，共有$\frac{{7!}}{7}$种排列方法
+
+
+## r-permutation with repetition
+
+[Theorem 3] There are C (n-1+r, r) r-combination from a set with n elements when repetition of elements is allowed. 
+
+>隔板原理，对于$x_1+x_2+x_4+x_4=16$的组合方式，若x为正整数，则有$C(15,3)$种，若x为非负整数，则有$C(16-1+4,3)$种
+>若对于非负整数$x_1+x_2+x_3+x_4\le 16$ ，可以添加一个辅助变量$x_5$使得$x_1+x_2+x_4+x_4+x_5=16$ 这样子共有$C(20,4)$ 种
+
+## Stirling Numbers 斯特林数
+
+[Definition] **S(n,j)=** The number of ways to distribute n distinguishable objects into j indistinguishable boxes so that no box is empty.
+将n个不同的物体放入j个没有区别的箱子中的方法总数
+
+- S(r,1)=S(r,r)=1;
+- S(r,2)=$2^{r-1}-1$;
+每个物体都有两种放置的选择，共有$2^r$ways，再减去两种存在空箱子的情况，再除以2减去重复的情况，得到S(r,2)的公式
+- S(r,r-1)=C(r,2);
+- S(r+1,n)=S(r,n-1)+nS(r,n);
+考虑两种情况: 1. 第一个元素的箱子只放置了它自己，此时有S(r,n-1)种ways；2. 第一个元素的箱子不止放置了它自己，那么此时其它元素可以放出S(r,n)种情况，再乘上n(第一个元素可以任意放入所有箱子中)得到结果。
+
+>实际上，S(n,j)=$[\sum_{i=0}^{j-1}(-1)^iC(j,i)(j-i)^n]/j!$
+
+
+# 6.6 Generating Permutations and Combinations
+
+看的莫名其妙的，有没有人来教教我？
+
+😓
+

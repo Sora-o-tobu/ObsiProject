@@ -1,4 +1,4 @@
-site_name: Nimisora's Notewebsite
+site_name: Nimisora's Notes
 
 theme:
     features:
@@ -70,10 +70,6 @@ markdown_extensions:
 plugins:
   - search
   - roamlinks
-  - blog:
-      post_date_format: full #时间
-      post_readtime: true
-      post_readtime_words_per_minute: 265  #计算帖子的阅读时间时读者每分钟预计阅读的字数
   - rss:
       match_path: blog/posts/.* 
       date_from_meta:
