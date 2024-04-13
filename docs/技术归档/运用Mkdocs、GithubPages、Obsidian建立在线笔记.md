@@ -6,25 +6,32 @@
 
 # 关于git一些基本操作
 
-```
+```git
 切换分支命令:
 git checkout main
 ```
 
 当你修改了仓库后，请执行以下三个命令来提交修改
 注意，不用切换到`gh-pages`分支，在main分支push就好了
-```
+```git
 git add .
 git commit -m "The information you note"
 git push
 ```
 
 如果push的时候报错了可以尝试取消代理
-```
+```git
 //取消http代理
 git config --global --unset http.proxy
 //取消https代理 
 git config --global --unset https.proxy
+```
+
+一般使用了如上操作都会成功，如果还是不行，请打开设置中的网络与Internet，选择代理，手动设置代理，将端口改为7890。
+![[改端口.png]]
+然后在git bash中输入
+```git
+git config --global http.proxy http://127.0.0.1:7890
 ```
 
 
