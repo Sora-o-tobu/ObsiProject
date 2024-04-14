@@ -2,6 +2,7 @@
 statistics: true
 ---
 # 首页
+本站共有 {{ pages }} 个页面，{{ words }} 个字，{{ codes }} 行代码。
 
 我尝试使用Mkdocs+Obsidian来搭建一个笔记网站，笔记部分可能瑕疵较多，请勿在意
 
