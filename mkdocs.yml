@@ -68,7 +68,7 @@ markdown_extensions:
       permalink: true
 
 plugins:
-  - statistics
+  - statistics:
       words_per_minute: 200
   - search
   - roamlinks
