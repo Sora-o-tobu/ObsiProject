@@ -68,6 +68,7 @@ markdown_extensions:
       permalink: true
 
 plugins:
+  - statistics
   - search
   - roamlinks
   - blog:
