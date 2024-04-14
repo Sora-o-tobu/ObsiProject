@@ -22,7 +22,7 @@ jobs:
       - run: pip install mkdocs-roamlinks-plugin
       - run: pip install mkdocs-rss-plugin
       - run: pip install mkdocs-statistics-plugin
-      - run: npm install @mdi/react @mdi/js
+      # - run: npm install @mdi/react @mdi/js
       # - run: pip install mkdocs-mermaid2-plugin
       - run: mkdocs gh-deploy --force
       

@@ -63,12 +63,35 @@ git config --global http.proxy http://127.0.0.1:7890
 然后在GitHub仓库Setting->Pages中勾选`Enforce HTTPS`来强制走HTTPS
 
 
-> !!! note 
-> 
-> 其中对DNS的配置不一定立即生效，可以稍微等待几分钟
+!!! note 
+	其中对DNS的配置不一定立即生效，可以稍微等待几分钟
 
 ## 注意
 每次push完后要重新填一遍github仓库中的custom domains
+
+
+## 本地服务器
+
+如果你不希望每次做一些小小的调试就push到仓库中再打开网站看是否成功，你应该先把mkdocs安装好，并在你的电脑上把使用到的插件都安装上，再在`mkdocs.yml`所在目录运行下列命令启动本地服务器。
+```
+mkdocs serve
+```
+如果上面这个运行不了，请在前面加上`python -m`
+```
+python -m mkdocs serve
+```
+
+有时候，在创建本地服务器过程中，会遇到`PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。`的提示，这告诉我们端口已经被占用了。
+如果你开着酷狗音乐，请将它关闭后重试，因为酷狗默认端口就是8000🤣
+如果没有，可以尝试:
+```
+netstat -ano|findstr 8000
+```
+来找到占用端口的PID，再taskill它来关闭
+```
+taskkill /pid THEPIDYOUFIND /F
+```
+
 # 一些显著的缺陷
 
 Latex内联公式缺陷，似乎并不能很好地支持换行，并且会将几个相近的公式块连在一起(需要中间加个回车)
@@ -83,4 +106,3 @@ Mkdocs-material不支持Obsidian的Note格式，不过它自带了其它note方�
 # TODO
 
 - 改用webq图片格式
-- 修改字数统计格式

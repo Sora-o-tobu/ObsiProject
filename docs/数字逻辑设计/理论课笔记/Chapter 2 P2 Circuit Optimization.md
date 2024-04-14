@@ -1,4 +1,5 @@
-电路优化
+# Chapter 2 P2 Circuit Optimization
+
 # Canonical Forms 规范型
 **Two common Canonical Forms:**
 - Sum of Minterms (SOM)

@@ -1,4 +1,5 @@
-组合逻辑设计
+# Chapter 3 Combinational Logic Design
+
 # Part 1 ：Implementation Technology and Logic Design
 ## Definition Of Two Types Of Logic Circuits
 

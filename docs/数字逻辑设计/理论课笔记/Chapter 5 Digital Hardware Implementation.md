@@ -1,4 +1,4 @@
-电子硬件执行
+# Chapter 5 Digital Hardware Implementation
 # Part 2 Programmable Implementation Technologies
 
 ## Programming technologies
