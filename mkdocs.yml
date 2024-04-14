@@ -40,6 +40,7 @@ theme:
 # Extensions
 markdown_extensions:
   - footnotes
+  - md_in_html
   # - attr_list
   - pymdownx.arithmatex:
       generic: true
