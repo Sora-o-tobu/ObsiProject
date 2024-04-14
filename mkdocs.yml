@@ -69,6 +69,7 @@ markdown_extensions:
 
 plugins:
   - statistics
+      words_per_minute: 200
   - search
   - roamlinks
   - blog:

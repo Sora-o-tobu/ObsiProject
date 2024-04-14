@@ -83,4 +83,4 @@ Mkdocs-material不支持Obsidian的Note格式，不过它自带了其它note方�
 # TODO
 
 - 改用webq图片格式
-- 
+- 修改字数统计格式
