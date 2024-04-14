@@ -4,11 +4,11 @@
 
 1. **The Sum Rule**
 	If a first task can be done in n<sub>1</sub> ways and a second task in n<sub>2</sub> ways, and if these tasks cannot be done at the same time , then there are n<sub>1</sub> + n<sub>2</sub> ways to do one of these tasks.
-也可以用集合表示: $|S\cup T|\ =\ |S|\ +\ |T|\ where\ S\ and\ T\ are\ two\ disjoint\ finite\ sets$
+	也可以用集合表示: $|S\cup T|\ =\ |S|\ +\ |T|\ where\ S\ and\ T\ are\ two\ disjoint\ finite\ sets$
 
 2. **The Product Rule**
 	Suppose that a procedure can be broken down into two tasks. If there are n<sub>1</sub> ways to do the first task and n<sub>2</sub> ways to do the second after the first task has been done, then there are n<sub>1</sub>n<sub>2</sub> ways to complete the procedure.
-用集合表示就是: $|S\times T|\ =\ |S|\ \cdot \ |T|$
+	用集合表示就是: $|S\times T|\ =\ |S|\ \cdot \ |T|$
 
 ## The Inclusion-Exclusion Principle (Subtraction Rule) 容斥原理
 
@@ -37,16 +37,16 @@ $$
 >Since\ there\ are\ only\ n\ odd\ number\ less\ than\ 2n,\\ by\ the\ pigeonhole\ principle\ it\ follows\ that\ there\ exist\ integer\ i\ and\ j\ that\ q_i=q_j\\
 >then\ a_i=2^{k_i}q_i\ ,\ a_j=2^{k_j}q_j\\
 >Then\ we\ can\ conclude\ it
->\end{gather}
-$$
+>\end{gather}$$
+
 
 > [!NOTE] Example 2
 > ![[鸽笼原理例子2.png]]
 
-
 **[Theorem]** Every sequence of n<sup>2</sup>+1distinct integers contains a subsequence of length n + 1 that is either strictly increasing or strictly decreasing.
 **证明：**
-$$\begin{gather}
+$$
+\begin{gather}
 Let\ the\ sequence\ be\ the\ a_1,a_2,...,a_{n^2+1}\\
 Associate\ (i_k,d_k)\ to\ the\ term\ a_k\\其中i_k，d_k分别是从a_k开始的最大严格递增序列的长度和最大严格递减序列的长度\\
 我们假定没有i_k和d_k能超过n+1，即(i_k,d_k)共有n\times n =n^2个组合\\
@@ -64,6 +64,7 @@ $$
 $$
 P(n,r)=n(n-1)(n-2)...(n-r+1)=\frac{n!}{(n-r)!}
 $$
+
 In particular , $P(n,n)=n!$ $P(n,0)=1$
 用函数来表示就是:
 $$\begin{gather}
@@ -79,19 +80,21 @@ $$
 \frac{n!}{{r!(n-r)!}}=n(n-1)(n-2)...(n-r+1)/r!
 $$
 
+
 $$\begin{gather}
 A=\{a_1,a_2,...,a_n\},B=\{0,1\}\\
 f\ is\ the\ function\ from\ A\ to\ B\ such\ that\ the\ image\ of\ r\ elements\ in\ A\ is\ 1\ \\ \Leftrightarrow An\ r-combination\ of\ A.\\ \\
 C(n,r)=|\{f|f:A\to B\land r=|\{a|a\in A\land f(a)=1\}|\}|
 \end{gather}
 $$
+
 用集合来表示就是: 势为n的集合的势为r的子集的个数
 
 [Corollary 1] $$
 C(n,r)=C(n,n-r)
 $$
-# 6.4 Binomial Coeffcients 二项式系数
 
+# 6.4 Binomial Coeffcients 二项式系数
 $$
 (x+y)^n=\sum_{j=0}^n C(n,j)x^{n-j}y^j
 $$
@@ -113,7 +116,7 @@ $$
 
 > [!NOTE] PASCAL's triangle
 > 
-![[ObsiProject/docs/离散数学/image/杨辉三角.png]]
+![[杨辉三角.png]]
 
 
 [Theorem] 
