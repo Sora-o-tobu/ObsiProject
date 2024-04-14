@@ -41,7 +41,7 @@ theme:
 markdown_extensions:
   - footnotes
   - md_in_html
-  # - attr_list
+  - attr_list # 矩形按钮/按键
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.highlight: # 代码块高亮
