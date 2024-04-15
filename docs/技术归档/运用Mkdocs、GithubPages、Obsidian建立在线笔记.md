@@ -1,10 +1,15 @@
 占位行
-# 认真阅读此文档，相信你能成功
+## 认真阅读此文档，相信你能成功
 
 [jobindjohn/obsidian-publish-mkdocs: A Template to Publish Obsidian/Foam Notes on Github Pages (uses MkDocs)](https://github.com/jobindjohn/obsidian-publish-mkdocs)
 
 
-# 关于git一些基本操作
+- 其它官方文档
+[MkDocs](https://www.mkdocs.org/)
+[Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+
+最好还是把这些弄好，这样子可以实现本地调试
+## 关于git一些基本操作
 
 ```git
 切换分支命令:
@@ -35,16 +40,16 @@ git config --global http.proxy http://127.0.0.1:7890
 ```
 
 
-# 自定义域名（无需备案）
+## 自定义域名（无需备案）
 
-## 1. 购买域名
+### 1. 购买域名
 你可以从阿里云、华为云、腾讯云等国内知名公司申请购买一个域名，购买完成后不需要备案。
-## 2. 在仓库中添加CNAME文件，并写入你的域名
+### 2. 在仓库中添加CNAME文件，并写入你的域名
 不要在前面加Http和www!!!
 ![[CNAME填入域名.png]]
-## 3. 在github上选择Setting->Pages->Custom domain，再次填入你的域名
+### 3. 在github上选择Setting->Pages->Custom domain，再次填入你的域名
 ![[域名1.png]]
-## 4. 在域名解析记录中，添加你github.io域名的IP
+### 4. 在域名解析记录中，添加你github.io域名的IP
 
 要得到你github.io的IP，可以打开CMD ping一下:
 ![[得到IP.png]]
@@ -52,7 +57,7 @@ git config --global http.proxy http://127.0.0.1:7890
 ![[IP解析.png]]
 我使用的华为云可以快速添加两个记录，其它解析操作类似不做讲解
 
-## 5. 启用HTTPS（可选）
+### 5. 启用HTTPS（可选）
 再次在域名解析中添加如下四个IP地址的至少一个
 
 - 185.199.108.153
@@ -66,11 +71,11 @@ git config --global http.proxy http://127.0.0.1:7890
 !!! note 
 	其中对DNS的配置不一定立即生效，可以稍微等待几分钟
 
-## 注意
+### 注意
 每次push完后要重新填一遍github仓库中的custom domains
 
 
-## 本地服务器
+### 本地服务器
 
 如果你不希望每次做一些小小的调试就push到仓库中再打开网站看是否成功，你应该先把mkdocs安装好，并在你的电脑上把使用到的插件都安装上，再在`mkdocs.yml`所在目录运行下列命令启动本地服务器。
 ```
@@ -92,17 +97,20 @@ netstat -ano|findstr 8000
 taskkill /pid THEPIDYOUFIND /F
 ```
 
-# 一些显著的缺陷
+## 一些显著的缺陷
 
-Latex内联公式缺陷，似乎并不能很好地支持换行，并且会将几个相近的公式块连在一起(需要中间加个回车)
+Latex内联公式缺陷，似乎并不能很好地支持换行，并且会将几个相近的公式块连在一起(需要中间加个回车)以及会优先使用markdown语法
+
 章节标题错误，公式如此，请自加占位行（如本文档的最上方）
 
 Mkdocs-material不支持Obsidian的Note格式，不过它自带了其它note方式
 
 不支持嵌套无序列表，或者说第二次需要用 `*` 而不是 `-`
 
+右侧TOC只支持从二级标题开始显示，我前面导入的笔记懒得修改了，所有没有TOC
 
 
-# TODO
+
+## TODO
 
 - 改用webq图片格式
