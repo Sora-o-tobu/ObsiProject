@@ -73,6 +73,8 @@ markdown_extensions:
       permalink: true
 
 plugins:
+  - mkdocs-video:
+      is_video: True
   - statistics:
       words_per_minute: 200
   - search
