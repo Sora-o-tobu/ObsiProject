@@ -111,8 +111,10 @@ Mkdocs-material不支持Obsidian的Note格式，不过它自带了其它note方�
 
 右侧TOC只支持从二级标题开始显示，我前面导入的笔记懒得修改了，所有没有TOC
 
-
-
+视频插入格式:
+```
+![type:video](image/帅头硬.mp4)
+```
 ## TODO
 
 - 改用webq图片格式

@@ -12,7 +12,7 @@ $$
 	(2) Pascal's recursion for binomial coeffcient: $C_{n+1}^k = C_n^k + C_n^{k-1}$
 	(3) The Tower of Hanoi: $H_1=1; H_n= 2H_{n-1}+1$
 
-### 8.2 Solving Linear Recurrence Relations
+## 8.2 Solving Linear Recurrence Relations
 
 **Linear homogeneous recurrence relation of degree k with constant coeffcients**
 $$
