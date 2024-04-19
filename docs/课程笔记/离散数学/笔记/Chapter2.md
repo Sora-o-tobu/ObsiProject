@@ -24,22 +24,27 @@ Note:
 一. Show that $P(A)\in P(B)\ implies\ A\in B$
 证明:
 $$
-P(A)\in P(B) \Rightarrow P(A)\subseteq B \newline $$
+P(A)\in P(B) \Rightarrow P(A)\subseteq B \newline 
+$$
+
 $$
 \begin{cases}P(A)\subseteq B \\A\in P(A) \end{cases} \Rightarrow A\in B 
 $$
+
 二.Show that $A\subseteq B \Rightarrow P(A)\subseteq P(B)$
+
 $$
 \forall x \in P(A),\begin{cases}x\subseteq A \\ A\subseteq B\end{cases} \Rightarrow x\subseteq B\Rightarrow x\in P(B) \Rightarrow P(A)\subseteq P(B)
 $$
+
 ### Cartesian Product 笛卡尔积
 
 也就是叉乘
 
 $A\times B=\{(a,b)|a\in A\land b\in B\}$
 
-> [!NOTE] Notation!
->$A\times \emptyset =\emptyset \times A$
+!!! note
+	$A\times \emptyset =\emptyset \times A$
 
 
 ## 2.2 Set Operations
@@ -60,6 +65,7 @@ $|A\cup B|=|A|+|B|-|A\cap B|$
 
 
 ## 2.3 Functions
+
 Let A and B be nonempty sets. A ==function (mapping or transformations)== f  from A to B:
 $$
 f:A\to B
@@ -74,9 +80,13 @@ $f(a)=b$
 	- a is called a ==preimage== of b;
 
 > [!NOTE] NOTATION!
+> 
 > $f(\emptyset)=\emptyset$
+> 
 > $f(\{a\})=\{f(a)\}$
+> 
 > $f(A\cup B)=f(A)\cup f(B)$
+> 
 > $f(A\cap B)\subseteq f(A)\cap f(B)$
 
 **The graphs of functions:**
@@ -121,29 +131,32 @@ $$
 
 ### Definition
 A ==sequence== is a function from a subset of the set of integers (usually either the set {0, 1, 2, …} or the set {1, 2, 3, …}) to a set S. We use the notation $a_n$ to denote the image of the integer n. We call $a_n$ a term of the sequence. ($\{a_n\}$)
+
 > [!NOTE] Some Useful Summation Formulae
 > ![[数列和.png]]
 
 ## Cardinality of Sets
 **[Definition 1]** The cardinality of a set A is equal to the cardinality of a set B, denoted | A | = | B |, iff there exists a bijection from A to B.
+
 **[Definition 2]** If there is an injection from A to B, the cardinality of A is less than or the same as the cardinality of B and we write  |A| ≤ |B|. (如果从A到B有单射)
 
 Example:
 Prove that |(a,b)| = |(0,1)| in R
-$$\begin{gather}
+$$
+\begin{gather}
 \frac{x-a}{b-a}=\frac{y-0}{1-0}\newline
 Let\ f\ be\ function\ from\ A\ to\ B\ that\ y=f(x)=\frac{x-a}{b-a}\\
 Then\ y\ is\ a\ bijection\ from\ (a,b)\ to\ (0,1)
 \end{gather}
 $$
-
 **[Definition]** A set that is either finite or has the same cardinality as the set of positive integers called ==countable==.
 	When an infinite set S is countable, we denote the cardinality of S by $\aleph _0$ ( aleph null ).
 	If $|A|=|Z^+|$ , the set A is countable infinite.
 
 [Example:]
 	Show the set of positive rational numbers $|Q^+|=|Z^+|$
-$$\begin{gather}
+$$
+\begin{gather}
 \forall x \in Q^{+},x=\frac{p}{q},\ p,q\in Z^+
 \\Let S=\{(p,q)|p,q\in Z^{+}\}=Z^{+}\times Z^{+}\\
 \begin{cases} |Q^+|\le |S|\\|S|=|Z^+|\\|Z^+|\le |Q^+|
@@ -156,7 +169,8 @@ $$
 
 [Example:]
 	Prove that the set of real number between 0 and 1 is uncoutable.
-$$\begin{gather}
+$$
+\begin{gather}
 A=\{x|x\in (0,1)\land x\in R\}\\
 (1)|Z^+|\le|A|\\
 B=\{\frac{1}{n+1}|n\in Z^+\}\\
@@ -166,7 +180,6 @@ B=\{\frac{1}{n+1}|n\in Z^+\}\\
 (2)|Z^+|\ne |A|\\
 \end{gather}
 $$
-
 
 ![[补充2.png]]
 $$
@@ -179,7 +192,8 @@ $$
 
 [Example:]
 	Show that $|[0,1]|=|(0,1)|(Both\ Uncountable)$
-$$\begin{gather}
+$$
+\begin{gather}
 (1)B\subseteq A \Rightarrow |B|\le|A|\\
 (2)Let\ g(x)=\frac{1}{2}x+\frac{1}{4},x\in [0,1]\\
 for\ g(x)\ is\ a\ bijection\ from\ [0,1]\ to\ [\frac{1}{4} , \frac{3}{4}].\\

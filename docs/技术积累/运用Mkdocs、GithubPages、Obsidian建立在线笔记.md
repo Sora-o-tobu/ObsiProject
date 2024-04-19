@@ -122,4 +122,4 @@ Mkdocs-material不支持Obsidian的Note格式，不过它自带了其它note方�
 ```
 ## TODO
 
-- 改用webq图片格式
+- 有闲暇的话，把其它图片改用webq图片格式，节省空间
