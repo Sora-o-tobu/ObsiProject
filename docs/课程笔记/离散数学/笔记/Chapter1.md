@@ -71,15 +71,16 @@ $\exists x\ (x+y)=1$ 中，x是bound，y是free
 
 #### Logical Equivalences
 
-- $\forall x(A(x)\land B(x))\equiv \forall A(x) \land \forall x B(x)$
-- $\exists x(A(x)\lor B(x))\equiv \exists A(x) \lor \exists x B(x)$
-- $\forall x(A(x)\lor B(x))\ne \forall A(x) \lor \forall x B(x)$
-- $\exists x(A(x)\land B(x))\ne \exists A(x) \land \exists x B(x)$
+- $\forall x(A(x)\land B(x))\equiv \forall x A(x) \land \forall x B(x)$
+- $\exists x(A(x)\lor B(x))\equiv \exists x A(x) \lor \exists x B(x)$
+- $\forall x(A(x)\lor B(x))\ne \forall x A(x) \lor \forall x B(x)$
+- $\exists x(A(x)\land B(x))\ne \exists x A(x) \land \exists x B(x)$
 
 ## 1.5 Nested Quantifiers
 
 同种类型的量词嵌套可以互换，但是不同就不行
 For example:
+
 - $\exists x\exists y\ P(x,y)\equiv \exists y\exists x\ P(x,y)$
 - $\exists x\forall y\ P(x,y) \ne \forall y\exists x\ P(x,y)$
 
@@ -87,7 +88,6 @@ For example:
 
 > [!NOTE] TABLE
 > ![[rules of inference.jpg]]
-> 
 
 
 

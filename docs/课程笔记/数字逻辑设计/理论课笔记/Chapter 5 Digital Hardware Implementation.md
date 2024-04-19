@@ -58,6 +58,7 @@ Read Only Memory(**ROM**) or Programmable Read Only Memory(**PROM**)
 **[Example]** An $2^3\times 4$ ROM (N=3 input lines , M=4 output lines) 
 ![[ROM.png]]
 
+
 > [!NOTE] 实际使用用例：3bit输入的平方计算 $B[5:0]=A[2:0]\times A[2:0]$
 > 1. 首先列出真值表
 > ![[Truthtablerom.png]]

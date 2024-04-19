@@ -73,13 +73,11 @@ P(n,r)\ is\ the\ number\ of\ injection(单射)\ from\ B\ to\ A
 \end{gather}
 $$
 
-
 ### Combinations 组合
 [Notation] C(n,r)
 $$
 \frac{n!}{{r!(n-r)!}}=n(n-1)(n-2)...(n-r+1)/r!
 $$
-
 
 $$\begin{gather}
 A=\{a_1,a_2,...,a_n\},B=\{0,1\}\\
@@ -93,27 +91,22 @@ $$
 [Corollary 1] $$
 C(n,r)=C(n,n-r)
 $$
-
 ## 6.4 Binomial Coeffcients 二项式系数
 $$
 (x+y)^n=\sum_{j=0}^n C(n,j)x^{n-j}y^j
 $$
-
 [Corollary 1]
 $$
 \sum_{k=0}^{n}C(n,k)=2^n
 $$
-
 [Corollary 2]
 $$
 \sum_{k=0}^{n}(-1)^kC(n,k)=0
 $$
-
 [Theorem] PASCAL'S Identity
 $$
 C(n+1,k)=C(n,k)+C(n,k-1)
 $$
-
 > [!NOTE] PASCAL's triangle
 > 
 ![[杨辉三角.png]]
@@ -123,7 +116,6 @@ $$
 $$
 C(m+n,r)=\sum_{k=0}^rC(m,r-k)C(n,k)
 $$
-
 [Corollary 4] $$
 C(2n,n)=\sum_{k=0}^nC^2(n,k)
 $$
@@ -206,7 +198,6 @@ r个元素排入长为n的圈中，共有P(n,r)/r种排法。
 [Example] $S_i=\{2,3,5,6,9,10\}$ is given from the Set {1,2,3,4,5,6,7,8,9,10}. Find $S_{i+1}$
 
 从后往前看，10和9对应了Set中最后两位数，因此我们以6为$a_i$ ，将其替换为7，9和10依次变成8和9，因此答案为$S_{i+1}=\{2,3,5,7,8,9\}$
-
 
 
 

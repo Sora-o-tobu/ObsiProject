@@ -34,15 +34,18 @@ $$
 If\ f(x)\ is\ O(g(x))\ as\ well\ as\ \Omega (g(x)),then\ we\ say\ that\ f(x)=\Theta(g(x))
 $$
 
-> [!NOTE] Warning!!!
-> $O(n^3 2^n)<O(n^2 3^n)$
-> $O(2^n)\ne O(3^n)$
+!!! note
+	$O(n^3 2^n)<O(n^2 3^n)$
+	
+	$O(2^n)\ne O(3^n)$
 ## 3.3 Complexity of Algorithms
 两个方面，space complexity 和 time complexity
 
 **[Definition] Tractable:** A problem is solvable using an algorithm with polynomial worst-case complexity. 最坏情况下能够使用多项式复杂度的算法解决问题
 
 > **Class P** : Tractable problems
+> 
 > **Class NP(nondeterministic polynomial time 非确定性多项式时间):** problems for which a solution can be ==checked== in polynomial time. 
+> 
 > **NP-complete(非多项式完全问题):** An important class of problems with the property that if any of these problems can be solved by a polynomial worst-case time algorithm, then all can be solved by polynomial worst-case time algorithms.
 

@@ -1,4 +1,4 @@
-# CH 8 Advanced Counting Techniques
+# CH 8 : Advanced Counting Techniques
 ## 8.1 Applications of Recurrence Relations
 递归关系的应用
 

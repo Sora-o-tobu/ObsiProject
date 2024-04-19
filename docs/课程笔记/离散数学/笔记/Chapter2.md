@@ -32,22 +32,28 @@ $$
 $$
 \forall x \in P(A),\begin{cases}x\subseteq A \\ A\subseteq B\end{cases} \Rightarrow x\subseteq B\Rightarrow x\in P(B) \Rightarrow P(A)\subseteq P(B)
 $$
-
 ### Cartesian Product 笛卡尔积
+
 也就是叉乘
+
 $A\times B=\{(a,b)|a\in A\land b\in B\}$
+
 > [!NOTE] Notation!
 >$A\times \emptyset =\emptyset \times A$
 
+
 ## 2.2 Set Operations
+
 - **Union** 
 	- $A\cup B=\{x|x\in A\lor x\in B\}$
 - **Intersection**
 	- $A\cap B=\{x|x\in A \land x\in B\}$
 - **Difference**
 	- $A-B=\{x|x\in A \land x\notin B\}=A\cap\overline{B}$
+
 由此得到:
 $|A\cup B|=|A|+|B|-|A\cap B|$
+
 
 > [!NOTE] TABLE
 > ![[集合的inference表.png]]
@@ -58,6 +64,7 @@ Let A and B be nonempty sets. A ==function (mapping or transformations)== f  fr
 $$
 f:A\to B
 $$
+
 $$
 Also\ \forall a(a\in A\to \exists !b(b\in B\land f(a)=b))
 $$
@@ -106,10 +113,10 @@ $f^{-1}(y)=x\ iff\ f(x)=y$
 $$
 \lfloor -x\rfloor =-\lceil x\rceil
 $$
+
 $$
 \lceil -x\rceil=-\lfloor x\rfloor
 $$
-
 ## 2.4 Sequence and Summations 数列与求和
 
 ### Definition
@@ -143,8 +150,6 @@ $$\begin{gather}
 \end{cases}\Rightarrow |Q^+|=|Z^+|
 \end{gather}
 $$
-
-
 所以，有理数集Q是可数的。
 
 **[Theorem]** The union of a countable number of countable sets is countable.（可数个可数集的合集是可数的）
@@ -161,6 +166,7 @@ B=\{\frac{1}{n+1}|n\in Z^+\}\\
 (2)|Z^+|\ne |A|\\
 \end{gather}
 $$
+
 
 ![[补充2.png]]
 $$
@@ -181,6 +187,7 @@ for\ g(x)\ is\ a\ bijection\ from\ [0,1]\ to\ [\frac{1}{4} , \frac{3}{4}].\\
 Therefore\ |A|=|B|
 \end{gather}
 $$
+
 
 [Theorem] |R|=|(0,1)|
 	构造函数即可证明，如$f(x)=\frac{2}{\pi} \tan(x)$
