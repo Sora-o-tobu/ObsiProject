@@ -26,6 +26,11 @@ git commit -m "The information you note"
 git push
 ```
 
+如果你commit错了，请reset取消commit
+```git
+git reset HEAD~1
+```
+
 如果push的时候报错了可以尝试取消代理
 ```git
 //取消http代理

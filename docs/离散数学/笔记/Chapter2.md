@@ -1,13 +1,13 @@
-# Chapter 2 : Basic Structure
-# 2.1 Sets
+# CH 2 : Basic Structure
+## 2.1 Sets
 A set is an unordered collection of objects.
 通常用大写字母表示集合，小写字母表示集合里的元素
 
-## Cardinality 集合的势
+### Cardinality 集合的势
 Let S be a set. If there are exactly n distinct elements in S where n is a nonnegative integer, we say that S is a finite set and that n is the cardinality of S.
 用| S | 表示 the cardinality of S
 
-## Power set
+### Power set
 Power set of S is the set of all subsets of the set S , 用 P(S) 表示
 $P(S)=\{x|x\subseteq S\}$
 Note:
@@ -33,13 +33,13 @@ $$
 \forall x \in P(A),\begin{cases}x\subseteq A \\ A\subseteq B\end{cases} \Rightarrow x\subseteq B\Rightarrow x\in P(B) \Rightarrow P(A)\subseteq P(B)
 $$
 
-## Cartesian Product 笛卡尔积
+### Cartesian Product 笛卡尔积
 也就是叉乘
 $A\times B=\{(a,b)|a\in A\land b\in B\}$
 > [!NOTE] Notation!
 >$A\times \emptyset =\emptyset \times A$
 
-# 2.2 Set Operations
+## 2.2 Set Operations
 - **Union** 
 	- $A\cup B=\{x|x\in A\lor x\in B\}$
 - **Intersection**
@@ -53,7 +53,7 @@ $|A\cup B|=|A|+|B|-|A\cap B|$
 > ![[集合的inference表.png]]
 
 
-# 2.3 Functions
+## 2.3 Functions
 Let A and B be nonempty sets. A ==function (mapping or transformations)== f  from A to B:
 $$
 f:A\to B
@@ -75,7 +75,7 @@ $f(a)=b$
 **The graphs of functions:**
 $\{(a,b)|a\in A \land f(a)=b\}$
 
-## 几种函数类型
+### 几种函数类型
 - **One-to-one** also injection 单射
 	- $\forall a\forall b(f(a)=f(b)\to a=b)$
 - **Onto** also surjection 满射
@@ -98,7 +98,7 @@ $\{(a,b)|a\in A \land f(a)=b\}$
 Function f is invertible iff f is a ==bijection==.
 $f^{-1}(y)=x\ iff\ f(x)=y$
 
-## Some important functions
+### Some important functions
 - **Floor function**
 	- $\lfloor x\rfloor$
 - **Ceiling function**
@@ -110,14 +110,14 @@ $$
 \lceil -x\rceil=-\lfloor x\rfloor
 $$
 
-# 2.4 Sequence and Summations 数列与求和
+## 2.4 Sequence and Summations 数列与求和
 
-## Definition
+### Definition
 A ==sequence== is a function from a subset of the set of integers (usually either the set {0, 1, 2, …} or the set {1, 2, 3, …}) to a set S. We use the notation $a_n$ to denote the image of the integer n. We call $a_n$ a term of the sequence. ($\{a_n\}$)
 > [!NOTE] Some Useful Summation Formulae
 > ![[数列和.png]]
 
-# Cardinality of Sets
+## Cardinality of Sets
 **[Definition 1]** The cardinality of a set A is equal to the cardinality of a set B, denoted | A | = | B |, iff there exists a bijection from A to B.
 **[Definition 2]** If there is an injection from A to B, the cardinality of A is less than or the same as the cardinality of B and we write  |A| ≤ |B|. (如果从A到B有单射)
 
@@ -168,7 +168,7 @@ $$
 \end{cases}\Rightarrow |Z^+|<|A|
 $$
 
-## **[有趣的结论（其实是重要的结论）]** 有理数集是可数的，但是实数集不可数
+### **[有趣的结论（其实是重要的结论）]** 有理数集是可数的，但是实数集不可数
 
 
 [Example:]

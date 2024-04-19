@@ -1,5 +1,5 @@
-# Chapter 5 : Induction and Recursion 归纳与递归
-# 5.1 Mathematical Induction 数学归纳法
+# CH 5 : Induction and Recursion 归纳与递归
+## 5.1 Mathematical Induction 数学归纳法
 To prove  $\forall n\ P(n)$ by mathematical induction:
 	(1) **Basic Step:** Establish P(1)
 	(2) **Inductive Step:** Prove that $P(k)\to P(k+1)\ for\ k\ge 1$
@@ -8,8 +8,8 @@ To prove  $\forall n\ P(n)$ by mathematical induction:
 $$
 (p(1)\land \forall k(p(k)\to p(k+1)))\to \forall n\ p(n)
 $$
-# 5.2 Strong Induction and Well-ordering Property
-## Strong Induction 强归纳法、归纳法第二原理
+## 5.2 Strong Induction and Well-ordering Property
+### Strong Induction 强归纳法、归纳法第二原理
 To prove  $\forall n\ P(n)$ by strong induction:
 	(1) **Basic Step:** Establish $P(n_0)$
 	(2) **Inductive Step:** Prove that $P(n_0)\land P(n_0+1)\land ... \land P(k)\to P(k+1)$
@@ -21,7 +21,7 @@ $$
 $$
 
 
-## Well-ordering Property 良序性原理
+### Well-ordering Property 良序性原理
 The validity of mathematical induction follows from the well-ordering property for the set of ==positive integers==.
 
 **[Theorem]** A set S is well ordered  if every nonempty subset of S has a least element.
@@ -38,7 +38,7 @@ The validity of mathematical induction follows from the well-ordering property f
 > 1. The validities of both mathematical induction and strong induction follow from the well-ordering property. (良序性原理是前提)
 > 2. 1.In fact, mathematical induction, strong induction, and  well-ordering are all equivalent principles.
 
-# 5.3 Recursive Definitions and Structural Induction 递归定义和结构归纳法
+## 5.3 Recursive Definitions and Structural Induction 递归定义和结构归纳法
 
 **[Example]** 求最大公约数
 	[Lemma 1] Let a = bq + r , then gcd(a,b) = gcd(b,r).
@@ -59,7 +59,7 @@ The validity of mathematical induction follows from the well-ordering property f
 > ![[三种归纳的对比.png]]
 
 
-# 5.4 Recursive Algorithms
+## 5.4 Recursive Algorithms
 
 **Recursive algorithm vs. iterative algorithm**
 1. 对于任何递归算法，都有相应等价的迭代算法
