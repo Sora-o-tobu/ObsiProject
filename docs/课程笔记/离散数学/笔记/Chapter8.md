@@ -76,7 +76,7 @@ $a_n$ is a function of previous k terms of the sequence
 
 
 
-### 8.4 Generating Functions
+## 8.4 Generating Functions
 
 生成函数的本质是处理排列组合的有效工具。
 
@@ -86,3 +86,35 @@ $a_n$ is a function of previous k terms of the sequence
 
 
 ![[生产函数table_webp.webp]]
+
+**重要等式**
+
+若$b_k= \sum_{i=0}^k a_i\ \ a_k\leftrightarrow G(x)\ \ b_k\leftrightarrow F(x)$，则$F(x)=\frac{G(x)}{{1-x}}$
+
+$C_{-n}^k =(-1)^k C_{n+k-1}^k$
+
+### Counting with Generating Functions
+
+#### r-combinations from a set with n elements with repetitions allowed
+
+在term中，$x^i$代表这个元素有被选了i次，共有n个元素，因此我们:
+$G(x)=(1+x+x^2 +x^3+... )^n= (\frac{1}{{1-x}})^n =\sum_{k=0}^\infty C_{n+k-1}^k x^k$
+其中我们要找的答案就是$x^r$的系数$C_{n+r-1}^r$
+
+[Example](#)
+Find the number of solutions of $e_1+ e_2+ e_3 =17\ \ where\ 2\le e_1\le 5,3\le e_2\le 6,4\le e_3\le 7$
+
+$G(x)=(x^2+ x^3 +x^4+ x^5)( x^3 +x^4+ x^5+ x^6)( x^4+ x^5 +x^6+ x^7)$
+
+答案就是$x^{17}$的系数。
+
+??? note "如何快速求系数?"
+	在这里我们以$G(x)=(1+x+...+x^{2r} )^3$求$x^{3r}$的系数为例:
+	
+	$G(x)=(\frac{1-x^{2r+1}}{1-x})^3 =\frac{1-3x^{2r+1}+ 3x^{4r+2}- x^{6r+3}}{(1-x)^3}$
+	
+	令$F(x)=\frac{1}{(1-x)^3}=\sum C_{i+2}^{i} x^i$，因为$G(x)=({1-3x^{2r+1}+ 3x^{4r+2}- x^{6r+3}})F(x)$只需要找到i=3r和i=r-1(2r+1+i=3r)的情况即可
+	
+	因此，$a^{3r}=C_{3r+2} ^{3r}-3C_{r+1} ^{r-1}$
+
+
