@@ -58,13 +58,15 @@ git config --global http.proxy http://127.0.0.1:7890
 ![[域名1.png]]
 ### 4. 在域名解析记录中，添加你github.io域名的IP
 
-要得到你github.io的IP，可以打开CMD ping一下:
-![[得到IP.png]]
-然后在你的域名解析中添加两个A记录，分别为www和@，记录值为你刚刚得到的IP
+~~然后在你的域名解析中添加两个A记录，分别为www和@，记录值为你刚刚得到的IP~~
+先选择CNAME域名把你`yourname.github.io` 的www记录给输进去，然后再输入你的各种IP的@记录(包括下一步的各种IP)
 ![[IP解析.png]]
 我使用的华为云可以快速添加两个记录，其它解析操作类似不做讲解
 
 ### 5. 启用HTTPS（可选）
+
+其实不用输这些好像也行（） 但是不输白不输入嘛
+
 再次在域名解析中添加如下四个IP地址的至少一个
 
 - 185.199.108.153
@@ -72,9 +74,11 @@ git config --global http.proxy http://127.0.0.1:7890
 - 185.199.110.153
 - 185.199.111.153
 
-然后在GitHub仓库Setting->Pages中勾选`Enforce HTTPS`来强制走HTTPS
+然后在GitHub仓库Setting->Pages中勾选`Enforce HTTPS`来走HTTPS
 
-沟槽的，谁写的教程，上面的东西可以是可以，但是有点小问题！
+
+
+**沟槽的，谁写的教程，上面的东西可以是可以，但是有点小问题！**
 
 !!! note 
 	其中对DNS的配置不一定立即生效，可以稍微等待几分钟
