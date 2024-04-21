@@ -74,6 +74,7 @@ git config --global http.proxy http://127.0.0.1:7890
 
 然后在GitHub仓库Setting->Pages中勾选`Enforce HTTPS`来强制走HTTPS
 
+沟槽的，谁写的教程，上面的东西可以是可以，但是有点小问题！
 
 !!! note 
 	其中对DNS的配置不一定立即生效，可以稍微等待几分钟
