@@ -22,6 +22,6 @@ statistics: true
 !!! danger ""
 	
 	**请问你看到我老婆新海天了吗，没看到也没关系，她就在这里哦，真的好可爱哇**
-	![[One Last Sora.png]]
+	![[OneLastSora_webp.webp]]
 
 
