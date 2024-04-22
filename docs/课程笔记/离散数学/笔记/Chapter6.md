@@ -91,7 +91,9 @@ $$
 [Corollary 1] $$
 C(n,r)=C(n,n-r)
 $$
+
 ## 6.4 Binomial Coeffcients 二项式系数
+
 $$
 (x+y)^n=\sum_{j=0}^n C(n,j)x^{n-j}y^j
 $$
@@ -99,14 +101,17 @@ $$
 $$
 \sum_{k=0}^{n}C(n,k)=2^n
 $$
+
 [Corollary 2]
 $$
 \sum_{k=0}^{n}(-1)^kC(n,k)=0
 $$
+
 [Theorem] PASCAL'S Identity
 $$
 C(n+1,k)=C(n,k)+C(n,k-1)
 $$
+
 > [!NOTE] PASCAL's triangle
 > 
 ![[杨辉三角.png]]
@@ -116,13 +121,16 @@ $$
 $$
 C(m+n,r)=\sum_{k=0}^rC(m,r-k)C(n,k)
 $$
+
 [Corollary 4] $$
 C(2n,n)=\sum_{k=0}^nC^2(n,k)
 $$
 
+
 [Theorem] $$
 C(n+1,r+1)=\sum_{j=r}^nC(j,r)
 $$
+
 
 证明:
 假设第 j+1 个元素被选上，但是j+1后面的所有元素都没被悬赏，则共有$C(j,r)$种选择，同理，j可从r选取到n，Q.E.D
