@@ -4,10 +4,11 @@ statistics: true
 
 # 首页
 
+
 ???+ info "本站统计"
     <center>页面数：{{pages}} </center>
     <center>总字数：{{words}} </center>
-    <center>代码行数：{{codes}} </center>
+
 
 !!! note ""
 	<center></center>
