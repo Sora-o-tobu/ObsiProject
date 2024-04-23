@@ -11,6 +11,11 @@ A combinational circuit consists of logic gates whose output is a function of on
 
 Sequential logic is a type of logic circuit whose output depends not only on the present value of its input signals but on the sequence of past inputs (state or memory).
 
+### Hierarchy Design 分层设计
+
+- Top-Down ： 从需求开始，自顶向下分解功能设计
+- Bottom-Up ： 根据现有元件去组合目标功能
+
 ### Combinational circuits
 
 组合电路不包含任何memory devices , feedback loops , one-way transmission of input signal(输入信号的单向传输)
@@ -38,14 +43,24 @@ Sequential logic is a type of logic circuit whose output depends not only on the
 而t<sub>PHL</sub> 与 t<sub>PLH</sub> 则计算L和H的中点时间差
 ![[传输延迟.png]]
 
-- **细品差别**
+- **细品差别** 
 ![[细品差别.png]]
+
+Transition time : 过渡时间 ，专注于输出的变化，只需要看输出的时序图就可以
+
+Propagation delay : 传输延迟，包含输入和输出的变化的整个过程，通过比较输入和输出的偏差来表示
+
+
+> 此外，我们还引入一个$t_{pd}$来统一表示$t_{phl}和t_{plh}$，
+> 一般将$t_{pd}$设为$\frac{t_{phl}+ t_{plh}}{2}$或者$max(t_{phl}+t_{plh})$
+
+
 
 ###### 传输延迟的模型
 
 在仿真中，我们常用Delay models有
 
-- Transport delay
+- Transport delay  (传输延迟)
 - Inertial delay （惯性延迟、固有延迟）
 
 
@@ -55,7 +70,7 @@ A change in the output in response to a change on the inputs occurs after ==a fi
 ![[Transport delay.png]]
 
 - **Inertial delay**：
-A pulse of duration less than the inertial delay (rejection time) does not contain enough energy to cause the device to switch.
+A pulse of duration less than the inertial delay (**rejection time**) does not contain enough energy to cause the device to switch.
 ![[Inertial delay.png]]
 
 
@@ -64,7 +79,7 @@ Example：
 
 如果考虑到了电路延迟的话，就有可能出现意想不到的结果哦~
 
-##### 考虑这些因素，我们在logic synthesis中有必要精选Technology mapping
+#### 考虑这些因素，我们在logic synthesis中有必要精选Technology mapping
 ![[工艺映射.png]]
 
 其中映射的一个重要步骤是recognize logic equivalence between 原始逻辑与目标技术
@@ -78,20 +93,42 @@ Example：
 ![[NANDmapping.png]]
 
 
+### 正逻辑与负逻辑
 
-## Part 2
+**正逻辑**(Positive Logic)就是1为有效信号，**负逻辑**(Negative Logic)就是0为有效信号。
+
+在正逻辑中的AND门相当于负逻辑中的OR门。
+
+![[正负逻辑.png]]
+
+> 如上图，左侧代表正逻辑，右侧代表负逻辑
+
+
+
+## Part 2 : Combinational Logic
 ### Rudimentary Logic Functions 基础函数功能
-- Value - Fixing $F = 0$ or $F = 1$ 
-- Transferring $F = X$ 
-- Inverting $F = \overline{x}$
-- Enabling $F = X \cdot EN or F = X + \overline{EN}$
+
+- 常量函数 Value - Fixing $F = 0$ or $F = 1$ 
+- 传输函数 Transferring $F = X$ 
+- 逆变函数 Inverting $F = \overline{x}$
+- 使能函数 Enabling $F = X \cdot EN or F = X + \overline{EN}$
 
 ![[Chapter 3 Combinational Logic Design 2024-04-04 15.38.39.excalidraw]]
 
 ### Functional Blocks
 
+- 译码器 Decoder
+- 编码器 Encoder
+- 多路选择器 Multiplexer **MUX**
+- 信号分配器 Demultiplexer **DEMUX**
+
+
 #### 1. Decoder 译码器
-Decoding - the conversion of an n-bit input code to an m-bit output code with ==n <= m <= 2n== such that each valid code word produces a unique output code
+
+Decoding 
+
+- the conversion of an n-bit input code to an m-bit output code with ==n <= m <= 2n== such that each valid code word produces a unique output code
+
 例如实验lab5的3-8译码器以及lab6的BCD to 7-segment decoder
 
 一个高级的Decoder的设计可以采用hierarchical design设计思想
@@ -133,6 +170,7 @@ Priority Encoder(优先级编码器):
 ![[2-to-1多路选择器.png]]
 
 In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
+
 - n-to-2<sup>n</sup>-line decoder
 - $2^n\times 2 AND-OR$ 
 
@@ -148,20 +186,23 @@ In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 ![[三态门多路选择器2.png]]
 
 
-多路选择器可以应用于不同编码之间的转换
-如，Gray to Binary Code：
+多路选择器可以应用于不同编码之间的转换，**实现任意的逻辑函数**
+
+如，**Gray** to **Binary Code**：
 ![[格雷码转换二进制编码.png]]
 
-此外，此转换还可以进行化简：
+此外，此转换还可以将一部分输入当作常量端进行降维化简：
 
 ![[转换的化简.png]]
 
-化简的规则为，观察真值表，当两行中A、B各自相同时，若输出分别为0、1，则可置C或~C；若输出均为0或1，则置常值0或1。
+**化简的规则为，观察真值表，当两行中A、B各自相同时，若输出分别为0、1，则可置C或~C；若输出均为0或1，则置常值0或1。**
 
 ## Part 3 : Arithmetic Functions
 
+计算主要包括逻辑运算和算术运算，前者由于可以直接通过基本门很方便实现，所以我们不过多考虑；在此主要介绍算数运算。在计算机硬件中，承担计算工作的主要部件为 `ALU`(Arithmetic Logical Unit)。
+
 ### 诞生的条件
-在Logic Design中，一个Arithmetic calculation(e.g. addition subtraction)是==code translation decoder==，例如，一个N-bit的二进制加法需要一个2N-to-N+1 Decoder
+在Logic Design中，一个Arithmetic calculation(e.g. addition & subtraction)是==code translation decoder==，例如，一个N-bit的二进制加法需要一个2N-to-N+1 Decoder
 
 但是，当N的数量变得很大，建立这么一个Decoder将会变得非常困难，由于总共有2N个变量，我们建立的Truth Table将会有2^2N^行！这是Desing Impractical的！
 
@@ -179,7 +220,7 @@ In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 
 ### Function Blocks : Addition
 
-发展历程: **Half-Adder(HA) -> Ful-Adder(FA) -> Ripple Carry Adder -> Carry-Look-Ahead Adder(CLA)**
+发展历程: **Half-Adder(HA) 半加器 -> Full-Adder(FA) 全加器 -> Ripple Carry Adder 行波加法器 -> Carry-Look-Ahead Adder(CLA) 超前进位加法器**
 
 #### Half-Adder 半加器
 实际上，半加器相当于一个 2-to-2 Decoder
@@ -334,6 +375,7 @@ $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
 因此我们可以给每个B加上一个异或门来操控是应用加法 (0) 还是减法 (1)
 
 ![[合二为一.png]]
+
 !!! note
 	请注意，当应用减法的时候，C<sub>0</sub>要置1，所以我们将S接入C<sub>0</sub>
 
@@ -349,7 +391,9 @@ $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
 ![[补码法总结.png]]
 
 ### Arithmetic Logic Unit (ALU)
-**Specification**
+
+**Specification**：
+
 - two n-bit input : $A_0- A_{n-1}, B_0- B_{n-1}$
 - mode selection : arithmetic/logical
 - operation selection :  add/sub/inc/dec or and/or/not/xor
@@ -364,5 +408,6 @@ $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
 
 !!! note
 	请注意，Y中的1指所有位均为1的数，因此$G=A+2^n-1=A-1$ 
+
 
 ![[算数ALU真值表.png]]
