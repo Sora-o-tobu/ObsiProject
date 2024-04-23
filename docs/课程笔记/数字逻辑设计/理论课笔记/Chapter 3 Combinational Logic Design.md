@@ -4,15 +4,18 @@
 ### Definition Of Two Types Of Logic Circuits
 
 - **Combinational Circuit** 组合电路
+
 A combinational circuit consists of logic gates whose output is a function of only the present input.
 
 - **Sequential Logic Circuit** 时序逻辑电路
+
 Sequential logic is a type of logic circuit whose output depends not only on the present value of its input signals but on the sequence of past inputs (state or memory).
 
 ### Combinational circuits
 
 组合电路不包含任何memory devices , feedback loops , one-way transmission of input signal(输入信号的单向传输)
 因此，一个组合电路包含：
+
 - m个布尔值输入
 - n个布尔值输出
 - n个只与当前输入有关系的变换函数
@@ -22,6 +25,7 @@ Sequential logic is a type of logic circuit whose output depends not only on the
 ##### Fan-in and Fan-out
 - Fan-in 是一个逻辑门能够接受的最多输入，如果超过了，输出会变为undefined 或者 incorrect
 - Fan-out 是一个逻辑门的输出所能连接到最多的输入（或称负载 load），且不影响电路正常性能的个数
+
 ![[faninandfanout.png]]
 
 **Fan-in的原因，以与门为例**
@@ -40,8 +44,11 @@ Sequential logic is a type of logic circuit whose output depends not only on the
 ###### 传输延迟的模型
 
 在仿真中，我们常用Delay models有
+
 - Transport delay
 - Inertial delay （惯性延迟、固有延迟）
+
+
 
 - **Transport delay**：
 A change in the output in response to a change on the inputs occurs after ==a fixed specified delay.==

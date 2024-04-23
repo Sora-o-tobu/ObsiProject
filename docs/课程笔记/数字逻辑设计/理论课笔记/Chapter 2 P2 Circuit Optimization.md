@@ -2,10 +2,14 @@
 
 ## Canonical Forms 规范型
 **Two common Canonical Forms:**
+
 - Sum of Minterms (SOM)
 - Product of Maxterms (POM)
+
 ==不化简哦~==
-Example:
+
+[Example]:
+
 $F =\overline{X}\overline{Y} +X\overline{Y} = \sum_{m}(0,2)$     SOM
 $F =(X+\overline{Y})(\overline{X}+\overline{Y}) = \prod_{m}(1,3)$    POM
 
@@ -14,6 +18,7 @@ $F =(X+\overline{Y})(\overline{X}+\overline{Y}) = \prod_{m}(1,3)$    POM
 
 ## Standard Forms 标准型
 将规范型化至最简便是标准型
+
 - Standard Sum-of-Products (SOP) form:
 $ABC+\overline{A}\overline{B}C+B$
 - Standard Product-of-Sums (POS) form:
@@ -55,7 +60,11 @@ An electronic amplifier used to improve circuit voltage levels and speed.
 - A - AND
 - O - OR
 - I - Inverter
+
 eg:
+
 2 - 2 AOI -> $F=\overline{WX+YZ}$
+
 2 - 2 - 1 AO -> $F= WX+YZ+V$
+
 2 - 2 AI -> $F=\overline{(W+X)(Y+Z)}$
