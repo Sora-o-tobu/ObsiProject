@@ -126,3 +126,30 @@ Mkdocs-material不支持Obsidian的Note格式，不过它自带了其它note方�
 ## TODO
 
 - 有闲暇的话，把其它图片改用webq图片格式，节省空间
+
+## Appendix
+
+!!! note
+
+!!! abstract
+
+!!! info
+
+!!! tip
+
+!!! success
+
+!!! question
+
+!!! warning
+
+!!! failure
+
+!!! danger
+
+!!! bug
+
+!!! example
+
+!!! quote
+

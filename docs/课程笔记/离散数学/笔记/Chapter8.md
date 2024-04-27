@@ -117,4 +117,37 @@ $G(x)=(x^2+ x^3 +x^4+ x^5)( x^3 +x^4+ x^5+ x^6)( x^4+ x^5 +x^6+ x^7)$
 	
 	因此，$a^{3r}=C_{3r+2} ^{3r}-3C_{r+1} ^{r-1}$
 
+!!! danger "利用Generating Function求Recurrence Relations"
+	
+	![[利用GeneratingFunction求递归关系.png]]
+
+## 8.5 Inclusion-Exclusion
+
+For the **Union** of n finite sets：
+$$
+|A_1 \cup A_2\cup ...\cup A_n|= \sum_{i=1}^{n} |A_i| -\sum_{1\le i\lt j\le n}|A_i\cap A_j|+ \sum_{1\le i\lt j\lt k\le n}| A_i \cap A_j\cap A_k|+...+(-1)^{n+1}|A_1 \cap A_2\cap ...\cap A_n|
+$$
+
+[证明](#)
+假设共有r个集合包含元素a，那么这个元素被count的个数有等式：
+$$
+1=C_r^1 -C_r^2+ C_r^3 -...+(-1)^r C_r^r\ \ [Since\ (1-1)^r=0]
+$$
+其中等式左边的1与$|A_1 \cup A_2\cup ...\cup A_n|$对应
+
+## 8.5 Application of Inclusion-Exclusion
+
+以 $N(P_i)$ 表示满足 $P_i$ 的个数，则有
+$$
+N(P_1' P_2'... P_n')=N- |A_1 \cup A_2\cup ...\cup A_n|=N- \sum_{1\le i\le n} N(P_i)+\sum_{1\le i\lt j\le n} N(P_i P_j)-...+(-1)^nN( P_1 P_2...P_n)
+$$
+
+[例题1](#) 将隔板原理题目化简
+![[容斥原理例题1.png]]
+
+[例题2](#) onto functions的个数
+![[容斥原理满射的个数.png]]
+
+[例题3](#) derangement 打乱次序，且每个元素不在原来位置
+![[容斥原理打乱顺序.png]]
 
