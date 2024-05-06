@@ -175,7 +175,6 @@ The relation R on a set A is ==transitive== if and only if $R^n\subseteq R,for \
 ### Reflexive Closure
 
 [Theorem](#) 
-
 Let R be a relation on A . The ==reflexive closure== of R , denoted by *r(R)* , is  $R\cup I_A\ \ I_A=\{(x,x)|x\in A\}$
 
 !!! info "证明需要证明Closure的三个性质"

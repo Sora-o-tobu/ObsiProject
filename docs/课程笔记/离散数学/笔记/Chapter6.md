@@ -24,13 +24,15 @@ $$
 
 ## 6.2 The Pigeonhole Principle
 
-**[Theorem]** The pigeonhole principle states that if there are more pigeons than pigeonholes, then there must be at least one pigeonhole with at least two pigeons in it. 如果鸽子数量大于鸽笼，那么一定至少有一个鸽棚里面有至少两只鸽子
+**[Theorem](#)** The pigeonhole principle states that if there are more pigeons than pigeonholes, then there must be at least one pigeonhole with at least two pigeons in it. 如果鸽子数量大于鸽笼，那么一定至少有一个鸽棚里面有至少两只鸽子
 
 实际上，如果要将N objects放入k boxes中，那么一定会有至少一个box中保存了至少$\lceil \frac{N}{k}\rceil$ 个objects
 
 >[!NOTE] An elegant application of pigeonhole principle
 >Show that among any n+1 positive integers not exceeding 2n there must be an integer that divides one of the other integers n+1个不超过2n的正整数必定存在一个数是另一个数的整数倍
+>
 >**证明过程：**
+>
 >$$\begin{gather}
 >Let\ n+1\ positive\ integers\ be\ a_1,a_2,...,a_{n+1},(1\le a_i\le 2n)\\
 >Write\ a_i=2^{k_i}q_i,where\ k_i\ is\ a nonnegative\ integer\ and\ q_i\ is an\ odd\ integer\ less\ than\ 2n\\
@@ -43,8 +45,9 @@ $$
 > [!NOTE] Example 2
 > ![[鸽笼原理例子2.png]]
 
-**[Theorem]** Every sequence of n<sup>2</sup>+1distinct integers contains a subsequence of length n + 1 that is either strictly increasing or strictly decreasing.
+**[Theorem](#)** Every sequence of n<sup>2</sup>+1distinct integers contains a subsequence of length n + 1 that is either strictly increasing or strictly decreasing.
 **证明：**
+
 $$
 \begin{gather}
 Let\ the\ sequence\ be\ the\ a_1,a_2,...,a_{n^2+1}\\
@@ -60,7 +63,7 @@ $$
 ## 6.3 Permulations and Combinations
 
 ### Permulations 排列
-[Notation] P(n,r)
+[Notation](#) P(n,r)
 $$
 P(n,r)=n(n-1)(n-2)...(n-r+1)=\frac{n!}{(n-r)!}
 $$
@@ -75,7 +78,7 @@ P(n,r)\ is\ the\ number\ of\ injection(单射)\ from\ B\ to\ A
 $$
 
 ### Combinations 组合
-[Notation] C(n,r)
+[Notation](#) C(n,r)
 $$
 \frac{n!}{{r!(n-r)!}}=n(n-1)(n-2)...(n-r+1)/r!
 $$
@@ -89,7 +92,8 @@ $$
 
 用集合来表示就是: 势为n的集合的势为r的子集的个数
 
-[Corollary 1] $$
+[Corollary 1](#) 
+$$
 C(n,r)=C(n,n-r)
 $$
 
@@ -98,17 +102,17 @@ $$
 $$
 (x+y)^n=\sum_{j=0}^n C(n,j)x^{n-j}y^j
 $$
-[Corollary 1]
+[Corollary 1](#)
 $$
 \sum_{k=0}^{n}C(n,k)=2^n
 $$
 
-[Corollary 2]
+[Corollary 2](#)
 $$
 \sum_{k=0}^{n}(-1)^kC(n,k)=0
 $$
 
-[Theorem] PASCAL'S Identity
+[Theorem](#) PASCAL'S Identity
 $$
 C(n+1,k)=C(n,k)+C(n,k-1)
 $$
@@ -118,17 +122,18 @@ $$
 ![[杨辉三角.png]]
 
 
-[Theorem] 
+[Theorem](#) 
 $$
 C(m+n,r)=\sum_{k=0}^rC(m,r-k)C(n,k)
 $$
 
-[Corollary 4] $$
+[Corollary 4](#) 
+$$
 C(2n,n)=\sum_{k=0}^nC^2(n,k)
 $$
 
 
-[Theorem] $$
+[Theorem](#) $$
 C(n+1,r+1)=\sum_{j=r}^nC(j,r)
 $$
 
@@ -142,7 +147,7 @@ $$
 
 ### r-permutation with repetition
 
-[Theorem 1] The number of r-permutations of a set of n objects with repetition allowed is $n^r$.
+[Theorem 1](#) The number of r-permutations of a set of n objects with repetition allowed is $n^r$.
 将r个元素可重复的排列进n个对象中，共有$n^r$种排列方法
 
 > 如果每个元素可重复多少次不一样，那就另当别论，比如:
@@ -150,7 +155,7 @@ $$
 > $C(7,3)C(4,2)C(2,1)C(1,1)=\frac{{7!}}{{3!2!1!1!}}$ 
 
 
-[Theorem 2] The number of r- Circle permutations of a set of n objects is P(n,r)/r .
+[Theorem 2](#) The number of r- Circle permutations of a set of n objects is P(n,r)/r .
 r个元素排入长为n的圈中，共有P(n,r)/r种排法。
 
 >[!NOTE] 例子
@@ -159,14 +164,14 @@ r个元素排入长为n的圈中，共有P(n,r)/r种排法。
 
 ### r-permutation with repetition
 
-[Theorem 3] There are C (n-1+r, r) r-combination from a set with n elements when repetition of elements is allowed. 
+[Theorem 3](#) There are C (n-1+r, r) r-combination from a set with n elements when repetition of elements is allowed. 
 
 >隔板原理，对于$x_1+x_2+x_4+x_4=16$的组合方式，若x为正整数，则有$C(15,3)$种，若x为非负整数，则有$C(16-1+4,3)$种
 >若对于非负整数$x_1+x_2+x_3+x_4\le 16$ ，可以添加一个辅助变量$x_5$使得$x_1+x_2+x_4+x_4+x_5=16$ 这样子共有$C(20,4)$ 种
 
 ### Stirling Numbers 斯特林数
 
-[Definition] **S(n,j)=** The number of ways to distribute n distinguishable objects into j indistinguishable boxes so that no box is empty.
+[Definition](#) **S(n,j)=** The number of ways to distribute n distinguishable objects into j indistinguishable boxes so that no box is empty.
 将n个不同的物体放入j个没有区别的箱子中的方法总数
 
 - S(r,1)=S(r,r)=1;
@@ -186,11 +191,14 @@ r个元素排入长为n的圈中，共有P(n,r)/r种排法。
 **The lexicographic ordering**(字母序) of the set of permutations of {1, 2, …, n}，总共有n!种排列
 
 >Given permutation a<sub>1</sub>a<sub>2</sub>...a<sub>n</sub>, find the next larger permutation in increasing order
+>
 >（1）找到后面最长递减数列的前一个元素，即$a_j< a_{j+1},and\ a_{j+1}> a_{j+1}>...> a_n$
+>
 >（2）将$a_j$替换为$a_{j+1}到a_n$中比$a_j$大的最小数
+>
 >（3）将剩下的数按照increasing order排列在后面
 
-[Example] What is the next larger permutation in lexicographic order after 124653?
+[Example](#) What is the next larger permutation in lexicographic order after 124653?
 
 124/653->125643->125346 
 
@@ -204,7 +212,7 @@ r个元素排入长为n的圈中，共有P(n,r)/r种排法。
 > If $S_i= \{a_1 ,a_2 ,...,a_r\},1\le i\le C_n^r -1$   has found , then the next combination can be obtained using the following rules:
 > 找到S<sub>i</sub>中最大的不与末尾子列对应的元素($a_i\ne n-r+i$)，然后将其换为$a_i+1$，后面所有元素都是前一个元素加 1。
 
-[Example] $S_i=\{2,3,5,6,9,10\}$ is given from the Set {1,2,3,4,5,6,7,8,9,10}. Find $S_{i+1}$
+[Example](#) $S_i=\{2,3,5,6,9,10\}$ is given from the Set {1,2,3,4,5,6,7,8,9,10}. Find $S_{i+1}$
 
 从后往前看，10和9对应了Set中最后两位数，因此我们以6为$a_i$ ，将其替换为7，9和10依次变成8和9，因此答案为$S_{i+1}=\{2,3,5,7,8,9\}$
 

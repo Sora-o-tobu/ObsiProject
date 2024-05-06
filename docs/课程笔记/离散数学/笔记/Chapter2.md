@@ -110,6 +110,7 @@ $\{(a,b)|a\in A \land f(a)=b\}$
 
 
 **Monotonic Functions 单调函数**
+
 - monotonically (strictly) increasing
 	- $\forall x \forall y(x<y\to f(x)<f(y))$
 - monotonically (strictly) decreasing
