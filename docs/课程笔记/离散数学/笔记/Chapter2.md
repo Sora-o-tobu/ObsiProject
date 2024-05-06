@@ -9,7 +9,9 @@ Let S be a set. If there are exactly n distinct elements in S where n is a nonne
 
 ### Power set
 Power set of S is the set of all subsets of the set S , 用 P(S) 表示
+
 $P(S)=\{x|x\subseteq S\}$
+
 Note:
 
 - $|S|=n\ implies\ |P(S)|=2^n$
@@ -79,8 +81,11 @@ $$
 Also\ \forall a(a\in A\to \exists !b(b\in B\land f(a)=b))
 $$
 A is called ==domain== ,B is called ==codomain==
-$f(a)=b$ 
+
+!!! info "f(a)=b"
+	
 	- b is called the ==image== of a under f;
+	
 	- a is called a ==preimage== of b;
 
 > [!NOTE] NOTATION!
@@ -100,13 +105,18 @@ $\{(a,b)|a\in A \land f(a)=b\}$
 - **One-to-one** also injection 单射
 	- $\forall a\forall b(f(a)=f(b)\to a=b)$
 - **Onto** also surjection 满射
-	- $\forall b\in B \exists a \in A(f(a)=b)$
+	- $\forall b\in B\  \exists a \in A(f(a)=b)$
 - **One-to-one and Onto** or **one-to-one correspondence** also bijection 双射、一一对应
 
-如果存在函数 f 使得A to B有个双射，则他们具有相同的势（cardinality）
+!!! note
+	如果存在函数 f 使得A to B有个双射，则他们具有相同的势（cardinality）
 
-> [!NOTE] 证明方法
-> ![[单射满射的证明方法.png]]
+如何证明函数 f 是单射或是满射？
+![[单射满射的证明方法.png]]
+
+
+
+
 
 
 **Monotonic Functions 单调函数**
@@ -125,13 +135,14 @@ $f^{-1}(y)=x\ iff\ f(x)=y$
 	- $\lfloor x\rfloor$
 - **Ceiling function**
 	- $\lceil x\rceil$
-$$
-\lfloor -x\rfloor =-\lceil x\rceil
-$$
 
-$$
-\lceil -x\rceil=-\lfloor x\rfloor
-$$
+!!! info
+	$\lfloor -x\rfloor =-\lceil x\rceil$
+	
+	$\lceil -x\rceil=-\lfloor x\rfloor$
+
+
+
 ## 2.4 Sequence and Summations 数列与求和
 
 ### Definition
@@ -141,26 +152,26 @@ A ==sequence== is a function from a subset of the set of integers (usually eithe
 > ![[数列和.png]]
 
 ## Cardinality of Sets
-**[Definition 1]** The cardinality of a set A is equal to the cardinality of a set B, denoted | A | = | B |, iff there exists a bijection from A to B.
+**[Definition 1](#)** The cardinality of a set A is equal to the cardinality of a set B, denoted | A | = | B |, iff there exists a bijection from A to B.
 
-**[Definition 2]** If there is an injection from A to B, the cardinality of A is less than or the same as the cardinality of B and we write  |A| ≤ |B|. (如果从A到B有单射)
+从A到B有双射，则A和B等势
 
-Example:
-Prove that |(a,b)| = |(0,1)| in R
+**[Definition 2](#)** If there is an injection from A to B, the cardinality of A is less than or the same as the cardinality of B and we write  |A| ≤ |B|. 
 
-$$
-\begin{gather}
-\frac{x-a}{b-a}=\frac{y-0}{1-0}\newline
-Let\ f\ be\ function\ from\ A\ to\ B\ that\ y=f(x)=\frac{x-a}{b-a}\\
-Then\ y\ is\ a\ bijection\ from\ (a,b)\ to\ (0,1)
-\end{gather}
-$$
+从A到B有单射，则A的势小于等于B
 
-**[Definition]** A set that is either finite or has the same cardinality as the set of positive integers called ==countable==.
-	When an infinite set S is countable, we denote the cardinality of S by $\aleph _0$ ( aleph null ).
-	If $|A|=|Z^+|$ , the set A is countable infinite.
+!!! example "Prove that |(a,b)| = |(0,1)| in R"
+	$$\begin{gather}\frac{x-a}{b-a}=\frac{y-0}{1-0}\newline Let\ f\ be\ function\ from\ A\ to\ B\ that\ y=f(x)=\frac{x-a}{b-a}\\ Then\ y\ is\ a\ bijection\ from\ (a,b)\ to\ (0,1) \end{gather} $$
 
-[Example:]
+**[Definition](#)** A set that is either finite or has the same cardinality as the set of positive integers called ==countable==.
+
+任何有限的集合或者与整数集等势的集合都称作==countable==
+
+When an infinite set S is countable, we denote the cardinality of S by $\aleph _0$ ( aleph null ).
+
+If $|A|=|Z^+|$ , the set A is countable infinite.
+
+[Example:](#)
 	Show the set of positive rational numbers $|Q^+|=|Z^+|$
 
 $$
@@ -174,9 +185,9 @@ $$
 
 所以，有理数集Q是可数的。
 
-**[Theorem]** The union of a countable number of countable sets is countable.（可数个可数集的合集是可数的）
+**[Theorem](#)** The union of a countable number of countable sets is countable.（可数个可数集的合集是可数的）
 
-[Example:]
+[Example:](#)
 	Prove that the set of real number between 0 and 1 is uncoutable.
 
 $$
@@ -186,7 +197,7 @@ A=\{x|x\in (0,1)\land x\in R\}\\
 B=\{\frac{1}{n+1}|n\in Z^+\}\\
 \therefore |B|=|Z^+|\\
 \because B\subseteq A\\
-\therefore |Z^+|<=|A\\
+\therefore |Z^+|<=|A|\\
 (2)|Z^+|\ne |A|\\
 \end{gather}
 $$
@@ -203,8 +214,9 @@ $$
 ### **[有趣的结论（其实是重要的结论）](#)** 有理数集是可数的，但是实数集不可数
 
 
-[Example:]
+[Example:](#)
 	Show that $|[0,1]|=|(0,1)|(Both\ Uncountable)$
+	
 $$
 \begin{gather}
 (1)B\subseteq A \Rightarrow |B|\le|A|\\
@@ -216,8 +228,8 @@ Therefore\ |A|=|B|
 $$
 
 
-[Theorem] |R|=|(0,1)|
+[Theorem](#) |R|=|(0,1)|
 	构造函数即可证明，如$f(x)=\frac{2}{\pi} \tan(x)$
 
-[Theorem] The cardinality of the power set of an arbitrary set has a greater cardinality than the original arbitrary set.
+[Theorem](#) The cardinality of the power set of an arbitrary set has a greater cardinality than the original arbitrary set.
 即 $|P(S)|\ge |S|$

@@ -175,10 +175,66 @@ The relation R on a set A is ==transitive== if and only if $R^n\subseteq R,for \
 ### Reflexive Closure
 
 [Theorem](#) 
-Let R be a relation on A . The ==reflexive closure== of R , denoted by *r(R)* , is  $R\cup I_A\ \ I_A=\{(x,x)|x\in A\}$
+Let R be a relation on A . The ==reflexive closure== of R , denoted by $r(R)$ , is  $R\cup I_A\ \ I_A=\{(x,x)|x\in A\}$
 
 !!! info "证明需要证明Closure的三个性质"
 	1. 包含R  2. 是Reflexive的关系 3. 是包含R的最小Reflexive关系
 	![[ReflexiveClosure证明.png]]
+
+
+- 用集合表示的话，就是往R里面加入所有不在R内的$(a,a)\ where\ a\in A$
+- 用有向图表示的话，则是给每一个Vertex添加loop
+- 用connection matrix表示则在主对角线上全置1
+
+!!! example
+	**Question：** $R=\{(a,b)|a<b,a,b\in Z\}$ what is $r(R)$?
+	
+	$r(R)=R\cup I_A =\{(a,b)|a<b,a,b\in Z\} \cup \{(a,a)|a\in Z\}$
+	
+	$=\{(a,b)|a\le b,a,b\in Z\}$
+
+
+### Symmetric Closure
+
+[Theorem](#) 
+Let R be a relation on A . The ==symmetric closure== of R , denoted by $s(R)$ , is $R\cup R^{-1}$
+
+
+!!! info "证明需要证明Closure的三个性质"
+	1. 包含R  2. 是Symmetric的关系 3. 是包含R的最小Symmetric关系
+	![[SymmetricClosure证明1.png]]
+	![[SymmetricClosure证明2.png]]
+
+
+- 用集合表示的话，如果$(a,b)$在R内且$(b,a)$不在R内，则加上
+- 用有向图表示的话，如果存在一个edge从 y 到 x，再加上一个从 x 到 y 的edge
+- 用connection matrix表示则  $M_{s(R)} =M_R \lor M_R^T$
+
+### Transitive Closure
+
+先导知识:
+
+- 有向图中一段长度为n的path可以用sequence表示:$(x_0 ,x_1),( x_1, x_2),...,(x_{n-1} ,x_{n})$
+	- 也可以简写成 $x_0 ,x_1 ,x_2 ,...,x_{n-1} ,x_{n}$
+- 如果 $x_0= x_n\ (n\ge 1)$，则称这条path为==Cycle==或者==Circuit== 
+	- $|A|=n\Rightarrow Any\ path\ of\ length\ >n\ must\ contain\ a\ cycle$
+
+[Theorem](#)
+Let R be a relation on A . There is a path of length n from a to b if and only if $(a,b)\in R^n$
+
+可以用数学归纳法证明：
+$(a,x)\in R\ ,\ (x,b)\in R^{n-1} \Rightarrow (a,b)\in R^{n}$
+
+[Definition](#)
+The ==connectivity relation== denoted by $R^*$ , is the set of ordered pairs (a,b) such that there is a path (in R) from a to b : $R^* =\bigcup_{n=1}^{\infty} R^n$ and $t(R)=R^*$
+
+[Corollary](#)
+If $|A|=n$ , then $t(R)=R^* =R\cup R^2\cup ...\cup R^n$
+
+
+
+
+
+
 
 

@@ -2,7 +2,7 @@
 ## 8.1 Applications of Recurrence Relations
 递归关系的应用
 
-[Definition] A **recurrence relation** is:
+[Definition](#) A **recurrence relation** is:
 $$
 \forall n\ge n_0,\ \ a_n=f( a_0, a_1, a_2,..., a_{n-1}) 
 $$
@@ -37,15 +37,15 @@ $a_n$ is a function of previous k terms of the sequence
 不含常量
 
 
-例如:
-> (1) $a_n=(1.02) a_{n-1}$ linear;constant coeffcients;homogeneous;degree 1.
-> 
-> (2) $a_n= a_{n-1}+2^n$ linear;constant coeffcients;**nonhomogeneous**;degree 1.
-> 
-> (3) $a_n = na_{n-1}+ n^2a_{n-2}+ a_{n-1} a_{n-2}$  **nonlinear**;**not constant**;homogeneous;degree 2.
+!!! example
+	(1) $a_n=(1.02) a_{n-1}$ linear;constant coeffcients;homogeneous;degree 1.
+	
+	(2) $a_n= a_{n-1}+2^n$ linear;constant coeffcients;**nonhomogeneous**;degree 1.
+	
+	(3) $a_n = na_{n-1}+ n^2a_{n-2}+ a_{n-1} a_{n-2}$  **nonlinear**;**not constant**;homogeneous;degree 2.
 
 
-解法:不动点法，高中教过，相信都懂!
+解法:==不动点法==，高中教过，相信都懂!
 此处仅给出一例:
 ![[不动点法.png]]
 
@@ -129,13 +129,16 @@ $$
 $$
 
 [证明](#)
+
 假设共有r个集合包含元素a，那么这个元素被count的个数有等式：
+
 $$
 1=C_r^1 -C_r^2+ C_r^3 -...+(-1)^r C_r^r\ \ [Since\ (1-1)^r=0]
 $$
+
 其中等式左边的1与$|A_1 \cup A_2\cup ...\cup A_n|$对应
 
-## 8.5 Application of Inclusion-Exclusion
+## 8.6 Application of Inclusion-Exclusion
 
 以 $N(P_i)$ 表示满足 $P_i$ 的个数，则有
 $$

@@ -43,7 +43,7 @@ $$
 ## 3.3 Complexity of Algorithms
 两个方面，space complexity 和 time complexity
 
-**[Definition] Tractable:** A problem is solvable using an algorithm with polynomial worst-case complexity. 最坏情况下能够使用多项式复杂度的算法解决问题
+**[Definition](#) Tractable:** A problem is solvable using an algorithm with polynomial worst-case complexity. 最坏情况下能够使用多项式复杂度的算法解决问题
 
 > **Class P** : Tractable problems
 > 

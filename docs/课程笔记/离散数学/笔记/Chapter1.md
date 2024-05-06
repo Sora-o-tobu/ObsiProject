@@ -1,4 +1,4 @@
-# CH 1 : The Foundations: Logic and Proofs
+# CH 1 : Logic and Proofs
 ## 1.1 Propositional Logic （命题逻辑）
 
 ### **Definition**
@@ -19,7 +19,7 @@
 	- Disjunction operator  $\lor(OR)$
 	- Exclusive or operator  $\oplus(XOR)$
 	- Conditional operator  $\to(IF-THEN)$ 一般来讲是$p\to q 指If\ p，then\ q或是p\ implies\ q，但是p\ only\ if\ q也是这种表达，请注意哦$
-	- Biconditional operator  $\leftrightarrow(IF AND ONLY IF)$
+	- Biconditional operator  $\leftrightarrow(IF\ AND\ ONLY\ IF)$
 
 **Precedence:**
 $\neg$ >$\land$=$\lor$>$\to$=$\leftrightarrow$
@@ -38,10 +38,14 @@ $\neg$ >$\land$=$\lor$>$\to$=$\leftrightarrow$
 - **Contingency:** compound proposition that is neither a tautology nor a contradiction.
 
 此处仅列出较为难记忆的定理：
+
 **Absorption laws:**
+
 - $p\lor (p\land q)\equiv p$
 - $p\land (p\lor q)\equiv p$
+
 **Logical equivalence involving biconditional statements:**
+
 - $p\leftrightarrow q\equiv (p\land q)\lor(\neg p\land \neg q)$
 - $\neg(p\leftrightarrow q)\equiv p\leftrightarrow \neg q$
 
@@ -51,6 +55,7 @@ $\neg$ >$\land$=$\lor$>$\to$=$\leftrightarrow$
 A predicate (propositional function) is a statement that contains variables. Once the values of the variables are specified, the function has a truth value.
 
 Examples:
+
 - `P(X)="x>3"`
 - `Q(x,y)="x is the best player in the team y"`
 - `R(x,y,z)="x+y=z"`
@@ -112,8 +117,9 @@ If we know P is false then  $P\to Q$ is vacuously true.
 ### Trivial Proof
 If we know Q is true, then $P\to Q$ is true
 
-### Proof  p by Contradiction
+### Proof p by Contradiction
 步骤：
+
 - 假设p是False
 - 推导出一对矛盾的结论
 - 说明p是True
@@ -129,19 +135,25 @@ If we know Q is true, then $P\to Q$ is true
 
 ## Appendix : NormalForms
 
-**[Definition]** A set of logical operators is called ==functionally complete== if every compound proposition is logically equivalent to a compound proposition involving only this set of logical operators. 即可以用这组逻辑运算表示所有的逻辑运算,如 $\neg \ and\ \land(\lor)$
+**[Definition](#)** A set of logical operators is called ==functionally complete== if every compound proposition is logically equivalent to a compound proposition involving only this set of logical operators. 即可以用这组逻辑运算表示所有的逻辑运算,如 $\neg \ and\ \land(\lor)$
 
-**[Definition]** ==Disjunctive clauses== are disjunctions with one or more literals ($p\ or\ \neg p$) as disjuncts.
+**[Definition](#)** ==Disjunctive clauses== are disjunctions with one or more literals ($p\ or\ \neg p$) as disjuncts.
 > **Example**
+> 
 > $q\lor r$ Disjunctive clause
+> 
 > $\neg q\land p$ Conjunctive clause
+> 
 > $p\land q\lor r$ Not a clause
 
 
-**[Definition]** A conjunction with one or more disjunctive clauses as its conjuncts is said to be in ==conjunctive normal form==. (Conjunction 是中间都是$\land$)
+**[Definition](#)** A conjunction with one or more disjunctive clauses as its conjuncts is said to be in ==conjunctive normal form==. (Conjunction 是中间都是$\land$)
 > **Example**
+> 
 > $p\land (q\lor r)$ √
+> 
 > $\neg q\land p$ √
+> 
 > $p\land ((p\land q)\lor r)$ ×
 
 
@@ -149,11 +161,16 @@ If we know Q is true, then $P\to Q$ is true
 $$
 (p\lor q\lor r)\land(p\lor q\lor \neg r)\land(\neg p\lor \neg q\lor r)
 $$
+
+
 另一种表达方式是Full Conjunctive Normal Form是a conjunction of ==maxterms==
 
-**[Definition]** 简单来讲，就是将所有Quantifiers放到前面的形式
+**[Definition](#)** Prenex Normal Form 简单来讲，就是将所有Quantifiers放到前面的形式
 > **Example**
+> 
 > $\forall xP(x)\ \lor \ \forall Q(x)$  不是
+> 
 > $\forall x\forall y \ \neg(P(x)\lor Q(x))$  是
+> 
 > $\neg \forall xR(x)$ 不是
 
