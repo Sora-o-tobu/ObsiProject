@@ -11,13 +11,17 @@ Let S be a set. If there are exactly n distinct elements in S where n is a nonne
 Power set of S is the set of all subsets of the set S , 用 P(S) 表示
 $P(S)=\{x|x\subseteq S\}$
 Note:
+
 - $|S|=n\ implies\ |P(S)|=2^n$
 - $S\ is\ finite\ and\ so\ is\ P(S)$
 
 > [!NOTE] Extreme example
 > (1)$S=\{\emptyset\}$
+> 
 >    $P(S)=\{\emptyset ,\{\emptyset\}\}\ \ \ \ |P(S)|=2$ 
+>    
 > (2)$S=\{\emptyset ,\{\emptyset\}\}$ 
+> 
 > $P(S)=\{\emptyset , \{\emptyset \} , \{\{\emptyset\}\} , \{\emptyset ,\{\emptyset\}\}\}\ \ \ \ |P(S)|=4$
 
 例题：
@@ -142,6 +146,7 @@ A ==sequence== is a function from a subset of the set of integers (usually eithe
 
 Example:
 Prove that |(a,b)| = |(0,1)| in R
+
 $$
 \begin{gather}
 \frac{x-a}{b-a}=\frac{y-0}{1-0}\newline
@@ -149,12 +154,14 @@ Let\ f\ be\ function\ from\ A\ to\ B\ that\ y=f(x)=\frac{x-a}{b-a}\\
 Then\ y\ is\ a\ bijection\ from\ (a,b)\ to\ (0,1)
 \end{gather}
 $$
+
 **[Definition]** A set that is either finite or has the same cardinality as the set of positive integers called ==countable==.
 	When an infinite set S is countable, we denote the cardinality of S by $\aleph _0$ ( aleph null ).
 	If $|A|=|Z^+|$ , the set A is countable infinite.
 
 [Example:]
 	Show the set of positive rational numbers $|Q^+|=|Z^+|$
+
 $$
 \begin{gather}
 \forall x \in Q^{+},x=\frac{p}{q},\ p,q\in Z^+
@@ -163,12 +170,14 @@ $$
 \end{cases}\Rightarrow |Q^+|=|Z^+|
 \end{gather}
 $$
+
 所以，有理数集Q是可数的。
 
 **[Theorem]** The union of a countable number of countable sets is countable.（可数个可数集的合集是可数的）
 
 [Example:]
 	Prove that the set of real number between 0 and 1 is uncoutable.
+
 $$
 \begin{gather}
 A=\{x|x\in (0,1)\land x\in R\}\\
@@ -181,13 +190,16 @@ B=\{\frac{1}{n+1}|n\in Z^+\}\\
 \end{gather}
 $$
 
+
 ![[补充2.png]]
+
 $$
 \begin{cases} |Z^+|\le|A|\\|Z^+|\ne |A|
 \end{cases}\Rightarrow |Z^+|<|A|
 $$
 
-### **[有趣的结论（其实是重要的结论）]** 有理数集是可数的，但是实数集不可数
+
+### **[有趣的结论（其实是重要的结论）](#)** 有理数集是可数的，但是实数集不可数
 
 
 [Example:]

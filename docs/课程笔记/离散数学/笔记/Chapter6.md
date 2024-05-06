@@ -65,6 +65,7 @@ $$
 P(n,r)=n(n-1)(n-2)...(n-r+1)=\frac{n!}{(n-r)!}
 $$
 
+
 In particular , $P(n,n)=n!$ $P(n,0)=1$
 用函数来表示就是:
 $$\begin{gather}

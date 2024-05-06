@@ -161,3 +161,25 @@ The relation R on a set A is ==transitive== if and only if $R^n\subseteq R,for \
 	![[relation恒等式.png]]
 
 
+
+## 9.4 Closures of Relations
+
+- Reflexive Closure
+- Symmetric Closure
+- Transitive Closure
+
+[Definition](#) ==The closure of relaitons R with respect to property P== is the relation S with respect to property P containing R such that S is a subset of every relation with property P containing R.
+
+关系R关于性质P的闭环，就是一个具有性质P且包含R的关系S。
+
+### Reflexive Closure
+
+[Theorem](#) 
+
+Let R be a relation on A . The ==reflexive closure== of R , denoted by *r(R)* , is  $R\cup I_A\ \ I_A=\{(x,x)|x\in A\}$
+
+!!! info "证明需要证明Closure的三个性质"
+	1. 包含R  2. 是Reflexive的关系 3. 是包含R的最小Reflexive关系
+	![[ReflexiveClosure证明.png]]
+
+

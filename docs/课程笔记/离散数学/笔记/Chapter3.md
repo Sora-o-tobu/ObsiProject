@@ -1,7 +1,9 @@
 # CH 3 : Algorithms
 ## 3.1 Algorithms
+
 **[Definition]** An algorithm is a finite set of precise instructions for performing a computation or for solving a problem.
 ### Some common properties of algorithms 算法的性质
+
 - **Input:** An algorithm has input values from a specified set.
 - **Output:** From each set of input values, an algorithm produces output values from a specified set.
 - **Definiteness:** The steps of an algorithm must be defined ==precisely== 准确性
