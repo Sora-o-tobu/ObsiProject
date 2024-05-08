@@ -88,4 +88,73 @@ Latch 的条件
 		![[正边缘触发器器件图示.png]]
 
 
-![[标准符号.png]]
+!!! tip
+	![[标准符号.png]]
+
+!!! note "Simpler Implement of Edge-Triggered D Flip-Flop"
+	![[Simple正边沿触发器.png]]
+
+##### Flip-Flop Timing Parameters
+
+![[触发器时间因素.png]]
+
+
+- 为了保证数据能够成功存储在触发器中， 在边沿触发前需要有一小段Setup time ($t_s$)
+- 为了保证数据能够在触发后稳定保持并由时钟信号取样，在边沿触发后需要由一小段Hold time ($t_h$)
+- 二者合起来称为Flip-Flop的Setup hold window，这段时间需要保证数据是稳定的
+
+!!! info "主从触发器和边沿触发器对比"
+	对比发现，主从触发器要求C为1时输入全程保持稳定，而边沿触发器只要在边沿前一小段时间保持稳定即可
+	
+	![[触发器时间对比.png]]
+
+
+### Sequential Circuit Analysis
+
+主要包括：
+
+- ==Generating the functionality== by using state table , state diagram , input/output Boolean equations .
+- ==Determining the timing constraints== that a sequential circuit must ba satisfied in order to prevent metastability .
+
+#### 分析功能
+
+- **Step 1** 列出 `input equations` , `next state equations` and `output equations`
+![[列出状态关系1.png]]
+
+- **Step 2** 根据等式列出 `State Table`
+
+=== "淳朴无奇的列表(不推荐)"
+	![[状态表1.png]]
+=== "采用格雷码的二维表，便于优化(推荐)"
+	![[状态表2.png]]
+
+- **Step 3** 画出 `State Diagram`
+
+![[StateDiagram.png]]
+
+如果存在两个状态，当他们对于相同的输入，输出均相同且转移到相同的状态，则这两个状态是 ==equivalent== 的，需要我们手动优化。
+
+#### 分析时间
+
+The ultimate goal of ==timing analysis== is to determine the ==maximum clock frequency== of the circuit.
+
+在分析中，常见的Timing Constraints Components 有：
+
+- $t_p$ - clock period - 时钟周期的间隔
+- $t_{pd,FF}$ - flipflop propagation delay - 从 `clock edge` 到 `flip-flop output` 稳定下来所需要的时间
+- $t_{pd,COMB}$ - combinational logic delay - 从触发器输出到返回输入路径上所有组合逻辑的传播延迟
+- $t_s \& t_h$ - flipflop setup time & hold time
+- $t_{slack}$ - extra time in the period - 松弛时间，一般不加
+
+!!! note "各种时间示意图"
+	![[各种时间示意图.png]]
+
+- For every Flip-flop $t_p\ge t_{slack} +(t_{pd,FF} +t_{pd,COMB}+ t_s)$
+- For whole circuit , $t_p' \ge max\{t_p\}$
+
+##### 必须知道的话术
+
+![[必须知道的话术1.png]]![[必须知道的话术2.png]]
+![[必须知道的话术3.png]]![[必须知道的话术4.png]]
+![[必须知道的话术5.png]]
+

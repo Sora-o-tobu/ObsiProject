@@ -152,7 +152,7 @@ $$
 
 
 !!! abstract "证明"
-	假设第 j+1 个元素被选上，但是j+1后面的所有元素都没被悬赏，则共有$C(j,r)$种选择，同理，j可从r选取到n，Q.E.D
+	假设第 j+1 个元素被选上，但是j+1后面的所有元素都没被选上，则共有$C(j,r)$种选择，同理，j可从r选取到n，Q.E.D
 
 
 
@@ -161,7 +161,7 @@ $$
 ### r-permutation with repetition 元素可重复的排列
 
 [Theorem 1](#) The number of r-permutations of a set of n objects with repetition allowed is $n^r$.
-将r个元素可重复的排列进n个对象中，共有$n^r$种排列方法
+将n个对象重复的排列进r个位置中，共有$n^r$种排列方法
 
 !!! note
 	如果每个元素可重复多少次不一样，那就另当别论，比如:
@@ -170,7 +170,7 @@ $$
 
 
 [Theorem 2](#) The number of r- Circle permutations of a set of n objects is P(n,r)/r .
-r个元素排入长为n的圈中，共有P(n,r)/r种排法。
+n个元素排入长为r的圈中，共有P(n,r)/r种排法。
 
 !!! example
 	将七个同学围成一圈，共有$\frac{{7!}}{7}$种排列方法
