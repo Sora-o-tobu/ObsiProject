@@ -231,10 +231,114 @@ The ==connectivity relation== denoted by $R^*$ , is the set of ordered pairs (a,
 [Corollary](#)
 If $|A|=n$ , then $t(R)=R^* =R\cup R^2\cup ...\cup R^n$
 
+## 9.5 Equivalence Relations
+
+[Definition](#)
+A relation R on a set A is ==an equivalence relation== if R is :
+
+- reflexive
+- symmetric
+- transitive
+
+!!! example
+	
+	(1) $\{(a,b)|a+b=2m,a,b,m\in N\}$
+	
+	(2) The similarity relation between two triangles
+	
+	(3) The equvalent relation between two fomulas in proposition logic
+
+If R is an equvalence relations and (a,b) in R , then we note that `a~b` ,which means a and b is equvalent .
+
+[Definition](#) 
+The set of all elements that are related to an element x of A is called ==the equivalent class of x== (等价类)
+
+**Notation** : $[x]_R\ \ [x]$
+
+!!! example 
+	![[等价类例子1.png]]
+	
+	![[等价类例子1p2.png]]
 
 
+[Theorem](#)
+对于等价关系 R ，以下statements是等价的：
 
+1. $a R b$
+2. $[a]=[b]$
+3. $[a]\cap [b]\ne \emptyset$
 
+[Definition](#)
+A ==partition== of set A is a collection of *disjoint nonempty*  subsets of A that *have A as their union*
 
+- $A_i \ne \emptyset \ \ for\ i\in I(I\ is\ an\ index\ set)$
+- $A_i \cap A_j=\emptyset,when\ i\ne j$
+- $\bigcup _{i\in I} A_i =A$
 
+**Notation**: $pr(A)=\{A_i|i\in I\}$
 
+==集合的划分和等价类一一对应==
+
+!!! example
+	![[集合的划分和等价类一一对应.png]]
+
+**如何计算等价关系的最大个数？**
+
+- n元集合的等价类的个数 $B_{n+1} =\sum _{k=0}^n C_n ^k B_k,where\ B_0= B_1=1,B_2=2$
+- 可以利用类帕斯卡三角形手算
+	- 将1放在第一个位置
+	- 每行三角形中最左边的值通过复制上一行中最右边的值。每行中的其余位置是左侧和左上方位置的两个值之和
+```
+1  -B1
+1    2  -B2
+2    3    5  -B3
+5    7    10   15  -B4
+15   20   27   37   52  -B5
+52   67   87   114  151  203  -B6
+```
+
+!!! example
+	![[等价关系计数.png]]
+
+**Properties**
+
+$R_1$和$R_2$是集合A上两个等价关系，则：
+
+- $R_1\cap R_2$ is equvalence relation on A
+- $R_1\cup R_2$ is reflexive and symmetric relation on A
+- $\overline{R_1\cup R_2}$ is equvalence relation on A
+
+## 9.6 Partial Ordering
+
+[Definition](#)
+A relation R on a set S is ==partial ordering or partial order== if R is :
+
+- reflexive
+- antisymmetric
+- transitive
+
+**Notation**: (S,R) --- partial ordered set or ==poset== , $a\preceq b$  --- $(a,b)\in R$
+
+!!! info
+	$\preceq$ precede or equal to  先于或等于 用latex打即 \\preceq 
+
+!!! example
+	![[poset例子.png]]
+
+[Definition](#) 
+
+- **Comparable:**
+	- $a,b\ of\ (S,\preceq),a\preceq b\ or\ b\preceq a$
+- **Incomparable:**
+	- $a,b\ of\ (S,\preceq),neither\ a\preceq b\ nor\ b\preceq a$
+
+如果Set S中任意两个元素都*Comparable*，那么称S是==totally ordered== or  ==linearly ordered set== .且 $(S,\preceq)$ 被称为==chain==
+
+!!! example
+	![[chain例子.png]]
+
+### Lexicographic Order 字典序
+
+![[字典序？.png]]
+
+A lexicographic ordering on the Cartesian product of two posets is a partial ordering.
