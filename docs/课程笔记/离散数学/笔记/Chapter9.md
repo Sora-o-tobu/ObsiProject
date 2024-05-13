@@ -339,6 +339,105 @@ A relation R on a set S is ==partial ordering or partial order== if R is :
 
 ### Lexicographic Order 字典序
 
+!!! info "导演剪辑版"
+	将元素看作字符串里面的单个字符，比大小比的是\\preceq
+
 ![[字典序？.png]]
 
+[Theorem](#)
 A lexicographic ordering on the Cartesian product of two posets is a partial ordering.
+
+两个posets的叉乘的字典序还是posets
+
+!!! example "字典序例子"
+	![[字典序例子（并非posets.png]]
+
+!!! tip "也可以延申为多个posets的Cartesian Products"
+	![[叉乘可以衍生为多个.png]]
+
+
+### Hasse Diagrams 哈斯图
+
+A method used to represent a partial ordering
+
+??? success "How to obtain a Hasse Diagrams"
+	- $A\ =\ \{1,2,3,4,5,6,7,8,9\},R\ =\ \{(a,b)|\ a|b,a,b\in A\}$
+	
+	1.用有向图表示所有关系
+	![[用有向图表示所有关系.png]]
+	
+	2.删除自环
+	![[删除自环.png]]
+	
+	3.删除可以通过传递性得到的边
+	![[删除可以通过传递性得到的边.png]]
+	
+	4.转为无向图
+	![[转为无向图.png]]
+
+!!! example "More Example"
+	![[哈斯图更多例子.png]]
+
+
+### Chain and Antichain
+
+不想写了，直接把学长的笔记截图过来
+
+![[chainantichain.png]]
+
+### Maximal and Minimal Elements 极大值和极小值
+
+[Definition](#)
+Let $(A,\preceq)$ be a poset . $a\in A$ , then a is a ==maximal element== if there does not exist an element b in A such that $a\prec b$ .
+
+![[极大值极小值.png]]
+
+!!! info
+	极大值和极小值就是Hasse Diagrams种最上面一层和最下面一层的元素
+
+### Greatest and Least Element 最大值和最小值
+
+[Definition](#)
+Let $(A,\preceq)$ be a poset . $a\in A$ , then a is a ==greatest element== if $b\preceq a$ for every b in A .
+
+![[最大值最小值.png]]
+
+!!! info
+	如果最大值和最小值存在，则是唯一的。注意，最大值要求所有其它元素都preceq它，如上图（2）中 6 和 9 就不 preceq 8
+
+### Upper and Lower Bounds 上下界
+
+![[上下界.png]]
+
+在此基础上还有==Least upper bound==(记为lub(A))和==Greatest lower bound==(记为glb(A))，字面意思指上下界中最大或最小的元素
+
+
+### Well-ordered Sets 良序集
+
+[Definition](#)
+A poset(A,R) is ==well-ordered set== if every nonempty subset of A has a least element .
+
+**A well-ordered set is a totally ordered set** 良序则全序
+
+### Lattices 格
+
+[Definition](#)
+一个poset被称为lattices如果每对元素都有lub和glb
+
+!!! info
+	![[Lattices相关知识.png]]
+
+
+
+### Topological Sorting
+
+- 从一个偏序构造全序
+- 每次找一个极小元素，然后删除该元素和与其相关联的关系后，继续寻找极小元素，直到形成全序
+
+（还没搞懂，以后再来看）
+
+
+
+
+
+
