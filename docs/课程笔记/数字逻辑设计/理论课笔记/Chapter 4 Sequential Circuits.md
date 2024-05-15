@@ -125,7 +125,7 @@ Latch 的条件
 
 === "淳朴无奇的列表(不推荐)"
 	![[状态表1.png]]
-=== "采用格雷码的二维表，便于优化(推荐)"
+=== "采用格雷码的**二维表**，便于优化(推荐)"
 	![[状态表2.png]]
 
 - **Step 3** 画出 `State Diagram`
@@ -158,3 +158,98 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 ![[必须知道的话术3.png]]![[必须知道的话术4.png]]
 ![[必须知道的话术5.png]]
 
+## Part 2 Sequential Circuit Design
+
+设计一般步骤：
+
+- **Specification** - 确定输入/输出，并建立model描述系统的行为
+- **Formulation** - 得到状态图(Mealy Diagram更好)，注意电路的初始状态，并由此得到状态表
+- **State Minimization** - 根据表进行优化，可以消去重复的状态
+- **State Assignment** - 给每个状态分配一个编码(`Counting Order`,`Grey Code`,`One-hot Code`)
+- **Equation** - 利用卡诺图等方式得到并优化输入输出方程
+
+??? abstract "可用的编码"
+	![[三种不同的编码.png]]
+
+### 设计实例 1 Sequence Recognizer
+
+检测序列中的1101串
+
+![[检测序列中的1101串.png]]
+
+- 由此得到Mealy Model：
+![[SequenceRecognizerMealyModel.png]]
+
+- 再根据图得到State Table
+
+| Present State | Next State<br>x=0 | Next State<br>x=1 | Output<br>x=0 | Output<br>x=1 |
+| ------------- | ----------------- | ----------------- | ------------- | ------------- |
+| A             | A                 | B                 | 0             | 0             |
+| B             | A                 | C                 | 0             | 0             |
+| C             | D                 | C                 | 0             | 0             |
+| D             | A                 | B                 | 0             | 1             |
+
+- 编码
+
+???+ info
+	=== "Counting Order Assignment"
+		![[CountingOrderAssignment.png]]
+	
+	=== "Grey Code Assignment"
+		![[GreyCodeAssignment.png]]
+	
+	=== "One-hot Assignment"
+		![[OnehotAssignment.png]]
+
+- 通常使用D触发器来作为时序元件，其中D触发器的input通常为Next State的值，即$D(t)=Y(t+1)$
+
+
+!!! info ""
+	=== "Counting Order Assignment"
+		![[CountingOrderAssignment优化.png]]
+	
+	=== "Grey Code Assignment"
+		![[GreyCodeAssignment优化.png]]
+	
+	=== "One-hot Assignment"
+		![[One-hotAssignment优化.png]]
+		可以看出`One-hot`编码的优化非常简单，我比较喜欢喵
+
+
+- 以格雷码为例，最终得到如图电路
+![[SequenceRcognizer最终电路.png]]
+
+
+### 设计实例 2 Modulo 3 accumulater for 2-bit operands
+
+余三累加器
+
+- **Specification**
+	- **Input**: $(X_1, X_0)$
+	- Stored SUM: $(Y_1, Y_0)$
+	- **Ouput**: $(Z_1 ,Z_0) =(X_1, X_0) +(Y_1, Y_0)$ (==Mealy Model)== or $(Z_1 ,Z_0) =(Y_1, Y_0)$ (==Moore Model==)
+
+
+- **Formulation**
+
+!!! danger ""
+	=== "Mealy Model"
+		![[余3累加器状态图.png]]
+	
+	=== "Moore Model"
+		![[余3累加器MooreModel.png]]
+
+本例采用Moore Model进行演示
+
+!!! info "State Table under Moore Model"
+	![[余3累加器table.png]]
+
+- **Find equation and optimize**
+![[余3累加器卡诺图.png]]
+
+- **最终电路**
+![[余3累加器最终电路.png]]
+
+### State Machine 状态机
+
+正体不明
