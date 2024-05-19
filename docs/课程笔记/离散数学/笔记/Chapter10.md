@@ -50,6 +50,9 @@ A simply graph is called regular if every vertex of this graph has the same degr
 
 !!! note
 	A regular graph is called n-regular if every vertex in this graph has degree n.
+	
+	如 $K_n$ 就是 (n-1)-Regular
+
 
 
 

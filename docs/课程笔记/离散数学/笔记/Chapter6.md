@@ -25,7 +25,7 @@ $$
 	![[Treediagramexample1.png]]
 
 
-## 6.2 The Pigeonhole Principle
+## 6.2 The Pigeonhole Principle 鸽笼原理
 
 **[Theorem](#)** 
 The pigeonhole principle states that if there are more pigeons than pigeonholes, then there must be at least one pigeonhole with at least two pigeons in it. 
@@ -41,6 +41,12 @@ The pigeonhole principle states that if there are more pigeons than pigeonholes,
 	
 	$$\begin{gather}Let\ n+1\ positive\ integers\ be\ a_1,a_2,...,a_{n+1},(1\le a_i\le 2n)\\ Write\ a_i=2^{k_i}q_i,where\ k_i\ is\ a nonnegative\ integer\ and\ q_i\ is an\ odd\ integer\ less\ than\ 2n\\ Since\ there\ are\ only\ n\ odd\ number\ less\ than\ 2n,\\ by\ the\ pigeonhole\ principle\ it\ follows\ that\ there\ exist\ integer\ i\ and\ j\ that\ q_i=q_j\\ then\ a_i=2^{k_i}q_i\ ,\ a_j=2^{k_j}q_j\\ Then\ we\ can\ conclude\ it \end{gather}$$
 
+!!! danger "另一个类似的问题，而我期中考没做出来"
+	n+1个不超过2n的正整数必定存在两个数互质
+	
+	**证明**
+	
+	将2n个数两两分为一组，为 {1，2}，{3，4}，{5，6}...{2n-1,2n}，由于要选择n+1个数字，则必定有两个数在同一组，且这两个数互质，Q.E.D
 
 
 ??? example "Example 2"
