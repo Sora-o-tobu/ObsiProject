@@ -39,6 +39,17 @@
 !!! example 
 	![[二部图例子1.png]]
 
+[Theorem](#)
+A simple graph is bipartite if and only if it is possible to assign one of two different colors to each vertex of the graph so that no two adjacent vertices are assigned the same color.
+
+一个Simple Graph为二部图当且仅当可以分配两种颜色给所有vertex使得每一个相邻的vertex颜色都不同
+
+#### Regular Graph
+
+A simply graph is called regular if every vertex of this graph has the same degree.
+
+!!! note
+	A regular graph is called n-regular if every vertex in this graph has degree n.
 
 
 
