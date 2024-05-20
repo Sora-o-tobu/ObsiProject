@@ -1,3 +1,47 @@
 body {
     font-family: "LXGW WenKai", sans-serif;
   }
+
+.md-typeset h3 {
+    color:rgb(42,164,187)
+}
+
+.md-typeset h2 {
+    color:rgb(76,177,72)
+}
+
+.md-typeset h1 {
+    color:rgb(150,194,46)
+}
+
+.md-typeset h4 {
+    color:rgb(117,162,230)
+}
+
+.md-typeset h5 {
+  color:rgb(178,150,243)
+}
+
+h2::before, h3::before, h4::before, h5::before {
+  content: "# ";
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5 {
+    font-weight: 600;
+}
+
+.md-typeset h5 {
+  font-size: large; /*不加这个h5太过于小了*/
+}
+
+::selection {
+  background:rgba(244,144,177,0.6);
+}
+
+.md-header__topic {
+  font-weight: bold;
+}

@@ -63,15 +63,15 @@ $a_n$ is a function of previous k terms of the sequence
         - (Case 2) $s$为特征根且重复了$m$次，则特解为$n^m (p_tn^t +p_{t-1}n^{t-1} +...+p_1n+ p_0)s^n$
     - 求解的时候注意特解的形式：取到哪个幂次
 
-> 例题1
-> ![[含常量例题1.png]]
+!!! example "例题1"
+	![[含常量例题1.png]]
 
 
 --- 
 
+!!! example "例题2"
+	![[含常量例题2.png]]
 
-> 例题2
-> ![[含常量例题2.png]]
 > 注意，可以将 $n$ 看作 $n*1^n$ ，则$s$取1，$m$取1，$n$转换成一次的一般形式$p_1n^2 +p_o$
 
 

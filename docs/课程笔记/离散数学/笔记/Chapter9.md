@@ -332,7 +332,7 @@ A relation R on a set S is ==partial ordering or partial order== if R is :
 - **Incomparable:**
 	- $a,b\ of\ (S,\preceq),neither\ a\preceq b\ nor\ b\preceq a$
 
-如果Set S中任意两个元素都*Comparable*，那么称S是==totally ordered== or  ==linearly ordered set== .且 $(S,\preceq)$ 被称为==chain==
+如果Set S中任意两个元素都*Comparable*，那么称S是==totally ordered== (全序) or  ==linearly ordered set== .且 $(S,\preceq)$ 被称为==chain==
 
 !!! example
 	![[chain例子.png]]
@@ -352,7 +352,7 @@ A lexicographic ordering on the Cartesian product of two posets is a partial ord
 !!! example "字典序例子"
 	![[字典序例子（并非posets.png]]
 
-!!! tip "也可以延申为多个posets的Cartesian Products"
+!!! tip "也可以延申为多个posets的笛卡尔积(Cartesian Products)"
 	![[叉乘可以衍生为多个.png]]
 
 
@@ -435,9 +435,3 @@ A poset(A,R) is ==well-ordered set== if every nonempty subset of A has a least e
 - 每次找一个极小元素，然后删除该元素和与其相关联的关系后，继续寻找极小元素，直到形成全序
 
 （还没搞懂，以后再来看）
-
-
-
-
-
-
