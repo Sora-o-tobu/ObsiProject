@@ -21,7 +21,7 @@ theme:
     # Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: pink
+      primary: custom
       accent: indigo
       toggle:
         icon: material/toggle-switch-off-outline
@@ -30,7 +30,7 @@ theme:
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: pink
+      primary: custom
       accent: blue
       toggle:
         icon: material/toggle-switch
