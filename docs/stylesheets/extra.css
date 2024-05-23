@@ -15,11 +15,13 @@ body {
 }
 
 .md-typeset h4 {
-    color:rgb(117,162,230)
+    color:rgb(117,162,230);
+    font-size: large;
 }
 
 .md-typeset h5 {
-  color:rgb(178,150,243)
+  color:rgb(178,150,243);
+  font-size: large;
 }
 
 h2::before, h3::before, h4::before, h5::before {
@@ -34,9 +36,6 @@ h2::before, h3::before, h4::before, h5::before {
     font-weight: 600;
 }
 
-.md-typeset h5 {
-  font-size: large; /*不加这个h5太过于小了*/
-}
 
 ::selection {
   background:rgba(244,144,177,0.6);
@@ -53,8 +52,12 @@ h2::before, h3::before, h4::before, h5::before {
 }
 
 [data-md-color-scheme=default] {
-    --md-default-bg-color: rgba(252,228,236,0.2); /*淡粉色背景，可爱好耶*/
-    --md-default-bg-color--light: hsla(0, 0%, 100%, 0.9);
+    --md-default-bg-color: rgba(254,242,246,1); /*淡粉色背景，可爱好耶*/
+    --md-typeset-table-color: rgba(0, 0, 0, .12);
+    --md-footer-bg-color: rgba(0, 0, 0, .87);
+    --md-shadow-z1: 1px 1px 3px #fff5ee, 1px 1px 5px #e1d0c5;
+    --md-shadow-z2: 1px 1px 3px #fff5ee, 2px 2px 7px #cebeb3;
+    --md-shadow-z3: 1px 1px 3px #fff5ee, 2px 2px 9px #cebeb3;
 }
 
 

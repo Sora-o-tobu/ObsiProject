@@ -253,3 +253,54 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 ### State Machine 状态机
 
 正体不明
+
+### 其它触发器(也有可能考的哦)
+
+#### J-K Flip-flop
+
+- 与SR-FlipFlop功能基本相同，但是 ==允许 J=K=1== ，并且J、K均为1时输出反转
+
+| J   | K   | Q(t+1) | Operation  |
+| --- | --- | ------ | ---------- |
+| 0   | 0   | Q(t)   | No change  |
+| 0   | 1   | 0      | Reset      |
+| 1   | 0   | 1      | Set        |
+| 1   | 1   | ~Q(t)  | Complement |
+
+也可以转换成 excitation table (==时序电路设计时要用到==)
+
+| Q(t) | Q(t+1) | J   | K   |
+| ---- | ------ | --- | --- |
+| 0    | 0      | 0   | X   |
+| 0    | 1      | 1   | X   |
+| 1    | 0      | X   | 1   |
+| 1    | 1      | X   | 0   |
+
+!!! info "构造图及其符号"
+	![[JK触发器构造.png]]
+
+#### T Flip-flop (Toggle)
+
+- Has a single input `T`
+	- For `T = 0` ,no change to state
+	- For `T = 1` ,changes to opposite state
+- 相当于JK触发器 J=K=T的情况
+
+| T   | Q(t) | Q(t+1) | Operation  |
+| --- | ---- | ------ | ---------- |
+| 0   | 0    | 0      | No change  |
+| 0   | 1    | 1      | No change  |
+| 1   | 0    | 1      | Complement |
+| 1   | 1    | 0      | Complement |
+
+!!! info "构造图及其符号"
+	![[T触发器的构造.png]]
+
+由表可以得到：
+
+- $Q(t+1)=T\oplus Q(t)$
+- $T=Q(t)\oplus Q(t+1)$
+
+!!! extract "与正边沿D触发器比较"
+	![[T与D比较.png]]
+

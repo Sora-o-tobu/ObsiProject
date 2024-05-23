@@ -47,12 +47,53 @@ A simple graph is bipartite if and only if it is possible to assign one of two 
 #### Regular Graph
 
 A simply graph is called regular if every vertex of this graph has the same degree.
+所有vertex的degree相同
 
 !!! note
 	A regular graph is called n-regular if every vertex in this graph has degree n.
 	
 	如 $K_n$ 就是 (n-1)-Regular
 
+## 10.3 Representing Graphs and Graph Isomorphism
+
+=== "Adjacency List for a directed graph"
+	![[AdjacencyListfordirectedgraph.png]]
+=== "Ajdacency Matrix"
+	![[AdjacencyMatrixExample.png]]
+	无向图的邻接矩阵是对称的
+=== "Incidence Matrix"
+	以邻接边表示图
+	![[IncidenceMatrixExample.png]]
+
+### Isomorphism of Graphs 图的同构
+
+- **Definition**：对于两个Simple Graph `G_1` 和 `G_2`，若对于 `G_1` 的任意相邻的Vertex，a和b，存在一个Bijection Function，使得 f(a)和f(b)都在 `G_2` 中且相邻，则称这个 function 是 Isomorphism
+
+- Invariant in isomorphic graphs ： ==(同构不变量)==
+	- Vertex的个数
+	- Edge的个数
+	- 对应Vertex的Degree
+	- 如果一个图是Bipartite的，那么另一个肯定也是
+	- 如果一个图是Complete的，那么另一个肯定也是 
+	- 如果一个图是一个Special Graph，如Wheel，那么另一个也是
+
+## 10.4 Connectivity 连通性
+
+- **Simple path**：不二次经过同一个edge的path
+- **连通**：任意一对点之间都有 simple path 相连
+- **Cut vertex (割点)**: 从连通图里删除割点，就产生不连通的子图
+- **Cut edge/bridge (割边，桥)**: 从连通图里删除割边，就产生不连通的子图
+- **Connected Component**：最大连通子图
+![[割点割边例子.png]]
 
 
+
+**Counting Path**：The number of different paths of length `r` from $v_i$ to $v_j$ 等于 $A^r[i,j]$
+
+!!! example
+	![[计算path个数例题1.png]]
+
+- 对于无向图，还分为强连通和弱连通
+	- **Strongly connected**：严格按方向连通
+	- **Weakly connected**：将有向图看作无向图看待
 
