@@ -38,8 +38,8 @@ A relation of set A is a relation from A to A.
 #### Digraph
 ![[有向图表示Relation.png]]
 
-[例子](#)
-![[有向图表示Relation例子.png]]
+!!! example
+	![[有向图表示Relation例子.png]]
 
 
 ### Special Properties of Binary Relations
@@ -51,6 +51,7 @@ A relation of set A is a relation from A to A.
 - **Transitive** 传递性
 
 [Definition](#) A relation R on a set A is ==reflexive== if
+
 $$
 \forall x(x\in A\to (x,x)\in R)
 $$
@@ -63,9 +64,11 @@ $$
 
 --- 
 [Definition](#) A relation R on a set A is ==irreflexive== if
+
 $$
 \forall x(x\in A \to (x,x)\notin R)
 $$
+
 对于任意A中元素，(x,x)都不在R中
 
 因此，若用矩阵表示，矩阵正对角线应当全部为0；
@@ -79,6 +82,7 @@ $$
 
 --- 
 [Definition](#) A relation R on a set A is ==symmetric== if
+
 $$
 \forall x\forall y((x,y)\in R\to(y,x)\in R)
 $$
@@ -89,13 +93,15 @@ $$
 
 --- 
 [Definition](#) A relation R on a set A is ==antisymmetric== if
+
 $$
 \forall x\forall y((x,y)\in R \land (y,x)\in R \to x=y)
 $$
 
-注意，只是关于对角线不存在两个都为1的情况，(0,0)是允许的
+注意，只是关于对角线不存在两个都为1的情况，(0,1)是允许的
 
 因此，也可以这样表示关系:
+
 $$
 \forall x\forall y((x,y)\in R\land x\ne y\to (y,x)\notin R)
 $$
@@ -106,6 +112,7 @@ $$
 
 ---
 [Definition](#) A relation R on a set A is ==transitive== if
+
 $$
 \forall x\forall y\forall z((x,y)\in R\land (y,z)\in R\to (x,z)\in R)
 $$
@@ -142,6 +149,7 @@ $$
 
 [Definition](#)
 Let R be a relation on the set A. The powers $R^n,n=1,2,3,...$  are defined recursively by
+
 $$
 R^1 =R,and\ R^{n+1}= R^n\circ R
 $$
@@ -332,7 +340,7 @@ A relation R on a set S is ==partial ordering or partial order== if R is :
 - **Incomparable:**
 	- $a,b\ of\ (S,\preceq),neither\ a\preceq b\ nor\ b\preceq a$
 
-如果Set S中任意两个元素都*Comparable*，那么称S是==totally ordered== (全序) or  ==linearly ordered set== .且 $(S,\preceq)$ 被称为==chain==
+如果Set S中任意两个元素都*Comparable*，那么称S是 ==totally ordered== (全序) or  ==linearly ordered set== .且 $(S,\preceq)$ 被称为 ==chain==
 
 !!! example
 	![[chain例子.png]]
@@ -409,7 +417,7 @@ Let $(A,\preceq)$ be a poset . $a\in A$ , then a is a ==greatest element== if $b
 
 ![[上下界.png]]
 
-在此基础上还有==Least upper bound==(记为lub(A))和==Greatest lower bound==(记为glb(A))，字面意思指上下界中最大或最小的元素
+在此基础上还有 ==Least upper bound== (记为lub(A))和 ==Greatest lower bound== (记为glb(A))，字面意思指上下界中最大或最小的元素
 
 
 ### Well-ordered Sets 良序集

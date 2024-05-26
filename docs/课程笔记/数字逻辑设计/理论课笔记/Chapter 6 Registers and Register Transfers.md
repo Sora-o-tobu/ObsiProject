@@ -9,7 +9,7 @@
 	- load = 1 : **load** the values on the data inputs
 	- load = 0 : **Store** the values in the register
 
-可行的方法之一是将Enable型号由 $Clock$ 变为 $\overline{load}+clock$ ，这样当 load = 0 时，使能信号时钟为1，使得触发器中的slave锁存器无法写入数据，达到 store 的功能。
+可行的方法之一是将Enable信号由 $Clock$ 变为 $\overline{load}+clock$ ，这样当 load = 0 时，使能信号时钟为1，使得触发器中的slave锁存器无法写入数据，达到 store 的功能。
 ![[方案Aphoto.png]]
 
 !!! warning "Clock Skew"

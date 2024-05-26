@@ -12,7 +12,7 @@
 ## 10.2 Graph Terminology  and Special Types of Graphs
 
 - 对于无向图，$\Sigma _{v\in V} deree(v)=2e$  （==自环算增加两个degree==）
-	- 因此有引理：无向图拥有奇数个degree的vertex一定有偶数
+	- 因此有引理：无向图拥有奇数个degree的vertex一定有偶数个
 - 对于有向图，$\Sigma _{v\in V} deree^+(v) = \Sigma _{v\in V} deree^-(v) =e$
 
 ### Some Special Simple Graphs
@@ -58,7 +58,7 @@ A simply graph is called regular if every vertex of this graph has the same degr
 
 === "Adjacency List for a directed graph"
 	![[AdjacencyListfordirectedgraph.png]]
-=== "Ajdacency Matrix"
+=== "Adjacency Matrix"
 	![[AdjacencyMatrixExample.png]]
 	无向图的邻接矩阵是对称的
 === "Incidence Matrix"
@@ -93,7 +93,7 @@ A simply graph is called regular if every vertex of this graph has the same degr
 !!! example
 	![[计算path个数例题1.png]]
 
-- 对于无向图，还分为强连通和弱连通
+- 对于有向图，还分为强连通和弱连通
 	- **Strongly connected**：严格按方向连通
 	- **Weakly connected**：将有向图看作无向图看待
 

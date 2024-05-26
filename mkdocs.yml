@@ -35,9 +35,9 @@ theme:
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
-    
-    extra:
-      generator: false 
+
+extra:
+  generator: false 
 
 # Extensions
 markdown_extensions:
@@ -97,6 +97,8 @@ plugins:
       categories:
         - categories
         - tags
+  #- projects
+  #- optimize
 
 extra_javascript:
   - javascripts/mathjax.js

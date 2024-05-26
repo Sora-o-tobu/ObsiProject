@@ -1,16 +1,18 @@
-占位行
+# 建站相关
+
+由于我更多需要的是一个可以供我随时随地打开的笔记，而不是一个博客性质的网站，因此我最终选择了mkdocs作为模板部署我的网站。
+
 ## 认真阅读此文档，相信你能成功
 
 [jobindjohn/obsidian-publish-mkdocs: A Template to Publish Obsidian/Foam Notes on Github Pages (uses MkDocs)](https://github.com/jobindjohn/obsidian-publish-mkdocs)
 
 
 - 其它官方文档
+	- [MkDocs](https://www.mkdocs.org/)
+	- [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
 
-[MkDocs](https://www.mkdocs.org/)
 
-[Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
-
-最好还是把这些弄好，这样子可以实现本地调试
+最好还是把这些弄好，以便可以实现本地调试
 ## 关于git一些基本操作
 
 ```git
@@ -70,25 +72,12 @@ netstat -ano|findstr 8000
 taskkill /pid THEPIDYOUFIND /F
 ```
 
-## 一些显著的缺陷
-
-Latex内联公式缺陷，似乎并不能很好地支持换行，并且会将几个相近的公式块连在一起(需要中间加个回车)以及会优先使用markdown语法
-
-章节标题错误，公式如此，请自加占位行（如本文档的最上方）
-
-Mkdocs-material不支持Obsidian的Note格式，不过它自带了其它note方式
-
-不支持嵌套无序列表，或者说第二次需要用 `*` 而不是 `-`
-
-右侧TOC只支持从二级标题开始显示，我前面导入的笔记懒得修改了，所有没有TOC
+## Tips
 
 视频插入格式:
 ```
 ![type:video](image/帅头硬.mp4)
 ```
-## TODO
-
-- 有闲暇的话，把其它图片改用webq图片格式，节省空间
 
 ## Appendix
 
