@@ -2,7 +2,7 @@
 statistics: true
 ---
 
-# 首页
+# 欢迎！
 
 
 ???+ info "本站统计"
