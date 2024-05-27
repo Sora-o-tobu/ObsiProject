@@ -59,6 +59,7 @@ A simply graph is called regular if every vertex of this graph has the same degr
 === "Adjacency List for a directed graph"
 	![[AdjacencyListfordirectedgraph.png]]
 === "Adjacency Matrix"
+	自环也是1
 	![[AdjacencyMatrixExample.png]]
 	无向图的邻接矩阵是对称的
 === "Incidence Matrix"

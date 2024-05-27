@@ -224,7 +224,7 @@ Let R be a relation on A . The ==symmetric closure== of R , denoted by $s(R)$ , 
 
 - 有向图中一段长度为n的path可以用sequence表示:$(x_0 ,x_1),( x_1, x_2),...,(x_{n-1} ,x_{n})$
 	- 也可以简写成 $x_0 ,x_1 ,x_2 ,...,x_{n-1} ,x_{n}$
-- 如果 $x_0= x_n\ (n\ge 1)$，则称这条path为==Cycle==或者==Circuit== 
+- 如果 $x_0= x_n\ (n\ge 1)$，则称这条path为 ==Cycle== 或者 ==Circuit==  
 	- $|A|=n\Rightarrow Any\ path\ of\ length\ >n\ must\ contain\ a\ cycle$
 
 [Theorem](#)
