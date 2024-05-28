@@ -18,6 +18,7 @@
 	- 每当输入的状态改变，立刻更新输出的值 变化更快
 
 
+
 #### 锁存器
 
 Latch 的条件
@@ -151,12 +152,26 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 
 - For every Flip-flop $t_p\ge t_{slack} +(t_{pd,FF} +t_{pd,COMB}+ t_s)$
 - For whole circuit , $t_p' \ge max\{t_p\}$
+- 一般分析实例中 $t_h$ 小于 $t_{pd,FF}$ 
 
-##### 必须知道的话术
+##### 分析实例
+=== "External input to Output"
+	![[必须知道的话术1.png]]
+=== "External input to Clock Edge"
+	![[必须知道的话术2.png]]
+=== "Clock Edge to output"
+	![[必须知道的话术3.png]]
+=== "Clock Edge to Clock Edge"
+	![[必须知道的话术4.png]]
+	![[必须知道的话术5.png]]
 
-![[必须知道的话术1.png]]![[必须知道的话术2.png]]
-![[必须知道的话术3.png]]![[必须知道的话术4.png]]
-![[必须知道的话术5.png]]
+---
+
+=== "题面"
+	![[题面.png]]
+=== "答案"
+	![[分析实例答案.png]]
+
 
 ## Part 2 Sequential Circuit Design
 
