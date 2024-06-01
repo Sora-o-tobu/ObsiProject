@@ -163,9 +163,76 @@ A simply graph is called regular if every vertex of this graph has the same degr
 ## 10.6 Shortest Path Problems
 ### Dijkstra 算法
 
-用dfs，记录最小路径长度。
+用dfs(bfs也可)，记录最小路径长度。
 
 当当前长度小于历史长度，就更新；否则结束dfs。
 
 当到达Destination，结束dfs
+
+正经的方式：
+
+- 1.初始化：将所有Vertex的最短距离初始化为无限大，即 $d[v]=\infty$ 
+- 2.建立一个优先队列(Heap)，用于保存值不为无限大的且还未确定最短距离的Vertex，并且将起点 $d[s]=0$ 加入
+- 3.从Heap中取出值最小的顶点u，对于与其相邻的每个顶点v，若 $d[u]+w(u,v)\lt d[v]$ ，则更新 $d[v]$ 的值并将v加入Heap
+- 4.重复3直到终点被从Heap中取出。结果存储在 $d[Destination]$ 中
+
+## 10.7 Planar Graphs 平面图
+
+- **Definition**: 若可以在平面中画出一个图而边没有任何交叉（其中边的交叉是表示边的直线或弧线在它们的公共端点以外的地方相交），则这个图是平面图
+
+### Euler Formula
+若G是 ==Connected Planar Simple== Graph，则 $r=e-v+2$
+
+[Definition](#) 
+假如R是Connected Planar Simple Graph的一个Region，则R边界上的Edges的数量被称为 ==Degree of R== with Notation $Deg(R)$
+
+- $\sum_{v _i\in V}deg(v_i) =\sum_{r _i\in R}deg(r_i) =2e$
+- 如果一个边为 ==Cut Edge== 的话，它对 $Deg(R)$ 的贡献度为2
+
+??? example
+	![[面的度例子.png]]
+	$Deg(R_1)  =12\ \ Deg(R_2)=4$
+
+
+
+
+**推论**：
+
+- 如果G是Connected Planar Simple Graph，且 $v\ge 3$ ，则 $e\le 3v-6$
+	- 证明要点：$Deg(R)\ge 3$
+	- 因此 $K_5$ 不是平面图
+- 如果G是Connected Planar Simple Graph，那么G一定含有一个Degree不超过5的Vertex
+- 如果G是Connected Planar Simple Graph，且 $v\ge 3$ 以及没有长度为3的环，那么 $e\le 2v-4$
+
+
+### Kuratowski's Theorem
+
+- **Elementary Subdivision (初等细分)**：若一个图是平面图，则通过删除一条边 {𝑢,𝑣} 并且添加一个新顶点 𝑤 和两条边 (𝑢,𝑤) 与 (𝑤,𝑣) 获得的任何图也是平面图。也即，平面图中的一条边通过添加一个点的方式变成两条边，不改变其是平面图的性质
+- **Homeomorphic (同胚)**：相同的图通过「初等细分」得到不同的图，称其之间同胚
+- Theorem：一个图是 **非平面图** 当且仅当其包含一个同胚于 $K_5$ 或 $𝐾_{3,3}$ 的子图
+
+!!! example
+	=== "例1"
+		![[Kuratowski例子1.png]]
+		上图包含同胚于 $K_5$ 的子图，因此它不是平面图
+	=== "例2"
+		![[Kuratowski例2.png]]
+		上图包含同胚于 $K_{3,3}$ 的子图，因此它不是平面图
+
+
+## 10.8 Graph Coloring
+
+- Dual Graph (对偶图)：平面地图中，一个面对应一个点，若两个面相邻，则两个点之间有边。这样得到的图称为对偶图
+!!! example ""
+	![[对偶图实例.png]]
+
+- **Coloring (着色)**：指对该图的每个顶点都指定一种颜色，使得没有两个相邻的顶点颜色相同
+- **Chromatic Number of A Graph (着色数)**：着色这个图所需要的最少颜色数，记作 𝜒(𝐺)
+- 一般来说，得到 𝜒(𝐺)=𝑘 的方法是证明可以用 𝑘 个颜色着色，而 𝑘−1 则不能着色
+    - 𝜒(𝐺) of $𝐶_𝑛$: 𝑛 为奇数，为 3，反之为 2
+    - 𝜒(𝐺) of $𝐾_𝑛$: 𝑛
+    - 若简单图的着色数为 2，说明其是二分图
+- 四色定理：**平面图** 的着色数不超过 4，非平面图可以有任意大的着色数
+
+
 
