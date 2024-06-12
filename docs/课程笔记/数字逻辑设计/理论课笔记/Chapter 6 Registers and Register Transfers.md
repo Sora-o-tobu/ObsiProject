@@ -114,3 +114,16 @@ Easy to understand!
 !!! note "多出来的Carry out不要丢掉，可以用来组合成容量更大的计数器！"
 	![[拼装计数器.png]]
 
+##### 余N计数器
+
+通过将Counter的最大输出的与门作为的Load信号传回Counter，实现每次计数到N-1时重置计数
+
+![[余7计数器.png]]
+
+!!! tip
+	上图是一个余7计数器，因为每次Q为 `0110` (6) 时，将0读入
+
+??? example "More Example"
+	![[Load8Module38Counter.png]]
+	==Synchronously Load 8 on Terminal Count 38==
+

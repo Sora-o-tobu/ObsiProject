@@ -4,12 +4,9 @@
 ### Definition Of Two Types Of Logic Circuits
 
 - **Combinational Circuit** 组合电路
-
-A combinational circuit consists of logic gates whose output is a function of only the present input.
-
+	- A combinational circuit consists of logic gates whose output is a function of only the present input.
 - **Sequential Logic Circuit** 时序逻辑电路
-
-Sequential logic is a type of logic circuit whose output depends not only on the present value of its input signals but on the sequence of past inputs (state or memory).
+	- Sequential logic is a type of logic circuit whose output depends not only on the present value of its input signals but on the sequence of past inputs (state or memory).
 
 ### Hierarchy Design 分层设计
 
@@ -31,7 +28,9 @@ Sequential logic is a type of logic circuit whose output depends not only on the
 - Fan-in 是一个逻辑门能够接受的最多输入，如果超过了，输出会变为undefined 或者 incorrect
 - Fan-out 是一个逻辑门的输出所能连接到最多的输入（或称负载 load），且不影响电路正常性能的个数
 
-![[faninandfanout.png]]
+
+![[faninandfanout.png]] 
+
 
 **Fan-in的原因，以与门为例**
 ![[Fanin的原因.png]]
@@ -52,6 +51,7 @@ Propagation delay : 传输延迟，包含输入和输出的变化的整个过程
 
 
 > 此外，我们还引入一个$t_{pd}$来统一表示$t_{phl}和t_{plh}$，
+> 
 > 一般将$t_{pd}$设为$\frac{t_{phl}+ t_{plh}}{2}$或者$max(t_{phl}+t_{plh})$
 
 
@@ -85,12 +85,13 @@ Example：
 其中映射的一个重要步骤是recognize logic equivalence between 原始逻辑与目标技术
 为了做到这个步骤，我们需要：
 ##### Mapping to NAND gates
+
 1. 将所有AND OR都用NAND 与 Inverter代替
 2. 将inverter push 到 fan-out 中
 3. 如果inverter可以配对，则消去
 
-Example：
-![[NANDmapping.png]]
+!!! example
+	![[NANDmapping.png]]
 
 
 ### 正逻辑与负逻辑
@@ -139,6 +140,7 @@ Decoding
 另外，Decoder一般会有使能信号EN来控制。
 ![[3-8译码器使能信号.png]]
 在这种情况下，我们也可把译码器当作demultiplexer（信号分离器、多路解调器）看待。
+
 b和a的值控制使能信号EN的流向，当EN =0 时，无论b、a为多少，流出去的只有0。
 
 也可以利用使能信号组合更大的Decoder：
@@ -158,9 +160,11 @@ Decimal-to-BCD encoder:
 ![[Decimal-to-BCDencoder.png]]
 
 Priority Encoder(优先级编码器):
-优先级高的输入如果有效，则不用管优先级低的输入
-真值表（V检测是否有效）：
-![[优先级编码器真值表.png]]
+
+- 优先级高的输入如果有效，则不用管优先级低的输入
+- 真值表（V检测是否有效）：
+	- ![[优先级编码器真值表.png]]
+
 优先级编码器可以用K-map狠狠化简，请慢慢化简哦~
 
 #### 3. Multiplexer 多路选择器
@@ -176,20 +180,18 @@ In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 
 例如：
 
-4-to-1-line 多路选择器：
-![[4-to-1多路选择器.png]]
+- 4-to-1-line 多路选择器：
+	- ![[4-to-1多路选择器.png]]
+- 如果采用三态门构建的话可以省去最后的或门，并拥有更小的Gate input cost：
+	- ![[三态门多路选择器1.png]]
+- 另一种构建方法：
+	- ![[三态门多路选择器2.png]]
 
-如果采用三态门构建的话可以省去最后的或门，并拥有更小的Gate input cost：
-![[三态门多路选择器1.png]]
-
-另一种构建方法：
-![[三态门多路选择器2.png]]
-
-
-多路选择器可以应用于不同编码之间的转换，**实现任意的逻辑函数**
-
-如，**Gray** to **Binary Code**：
-![[格雷码转换二进制编码.png]]
+!!! success
+	多路选择器可以应用于不同编码之间的转换，**实现任意的逻辑函数**
+	
+	如，**Gray** to **Binary Code**：
+	![[格雷码转换二进制编码.png]]
 
 此外，此转换还可以将一部分输入当作常量端进行降维化简：
 
@@ -202,21 +204,19 @@ In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 计算主要包括逻辑运算和算术运算，前者由于可以直接通过基本门很方便实现，所以我们不过多考虑；在此主要介绍算数运算。在计算机硬件中，承担计算工作的主要部件为 `ALU`(Arithmetic Logical Unit)。
 
 ### 诞生的条件
-在Logic Design中，一个Arithmetic calculation(e.g. addition & subtraction)是==code translation decoder==，例如，一个N-bit的二进制加法需要一个2N-to-N+1 Decoder
+在Logic Design中，一个Arithmetic calculation(e.g. addition & subtraction)是 ==code translation decoder== ，例如，一个N-bit的二进制加法需要一个2N-to-N+1 Decoder
 
-但是，当N的数量变得很大，建立这么一个Decoder将会变得非常困难，由于总共有2N个变量，我们建立的Truth Table将会有2^2N^行！这是Desing Impractical的！
+但是，当N的数量变得很大，建立这么一个Decoder将会变得非常困难，由于总共有2N个变量，我们建立的Truth Table将会有 2^2N^ 行！这是Desing Impractical的！
 
 因此，我们希望能从Bisection转变为Iterative Array.
 
 ### Iterative Combinational Circuits
 
-**Cell** - subfunction block
-
-**Iterative array** - an array of interconnected cells
-
-**Arithmetic Functions**
-- Operate on a binary vectors
-- Use the same subfunction in each bit position
+- **Cell** - subfunction block
+- **Iterative array** - an array of interconnected cells
+- **Arithmetic Functions**
+	- Operate on a binary vectors
+	- Use the same subfunction in each bit position
 
 ### Function Blocks : Addition
 
@@ -271,6 +271,9 @@ $$
 
 #### Carry Lookahead Adder 超前进位加法器
 
+!!! info
+	数逻对此内容不做要求，补天的可以不看了
+
 为了探讨S、C的关系，我们可以令
 $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_i) C_i= G_i +P_i C_i$
 其中，$G_i$称为generate function，$P_i$称为propagate function。
@@ -300,7 +303,8 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 - 两个二进制数相减，如果没有出现borrow，说明结果为整数，无需额外处理
 - 若出现borrow，我们需要对其进行修正，具体为用$2^n$减去结果，并加上负号
 
-[Exmaple]
+[Exmaple](#)
+
 ![[减法例子.png]]
 
 !!! note
@@ -329,8 +333,9 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 利用同余的思想，我们可以将减法运算转换为加法运算。
 
 **同余**
+
 $$
-a\equiv b\ and\ c\equiv d \Rightarrow a\pm c\equiv b\pm d \ and\ ac\equiv bd
+a\equiv b\ \&\ c\equiv d \Rightarrow a\pm c\equiv b\pm d \ \& \ ac\equiv bd
 $$
 
 
@@ -352,23 +357,26 @@ $$
 ![[处理.png]]
 
 ![[有符号补码.png]]
+
 转换规则:
-对于正数，不变；
-对于负数，取绝对值后再取2's Complement，因此将补码转换回负数的时候，可以先再取2's Complement ，然后加上负号。如10011 -> 01101 -> 13 -> -13
+
+- 对于正数，不变；
+- 对于负数，取绝对值后再取2's Complement，因此将补码转换回负数的时候，可以先再取2's Complement ，然后加上负号。如10011 -> 01101 -> 13 -> -13
 
 另一种更方便的方法是认定most significant bit是negative weight，例如:
 $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
 
 
-对于nagative weighting的补码，我们对其进行==sign extension==并不会改变其值
+对于nagative weighting的补码，我们对其进行 ==sign extension== 并不会改变其值
 ![[signextension.png]]
 
 #### Signed 2's Complement Arithmetic
 
 [运算规则](#)
-无论是加法还是减法，将元素转换成补码进行表示；
-如果是减法，我们将减掉的数转换成complement(指上文所说的Complement)，然后进行加法运算。然后忽略多出的carry out。如:
-![[补码运算.png]]
+
+- 无论是加法还是减法，将元素转换成补码进行表示；
+- 如果是减法，我们将减掉的数转换成complement(指上文所说的Complement)，然后进行加法运算。然后忽略多出的carry out。如:
+	- ![[补码运算.png]]
 
 在补码运算中，有carry out不代表该算式overflow了，只有当两个操作数的符号位相同且与结果的符号位不同时，才有overflow发生(简单思考，就是正数加正数出现负数，或者负数加负数出现正数，说明发生了overflow)
 
@@ -402,6 +410,7 @@ $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
 > 一个简单的逻辑ALU
 > ![[逻辑ALU.png]]
 
+---
 
 > 一个简单的算数ALU
 > ![[算数ALU.png]]

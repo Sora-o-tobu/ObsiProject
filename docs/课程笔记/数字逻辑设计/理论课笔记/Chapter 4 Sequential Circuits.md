@@ -135,6 +135,12 @@ Latch 的条件
 
 如果存在两个状态，当他们对于相同的输入，输出均相同且转移到相同的状态，则这两个状态是 ==equivalent== 的，需要我们手动优化。
 
+
+!!! danger "历年卷里的奇怪题目"
+	![[分析功能历年题.png]]
+	注意，如果只给了时序电路的波形图，注意区别其与组合电路的区别: 时序电路的状态(包括内部与外部)在每次时钟正边沿的时候都会改变!因此上图一轮循环共有八个状态而不是四个
+
+
 #### 分析时间
 
 The ultimate goal of ==timing analysis== is to determine the ==maximum clock frequency== of the circuit.
