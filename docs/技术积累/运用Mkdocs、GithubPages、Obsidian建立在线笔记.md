@@ -74,11 +74,17 @@ taskkill /pid THEPIDYOUFIND /F
 
 ## Tips
 
-视频插入格式:
+- 视频插入格式:
 ```
 ![type:video](image/帅头硬.mp4)
 ```
 
+- 图片调整大小:
+
+```
+![[Counter.png]]{ width=200px }
+
+```
 ## Appendix
 
 !!! note

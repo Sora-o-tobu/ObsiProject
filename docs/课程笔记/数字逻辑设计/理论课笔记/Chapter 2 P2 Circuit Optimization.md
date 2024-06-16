@@ -29,10 +29,14 @@
 !!! note "注意！"
 	$(AB+C)(A+C)、AB\overline{C}+AC(A+B)$ 都不是标准型！！
 
+
+!!! danger "思考"
+	Relation between SOM and POM？ SOM and SOP?
+
 ## Cost Criteria
 - Literal cost（L）
 - Gate input cost（G）
-- Gate input cost with NOTs（GN）==数非门的时候同一个字母不用数两次==
+- Gate input cost with NOTs（GN）==数非门的时候同一个字母不用数两次,例如下图第三个例子,$\overline{B}$ 只数了一次，所以GN=G+3==
 
 ![[门消耗数数案例.png]]
 
@@ -43,6 +47,12 @@
 
 !!! info "Don't Care"
 	不定项，在卡诺图中用X表示，在最小项之和中用 $\sum d(...)$ 表示，可以随便定义它的值
+
+=== "例题"
+	Four variables odd function has ___ “1” squares in its corresponding K-Map.
+=== "答案"
+	8 , 四个变量，说明共有16种取值，有一般被1填上(错位填入K-Map)
+
 
 ### 蕴含项、主蕴含项与基本主蕴含项
 
@@ -64,9 +74,13 @@
 An electronic amplifier used to improve circuit voltage levels and speed.
 
 当一个输入需要同时接入多个逻辑门的时候使用：
+
 ![[buffer.png]]
+
 ### 3-state Buffer （三态门）
+
 ![[三态门.png]]
+
 当使能信号EN为0时，输出高阻Z。
 
 **Truth Table:**
@@ -85,6 +99,6 @@ An electronic amplifier used to improve circuit voltage levels and speed.
 
 eg:
 
-- 2 - 2 AOI -> $F=\overline{WX+YZ}$
-- 2 - 2 - 1 AO -> $F= WX+YZ+V$
-- 2 - 2 AI -> $F=\overline{(W+X)(Y+Z)}$
+- `2 - 2 AOI` -> $F=\overline{WX+YZ}$
+- `2 - 2 - 1 AO` -> $F= WX+YZ+V$
+- `2 - 2 AI` -> $F=\overline{(W+X)(Y+Z)}$

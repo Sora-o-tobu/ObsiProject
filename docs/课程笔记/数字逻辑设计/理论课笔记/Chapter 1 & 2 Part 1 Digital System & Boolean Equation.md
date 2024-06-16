@@ -3,6 +3,18 @@
 !!! danger
 	Chapter 1 及 Chapter 2 Part 1 内容较为杂乱，因此仅将要点放于此，推荐自行观看课件
 
+## 进制的转换
+![[进制的转换.png]]
+
+- 十进制转二进制
+	- 整数部分每轮除以2，余多少就从右往左加多少
+	- 小数部分每轮乘上2，如果大于1，就从左往右加上1；不大于1，则加0
+- 十进制转八进制、十六进制
+	- 先转成二进制，再接着转换即可
+		- 二进制转八进制，每三位对应一个数字，不够补零，小数部分同理
+		- 二进制转十六进制，每四位对应一个数字，不够补零，小数部分同理
+
+
 ## 常见的四种编码方式
 ![[常用的四种编码方式.png]]
 
@@ -49,6 +61,11 @@
 -  $X\oplus 1=\overline{X}$
 	- $(\overline{X\oplus Y})=(X\oplus Y)\oplus 1 =\overline{X}\oplus Y=X\oplus \overline{Y}$  ==交换定律==
 
+=== "例题"
+	Which of the following logical gates can be used as a controllable inverter?
+=== "答案"
+	XOR Gate 因为 $1\oplus X = \overline{X}$
+
 
 ![[常用逻辑门.png]]
 
@@ -57,11 +74,18 @@
 - A gate type that can implement all possible Boolean functions
 	- 目前只指 NOR 以及 NAND
 
+
 ## Duality Rule & Complement 对偶规则 与 互补
 
 - 原函数 $F=\overline{A}{B}+C\overline{D}$
 - 对偶函数 $F=(\overline{A}+B)(C+\overline{D})$
 - 互补函数 $\overline{F}=(A+\overline{B})(\overline{C}+D)$
+
+!!! info
+	Complement 考试可能会出题，注意是仅仅比 Dual 多一个 $X$ 与 $\overline{X}$ 互相转换
+
+!!! example ""
+	![[Complement考题.png]]
 
 ## Boolean Algebra 布尔代数
 ![[常用化简理论.png]]

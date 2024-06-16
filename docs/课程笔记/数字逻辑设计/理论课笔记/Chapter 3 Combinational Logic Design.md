@@ -15,7 +15,7 @@
 
 ### Combinational circuits
 
-组合电路不包含任何memory devices , feedback loops , one-way transmission of input signal(输入信号的单向传输)
+组合电路不包含任何 memory devices , feedback loops , one-way transmission of input signal(输入信号的单向传输)
 因此，一个组合电路包含：
 
 - m个布尔值输入
@@ -24,30 +24,43 @@
 
 #### 设计过程中的技术参数 Technology Parameters
 
+- Technology Parameters
+	- ==fan-in , fan-out==
+	- noise margin
+	- cost
+	- ==transition time==
+	- ==propagation delay==
+	- power dissipation 能量损耗
+
 ##### Fan-in and Fan-out
-- Fan-in 是一个逻辑门能够接受的最多输入，如果超过了，输出会变为undefined 或者 incorrect
+- Fan-in 是一个逻辑门能够接受的最多输入，如果超过了，输出会变为 undefined 或者 incorrect
 - Fan-out 是一个逻辑门的输出所能连接到最多的输入（或称负载 load），且不影响电路正常性能的个数
 
 
 ![[faninandfanout.png]] 
 
 
-**Fan-in的原因，以与门为例**
-![[Fanin的原因.png]]
+!!! info "Fan-in的原因，以与门为例"
+	![[Fanin的原因.png]]
+	
+	每接入一个输入，输出电压就会降 0.3 V ，接太多(如上图的7)，输出电压就不在High Level的区间了
+
 
 ##### 传输延迟 Propagation Delay
+
 传输延迟是输入改变对应的变化到输出改变所需的时间
+
 
 相对而言，t<sub>HL</sub> 与 t<sub>LH</sub> 都是指输出的变化时间；
 而t<sub>PHL</sub> 与 t<sub>PLH</sub> 则计算L和H的中点时间差
+
 ![[传输延迟.png]]
 
-- **细品差别** 
-![[细品差别.png]]
+- **细品差别**
+	- ![[细品差别.png]]
 
-Transition time : 过渡时间 ，专注于输出的变化，只需要看输出的时序图就可以
-
-Propagation delay : 传输延迟，包含输入和输出的变化的整个过程，通过比较输入和输出的偏差来表示
+- Transition time : 过渡时间 ，专注于输出的变化，只需要看输出的时序图就可以
+- Propagation delay : 传输延迟，包含输入和输出的变化的整个过程，通过比较输入和输出的偏差来表示
 
 
 > 此外，我们还引入一个$t_{pd}$来统一表示$t_{phl}和t_{plh}$，
@@ -62,16 +75,16 @@ Propagation delay : 传输延迟，包含输入和输出的变化的整个过程
 
 - Transport delay  (传输延迟)
 - Inertial delay （惯性延迟、固有延迟）
-
+- Rejection Time (拒绝时间)
 
 
 - **Transport delay**：
-A change in the output in response to a change on the inputs occurs after ==a fixed specified delay.==
-![[Transport delay.png]]
+	- A change in the output in response to a change on the inputs occurs after ==a fixed specified delay.==
+	- ![[Transport delay.png]]
 
 - **Inertial delay**：
-A pulse of duration less than the inertial delay (**rejection time**) does not contain enough energy to cause the device to switch.
-![[Inertial delay.png]]
+	- A pulse of duration less than the inertial delay (**rejection time**) does not contain enough energy to cause the device to switch.
+	- ![[Inertial delay.png]]
 
 
 Example：
@@ -79,12 +92,15 @@ Example：
 
 如果考虑到了电路延迟的话，就有可能出现意想不到的结果哦~
 
+!!! info "Rejection Time"
+	拒绝时间用来消除毛刺，当电位变化时间过于短，则不考虑
+
 #### 考虑这些因素，我们在logic synthesis中有必要精选Technology mapping
+
 ![[工艺映射.png]]
 
 其中映射的一个重要步骤是recognize logic equivalence between 原始逻辑与目标技术
-为了做到这个步骤，我们需要：
-##### Mapping to NAND gates
+为了做到这个步骤，我们需要：Mapping to NAND gates
 
 1. 将所有AND OR都用NAND 与 Inverter代替
 2. 将inverter push 到 fan-out 中
@@ -121,8 +137,7 @@ Example：
 - 译码器 Decoder
 - 编码器 Encoder
 - 多路选择器 Multiplexer **MUX**
-- 信号分配器 Demultiplexer **DEMUX**
-
+- 信号分配器 Demultiplexer **DEMUX** ==数逻不考==
 
 #### 1. Decoder 译码器
 
@@ -130,32 +145,33 @@ Decoding
 
 - the conversion of an n-bit input code to an m-bit output code with ==n <= m <= 2n== such that each valid code word produces a unique output code
 
-例如实验lab5的3-8译码器以及lab6的BCD to 7-segment decoder
+例如实验lab5的 3-8译码器 以及lab6的 BCD to 7-segment decoder
 
-一个高级的Decoder的设计可以采用hierarchical design设计思想
+- 一个高级的Decoder的设计可以采用hierarchical design设计思想
+	- 例如，一个3-8译码器可以由一个2-4译码器和一个1-2译码器组合而成：
+	- ![[3-8译码器1.png]]
+- 另外，Decoder一般会有使能信号EN来控制。
+	- ![[3-8译码器使能信号.png]]
+	- 在这种情况下，我们也可把译码器当作demultiplexer（信号分离器、多路解调器）看待。
+	- b和a的值控制使能信号EN的流向，当EN =0 时，无论b、a为多少，流出去的只有0。
+- 也可以利用使能信号组合更大的Decoder：
+	- ![[3-8译码器2.png]]
 
-例如，一个3-8译码器可以由一个2-4译码器和一个1-2译码器组合而成：
-![[3-8译码器1.png]]
-
-另外，Decoder一般会有使能信号EN来控制。
-![[3-8译码器使能信号.png]]
-在这种情况下，我们也可把译码器当作demultiplexer（信号分离器、多路解调器）看待。
-
-b和a的值控制使能信号EN的流向，当EN =0 时，无论b、a为多少，流出去的只有0。
-
-也可以利用使能信号组合更大的Decoder：
-![[3-8译码器2.png]]
+---
 
 Decoder的另一个应用是，可以用Decoder加上OR门组成minterms
+
 ![[Decoder组成minterms.png]]
 
 
 #### 2. Encoder 编码器
 
 Decimal-to-BCD encoder:
+
 - Inputs:10 bits corresponding to decimal digits 0 through 9 (D<sub>0</sub>, …, D<sub>9</sub>) ——one-hot code
 	- one-hot code: 只有一位是1
 - Outputs:4 bits with BCD codes
+
 真值表我们很容易就能得到：
 ![[Decimal-to-BCDencoder.png]]
 
@@ -168,10 +184,11 @@ Priority Encoder(优先级编码器):
 优先级编码器可以用K-map狠狠化简，请慢慢化简哦~
 
 #### 3. Multiplexer 多路选择器
+
 多路选择器可通过Decoder、AND-OR Gates、3-state buffers来实现
 
-2-to-1-Line Multiplexer:
-![[2-to-1多路选择器.png]]
+- 2-to-1-Line Multiplexer: 
+	- ![[2-to-1多路选择器.png]]
 
 In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 
@@ -206,9 +223,9 @@ In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 ### 诞生的条件
 在Logic Design中，一个Arithmetic calculation(e.g. addition & subtraction)是 ==code translation decoder== ，例如，一个N-bit的二进制加法需要一个2N-to-N+1 Decoder
 
-但是，当N的数量变得很大，建立这么一个Decoder将会变得非常困难，由于总共有2N个变量，我们建立的Truth Table将会有 2^2N^ 行！这是Desing Impractical的！
+但是，当N的数量变得很大，建立这么一个Decoder将会变得非常困难，由于总共有2N个变量，我们建立的Truth Table将会有 $2^{2N}$ 行！这是Desing Impractical的！
 
-因此，我们希望能从Bisection转变为Iterative Array.
+因此，我们希望能从 Bisection(二等分) 转变为 Iterative Array .
 
 ### Iterative Combinational Circuits
 
@@ -233,34 +250,30 @@ In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 | 1   | 1   | 0      | 1        |
 
 经过卡诺图优化得到:
-$$
-S=(X+Y)(\overline{X}+\overline{Y})=X\overline{Y} +\overline{X}Y=X\oplus Y
-$$
-and
-$$
-C=XY
+
+$$\begin{gather}
+S=(X+Y)(\overline{X}+\overline{Y})=X\overline{Y} +\overline{X}Y=X\oplus Y \\ C=XY
+\end{gather}
 $$
 
 半加器构造:
+
 ![[半加器.png]]
 
 #### Full-Adder 全加器
-全加器与半加器类似，但是还需要加上低位进位来的carry-in(Z)进行加法运算。
+全加器与半加器类似，但是还需要加上低位进位来的 carry-in(Z) 进行加法运算。
 
 ![[小全加器.png]]
 
 
 由真值表以及卡诺图可以得到:
-$$
-S=X\overline{Y}\overline{Z}+\overline{X}Y\overline{Z}+\overline{X}\overline{Y}Z+XYZ=X\oplus Y\oplus Z
+$$\begin{gather}
+S=X\overline{Y}\overline{Z}+\overline{X}Y\overline{Z}+\overline{X}\overline{Y}Z+XYZ=X\oplus Y\oplus Z \\ C=XY+XZ+YZ=XY+(X+Y)Z=XY+X\overline{Y}Z+\overline{X}YZ=XY+(X\oplus Y)Z\end{gather}
 $$
 
-$$
-C=XY+XZ+YZ=XY+(X+Y)Z=XY+X\overline{Y}Z+\overline{X}YZ=XY+(X\oplus Y)Z
-$$
 其中我们能发现可以复用的term，将$XY$称为carry generate，$X\oplus Y$称为carry propagate
 
-因此，全加器可以由两个半加器组合而成。
+全加器可以由两个半加器组合而成。
 ![[全加器.png]]
 
 #### Ripple-Carry Binary Adder
@@ -287,7 +300,7 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 	可以对表达方式进行化简
 	![[化简.png]]
 
-实际使用过程中， 由于门具有有限的fan-in，我们通常将好几个CLA进行连接来实现功能，称为==group carry lookahead== ，如
+实际使用过程中， 由于门具有有限的fan-in，我们通常将好几个CLA进行连接来实现功能，称为 ==group carry lookahead== ，如
 ![[groupCLA.png]]
 
 ![[groupCLA2.png]]
@@ -325,9 +338,9 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 ![[得到补码.png]]
 你也可以直接对反码加一得到补码
 
-另一种适用于计算机如何计算补码的方案:
-从最低位开始向前找到第一个1，保留着这几位然后对剩下位按位取反得到补码，这样子适合计算机处理较大的数据。
-![[计算机得到补码.png]]
+- 另一种适用于计算机如何计算补码的方案:
+	- 从最低位开始向前找到第一个1，保留着这几位然后对剩下位按位取反得到补码，这样子适合计算机处理较大的数据。
+	- ![[计算机得到补码.png]]
 
 #### Method of Complement
 利用同余的思想，我们可以将减法运算转换为加法运算。
@@ -361,7 +374,7 @@ $$
 转换规则:
 
 - 对于正数，不变；
-- 对于负数，取绝对值后再取2's Complement，因此将补码转换回负数的时候，可以先再取2's Complement ，然后加上负号。如10011 -> 01101 -> 13 -> -13
+- 对于负数，符号位不变，其它位取2's Complement，因此将补码转换回负数的时候，可以先再取2's Complement ，然后加上负号。如10011 -> 01101 -> 13 -> -13
 
 另一种更方便的方法是认定most significant bit是negative weight，例如:
 $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
@@ -375,12 +388,12 @@ $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
 [运算规则](#)
 
 - 无论是加法还是减法，将元素转换成补码进行表示；
-- 如果是减法，我们将减掉的数转换成complement(指上文所说的Complement)，然后进行加法运算。然后忽略多出的carry out。如:
+- 如果是减法，我们将减掉的数转换成complement(指Unsigned中所说的Complement)，然后进行加法运算。然后忽略多出的carry out。如:
 	- ![[补码运算.png]]
 
 在补码运算中，有carry out不代表该算式overflow了，只有当两个操作数的符号位相同且与结果的符号位不同时，才有overflow发生(简单思考，就是正数加正数出现负数，或者负数加负数出现正数，说明发生了overflow)
 
-因此我们可以给每个B加上一个异或门来操控是应用加法 (0) 还是减法 (1)
+根据上述原理，我们可以给每个B加上一个异或门来操控是应用加法 (0) 还是减法 (1)
 
 ![[合二为一.png]]
 

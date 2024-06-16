@@ -117,8 +117,19 @@ Decoder 的位宽和输入总线的Fan-out都是有限的，制约了内存的�
 #### 字拓展 和 位拓展
 想要从一个 $4\times 1$ RAM 拓展成 $16\times 4$ RAM，我们需要知道从 $4\times 1$ RAM 如何分别得到 $16\times 1$ RAM ==(word extension)== 和 $4\times 4$ RAM ==(bit extension)==
 
+!!! info
+	在复习时也看见过这种叫法:
+	
+	- Word-Capacity Expansion: Word extension (address bits are increased)
+	- Word-Length Expansion: Bit extension
+	
+	不要记混了
+
 ##### Word Extension 字拓展
 ![[字拓展.png]]
+
+- $A_0$ $A_1$ 正常接入四个 $2^n \times 1\ RAM$ 中
+- $A_2$ $A_3$ 接入Decoder，传出的信号作为CS接入RAM，来选择输出哪个RAM的数据
 
 ??? example "More Example"
 	![[字拓展2.png]]
@@ -127,6 +138,7 @@ Decoder 的位宽和输入总线的Fan-out都是有限的，制约了内存的�
 
 ![[位拓展.png]]
 
+- 将四个RAM并联，D-In 和 D-Out 都一起输出
 
 
 ### DRAM 动态内存
@@ -143,9 +155,6 @@ DRAM Cell 和 SRAM Cell 基本类似，也拥有一个 select 使能端和一组
 ![[DRAMCellArrays.png]]
 
 
-!!! info "地址复用"
-	在处理较大数据的时候，由于引脚(Pin)数目的限制，不可能用一个DRAM一次性Transfer所有数据，因此我们采取Addres Multiplexing
-
 
 ![[DRAM最终的结构.png]]
 
@@ -156,6 +165,23 @@ DRAM Cell 和 SRAM Cell 基本类似，也拥有一个 select 使能端和一组
 
 DRAM Reading Time
 ![[DRAMReadingTime.png]]
+
+#### Addres Multiplexing 地址复用
+!!! info "地址复用"
+	在处理较大数据的时候，由于引脚(Pin)数目的限制，不可能用一个DRAM一次性Transfer所有数据，因此我们采取Addres Multiplexing来减少地址引脚的使用
+
+![[地址复用.png]]
+
+- 如上图所示，地址复用中，Row Address 和 Col Address 使用的同一个引脚，$\overline{RAS}$ 和 $\overline{CAS}$ 分别用来控制Register的载入信号，置0载入
+	- 因此我们可以先输入行地址，再输入列地址实现同一个引脚完成地址复用
+- 如果用二进制表示地址的话，行地址是高八位，列地址是低八位
+
+!!! example "Example 1"
+	![[行列地址例子.png]]
+
+!!! example "Example 2"
+	![[地址复用例子2.png]]
+
 
 #### Refreshing Policy
 DRAM需要经常刷新维持它的数据。

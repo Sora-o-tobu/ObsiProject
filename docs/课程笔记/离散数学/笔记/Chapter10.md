@@ -30,6 +30,7 @@
 === "n-Cubes Graphs"
 	- Denoted as $Q_n$
 	- 每个顶点之和相差一位(==按照bit position==)的数相连
+	- 含有 $2^n$ Vertices , $\frac{n2^n}{2}$ edges
 	![[ncubesgrpah.png]]
 
 #### Bipartite Graphs 二部图

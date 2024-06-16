@@ -140,6 +140,12 @@ Latch 的条件
 	![[分析功能历年题.png]]
 	注意，如果只给了时序电路的波形图，注意区别其与组合电路的区别: 时序电路的状态(包括内部与外部)在每次时钟正边沿的时候都会改变!因此上图一轮循环共有八个状态而不是四个
 
+=== "课本里的奇怪题目"
+	![[课本里的奇怪题目.png]]
+	分析: 题目说 `Their transitions always appear in the order shown in Figure` 说明如果不按照图中顺序改变信号的话，E就会变成1. 由于我们不知道系统内部的具体状态，因此只能给每一种情况分配一个状态，而给Error单独一个状态. ==并请注意，由于时序电路每个时钟正边沿都会执行一次，因此实际上每个状态都会有自环(至少这题是这样)==
+=== "答案"
+	![[课本奇怪题目答案.png]]
+
 
 #### 分析时间
 
@@ -178,6 +184,9 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 === "答案"
 	![[分析实例答案.png]]
 
+
+!!! example "历年卷里题目(简单的)"
+	![[分析时间历年题.png]]
 
 ## Part 2 Sequential Circuit Design
 
@@ -238,7 +247,7 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 
 
 - 以格雷码为例，最终得到如图电路
-![[SequenceRcognizer最终电路.png]]
+	- ![[SequenceRcognizer最终电路.png]]
 
 
 ### 设计实例 2 Modulo 3 accumulater for 2-bit operands

@@ -29,6 +29,13 @@
 	![[常见RTL1.png]]
 	![[常见RTL2.png]]
 
+!!! example "RTL例题"
+	=== "题目"
+		![[RTL分析题目.png]]
+	=== "答案"
+		![[RTL分析答案.png]]
+
+
 #### Register Transfer Structure
 ##### Multiplexer-Based Transfers 基于MUX实现传输
 对于一个单一寄存器，它的**输入**可能有多种来源，例如其它寄存器，又或者是其他操作的结果。总而言之，它的输入很可能是不唯一的，而同一时刻我们只能接受一个来源的输入。因此，我们需要使用 `MUX` 来对输入进行选择。 -修佬
