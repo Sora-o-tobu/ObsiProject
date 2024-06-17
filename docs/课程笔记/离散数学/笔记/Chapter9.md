@@ -333,6 +333,16 @@ A relation R on a set S is ==partial ordering or partial order== if R is :
 !!! example
 	![[poset例子.png]]
 
+**如何计算偏序关系的最大个数？**
+
+- 画成Hasse Diagrams图进行分类计算
+	- 按照层数不同进行分类
+	- 如，一个含有三个元素的集合，最多含有 19 个偏序关系
+
+![[如何计算偏序关系最大值紧急避险.png]]
+
+
+
 [Definition](#) 
 
 - **Comparable:**

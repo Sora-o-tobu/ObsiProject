@@ -70,7 +70,6 @@ A simply graph is called regular if every vertex of this graph has the same degr
 ### Isomorphism of Graphs 图的同构
 
 - **Definition**：对于两个Simple Graph `G_1` 和 `G_2`，若对于 `G_1` 的任意相邻的Vertex，a和b，存在一个Bijection Function，使得 f(a)和f(b)都在 `G_2` 中且相邻，则称这个 function 是 Isomorphism
-
 - Invariant in isomorphic graphs ： ==(同构不变量)==
 	- Vertex的个数
 	- Edge的个数

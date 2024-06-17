@@ -2,15 +2,12 @@
 ## 6.1 The Basic of Counting
 ### Basic Counting Principles
 
-1. **The Sum Rule**
-
-	If a first task can be done in n<sub>1</sub> ways and a second task in n<sub>2</sub> ways, and if these tasks cannot be done at the same time , then there are n<sub>1</sub> + n<sub>2</sub> ways to do one of these tasks.
-	也可以用集合表示: $|S\cup T|\ =\ |S|\ +\ |T|\ where\ S\ and\ T\ are\ two\ disjoint\ finite\ sets$
-
-2. **The Product Rule**
-
-	Suppose that a procedure can be broken down into two tasks. If there are n<sub>1</sub> ways to do the first task and n<sub>2</sub> ways to do the second after the first task has been done, then there are n<sub>1</sub>n<sub>2</sub> ways to complete the procedure.
-	用集合表示就是: $|S\times T|\ =\ |S|\ \cdot \ |T|$
+- The Sum Rule
+	- If a first task can be done in n<sub>1</sub> ways and a second task in n<sub>2</sub> ways, and if these tasks cannot be done at the same time , then there are n<sub>1</sub> + n<sub>2</sub> ways to do one of these tasks.
+	- 也可以用集合表示: $|S\cup T|\ =\ |S|\ +\ |T|\ where\ S\ and\ T\ are\ two\ disjoint\ finite\ sets$
+- The Product Rule
+	- Suppose that a procedure can be broken down into two tasks. If there are n<sub>1</sub> ways to do the first task and n<sub>2</sub> ways to do the second after the first task has been done, then there are n<sub>1</sub>n<sub>2</sub> ways to complete the procedure.
+	- 用集合表示就是: $|S\times T|\ =\ |S|\ \cdot \ |T|$
 
 ### The Inclusion-Exclusion Principle (Subtraction Rule) 容斥原理
 
@@ -27,7 +24,7 @@ $$
 
 ## 6.2 The Pigeonhole Principle 鸽笼原理
 
-**[Theorem](#)** 
+[Theorem](#) 
 The pigeonhole principle states that if there are more pigeons than pigeonholes, then there must be at least one pigeonhole with at least two pigeons in it. 
 
 如果鸽子数量大于鸽笼，那么一定至少有一个鸽棚里面有至少两只鸽子
@@ -39,7 +36,7 @@ The pigeonhole principle states that if there are more pigeons than pigeonholes,
 	
 	**证明过程：**
 	
-	$$\begin{gather}Let\ n+1\ positive\ integers\ be\ a_1,a_2,...,a_{n+1},(1\le a_i\le 2n)\\ Write\ a_i=2^{k_i}q_i,where\ k_i\ is\ a nonnegative\ integer\ and\ q_i\ is an\ odd\ integer\ less\ than\ 2n\\ Since\ there\ are\ only\ n\ odd\ number\ less\ than\ 2n,\\ by\ the\ pigeonhole\ principle\ it\ follows\ that\ there\ exist\ integer\ i\ and\ j\ that\ q_i=q_j\\ then\ a_i=2^{k_i}q_i\ ,\ a_j=2^{k_j}q_j\\ Then\ we\ can\ conclude\ it \end{gather}$$
+	Let $n+1$ positive integers be $a_1,a_2,...,a_{n+1},(1\le a_i\le 2n)$ Write $a_i=2^{k_i}q_i$,where $k_i$ is a nonnegative integer and $q_i$ is an odd integer less than 2n Since there are only n odd number less than 2n, by the pigeonhole principle it follows that there exist integer i and j that $q_i=q_j$  then $a_i=2^{k_i}q_i\ ,\ a_j=2^{k_j}q_j$ Then we can conclude it
 
 !!! danger "另一个类似的问题，而我期中考没做出来"
 	n+1个不超过2n的正整数必定存在两个数互质
@@ -53,7 +50,7 @@ The pigeonhole principle states that if there are more pigeons than pigeonholes,
 	![[鸽笼原理例子2.png]]
 
 
-**[Theorem](#)** Every sequence of n<sup>2</sup>+1distinct integers contains a subsequence of length n + 1 that is either strictly increasing or strictly decreasing.
+[Theorem](#) Every sequence of n<sup>2</sup>+1distinct integers contains a subsequence of length n + 1 that is either strictly increasing or strictly decreasing.
 
 **证明：**
 
@@ -74,12 +71,14 @@ $$
 ### Permulations 排列
 
 [Notation](#) P(n,r)
+
 $$
 P(n,r)=n(n-1)(n-2)...(n-r+1)=\frac{n!}{(n-r)!}
 $$
 
 
 In particular , $P(n,n)=n!$ $P(n,0)=1$
+
 用函数来表示就是:
 
 $$\begin{gather}
@@ -207,14 +206,12 @@ n个元素排入长为r的圈中，共有P(n,r)/r种排法。
 
 - S(r,1)=S(r,r)=1;
 - S(r,2)=$2^{r-1}-1$;
-每个物体都有两种放置的选择，共有$2^r$ways，再减去两种存在空箱子的情况，再除以2减去重复的情况，得到S(r,2)的公式
+	- 每个物体都有两种放置的选择，共有$2^r$ways，再减去两种存在空箱子的情况，再除以2减去重复的情况，得到S(r,2)的公式
 - S(r,r-1)=C(r,2);
-- S(r+1,n)=S(r,n-1)+nS(r,n); 证明如下
-
-考虑两种情况: 
-
-1. 第一个元素的箱子只放置了它自己，此时有S(r,n-1)种ways；
-2. 第一个元素的箱子不止放置了它自己，那么此时其它元素可以放出S(r,n)种情况，再乘上n(第一个元素可以任意放入所有箱子中)得到结果。
+- S(r+1,n)=S(r,n-1)+nS(r,n);
+	- 考虑两种情况: 
+	- 1. 第一个元素的箱子只放置了它自己，此时有S(r,n-1)种ways；
+	- 2. 第一个元素的箱子不止放置了它自己，那么此时其它元素可以放出S(r,n)种情况，再乘上n(第一个元素可以任意放入所有箱子中)得到结果。
 
 !!! tip
 	实际上，S(n,j)=$[\sum_{i=0}^{j-1}(-1)^iC(j,i)(j-i)^n]/j!$

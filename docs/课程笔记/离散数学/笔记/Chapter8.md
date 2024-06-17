@@ -20,21 +20,19 @@ $$
 ### 不含常量的解法 Homogeneous
 
 **Linear homogeneous recurrence relation of degree k with constant coeffcients**
+
 $$
 a_n= c_1 a_{n-1}+ c_2 a_{n-2}+...+ c_k a_{n-k}
 $$
 
 - **Linear:**
-linear Combination of previous terms
-
+	-linear Combination of previous terms
 - **Constant Coeffcients:**
-The coeffcient of a<sub>i</sub> are constants
-
+	- The coeffcient of a<sub>i</sub> are constants
 - **Degree k:**
-$a_n$ is a function of previous k terms of the sequence
-
+	- $a_n$ is a function of previous k terms of the sequence
 - **Homogeneous:**
-不含常量
+	- 不含常量
 
 
 !!! example
@@ -46,6 +44,7 @@ $a_n$ is a function of previous k terms of the sequence
 
 
 解法:==不动点法==，高中教过，相信都懂!
+
 此处仅给出一例:
 ![[不动点法.png]]
 
@@ -87,11 +86,9 @@ $a_n$ is a function of previous k terms of the sequence
 
 ![[生产函数table_webp.webp]]
 
-**重要等式**
-
-若$b_k= \sum_{i=0}^k a_i\ \ a_k\leftrightarrow G(x)\ \ b_k\leftrightarrow F(x)$，则$F(x)=\frac{G(x)}{{1-x}}$
-
-$C_{-n}^k =(-1)^k C_{n+k-1}^k$
+- **重要等式**
+	- 若$b_k= \sum_{i=0}^k a_i\ \ a_k\leftrightarrow G(x)\ \ b_k\leftrightarrow F(x)$，则$F(x)=\frac{G(x)}{{1-x}}$
+	- $C_{-n}^k =(-1)^k C_{n+k-1}^k$
 
 ### Counting with Generating Functions
 

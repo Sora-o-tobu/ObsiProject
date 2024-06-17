@@ -141,6 +141,9 @@ Decoder 的位宽和输入总线的Fan-out都是有限的，制约了内存的�
 - 将四个RAM并联，D-In 和 D-Out 都一起输出
 
 
+!!! quote "两个都应用"
+	![[字拓展和位拓展同时使用.png]]
+
 ### DRAM 动态内存
 DRAM Cell 和 SRAM Cell 基本类似，也拥有一个 select 使能端和一组输入输出端，唯一的区别在于存储器的不同。SRAM Cell 使用一个锁存器来存储数据，而 DRAM Cell 使用**一个电容**和**一个晶体管**来存储数据。
 

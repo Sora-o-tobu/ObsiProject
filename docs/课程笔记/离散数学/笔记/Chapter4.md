@@ -22,6 +22,10 @@
 - $a\equiv b(\mod m)\ and\ c\equiv d(\mod m)$ , then $a+c\equiv b+d(\mod m)\ and\ ac\equiv bd(\mod m)$
 	- ==一个有用的推论==  $ab\mod m=((a\mod m)(b\mod m))\mod m$
 
+!!! example
+	Solve the system of congruence $x\equiv 3(\mod 6)$ and $x\equiv 4(\mod 7)$ using the method of back substitution
+	![[同余例题1答案.png]]
+
 
 ### Modular Arithmatic
 
@@ -33,7 +37,15 @@
 !!! info
 	There are infinitely many primes
 
-<center>ab=gcd(a,b) × lcd(a,b)</center>
+- Fermat's Little Theorem
+	- 对于任意质数p，任意整数a，有 $a^p\equiv a(\mod p)$ (若a与p互质，则有 $a^{p-1}\equiv 1(\mod p)$ )
+	- 例子: 利用Fertmat定理求$3^{302}\mod 5$
+		- $3^{300}\equiv(3 ^{4}) ^{75}\equiv 1^{75} (\mod 5)$
+		- So $3^{302}\mod 5 =9\mod 5=4$
+
+
+
+<center>ab = gcd(a,b) × lcd(a,b)</center>
 
 - Let a = bq + r , then gcd(a,b) = gcd(b,r)
 - There exist such integers that gcd(a,b) = sa + tb ==裴蜀定理==
@@ -55,4 +67,18 @@
 		- $$\begin{gather}7=2\times 3+1 \\1= (-2)\times3 +1\times 7 \\1 \equiv (-2\times 3+7)\ \mod 7 \\\end{gather}$$
 - 有了数论倒数后，既可以更公式化的求解同余方程了:
 	- 我们有 $\overline{a}a \equiv 1(\mod m)$ 和 $ax\equiv b (\mod m)$ ，两边同时乘以 $\overline{a}$ 得到 $x\equiv \overline{a}b(\mod m)$ 
+
+### 中国剩余定理
+
+**例子**：𝑥≡2(mod3),𝑥≡3(mod5),𝑥≡2(mod7)
+
+- 𝑚=3⋅5⋅7=105
+- 𝑀1=35,𝑀2=21,𝑀3=15
+- 分别求解 𝑀1mod3 的逆、𝑀2mod5 的逆、𝑀3mod7 的逆
+- 分别是 2、1、1
+- 𝑥=2⋅35⋅2+1⋅21⋅3+1⋅15⋅2=233≡23(mod105)
+
+!!! example "More Example"
+	![[中国剩余定理例子.png]]
+	x=323+330k
 
