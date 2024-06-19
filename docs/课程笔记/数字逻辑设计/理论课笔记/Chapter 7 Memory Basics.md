@@ -189,6 +189,11 @@ DRAM Reading Time
 #### Refreshing Policy
 DRAM需要经常刷新维持它的数据。
 
+刷新模式：
+
+- **爆发模式(burst mode)**：停止工作，刷新所有数据
+- **分布模式(distributed mode)**：间隔一段时间刷新，从而避免长时间的内存阻塞，这种刷新方式更加常用
+
 !!! warning
 	后面摆了，有缘再补
 

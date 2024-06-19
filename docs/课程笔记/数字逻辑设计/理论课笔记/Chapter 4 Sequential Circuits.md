@@ -57,7 +57,7 @@ Latch 的条件
 
 只有当C为1时，D锁存器才能写入数据；而当C为0时，D锁存器的数据不会变化
 
-!!! danger
+!!! danger "Transparennt"
 	在实际使用过程中，可能会遇到一个storage element连接到另一个storage element，然后另一个storage element又重新连接回原来的storage element，即在combinational logic中一个storage element的输入输出可能会相连。
 	
 	但是如果$\overline{Q}$与D相连，在clock时钟信号有效的时间内，Q的值可能会多次变化，导致我们无法确定C置0时Q的输出是什么。这就是我们常说的**空翻现象**

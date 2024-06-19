@@ -51,8 +51,11 @@
 === "例题"
 	Four variables odd function has ___ “1” squares in its corresponding K-Map.
 === "答案"
-	8 , 四个变量，说明共有16种取值，有一般被1填上(错位填入K-Map)
+	8 , 四个变量，说明共有16种取值，有一半被1填上(错位填入K-Map)
 
+??? info "三维卡诺图"
+	![[三维卡诺图实例1.png]]
+	![[三维卡诺图示例2.png]]
 
 ### 蕴含项、主蕴含项与基本主蕴含项
 
@@ -60,7 +63,7 @@
 - 而主蕴含项 ==(Prime Implicant)== 则是在卡诺图中的 **极大** 蕴含项；
     - 对于存在 Dont'cares 的 K-map，如果我们关注的是 1，那我们积极地将他们当作 1 来处理，反之亦然；
     - 但是单独的 X 不会被认为是主蕴含项；
-- 基本主蕴含项 ==(Essential Prime Implicant)== 是包含 只被它(基本主蕴含项)覆盖的 1 的主蕴含项；
+- 基本主蕴含项 ==(Essential Prime Implicant)== 是包含只被它覆盖的 1 的主蕴含项；
 
 !!! info
 	对于任意函数，主蕴含项一定存在，但是基本主蕴含项不一定存在。
@@ -71,6 +74,7 @@
 
 ## BUFFER 缓冲器
 功能函数： F = X
+
 An electronic amplifier used to improve circuit voltage levels and speed.
 
 当一个输入需要同时接入多个逻辑门的时候使用：

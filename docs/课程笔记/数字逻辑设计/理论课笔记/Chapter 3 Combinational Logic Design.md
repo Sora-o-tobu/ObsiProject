@@ -75,8 +75,9 @@
 
 - Transport delay  (传输延迟)
 - Inertial delay （惯性延迟、固有延迟）
-- Rejection Time (拒绝时间)
+	- Rejection Time (拒绝时间)
 
+---
 
 - **Transport delay**：
 	- A change in the output in response to a change on the inputs occurs after ==a fixed specified delay.==
@@ -86,6 +87,7 @@
 	- A pulse of duration less than the inertial delay (**rejection time**) does not contain enough energy to cause the device to switch.
 	- ![[Inertial delay.png]]
 
+---
 
 Example：
 ![[延迟的例子.png]]
@@ -99,8 +101,9 @@ Example：
 
 ![[工艺映射.png]]
 
-其中映射的一个重要步骤是recognize logic equivalence between 原始逻辑与目标技术
-为了做到这个步骤，我们需要：Mapping to NAND gates
+其中映射的一个重要步骤是找到原始逻辑与目标技术的逻辑等价关系
+
+为了做到这个步骤，我们需要：Mapping to NAND gates ==(工艺映射)==
 
 1. 将所有AND OR都用NAND 与 Inverter代替
 2. 将inverter push 到 fan-out 中
@@ -127,7 +130,7 @@ Example：
 
 - 常量函数 Value - Fixing $F = 0$ or $F = 1$ 
 - 传输函数 Transferring $F = X$ 
-- 逆变函数 Inverting $F = \overline{x}$
+- 逆变函数 Inverting $F = \overline{X}$
 - 使能函数 Enabling $F = X \cdot EN or F = X + \overline{EN}$
 
 ![[Chapter 3 Combinational Logic Design 2024-04-04 15.38.39.excalidraw]]
@@ -156,6 +159,9 @@ Decoding
 	- b和a的值控制使能信号EN的流向，当EN =0 时，无论b、a为多少，流出去的只有0。
 - 也可以利用使能信号组合更大的Decoder：
 	- ![[3-8译码器2.png]]
+
+!!! danger "注意"
+	考试有可能会考译码器内与门的个数
 
 ---
 
@@ -190,10 +196,12 @@ Priority Encoder(优先级编码器):
 - 2-to-1-Line Multiplexer: 
 	- ![[2-to-1多路选择器.png]]
 
+---
+
 In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 
 - n-to-2<sup>n</sup>-line decoder
-- $2^n\times 2 AND-OR$ 
+- $2^n\times 2\ AND-OR$ 
 
 例如：
 
@@ -223,7 +231,7 @@ In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 ### 诞生的条件
 在Logic Design中，一个Arithmetic calculation(e.g. addition & subtraction)是 ==code translation decoder== ，例如，一个N-bit的二进制加法需要一个2N-to-N+1 Decoder
 
-但是，当N的数量变得很大，建立这么一个Decoder将会变得非常困难，由于总共有2N个变量，我们建立的Truth Table将会有 $2^{2N}$ 行！这是Desing Impractical的！
+但是，当N的数量变得很大，建立这么一个Decoder将会变得非常困难，由于总共有2N个变量，我们建立的Truth Table将会有 $2^{2N}$ 行！这是Designing Impractical的！
 
 因此，我们希望能从 Bisection(二等分) 转变为 Iterative Array .
 
@@ -267,8 +275,11 @@ $$
 
 
 由真值表以及卡诺图可以得到:
+
 $$\begin{gather}
-S=X\overline{Y}\overline{Z}+\overline{X}Y\overline{Z}+\overline{X}\overline{Y}Z+XYZ=X\oplus Y\oplus Z \\ C=XY+XZ+YZ=XY+(X+Y)Z=XY+X\overline{Y}Z+\overline{X}YZ=XY+(X\oplus Y)Z\end{gather}
+S=X\overline{Y}\overline{Z}+\overline{X}Y\overline{Z}+\overline{X}\overline{Y}Z+XYZ=X\oplus Y\oplus Z \\ 
+C=XY+XZ+YZ=XY+(X+Y)Z=XY+X\overline{Y}Z+\overline{X}YZ=XY+(X\oplus Y)Z
+\end{gather}
 $$
 
 其中我们能发现可以复用的term，将$XY$称为carry generate，$X\oplus Y$称为carry propagate
@@ -276,7 +287,7 @@ $$
 全加器可以由两个半加器组合而成。
 ![[全加器.png]]
 
-#### Ripple-Carry Binary Adder
+#### Ripple-Carry Binary Adder 行波加法器
 
 ![[ripplecarry.png]]
 
@@ -313,6 +324,7 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 ### Unsigned Subtraction
 
 基本思路:
+
 - 两个二进制数相减，如果没有出现borrow，说明结果为整数，无需额外处理
 - 若出现borrow，我们需要对其进行修正，具体为用$2^n$减去结果，并加上负号
 
@@ -363,9 +375,8 @@ $$
 ### Signed Integers
 在计算机中，我们将most significant bit定为符号位，其为0时代表正数，为1时代表负数
 
-对于有符号数的加法，我们有一下四种情景
-
-![[有符号数加法.png]]
+???+ quote "对于有符号数的加法，我们有一下四种情景"
+	![[有符号数加法.png]]
 
 ![[处理.png]]
 
@@ -379,6 +390,8 @@ $$
 另一种更方便的方法是认定most significant bit是negative weight，例如:
 $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
 
+!!! danger "Sign-Magnitude"
+	历年题考过求一个负数的Sign-Magnitude(原码)，要记清楚概念
 
 对于nagative weighting的补码，我们对其进行 ==sign extension== 并不会改变其值
 ![[signextension.png]]
@@ -396,6 +409,10 @@ $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
 根据上述原理，我们可以给每个B加上一个异或门来操控是应用加法 (0) 还是减法 (1)
 
 ![[合二为一.png]]
+
+!!! bug "碎碎念"
+	其实我感觉这属于unsigned的...哈...哈哈......
+
 
 !!! note
 	请注意，当应用减法的时候，C<sub>0</sub>要置1，所以我们将S接入C<sub>0</sub>

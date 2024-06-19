@@ -24,6 +24,11 @@ body {
   font-size: large;
 }
 
+.md-typeset h6 {
+  color:rgb(234,165,248);
+  font-size: large;
+}
+
 h2::before, h3::before, h4::before, h5::before {
   content: "# ";
 }

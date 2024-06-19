@@ -48,7 +48,8 @@ git config --global --unset https.proxy
 git config --global http.proxy http://127.0.0.1:7890
 ```
 
-
+!!! danger
+	此处删除了大量个人信息，如果有闲情搞这个我会补充回来
 
 ## 本地服务器
 
