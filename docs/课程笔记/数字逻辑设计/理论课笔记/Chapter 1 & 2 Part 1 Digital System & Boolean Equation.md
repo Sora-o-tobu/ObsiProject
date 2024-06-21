@@ -3,6 +3,9 @@
 !!! danger
 	Chapter 1 及 Chapter 2 Part 1 内容较为杂乱，因此仅将要点放于此，推荐自行观看课件
 
+- **模拟信号(analog signals)**：在值和时间上都是 _连续(continuous)_ 的信号
+- **数字信号(digital signals)**：在值和时间上都是 _离散(discrete)_ 的信号
+
 ## 进制的转换
 ![[进制的转换.png]]
 
@@ -77,9 +80,9 @@
 
 ## Duality Rule & Complement 对偶规则 与 互补
 
-- 原函数 $F=\overline{A}{B}+C\overline{D}$
-- 对偶函数 $F=(\overline{A}+B)(C+\overline{D})$
-- 互补函数 $\overline{F}=(A+\overline{B})(\overline{C}+D)$
+- 原函数 $F=\overline{A}{B}+C\overline{D} +0$
+- 对偶函数 $F=(\overline{A}+B)(C+\overline{D})\cdot 1$  ==(如果出现 0 或 1，还要额外把它们互换)==
+- 互补函数 $\overline{F}=(A+\overline{B})(\overline{C}+D)\cdot 1$
 
 !!! info
 	Complement 考试可能会出题，注意是仅仅比 Dual 多一个 $X$ 与 $\overline{X}$ 互相转换
