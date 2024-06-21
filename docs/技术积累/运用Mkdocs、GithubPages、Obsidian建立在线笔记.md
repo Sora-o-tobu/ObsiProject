@@ -84,8 +84,14 @@ taskkill /pid THEPIDYOUFIND /F
 
 ```
 ![[Counter.png]]{ width=200px }
-
 ```
+空格格式不能改变
+
+- 图片居中
+```
+<center>![[卡诺循环TS图.png]]</center>
+```
+
 ## Appendix
 
 !!! note
