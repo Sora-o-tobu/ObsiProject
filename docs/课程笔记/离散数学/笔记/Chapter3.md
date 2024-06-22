@@ -1,4 +1,7 @@
 # CH 3 : Algorithms
+
+!!! warning "学过数据结构的大概不需要看这个吧..."
+
 ## 3.1 Algorithms
 
 [Definition](#) An algorithm is a finite set of precise instructions for performing a computation or for solving a problem.
@@ -38,9 +41,9 @@ If\ f(x)\ is\ O(g(x))\ as\ well\ as\ \Omega (g(x)),then\ we\ say\ that\ f(x)=\Th
 $$
 
 !!! note
-	$O(n^3 2^n)<O(n^2 3^n)$
-	
-	$O(2^n)\ne O(3^n)$
+	- $O(n^3 2^n)<O(n^2 3^n)$
+	- $O(2^n)\ne O(3^n)$
+
 ## 3.3 Complexity of Algorithms
 两个方面，space complexity 和 time complexity
 

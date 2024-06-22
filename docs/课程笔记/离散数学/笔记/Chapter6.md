@@ -50,20 +50,24 @@ The pigeonhole principle states that if there are more pigeons than pigeonholes,
 	![[鸽笼原理例子2.png]]
 
 
-[Theorem](#) Every sequence of n<sup>2</sup>+1distinct integers contains a subsequence of length n + 1 that is either strictly increasing or strictly decreasing.
+[Theorem](#) Every sequence of n<sup>2</sup>+1 distinct integers contains a subsequence of length n + 1 that is either strictly increasing or strictly decreasing.     任何一个含有n<sup>2</sup>+1个不同整数的序列，一定存在一个长度为n+1，要么严格单调递增要么严格单调递减的子列
 
 **证明：**
 
-$$
-\begin{gather}
-Let\ the\ sequence\ be\ the\ a_1,a_2,...,a_{n^2+1}\\
-Associate\ (i_k,d_k)\ to\ the\ term\ a_k\\其中i_k，d_k分别是从a_k开始的最大严格递增序列的长度和最大严格递减序列的长度\\
-我们假定没有i_k和d_k能超过n+1，即(i_k,d_k)共有n\times n =n^2个组合\\
-因为共有n^2+1个数，所以必定存在s\lt t,a_s,a_t使得(i_s,d_s)=(i_t,d_t).\\
-如果a_s<a_t,那么就存在从a_s开始长度为i_t+1的严格递增序列（从a_t开始长度为i_t的子序列加上a_s）\\
-因此我们可以得到矛盾contradiction,Q.E.D
-\end{gather}
-$$
+
+Let the sequence be the $a_1,a_2,...,a_{n^2+1}$ Associate $(i_k,d_k)$ to the term a_k
+
+其中 $i_k，d_k$ 分别是从 $a_k$ 开始的最大严格递增序列的长度和最大严格递减序列的长度
+
+我们假定没有 $i_k$ 和 $d_k$ 能超过 n+1，即 $(i_k,d_k)$ 共有 $n\times n =n^2$ 个组合
+
+因为共有 $n^2+1$ 个数，所以必定存在 $s\lt t,a_s,a_t$ 使得 $(i_s,d_s)=(i_t,d_t)$
+
+如果 $a_s<a_t$ ,那么就存在从 $a_s$ 开始长度为 $i_t+1$ 的严格递增序列（从 $a_t$ 开始长度为 $i_t$ 的子序列加上 $a_s$ ）
+
+因此我们可以得到矛盾 contradiction,Q.E.D
+
+
 
 
 ## 6.3 Permulations and Combinations
@@ -166,7 +170,7 @@ $$
 ### r-permutation with repetition 元素可重复的排列
 
 [Theorem 1](#) The number of r-permutations of a set of n objects with repetition allowed is $n^r$.
-将n个对象重复的排列进r个位置中，共有$n^r$种排列方法
+将n个对象可重复的排列进r个位置中，共有$n^r$种排列方法
 
 !!! note
 	如果每个元素可重复多少次不一样，那就另当别论，比如:

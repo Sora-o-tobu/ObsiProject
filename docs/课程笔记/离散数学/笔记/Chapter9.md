@@ -178,7 +178,7 @@ The relation R on a set A is ==transitive== if and only if $R^n\subseteq R,for \
 
 [Definition](#) ==The closure of relaitons R with respect to property P== is the relation S with respect to property P containing R such that S is a subset of every relation with property P containing R.
 
-关系R关于性质P的闭环，就是一个具有性质P且包含R的关系S。
+关系R关于性质P的闭环，就是一个具有性质P且包含R的最小关系S。
 
 ### Reflexive Closure
 
@@ -248,7 +248,7 @@ A relation R on a set A is ==an equivalence relation== if R is :
 - symmetric
 - transitive
 
-!!! example
+!!! example "等价关系例子"
 	
 	(1) $\{(a,b)|a+b=2m,a,b,m\in N\}$
 	
@@ -350,7 +350,7 @@ A relation R on a set S is ==partial ordering or partial order== if R is :
 - **Incomparable:**
 	- $a,b\ of\ (S,\preceq),neither\ a\preceq b\ nor\ b\preceq a$
 
-如果Set S中任意两个元素都*Comparable*，那么称S是 ==totally ordered== (全序) or  ==linearly ordered set== .且 $(S,\preceq)$ 被称为 ==chain==
+如果Set S中任意两个元素都*Comparable*，那么称 $\preceq$ 是 ==totally ordered== (全序) or  ==linearly ordered set== .且 $(S,\preceq)$ 被称为 ==chain==
 
 !!! example
 	![[chain例子.png]]
@@ -448,8 +448,5 @@ A poset(A,R) is ==well-ordered set== if every nonempty subset of A has a least e
 
 
 ### Topological Sorting
-
-- 从一个偏序构造全序
-- 每次找一个极小元素，然后删除该元素和与其相关联的关系后，继续寻找极小元素，直到形成全序
 
 （还没搞懂，以后再来看）

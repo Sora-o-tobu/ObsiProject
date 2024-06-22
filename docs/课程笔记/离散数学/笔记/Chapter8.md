@@ -1,13 +1,12 @@
 # CH 8 : Advanced Counting Techniques
-## 8.1 Applications of Recurrence Relations
-递归关系的应用
+## 8.1 Applications of Recurrence Relations 递归关系的应用
 
 [Definition](#) A **recurrence relation** is:
 $$
 \forall n\ge n_0,\ \ a_n=f( a_0, a_1, a_2,..., a_{n-1}) 
 $$
 
-!!! 常见的递归关系
+!!! note "常见的递归关系"
 
 	(1) The Fibonacci sequence $a_n= a_{n-1} + a{n-2}$
 	
@@ -26,7 +25,7 @@ a_n= c_1 a_{n-1}+ c_2 a_{n-2}+...+ c_k a_{n-k}
 $$
 
 - **Linear:**
-	-linear Combination of previous terms
+	- linear Combination of previous terms
 - **Constant Coeffcients:**
 	- The coeffcient of a<sub>i</sub> are constants
 - **Degree k:**
@@ -62,13 +61,13 @@ $$
         - (Case 2) $s$为特征根且重复了$m$次，则特解为$n^m (p_tn^t +p_{t-1}n^{t-1} +...+p_1n+ p_0)s^n$
     - 求解的时候注意特解的形式：取到哪个幂次
 
-!!! example "例题1"
+!!! example "特征根为3并且重复了两次"
 	![[含常量例题1.png]]
 
 
 --- 
 
-!!! example "例题2"
+!!! example "特征根为1..."
 	![[含常量例题2.png]]
 
 > 注意，可以将 $n$ 看作 $n*1^n$ ，则$s$取1，$m$取1，$n$转换成一次的一般形式$p_1n^2 +p_o$

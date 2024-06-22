@@ -147,6 +147,7 @@ A simply graph is called regular if every vertex of this graph has the same degr
 
 !!! example
 	![[哈密顿图例子1.png]]
+	
 	上图不含有哈密顿回路，因为删除圈出的五个顶点后，此图剩余六个Connected Components，不符合哈密顿图的必要条件
 
 ??? question "如何手画Hamilton Circuit"
@@ -186,7 +187,7 @@ A simply graph is called regular if every vertex of this graph has the same degr
 [Definition](#) 
 假如R是Connected Planar Simple Graph的一个Region，则R边界上的Edges的数量被称为 ==Degree of R== with Notation $Deg(R)$
 
-- $\sum_{v _i\in V}deg(v_i) =\sum_{r _i\in R}deg(r_i) =2e$
+- $\sum_{v _i\in V}deg(v_i) =\sum_{r _i\in R}Deg(r_i) =2e$
 - 如果一个边为 ==Cut Edge== 的话，它对 $Deg(R)$ 的贡献度为2
 
 ??? example
@@ -199,10 +200,11 @@ A simply graph is called regular if every vertex of this graph has the same degr
 **推论**：
 
 - 如果G是Connected Planar Simple Graph，且 $v\ge 3$ ，则 $e\le 3v-6$
-	- 证明要点：$Deg(R)\ge 3$
+	- 证明要点：$Deg(R)\ge 3$  /  $2e=\sum_{r _i\in R}Deg(r_i) \ge 3r =3(e-v+2)$
 	- 因此 $K_5$ 不是平面图
 - 如果G是Connected Planar Simple Graph，那么G一定含有一个Degree不超过5的Vertex
 - 如果G是Connected Planar Simple Graph，且 $v\ge 3$ 以及没有长度为3的环，那么 $e\le 2v-4$
+	- $Deg(R)\ge 4$
 
 
 ### Kuratowski's Theorem
@@ -222,7 +224,7 @@ A simply graph is called regular if every vertex of this graph has the same degr
 
 ## 10.8 Graph Coloring
 
-- Dual Graph (对偶图)：平面地图中，一个面对应一个点，若两个面相邻，则两个点之间有边。这样得到的图称为对偶图
+- Dual Graph (对偶图)：平面图中，一个面对应一个点，若两个面相邻，则两个点之间有边。这样得到的图称为对偶图
 !!! example ""
 	![[对偶图实例.png]]
 

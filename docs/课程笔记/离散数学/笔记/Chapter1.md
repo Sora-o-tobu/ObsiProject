@@ -93,7 +93,7 @@ For example:
 
 ## 1.6 Rules of Inference
 
-!!! success "TABLE"
+!!! success ""
 	 ![[rules of inference.jpg]]
 
 
@@ -140,24 +140,18 @@ If we know Q is true, then $P\to Q$ is true
 
 [Definition](#) ==Disjunctive clauses== are disjunctions with one or more literals ($p\ or\ \neg p$) as disjuncts.
 
-> **Example**
-> 
-> $q\lor r$ Disjunctive clause
-> 
-> $\neg q\land p$ Conjunctive clause
-> 
-> $p\land q\lor r$ Not a clause
+!!! example
+	- $q\lor r$ Disjunctive clause
+	- $\neg q\land p$ Conjunctive clause
+	- $p\land q\lor r$ Not a clause
 
 
 [Definition](#) A conjunction with one or more disjunctive clauses as its conjuncts is said to be in ==conjunctive normal form==. (Conjunction 是中间都是$\land$)
 
-> **Example**
-> 
-> $p\land (q\lor r)$ √
-> 
-> $\neg q\land p$ √
-> 
-> $p\land ((p\land q)\lor r)$ ×
+!!! example
+	- $p\land (q\lor r)$ √
+	- $\neg q\land p$ √
+	- $p\land ((p\land q)\lor r)$ ×
 
 
 相应的，==Full Conjunctive Normal Form== 就是在conjunctive normal form的基础上要求所有字母都在clauses中出现，如:
@@ -170,13 +164,10 @@ $$
 
 [Definition](#) Prenex Normal Form 简单来讲，就是将所有Quantifiers放到前面的形式
 
-> **Example**
-> 
-> $\forall xP(x)\ \lor \ \forall Q(x)$  不是
-> 
-> $\forall x\forall y \ \neg(P(x)\lor Q(x))$  是
-> 
-> $\neg \forall xR(x)$ 不是
+!!! example
+	- $\forall xP(x)\ \lor \ \forall Q(x)$  不是
+	- $\forall x\forall y \ \neg(P(x)\lor Q(x))$  是
+	- $\neg \forall xR(x)$ 不是
 
 ![[期中考试错题.jpg]]
 

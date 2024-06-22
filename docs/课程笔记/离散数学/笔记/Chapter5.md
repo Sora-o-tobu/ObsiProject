@@ -59,8 +59,8 @@ The validity of mathematical induction follows from the well-ordering property f
 	$\begin{gather}Suppose\ that\ a\ and\ b\ are\ positve\ integers\ with\ a\ge b.\\Let\ r_0=a\ and\ r_1=b.\\ r_0=r_1q_1+r_2,\ 0\le r_2\lt r_1;\\ r_1=r_2q_2+r_3,\ 0\le r_3\lt r_2;\\ ......\\ r_{n-2}=r_{n-1}q_{n-1}+r_{n},\ 0\le r_{n-1}\lt r_{n};\\ r_{n-1}=r_nq_n.\\ It\ follows\ Lemma\ 1\ that\ \\ gcd(a,b)\ =\ gcd(r_0,r_1)\ =\ gcd(r_1,r_2)\ =...=\ gcd(r_{n-1},r_{n})\ =\ gcd(r_n,0)\ =\ r_n  \end{gather}$
 
 
-> [!NOTE] Table
-> ![[三种归纳的对比.png]]
+!!! note ""
+	![[三种归纳的对比.png]]
 
 
 ## 5.4 Recursive Algorithms

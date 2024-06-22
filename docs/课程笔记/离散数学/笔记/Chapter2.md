@@ -20,7 +20,7 @@ Note:
 - $|S|=n\ implies\ |P(S)|=2^n$
 - $S\ is\ finite\ and\ so\ is\ P(S)$
 
-!!! success "Extreme example"
+!!! example "Extreme example"
 	(1)$S=\{\emptyset\}$
 	
     $P(S)=\{\emptyset ,\{\emptyset\}\}\ \ \ \ |P(S)|=2$ 
@@ -35,7 +35,7 @@ Note:
 
 证明:
 $$\begin{gather}
-P(A)\in P(B) \Rightarrow P(A)\subseteq B \newline \begin{cases}P(A)\subseteq B \\A\in P(A) \end{cases} \Rightarrow A\in B \end{gather}
+P(A)\in P(B) \Rightarrow P(A)\subseteq B \newline \begin{cases} P(A)\subseteq B \newline A\in P(A) \end{cases} \Rightarrow A\in B \end{gather}
 $$
 
 
@@ -51,8 +51,7 @@ $$
 
 $A\times B=\{(a,b)|a\in A\land b\in B\}$
 
-!!! note
-	$A\times \emptyset =\emptyset \times A$
+!!! note "$A\times \emptyset =\emptyset \times A$"
 
 
 ## 2.2 Set Operations
@@ -68,7 +67,7 @@ $A\times B=\{(a,b)|a\in A\land b\in B\}$
 $|A\cup B|=|A|+|B|-|A\cap B|$
 
 
-!!! info "TABLE"
+!!! info ""
 	![[集合的inference表.png]]
 
 
@@ -90,6 +89,8 @@ A is called ==domain== ,B is called ==codomain==
 	- b is called the ==image== of a under f;
 	- a is called a ==preimage== of b;
 
+---
+
 !!! danger "NOTATION!"
 	- $f(\emptyset)=\emptyset$
 	- $f(\{a\})=\{f(a)\}$
@@ -100,18 +101,16 @@ A is called ==domain== ,B is called ==codomain==
 $\{(a,b)|a\in A \land f(a)=b\}$
 
 ### 几种函数类型
-- **One-to-one** also injection 单射
+- **One-to-one** / injection / 单射
 	- $\forall a\forall b(f(a)=f(b)\to a=b)$
-- **Onto** also surjection 满射
+- **Onto** / surjection / 满射
 	- $\forall b\in B\  \exists a \in A(f(a)=b)$
-- **One-to-one and Onto** or **one-to-one correspondence** also bijection 双射、一一对应
+- **One-to-one and Onto** or **one-to-one correspondence** / bijection / 双射、一一对应
 
-!!! note
-	如果存在函数 f 使得A to B有个双射，则他们具有相同的势（cardinality）
+!!! note "如果存在函数 f 使得A to B有个双射，则他们具有相同的势（cardinality）"
 
-如何证明函数 f 是单射或是满射？
-
-![[单射满射的证明方法.png]]
+- 如何证明函数 f 是单射或是满射？
+	- ![[单射满射的证明方法.png]]
 
 
 **Monotonic Functions 单调函数**
@@ -158,7 +157,7 @@ A ==sequence== is a function from a subset of the set of integers (usually eithe
 	$$\begin{gather}\frac{x-a}{b-a}=\frac{y-0}{1-0}\newline Let\ f\ be\ function\ from\ A\ to\ B\ that\ y=f(x)=\frac{x-a}{b-a}\\ Then\ y\ is\ a\ bijection\ from\ (a,b)\ to\ (0,1) \end{gather} $$
 
 - [Definition](#) A set that is either finite or has the same cardinality as the set of positive integers called ==countable==.
-	- 任何有限的集合或者与整数集等势的集合都称作==countable==
+	- 任何有限的集合或者与整数集等势的集合都称作 ==countable==
 	- When an infinite set S is countable, we denote the cardinality of S by $\aleph _0$ ( aleph null ).
 	- If $|A|=|Z^+|$ , the set A is countable infinite.
 
@@ -206,7 +205,7 @@ $$
 $$
 
 
-### 重要的结论 : 有理数集是可数的，但是实数集不可数
+### 重要结论 : 有理数集是可数的，但是实数集不可数
 
 !!! note
 	$|R| =|R\times R|$

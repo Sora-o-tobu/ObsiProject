@@ -11,7 +11,7 @@
 !!! example "负数的Division Theorem?"
 	-11 = -4 × 3 + 1
 	
-	余数要是正数
+	==余数要是正数==
 
 
 [Some Theorem](#)
@@ -22,7 +22,7 @@
 - $a\equiv b(\mod m)\ and\ c\equiv d(\mod m)$ , then $a+c\equiv b+d(\mod m)\ and\ ac\equiv bd(\mod m)$
 	- ==一个有用的推论==  $ab\mod m=((a\mod m)(b\mod m))\mod m$
 
-!!! example
+!!! example "同余解题步骤"
 	Solve the system of congruence $x\equiv 3(\mod 6)$ and $x\equiv 4(\mod 7)$ using the method of back substitution
 	![[同余例题1答案.png]]
 
@@ -35,7 +35,7 @@
 ## 4.3 Primes and Greatest Common Divisors
 
 !!! info
-	There are infinitely many primes
+	There are infinitely many primes (反证法证明)
 
 - Fermat's Little Theorem
 	- 对于任意质数p，任意整数a，有 $a^p\equiv a(\mod p)$ (若a与p互质，则有 $a^{p-1}\equiv 1(\mod p)$ )
@@ -77,6 +77,14 @@
 - 分别求解 𝑀1mod3 的逆、𝑀2mod5 的逆、𝑀3mod7 的逆
 - 分别是 2、1、1
 - 𝑥=2⋅35⋅2+1⋅21⋅3+1⋅15⋅2=233≡23(mod105)
+---
+其实上述问题也可以直接求解，我就不背公式了
+
+- $x\equiv 2(\mod 3)\ \Rightarrow \ x=3t+2$
+- $3t+2\equiv 3(\mod 5)\ \Rightarrow \ 3t\equiv 6(\mod 5)$
+- $t=5u+2\ \Rightarrow \ x=15u+8$
+- $15u\equiv -6(\mod 7)\ \Rightarrow \ 15u\equiv 15(\mod 7)$
+- $u=7p+1\ \Rightarrow \ x=105u+23$
 
 !!! example "More Example"
 	![[中国剩余定理例子.png]]
