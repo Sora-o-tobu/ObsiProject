@@ -9,6 +9,7 @@ theme:
     - search.highlight # 搜索出的文章关键词加入高亮
     - content.code.copy #代码复制
     - content.tabs.link
+    - navigation.indexes
 
     name: 'material'
     font:
@@ -115,3 +116,59 @@ extra_css:
   - stylesheets/extra.css
   - https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css
 
+nav:
+  - Home: index.md
+  - 课程笔记:
+    - 课程笔记/index.md
+    - 微积分甲 II:
+      - 零碎知识点: 课程笔记/微积分甲II/零碎知识点.md
+    - 大学物理甲:
+      - 零碎知识点: 课程笔记/大学物理/零碎知识点.md
+    - 离散数学:
+      - 课程笔记/离散数学/index.md
+      - CH 1. Logic and Proofs: 课程笔记/离散数学/笔记/Chapter1.md
+      - CH 2. Basic Structure: 课程笔记/离散数学/笔记/Chapter2.md
+      - CH 3. Algorithms: 课程笔记/离散数学/笔记/Chapter3.md
+      - CH 4. Number Theory and Cryptography: 课程笔记/离散数学/笔记/Chapter4.md
+      - CH 5. Induction and Recursion: 课程笔记/离散数学/笔记/Chapter5.md
+      - CH 6. Counting: 课程笔记/离散数学/笔记/Chapter6.md
+      - CH 8. Advanced Counting Techniques: 课程笔记/离散数学/笔记/Chapter8.md
+      - CH 9. Relations: 课程笔记/离散数学/笔记/Chapter9.md
+      - CH 10. Graphs: 课程笔记/离散数学/笔记/Chapter10.md
+      - CH 11. Trees: 课程笔记/离散数学/笔记/Chapter11.md
+    - 数字逻辑设计:
+      - 理论课笔记:
+        - CH 1&2 P1.Digital System & Boolean Equation: 课程笔记/数字逻辑设计/理论课笔记/Chapter 1 & 2 Part 1 Digital System & Boolean Equation.md
+        - CH 2 P2. Circuit Optimization: 课程笔记/数字逻辑设计/理论课笔记/Chapter 2 P2 Circuit Optimization.md
+        - CH 3. Combinational Logic Design: 课程笔记/数字逻辑设计/理论课笔记/Chapter 3 Combinational Logic Design.md
+        - CH 4. Sequential Circuits: 课程笔记/数字逻辑设计/理论课笔记/Chapter 4 Sequential Circuits.md
+        - CH 5. Digital Hardware Implementation: 课程笔记/数字逻辑设计/理论课笔记/Chapter 5 Digital Hardware Implementation.md
+        - CH 6. Registers and Register Transfers: 课程笔记/数字逻辑设计/理论课笔记/Chapter 6 Registers and Register Transfers.md
+        - CH 7. Memory Basics: 课程笔记/数字逻辑设计/理论课笔记/Chapter 7 Memory Basics.md
+      - Verilog:
+        - Verilog基础: 课程笔记/数字逻辑设计/Verilog/Verilog基础.md
+        - Verilog补充: 课程笔记/数字逻辑设计/Verilog/Verilog补充.md
+    - 数据结构:
+      - 课程笔记/数据结构/index.md
+      - 数据结构基础: 
+        - 线性表: 课程笔记/数据结构/数据结构基础/线性表.md
+        - 树: 课程笔记/数据结构/数据结构基础/树.md
+        - 并查集: 课程笔记/数据结构/数据结构基础/并查集.md
+        - 图: 课程笔记/数据结构/数据结构基础/图.md
+        - 排序: 课程笔记/数据结构/数据结构基础/排序.md
+  - 课外积累:
+    - 课外积累/index.md
+    - Java: 课外积累/JAVA.md
+  - 技术积累:
+    - 建立在线笔记: 技术积累/建立在线笔记.md
+    - 正则表达式: 技术积累/正则表达式.md
+    - 虚拟机: 技术积累/虚拟机.md
+  - 兴趣:
+    - Galgame: 
+      - 个人评价: blog/Galgame/个人评价.md
+    - 番剧:
+      - 番剧: blog/番剧/番剧.md
+    - 游戏:
+      - 怪物猎人世界: blog/游戏/怪猎铸币时刻.md
+      - 艾尔登法环: blog/游戏/法环铸币时刻.md
+  - 友情链接: 友情链接.md

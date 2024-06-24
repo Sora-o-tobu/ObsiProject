@@ -6,10 +6,14 @@
 也就是说必须要有意义，比如：
 - `Where am I?`  不是
 - `Cheer up!` 不是
-- `X+1=2` 不是
+- `X+1=2` 不是，its truth depends on x
 - `1+1=2` 是
 - `Hangzhou is the capital of China.` 是
 - `The teacher exclaimed, “Don’t come into class late again!”` 是（说话这个行为是，内容无所谓）
+
+!!! warning
+	“This statement is false.” is not a proposition 因为它既不是true也不是false
+
 ### 组成
 - Propositional variables:  small letters such as  p, q, r, s …
 - Truth value: T (true proposition), F (false proposition)
@@ -26,6 +30,12 @@
 	
 	这也说明：
 	p $\lor$ q $\to$ r  means  (p $\lor$ q) $\to$ r
+
+
+- Converse ： 逆命题
+- Inverse : 否命题(存疑) 这个inverse实际上是 $p\rightarrow q \Rightarrow \neg p \rightarrow \neg q$
+- Contrapositive : 逆否命题
+
 
 ## 1.2 Application of Propositional Logic
 

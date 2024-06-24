@@ -33,6 +33,12 @@
 	
 	$i=\frac{n-1}{m}=\frac{100-1}{3}=33$ ， $l=n-i=100-33=67$
 
+!!! example "例子2"
+	(£) There is an undirected tree with 2 vertices of 4 degrees, 3 vertices of 3 degrees. The remaining vertices are leaves. Then it contains 8 leaves
+	
+	2 * 4 + 3 * 3 + l = 2e = 2(2 + 3 + l -1)=2l + 8
+	
+	l = 9
 
 ## 11.2 Applications of Trees
 

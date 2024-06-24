@@ -9,6 +9,12 @@
 	- 长度为0的路径只含一个点
 - Circuit: 首尾是同一个点的path
 
+
+??? example "证明Show that for any simple graph G , one of G and G' is connected"
+	![[ExtremeExampleOfConnectedness.png]]
+	
+	**Case 1:** Both u𝑢 and v𝑣 lie in H𝐻. Let w𝑤 be a vertex of K𝐾. Since u𝑢 and v𝑣 are not adjacent to w𝑤 in G𝐺, they must both be adjacent to w𝑤 in G′𝐺′, so u−w−v𝑢−𝑤−𝑣 is a u−v𝑢−𝑣 path in G′𝐺′. **Case 2:** u𝑢 is in H𝐻 and v𝑣 is in K𝐾. In this case, u𝑢 and v𝑣 are not adjacent in G𝐺, so they must be adjacent in G′𝐺′. In any case, we have a u−v𝑢−𝑣 path in G′𝐺′, so G′𝐺′ is connected.
+
 ## 10.2 Graph Terminology  and Special Types of Graphs
 
 - 对于无向图，$\Sigma _{v\in V} deree(v)=2e$  （==自环算增加两个degree==）
@@ -140,6 +146,9 @@ A simply graph is called regular if every vertex of this graph has the same degr
 === "必要条件"
 	- 如果一个图存在哈密顿回路，则该图是二连通的
 	    - 二连通（biconnected）是指一个无向图中，如果从图中删除任意一个顶点，剩余的图仍然是连通的。也就是说，图中不存在割点
+	- 除了不存在割点外，哈密顿图也不存在割边
+		- 显然哈密顿图是一个有包含所有顶点的圈的图，删除掉这个圈上任一顶点或者任一边，哈密顿图仍然连通，删除圈外边则对圈无影响，因此哈密顿图不存在割边
+		- 换言之，**有割点的图一定不是哈密顿图**
 	- 如果一个图存在哈密顿回路，则每个点的度都大于 1
 	- 如果一个图中存在哈密顿回路，并且该图中有一个度数为 2 的顶点，则与该顶点相连的两条边都必须属于哈密顿回路
 	- 在构造哈密顿回路时，如果已经经过了一个顶点，则除了用于构造哈密顿回路的两条边之外，与该顶点相连的其他边都可以不再考虑（因为哈密顿回路只能经过每个顶点恰好一次）

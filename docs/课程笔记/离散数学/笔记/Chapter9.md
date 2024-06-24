@@ -123,8 +123,7 @@ $$
 	![[判别特征的例子1.png]]
 	![[判别特征例子2.png]]
 
-!!! note 
-	有symmetric和transitve不能推导出reflexive
+!!! note "由symmetric和transitve不能推导出reflexive"
 
 ### Combining Relations
 

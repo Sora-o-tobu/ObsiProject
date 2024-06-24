@@ -205,6 +205,12 @@ $$
 $$
 
 
+!!! warning
+	The set of functions from N to N is uncountable infinite
+	
+	把所有函数都列出来，为f1,f2,f3,f4.....，然后你找一个G(n)，让G(n)!=fn(n)，这样G(n)，就不在所有的f里面，所有不可数了
+
+
 ### 重要结论 : 有理数集是可数的，但是实数集不可数
 
 !!! note
