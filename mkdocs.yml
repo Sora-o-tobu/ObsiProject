@@ -17,7 +17,7 @@ theme:
 
     icon: 
       logo: material/lumx
-    favicon: image/sugar.ico
+    favicon: image/sugar.png
     palette:
 
     # Light mode
@@ -121,9 +121,13 @@ nav:
   - 课程笔记:
     - 课程笔记/index.md
     - 微积分甲 II:
-      - 零碎知识点: 课程笔记/微积分甲II/零碎知识点.md
-    - 大学物理甲:
-      - 零碎知识点: 课程笔记/大学物理/零碎知识点.md
+      - 课程笔记/微积分甲II/index.md
+      - 级数: 课程笔记/微积分甲II/级数.md
+      - 直线与平面: 课程笔记/微积分甲II/直线与平面.md
+      - 多元函数微分: 课程笔记/微积分甲II/多元函数微分.md
+      - 多元函数积分: 课程笔记/微积分甲II/积分.md
+    - 大学物理 乙:
+      - 大物 乙 I: 课程笔记/大学物理/零碎知识点.md
     - 离散数学:
       - 课程笔记/离散数学/index.md
       - CH 1. Logic and Proofs: 课程笔记/离散数学/笔记/Chapter1.md
