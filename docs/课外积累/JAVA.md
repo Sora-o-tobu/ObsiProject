@@ -826,8 +826,330 @@ class Master {
 
 !!! info "instanceof : 类型判断语句"
 
+## 抽象类
+
+- 用关键词 ==abstract== 修饰类，此类不能new对象。抽象类意为不够完整的类，无法独立存在。
+- 同理，被abstract修饰的方法称为抽象方法， ==只有方法声明，没有方法实现({}内的部分)== ，必须包含在抽象类里面
+
+!!! warning
+	抽象方法必须在抽象类中。 这句论断是错误的，因为抽象方法可以放在抽象类和接口中。
+	
+	正确的表述是抽象方法所在的类一定是抽象类
+
+!!! success "抽象类和抽象方法能帮助我们更规范的使用多态"
+
+```java
+abstract class Pet {  
+    String Name;  
+  
+    public abstract void eat();  
+    //父类抽象方法子类必须实现
+    
+}  
+class Dog extends Pet {  
+  
+    public void eat() {  
+        System.out.println(Name + " is eating");  
+    }  
+    
+}
+```
 
 
 
+## 静态成员和静态方法
+
+静态关键词 ==static==
+
+```java
+public class Test {
+	public static void main(String[] args){
+		MyClass mc1 = new MyClass();
+		mc1.a = 10;
+		MyClass mc2 = new MyClass();
+		mc2.a = 20;
+
+		System.out.println(mc1.a+"-"+mc2.a);
+	//Output: 20-20
+	}
+}
+
+class MyClass {
+	static int a;
+}
+```
+
+- 静态属性是类的所有对象都共享一份空间，任何对象修改，都会影响其它对象。
+- 因此我们正确调用静态属性其实使用类名去调用，如 `MyClass.a = 10;` 
+
+如，我们可以利用静态变量的特性Count程序中共实例化多少次这个类:
+
+```java
+class MyClass {
+	static int a;
+
+	public MyClass() {
+		a++;
+	}
+}
+```
+
+同理，静态方法也是经由类名直接调用，区别在于静态方法直接可以互相调用，如：
+
+```java
+class MyClass {
+	static int a;
+
+	public static void m1() {
+		System.out.println("m1");
+		m2();
+	//这里就不能加 m3();
+	}
+	public static void m2() {
+		System.out.println("m2");
+	}
+	public void m3() {
+		System.out.println("m3");
+	}
+}
+```
+
+!!! danger
+	静态方法中不能调用 this,super 关键词
+
+- 静态方法特点总结
+	- 静态方法允许直接访问静态成员
+	- 静态方法不能直接访问非静态成员
+	- 静态方法不允许使用this或super关键字
+	- 静态方法可以被继承，但不能被重写、多态
+
+## Final 最终
+
+- final 最后的,不可更改的
+- 可修饰的内容
+	- 类 (最终类)
+		- 不可被继承
+		- String,Math,System均为final修饰的类
+	- 方法 (最终方法)
+		- 不能被覆盖
+	- 变量 (最终变量)
+		- 值不能被改变
+		- 只能在定义的时候赋值或在构造方法中赋值
+
+```java
+class sub {
+	final int a = 10;
+}
+```
+
+```java
+class sub {
+	final int a;
+
+	public sub() {
+		a = 10;
+	}
+
+	public sub(int a){
+		this.a = a;
+	}
+}
+```
+
+
+!!! info "静态常量只能定义的时候赋值或在静态代码块中赋值"
+	```java
+	final static int NUM;
+	static {
+		NUM = 10;
+	}
+	```
+
+
+
+## 接口
+接口相当于特殊的抽象类，定义方式、组成部分与抽象类类似
+
+!!! note "接口命名规范: 以大写I开头，a,b,l,e结尾"
+
+![[接口语法.png]]
+
+
+
+!!! info "阿里规范中要求省略写"
+
+```java
+package ObjTest.Interfaces;  
+  
+public interface ITest {  
+    public static final double VERSION = 1.0;  
+    int HISTORY = 3; //一般这样写，因为在接口中会默认加上 public static final  
+    public abstract void method1();  
+    void method2(); //同理，默认加上 public abstract}
+}
+```
+
+```java
+package ObjTest.Interfaces;  
+  
+public class SubTest implements ITest{  
+    public void method1(){  
+        System.out.println("method1");  
+    }  
+    public void method2(){  
+        System.out.println("method2");  
+    }  
+}
+```
+
+```java
+package ObjTest.Interfaces;  
+  
+public class Test {  
+    public static void main(String[] args) {  
+        SubTest test = new SubTest(); //or ITest test = new SubTest(); 同多态  
+        test.method1();  
+        System.out.println("VERSION is "+ITest.VERSION);  
+        System.out.println("HISTORY is "+ITest.HISTORY);  
+    }  
+}
+/*Output:
+method1
+VERSION is 1.0
+HISTORY is 3
+*/
+```
+
+
+
+当单继承无法满足子类需求的时候，可以用接口为类拓展多种能力，实现多继承
+
+```java
+package ObjTest.Interfaces.Able;  
+  
+public interface ICode {  
+    void code();  
+}
+```
+
+```java
+package ObjTest.Interfaces.Able;  
+  
+public interface IDraw {  
+    void draw();  
+}
+```
+
+```java
+package ObjTest.Interfaces.Able;  
+  
+public class Student implements ICode, IDraw{  
+    private String name;  
+  
+    @Override  
+    public void code() {  
+        System.out.println(name+" is coding");  
+    }  
+  
+    @Override  
+    public void draw() {  
+        System.out.println(name+" is drawing");  
+    }  
+  
+    public void setName(String name){  
+        this.name = name;  
+    }  
+}
+```
+
+```java
+package ObjTest.Interfaces.Able;  
+  
+public class Test {  
+    public static void main(String[] args) {  
+        Student s1 = new Student();  
+        s1.setName("Inuisana");  
+        s1.code();  
+        s1.draw();  
+    }  
+}
+/*Output:
+Inuisana is coding
+Inuisana is drawing
+*/
+```
+
+接口有时候还能表示一种标记，如：没有Serializable就不能序列化，没有Cloneable就不能复制
+
+### 接口回调
+没听懂喵...
+
+为什么会有接口回调？什么是接口回调？
+
+其实这两个问题是一个问题，知道了接口回调的原理自然就知道了为什么会有这么个东西。我们知道java中接口是不可以直接创建实例的，那么问题来了，假如我把一个接口声明为一个变量，那么我执行这个接口中的方法，接口没有实例它该怎么办呢？啊哈，这里自然又改出现java中的另一个特性—“多态”，这时java虚拟机自然会去找其子类，调用其子类中已经重载的该方法，这里就是接口回调的本质！！我们只需要给该变量指向其子类的地址就可以在调用的时候知道调用子类的方法。那么我们就可以在A类中创建接口的子类实例，在B类中创建一个接口的变量，把A类的地址传给B类的变量，在变量执行接口中的方法的时候就会调用A类中重写的方法，这就是接口回调的执行步骤。我们在网络请求等耗时的操作的时候会使用到该机制，用来把得到的数据传回主线程中。
+
+
+## Object 类的方法
+
+!!! abstract "万物皆对象，任何类和接口都直接或间接继承了Object类"
+
+```java
+Object S1 = new Student(); 
+System.out.println(S1.getClass().getSimpleName());
+//Output: Student 获取真实类名，是反射的基础
+
+System.out.println(S1.hashcode());
+//输出S1物理地址的Hash值(java中地址被封装了无法直接操作)
+
+System.out.println("aa".equals("aa"));
+//Output: True  equals可以用在比较任意类
+
+System.out.println(S1.toString());
+//Output: ObjTest.Interfaces.Able.Student@723279cf
+//前半部分是S1的类，后半是物理地址的hash值
+//要达到预期效果，可以在Student类中重写toString方法
+//System.out.println(S1); 同样效果，默认会调用toString()
+```
+
+### clone
+
+```java
+public class Student implements ICode, Cloneable{  
+    private String name;  
+  
+    @Override  
+    public void code() {  
+        System.out.println(name+" is coding");  
+    }  
+
+    public void setName(String name){  
+        this.name = name;  
+    }  
+    public Student clone() throws CloneNotSupportedException {  
+        return (Student) super.clone();  
+    }  
+}
+```
+
+```java
+public class Test {  
+    public static void main(String[] args) throws CloneNotSupportedException {  
+        Student s1 = new Student();  
+        s1.setName("Inuisana");  
+        s1.code();  
+        Student S2 = s1.clone();  
+        S2.setName("Nimisora");  
+        s1.code();  
+    }  
+}
+/*Output:
+Inuisana is coding
+Inuisana is coding
+*/
+```
+
+要在类中重写clone，并用Cloneable标记
+
+## 内部类
 
 
