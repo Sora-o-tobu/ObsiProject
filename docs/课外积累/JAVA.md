@@ -1,5 +1,5 @@
 
-!!! abstract 
+!!! quote
 	Java和C++一样是面向对象的程序设计语言，而C是面向过程的语言
 
 ## 第一个程序 Hello World
@@ -1152,4 +1152,110 @@ Inuisana is coding
 
 ## 内部类
 
+!!! abstract "在一个类的内部再定义一个完整的类"
+
+- 特点
+	- 编译之后可生成独立的字节码文件
+	- 内部类可直接访问外部类的私有成员，而不破坏封装
+	- 可为外部类提供必要的内部功能组件
+- 分类
+	- 成员内部类
+	- 静态内部类
+	- 局部内部类
+	- 匿名内部类
+
+### 成员内部类
+
+在成员变量位置定义内部类则叫成员内部类
+
+```java
+public class Outer {
+	int num = 3;
+	public class In {
+		int num = 2;
+		public void inMethod() {
+			int num = 1;
+			System.out.println("执行内部类的方法");
+			System.out.println(num);//3
+			System.out.println(this.num);//2
+			System.out.println(Outer.this.num);//1
+		}
+	}
+}
+```
+
+```java
+Outer out = new Outer();
+In in = out.new In();//内部类对象实例化格式
+in.inMethod();
+
+In in = new Outer().new In();//不在意外部类的话可以直接这样写
+in.inMethod();
+```
+
+使用内部类对功能实现更强的封装
+
+```java
+public class Outer {
+	private class In {
+		public int inMethod (int a ,int b) {
+			return a+b;
+		}
+	}
+	public int add(int a ,int b) {
+		return new In().inMethod(a,b);
+	}
+}
+```
+
+### 静态内部类
+```java
+public class Outer {
+	public static In {
+		public void show() {
+			System.out.println("静态内部类方法");
+		}
+	}
+}
+
+---
+//测试类
+Outer.In in = new Outer.In();
+in.show();
+```
+
+!!! tip "静态内部类只能访问到外部类的静态变量"
+
+
+### 局部内部类
+
+在局部变量位置定义内部类则叫局部内部类
+
+```java
+public class Outer {
+
+	public void method() {
+		int num = 8;
+		class In {
+			public void inMethod() {
+				System.out.println("局部内部类");
+				System.out.println(num);
+//如果在局部内部类调用外部局部变量，则该变量强制转化为final类型(保证生命周期一致)
+			}
+		//num++; 对num的操作不能和局部内部类调用num同时存在
+		new In().inMethod();
+		}
+	}
+}
+```
+
+### 匿名内部类
+
+- 没有类名的局部内部类 (一切特征都与局部内部类相同)
+- 必须继承一个父类或实现一个接口
+- 定义类、实现类、创建对象的语法合并，只能创建一个该类的对象
+- 优点
+	- 减少代码量
+- 缺点
+	- 可读性较差
 
