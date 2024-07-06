@@ -141,6 +141,7 @@ nav:
       - CH 10. Graphs: 课程笔记/离散数学/笔记/Chapter10.md
       - CH 11. Trees: 课程笔记/离散数学/笔记/Chapter11.md
     - 数字逻辑设计:
+      - 课程笔记/数字逻辑设计/index.md
       - 理论课笔记:
         - CH 1&2 P1.Digital System & Boolean Equation: 课程笔记/数字逻辑设计/理论课笔记/Chapter 1 & 2 Part 1 Digital System & Boolean Equation.md
         - CH 2 P2. Circuit Optimization: 课程笔记/数字逻辑设计/理论课笔记/Chapter 2 P2 Circuit Optimization.md
@@ -153,8 +154,8 @@ nav:
         - Verilog基础: 课程笔记/数字逻辑设计/Verilog/Verilog基础.md
         - Verilog补充: 课程笔记/数字逻辑设计/Verilog/Verilog补充.md
     - 数据结构:
-      - 课程笔记/数据结构/index.md
-      - 数据结构基础: 
+      - 数据结构基础:
+        - 课程笔记/数据结构/数据结构基础/index.md 
         - 线性表: 课程笔记/数据结构/数据结构基础/线性表.md
         - 树: 课程笔记/数据结构/数据结构基础/树.md
         - 并查集: 课程笔记/数据结构/数据结构基础/并查集.md
@@ -164,6 +165,7 @@ nav:
     - 网络攻防实践基础 短学期:
       - 课程笔记/网络攻防实践基础短学期/index.md
       - Web 基础: 课程笔记/网络攻防实践基础短学期/Web基础.md
+      - Misc 基础: 课程笔记/网络攻防实践基础短学期/Misc基础.md
   - 课外积累:
     - 课外积累/index.md
     - Java: 课外积累/JAVA.md

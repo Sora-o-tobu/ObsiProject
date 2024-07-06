@@ -49,7 +49,7 @@
 	- IPv4由四个段组成，每个段为八位二进制，理论上可以有 $2^{32}$ 个不同地址(实际上有复杂的地址分配机制)
 	- 2019 年 11 月 25 日，RIPE NCC 宣布 IPv4 地址耗尽
 
-!!! example
+!!! example "IPv4 的地址"
 	![[IP表示.png]]
 
 
@@ -72,11 +72,12 @@
 
 !!! abstract "超文本传输协议 HyperText Transfer Protocol"
 
-- 应用层
+- 属于应用层
 - 特点：是基于文本的协议，用于在客户端和服务器之间传输网页
-	- URL(统一资源定位符)只能包含ASCII字符，Encode为百分号编码
 - 需要维持状态（比如：用户已登录）怎么办？Cookie 存在文件头中
 - 格式
+	- http规定了请求报文和响应报文的形式
+	- URL(统一资源定位符)只能包含ASCII字符，Encode为百分号编码
 
 ## 后端：业务逻辑
 
@@ -261,11 +262,19 @@ CSRF 示例： 假设有一个转账功能，用户可以通过POST请求向指�
 - **CSRF Token**：在表单中加入随机的CSRF Token，确保请求是来自合法的来源。
 - **SameSite Cookie**：设置Cookie的SameSite属性，防止跨站请求时Cookie被发送。
 
+---
+
 SSRF 示例： 假设有一个Web应用允许用户输入URL并获取该URL的内容。攻击者可以输入内部服务的URL，获取敏感信息：
 
 ```html
 <https://example.com/fetch?url=http://internal-service:8080/secret>
 ```
+
+??? tip "常用内网ip段"
+	- 192.168.0.0/16 => 192.168.0.0 ~ 192.168.255.255
+	- 10.0.0.0/8 => 10.0.0.0 ~ 10.255.255.255
+	- 172.16.0.0/12 => 172.16.0.0 ~ 172.31.255.255
+		- 实际上，判断是否是内网ip还包括 127.0.0.0/8 和 0.0.0.0/8
 
 **防护措施**：
 
@@ -280,6 +289,17 @@ def fetch_url(url):
         return "Access Denied"
     # 继续处理请求
 ```
+
+
+[参考阅读](https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html)
+
+所以，归纳一下，完美解决SSRF漏洞的过程如下：
+
+1. 解析目标URL，获取其Host
+2. 解析Host，获取Host指向的IP地址
+3. 检查IP地址是否为内网IP
+4. 请求URL
+5. 如果有跳转，拿出跳转URL，执行1
 
 #### 跨域
 

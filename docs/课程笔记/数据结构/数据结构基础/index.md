@@ -1,5 +1,7 @@
 # index
 
+平时分拿全，满绩很简单的一门课
+
 ## ADT : The Abbreviation of Abstract Data Type
 
 
