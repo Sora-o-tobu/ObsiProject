@@ -166,9 +166,15 @@ nav:
       - 课程笔记/网络攻防实践基础短学期/index.md
       - Web 基础: 课程笔记/网络攻防实践基础短学期/Web基础.md
       - Misc 基础: 课程笔记/网络攻防实践基础短学期/Misc基础.md
+      - Reverse 基础: 课程笔记/网络攻防实践基础短学期/Reverse基础.md
+      - Pwn 基础: 课程笔记/网络攻防实践基础短学期/Pwn基础.md
+      - Crypto 基础: 课程笔记/网络攻防实践基础短学期/Crypto基础.md
+      - Web 专题: 课程笔记/网络攻防实践基础短学期/Web专题.md
+      - Misc 专题: 课程笔记/网络攻防实践基础短学期/Misc专题.md
   - 课外积累:
     - 课外积累/index.md
     - Java: 课外积累/JAVA.md
+    - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
   - 技术积累:
     - 建立在线笔记: 技术积累/建立在线笔记.md

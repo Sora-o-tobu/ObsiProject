@@ -18,11 +18,11 @@ statistics: true
 
 
 !!! danger ""
-	![[OneLastSora_webp.webp]]
+	![[OneLastSora.png]]
 
 
 !!! quote "这是一个试验功能"
-	- [x]  [测试1](./课程笔记/大学物理/零碎知识点.md)
+	- [x]  [CTF 短学期](./课程笔记/网络攻防实践基础短学期/index.md)
 	- 暑假待办
 		- [ ]  [CMU 15-445: Database Systems](https://csdiy.wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F/15445/)
 			- [【cmu15-445】【数据库导论】【卡内基梅隆大学】【中英字幕】](https://www.bilibili.com/video/BV1cM4y1n7HL/?vd_source=2b9f6fcc0b53b5f5e1607a9e3e8c83bd)
