@@ -8,18 +8,20 @@
 	
 	这两个操作一般用于对象的保存和网络传输对象的字节序列等场景。
 
+![[序列化与反序列化.png]]
+
 Java中，实现序列化和反序列化的类分别位于 `java.io.ObjectOutputStream` 和 `java.io.ObjectInputStream` 中
 
 - **序列化** ObjectOutputStream类 => writeObject()
 	- 该方法对参数指定的obj对象进行序列化，把字节序列写到一个目标输出流中，按Java的标准约定是给文件一个.ser扩展名
 	- 流程：
-		- 1. 创建一个对象输出流(也可以是文件输出流)
-		- 2. 通过对象输出流的writeObject方法将对象序列化写入输出流
+		- (1) 创建一个对象输出流(也可以是文件输出流)
+		- (2) 通过对象输出流的writeObject方法将对象序列化写入输出流
 - **反序列化** ObjectInputStream类 --> readObject()
 	- 该方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。
 	- 流程：
-		- 1. 创建一个对象输出流(也可以是文件输出流)
-		- 2. 通过对象输出流的readObject方法将对象反序列化写入输出流
+		- (1) 创建一个对象输出流(也可以是文件输出流)
+		- (2) 通过对象输出流的readObject方法将对象反序列化写入输出流
 
 ```java
 import java.io.*;
@@ -93,3 +95,56 @@ Apache是一个著名开源项目，而Commons Collections作为其重要组件�
 
 如果一个类的方法被重写，那么在调用这个函数时，会优先调用经过修改的方法。因此， **如果某个可序列化的类重写了readObject()方法，并且在readObject()中对Map类型的变量进行了键值修改操作，且这个Map变量是可控的，我么就可以实现攻击目标**。
 
+```java
+public class test{
+    public static void main(String args[]) throws Exception{
+        //定义myObj对象
+        MyObject myObj = new MyObject();
+        myObj.name = "hi";
+        //创建一个包含对象进行反序列化信息的”object”数据文件
+        FileOutputStream fos = new FileOutputStream("object");
+        ObjectOutputStream os = new ObjectOutputStream(fos);
+        //writeObject()方法将myObj对象写入object文件
+        os.writeObject(myObj);
+        os.close();
+        //从文件中反序列化obj对象
+        FileInputStream fis = new FileInputStream("object");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        //恢复对象
+        MyObject objectFromDisk = (MyObject)ois.readObject();
+        System.out.println(objectFromDisk.name);
+        ois.close();
+    }
+}
+
+class MyObject implements Serializable{
+    public String name;
+    //重写readObject()方法
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException{
+        //执行默认的readObject()方法
+        in.defaultReadObject();
+        //执行打开计算器程序命令
+        Runtime.getRuntime().exec("open /Applications/Calculator.app/");
+    }
+}
+```
+
+
+我们注意到MyObject类重写了readObject方法，在原本功能外额外增加了 `Runtime.getRuntime().exec("open /Applications/Calculator.app/");` 偷偷把计算器打开了
+
+!!! danger
+	当然，这只是Java反序列化漏洞的基本原理，实际上基于此可以引申为更复杂的应用，在此不过多介绍 (懒，且暂时没有用处)
+
+### 漏洞防范
+
+- (1) **类白名单校验**
+	- 在 ObjectInputStream 中 resolveClass 里只是进行了 class 是否能被 load ，自定义 ObjectInputStream , 重载 resolveClass 的方法，对 className 进行白名单校验
+- (2) **禁止 JVM 执行外部命令 Runtime.exec**
+	- 通过扩展 SecurityManager实现
+
+
+
+## 参考
+
+- [https://blog.csdn.net/qq_37019068/article/details/120717474](https://blog.csdn.net/qq_37019068/article/details/120717474)
+- [https://paper.seebug.org/312/](https://paper.seebug.org/312/)
