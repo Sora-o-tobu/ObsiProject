@@ -40,6 +40,7 @@ JPEG 使用分段的结构来进行存储，各段以 0xFF 开头，后接一
 
 #### PNG 文件结构
 ![[png文件结构.png]]
+
 - 文件头 89 50 4E 47 0D 0A 1A 0A | .PNG....
 - 采用分块的方式存储数据
     - 每块的结构都是 4 字节长度 + 4 字节类型 + 数据 + 4 字节 CRC 校验
@@ -124,6 +125,7 @@ JPEG 使用分段的结构来进行存储，各段以 0xFF 开头，后接一
     - 编码音频数据的 sample 也可以进行 LSB 隐写
 - flac：无损压缩，如果出现可能考虑转换为 wav
 - 使用 Python 的 soundfile / librosa 库进行音频处理
+	- 版本兼容问题挺严重的，我搞不好这玩意
 
 
 
@@ -273,14 +275,52 @@ JPEG 使用分段的结构来进行存储，各段以 0xFF 开头，后接一
 +----------------+
 ```
 
+
+**MESSAGE_TYPE_SYN \[0x00\]**
+
+- (uint16_t) packet_id
+- (uint8_t) message_type \[0x00\]
+- (uint16_t) session_id
+- (uint16_t) initial sequence number
+- (uint16_t) options
+- If OPT_NAME is set:
+    - (ntstring) session_name
+
+**MESSAGE_TYPE_MSG:\ [0x01\]**
+
+- (uint16_t) packet_id
+- (uint8_t) message_type \[0x01\]
+- (uint16_t) session_id
+- (uint16_t) seq
+- (uint16_t) ack
+- (byte\[\]) data
+
+
+**MESSAGE_TYPE_FIN: \[0x02\]**
+
+- (uint16_t) packet_id
+- (uint8_t) message_type \[0x02\]
+- (uint16_t) session_id
+- (ntstring) reason
+
+**MESSAGE_TYPE_ENC: \[0x03\]**
+
+- (uint16_t) packet_id
+- (uint8_t) message_type \[0x03\]
+- (uint16_t) session_id
+- (uint16_t) subtype
+- (uint16_t) flags
+- If subtype is ENC_SUBTYPE_INIT:
+    - (byte\[32\]) public_key_x
+    - (byte\[32\]) public_key_y
+- If subtype is ENC_SUBTYPE_AUTH:
+    - (byte\[32\]) authenticator
+
 ---
 
 `SEQ` (sequence) and `ACK` (acknowledgement) numbers 用法和TCP中类似。在连接的开始，客户端和服务器都选择一个随机的 `ISN` (Initial Sequence Number) 并发送给对方。
 
 客户端的 `SEQ` 就是服务器的 `ACK` ；服务器的 `SEQ` 就是客户端的 `ACK` 。这也意味着双方都知道预期的字节偏移量
-
-在一次会话，每一端将发送介于 0 和无限数量的字节之间的数据到另一侧。随着越来越多的数据排队等待发送， 想象一下您正在追加要发送到列表的字节是很有帮助的 发送的所有字节。当消息发出时，系统应 查看它自己的序列号和字节队列，以决定要做什么 发送。如果有字节等待，但尚未被 peer，它应该发送尽可能多的这些字节以及它的 当前序列号。
-
 
 ### 内存取证
 #### 基础介绍
@@ -414,7 +454,6 @@ JPEG 使用分段的结构来进行存储，各段以 0xFF 开头，后接一
 - 通过 payable 关键字定义一个可以接收以太币的函数
 - 特殊函数：constructor、fallback、receive
 
-
 !!! tip "[TonyCrane的Solidity笔记](https://note.tonycrane.cc/ctf/blockchain/eth/solidity/)"
 
 ##### 常见漏洞 之 整型溢出
@@ -434,7 +473,6 @@ function transfer(address _to, uint256 _value) public returns (bool) {
 - 给任意地址转账，原余额 20 Token，转 21 个，则 balances 会变的巨大
 - 通过事先检查或者使用 SafeMath 库可以避免
 - 新版本 solidity 自动开启了溢出检查
-
 
 ##### 常见漏洞 之 重入攻击
 
@@ -468,6 +506,8 @@ contract Bank {
 
 [Ethernaut](https://ethernaut.openzeppelin.com/) 的题目 `Coin Flip`
 
+该题目只需要根据源代码中生成随机数的方法进行复现即可，可以藉此学习 Remix IDE 与测试链的交互 (Beyond The Console)
+
 #### CTF 比赛中的私链题目交互
 
 - 一般会过滤掉大部分 geth rpc 接口
@@ -481,3 +521,42 @@ contract Bank {
     - 得到 rawTransaction 后 eth.send_raw_transaction(raw) 发送
     - 通过 eth.wait_for_transaction_receipt(hash) 等待交易完成
     - 无需交易的 view 函数可以直接 contract.functions.f().call()
+
+#### Web3.py 交互
+
+非常推荐使用 `Web3.py` 进行交互，以某 Lab 一个题目的代码为例子：
+
+- 创捷合约实例
+	- `SimpleStorage = w3.eth.contract(abi=contract_abi, bytecode=contract_bytecode)`
+- 构建部署交易
+```python 
+	transaction = SimpleStorage.constructor().build_transaction({
+	    'from': Account,
+	    'nonce': w3.eth.get_transaction_count(Account),
+	    'gas': 2000000,
+	    'gasPrice': w3.to_wei('50', 'gwei')
+	})
+```
+- 私钥签名
+	- `signed_txn = w3.eth.account.sign_transaction(transaction, privateKey)`
+- 发送交易、获取交易回执
+	- `txn_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)`
+	- `txn_receipt = w3.eth.wait_for_transaction_receipt(txn_hash)`
+- 获取合约地址
+	- `contract_address = txn_receipt.contractAddress`
+- 创捷已部署合约的实例
+	- `simple_storage = w3.eth.contract(address=contract_address, abi=contract_abi)`
+- 构建 geteth() 函数
+	- 要记得加 `value: w3.to_wei(0.001,'ether')
+```python
+	set_txn = simple_storage.functions.geteth().build_transaction({
+	    'from': Account,
+	    'value': w3.to_wei(0.001, 'ether'),
+	    'nonce': w3.eth.get_transaction_count(Account),
+	    'gas': 200000,
+	    'gasPrice': w3.to_wei('50', 'gwei')
+	})
+```
+- 调用 geteth() 函数
+	- `stored_data = simple_storage.functions.geteth().call()`
+

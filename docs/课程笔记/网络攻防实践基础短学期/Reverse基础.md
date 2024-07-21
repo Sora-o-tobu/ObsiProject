@@ -1,3 +1,4 @@
+# Reverse 基础
 
 ## 可执行文件
 
@@ -141,6 +142,12 @@ After main
 
 ## ELF 的交互、调试
 
+- `gdb` 调试C语言程序
+	- `run` 开始运行
+	- `b *main` 在 main 函数开头设置断点
+	- `info break` 查看当前断点情况
+	- `p &buffer[0]` 查看数组 `buffer` 的起始地址
+	- `x/gx $rsp/rbp` 查看 `rsp/rbp` 指针指向的地址
 
 ## ELF 的逆向
 
@@ -155,7 +162,9 @@ After main
 	- [Cutter/radare](https://github.com/rizinorg/cutter)
 	- [大语言模型;D](https://mlm.lingyiwanwu.com/)
 
+!!! quote "在基础的 CTF 题目上，一般把可执行程序丢进 IDA 就可以得到源码了"
 
 ### 动态逆向
 
 **可运行** 和 **可调试** 是高效解决
+

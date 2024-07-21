@@ -67,6 +67,55 @@ public class ReflectionPlay implements Serializable {
 
 从运行结果可以看到，我们将String类型的对象序列化后又进行了反序列化，得到的还是原来的对象，成功将 `hello` 输出
 
+### PHP 反序列化
+
+在了解 Java 的反序列化漏洞前，可以先对 PHP 反序列化有一个大致认识
+
+php 将数据序列化和反序列化会用到两个函数
+
+- **serialize** 将对象格式化成有序的字符串
+- **unserialize** 将字符串还原成原来的对象
+
+!!! quote "在PHP中，序列化和反序列化一般用做缓存，比如session缓存，cookie等。"
+
+一个简单的例子如下：
+
+```php
+<?php
+$user=array('xiao','shi','zi');
+$user=serialize($user);
+echo($user.PHP_EOL);
+print_r(unserialize($user));
+?>
+/* Output
+a:3:{i:0;s:4:"xiao";i:1;s:3:"shi";i:2;s:2:"zi";}
+Array
+(
+    [0] => xiao
+    [1] => shi
+    [2] => zi
+)
+*
+*上面输出中，i代表整型数据 int ，s代表字符串，后接长度
+*/
+```
+
+```php
+<?php
+ 
+class FileHandler {
+    public  $op = 2;
+    public  $filename = "flag.php";
+}
+ 
+$a = new FileHandler();
+$b = serialize($a);
+echo $b;
+ 
+?>
+# Output: O:11:"FileHandler":2:{s:2:"op";i:2;s:8:"filename";s:8:"flag.php";}
+```
+
 ## 反序列化漏洞
 
 ### 漏洞分析
