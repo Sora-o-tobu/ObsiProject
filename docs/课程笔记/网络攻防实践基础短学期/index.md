@@ -11,8 +11,8 @@
 - [CTF Wiki](https://ctf-wiki.org/)
 - 刷题网站
 	- [ZJU School-Bus](https://zjusec.com/)  需要内网
-	- [Hackergame](hack.lug.ustc.edu.cn)
-	- [攻防世界](adworld.xctf.org.cn)
+	- [Hackergame](https://hack.lug.ustc.edu.cn)
+	- [攻防世界](https://adworld.xctf.org.cn)
 - [「实用技能拾遗」系列辅学课程网站](https://slides.tonycrane.cc/PracticalSkillsTutorial/)
 - [Black White's Homepage](http://cc.zju.edu.cn/bhh/)
 - [x86 汇编语言 - 鹤翔万里的笔记本](https://note.tonycrane.cc/cs/pl/asm/)

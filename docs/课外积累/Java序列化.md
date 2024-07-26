@@ -191,7 +191,7 @@ class MyObject implements Serializable{
 - (1) **类白名单校验**
 	- 在 ObjectInputStream 中 resolveClass 里只是进行了 class 是否能被 load ，自定义 ObjectInputStream , 重载 resolveClass 的方法，对 className 进行白名单校验
 - (2) **禁止 JVM 执行外部命令 Runtime.exec**
-	- 通过扩展 SecurityManager实现
+	- 通过扩展 SecurityManager 实现
 
 
 

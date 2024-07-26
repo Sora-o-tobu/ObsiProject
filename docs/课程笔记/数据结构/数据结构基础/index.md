@@ -2,8 +2,10 @@
 
 平时分拿全，满绩很简单的一门课
 
-## ADT : The Abbreviation of Abstract Data Type
+!!! quote "ADT : The Abbreviation of Abstract Data Type"
 
+
+使用 pandoc 制作实验报告：
 
 ```
 pandoc .\Project.md -s --highlight-style tango -o pr.pdf （--pdf-engine=xelatex）
