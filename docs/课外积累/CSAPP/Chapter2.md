@@ -37,10 +37,101 @@
 
 ## Part 2. 整数的表示
 
+源码、反码、补码... 老生常谈，此处亦不细讲，仅补充几点额外的信息:
 
+- 对于大多数C语言实现，有符号数和无符号数之间转换的规则是，位模式不变，但是解释这些位的方法变了
+
+```c
+❯ nano signed.c
+ signed.c
+ 1 #include <stdio.h>
+ 2
+ 3 int main(void)
+ 4 {
+ 5         int a = -12345;
+ 6         unsigned short b = (unsigned short) a;
+ 7         printf("a = %d , b = %u",a,b);
+ 8 }
+
+❯ gcc signed.c -o signed
+❯ ./signed
+a = -12345 , b = 53191
+/*
+* -12345 : 1100 1111 1100 0111
+*  54191 : 1100 1111 1100 0111
+*/
+```
+
+- 如果一个运算数是有符号数，另一个是无符号数，那么C语言会隐式的将有符号数强制转化为无符号数进行运算
+
+```c
+❯ nano versus.c
+versus.c
+ 1 #include <stdio.h>
+ 2 int main(void){
+ 3         int a = -1;
+ 4         unsigned int b = 0;
+ 5
+ 6         if (a < b)
+ 7                 printf("-1 < 0");
+ 8         else
+ 9                 printf("-1 > 0");
+10 }
+
+❯ gcc versus.c -o versus
+❯ ./versus
+-1 > 0
+```
+
+- 当位数更多的数据类型转化为位数更低的数据类型时，多出的位数舍去；当位数低的数据类型转化为位数高的数据类型时，需要根据要转化成的数据是否是有符号数
+	- 若是无符号数，新增位全为 `0`
+	- 若是有符号数
+		- 若是正数，新增位全为 `0`
+		- 若是负数，新增位全为 `1`
+- 保证符号拓展数值保持不变
 
 ## Part 3. 整数运算
 
+你知道我要说什么，这节内容在 《数字逻辑设计》 中亦有记载
 
+- 无符号数加法的溢出
+
+```c
+❯ nano addition.c
+addition.c
+ 1 #include <stdio.h>
+ 2 int main(void)
+ 3 {
+ 4         unsigned char a = 255;
+ 5         unsigned char b = 1;
+ 6         unsigned char c = a + b;
+ 7         printf("a+b = %d , c = %d",a+b,c);
+ 8 }
+
+❯ gcc addition.c -o addition
+❯ ./addition
+a+b = 256 , c = 0
+/* What if (char)127 + (char)1?
+char x = 123 , y = 1;
+char z = x + y;
+printf("z = %d",z);
+# Output: z = -128
+# x : 0111 1111
+# y : 0000 0001
+# z : 1000 0000
+*/
+```
+
+- 对于两个 w 位的无符号数的乘法，得到的结果也应该为 w 位，因此有可能会产生截断
+- 无论是无符号乘法还是补码乘法，运算结果的位级表示都是一样的(截断后)
+
+![[整数乘法.png]]
+
+!!! note "回归性原理，乘法就是加法"
+	![[乘法的实质.png]]
+
+- 同样的，除法可以看作是右移操作。对于有符号的负数的算数右移，由于需要满足四舍五入的特性，需要对原数加上 $2^k-1$ 大小的 `bias` ，即可得到向零舍入的结果
+
+![[有符号数算数右移.png]]
 
 ## Part 4. 浮点数
