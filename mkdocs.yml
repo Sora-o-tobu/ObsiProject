@@ -173,6 +173,9 @@ nav:
       - Misc 专题: 课程笔记/网络攻防实践基础短学期/Misc专题.md
   - 课外积累:
     - 课外积累/index.md
+    - CSAPP:
+      - Chapter 1. 计算机系统漫游: 课外积累/CSAPP/Chapter1.md
+      - Chapter 2. 信息的表示与处理: 课外积累/CSAPP/Chapter2.md
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md

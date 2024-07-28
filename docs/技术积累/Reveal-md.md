@@ -2,7 +2,7 @@
 # 使用 Reveal-md 写 Slides
 
 !!! quote
-	收到短学期课程 CTF 影响，我也对 Reveal-md 写 Sldes 的方式产生了较大兴趣，因此参考[修佬的教程](https://note.isshikih.top/others/reveal-md2Slides/)写了篇自用的笔记
+	受到短学期课程 CTF 影响，我也对 Reveal-md 写 Sldes 的方式产生了较大兴趣，因此参考[修佬的教程](https://note.isshikih.top/others/reveal-md2Slides/)写了篇自用的笔记
 
 我写的一个简陋测试 Slides： [🔗](https://slides.nimisora.top/test-dir/test.html#/)
 
@@ -116,3 +116,4 @@ reveal-md slides.md --print slides.pdf --print-size A4
 reveal-md .\test.md --static static-dir --assets-dir assets
 ```
 
+部署完后，通过 URL 指定访问即可
