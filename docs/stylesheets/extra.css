@@ -1,6 +1,7 @@
-body {
-    font-family: "LXGW WenKai", sans-serif;
-  }
+:root {
+  --md-text-font: "JetBrains Mono", "LXGW WenKai Screen"; 
+  --md-code-font: "JetBrains Mono";
+}
 
 .md-typeset h3 {
     color:rgb(42,164,187)
@@ -37,8 +38,10 @@ h2::before, h3::before, h4::before, h5::before {
 .md-typeset h2,
 .md-typeset h3,
 .md-typeset h4,
-.md-typeset h5 {
-    font-weight: 600;
+.md-typeset h5,
+.md-typeset h6 {
+    font-weight: bold;
+    font-family: "LXGW WenKai Screen";
 }
 
 
@@ -65,4 +68,15 @@ h2::before, h3::before, h4::before, h5::before {
     --md-shadow-z3: 1px 1px 3px #fff5ee, 2px 2px 9px #cebeb3;
 }
 
+img {
+  max-width: 100%;
+  max-height: 500px;
+  margin: auto;
+  display: block;
+}
 
+.md-typeset__table {
+  text-align: center;
+  vertical-align: middle;
+  display: table-cell;
+}

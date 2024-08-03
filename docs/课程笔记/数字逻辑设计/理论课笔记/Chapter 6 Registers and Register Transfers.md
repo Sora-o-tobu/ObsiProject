@@ -1,8 +1,6 @@
 # Chapter 6 Registers and Register Transfers
 
-## Part 1 ： Registers, Microoperations and Implementations
-
-### Register 寄存器
+## Register 寄存器
 
 - 一个寄存器既能存储值(store)又能读取新的值(load)
 - 要同时实现这两个功能，我们使用变量`load`来控制寄存器选择store还是load的行为
@@ -19,7 +17,7 @@
 
 ![[方案Bphoto.png]]
 
-### Register Transfer Operations
+## Register Transfer Operations
 
 - Elementary Operations: load, count, shift, add, bitwise "OR", etc.
 	- Elementary operations called ==microoperations==
@@ -36,8 +34,8 @@
 		![[RTL分析答案.png]]
 
 
-#### Register Transfer Structure
-##### Multiplexer-Based Transfers 基于MUX实现传输
+### Register Transfer Structure
+#### Multiplexer-Based Transfers 基于MUX实现传输
 对于一个单一寄存器，它的**输入**可能有多种来源，例如其它寄存器，又或者是其他操作的结果。总而言之，它的输入很可能是不唯一的，而同一时刻我们只能接受一个来源的输入。因此，我们需要使用 `MUX` 来对输入进行选择。 -修佬
 
 ![[基于MUX实现传输例子.png]]
@@ -45,7 +43,7 @@
 !!! example "一组Register互相之间有输入的情况"
 	![[基于MUX的一组Register.png]]
 
-#### Multiplexer Bus 基于MUX总线实现传输
+### Multiplexer Bus 基于MUX总线实现传输
 上述实现要求每个Register都有其对应的MUX，这将大大增加电路的开销。因此我们不妨试想一个所有Register连接到一条线路的情况，这条线路也被称为**总线**(bus)
 
 接下来进行对比，以总线实现为主体，与 `MUX` 实现对比：
@@ -58,30 +56,30 @@
 
 而因为这些特点，我们需要评估我们的需求，选择合适的结构来实现。
 
-##### Mutiplexer Bus 共用MUX
+#### Mutiplexer Bus 共用MUX
 ![[Mutiplexerbus实现.png]]
 
 上图将所有Register存储的值接入一个共用的MUX中，通过 $S_1、 S_0$ 控制输出哪组值，再通过寄存器各自的load控制是否输入到该寄存器中
 
-##### Three-State Bus
+#### Three-State Bus
 ![[三态门bus实现.png]]
 
 三态门输出高阻，很适合当bus
 
-#### Microoperations 实现
-##### Add and Substract 加减法
+### Microoperations 实现
+#### Add and Substract 加减法
 ![[加减法微操作.png]]
 
 !!! note
 	正如见面几章所学过的，还可以通过加减法器做到很多功能
 	![[加减法器更多功能.png]]
 
-##### Logic 逻辑运算
+#### Logic 逻辑运算
 Wow，so simply!
 
 ![[逻辑微运算.png]]
 
-##### Shift 移位运算
+#### Shift 移位运算
 ![[移位运算的基本实现.png]]
 
 - 上图Serial指串行输入，每过一个时钟周期，上一个寄存器的值会转移到下一个寄存器
@@ -98,7 +96,7 @@ Wow，so simply!
 
 此外，通过在每个Flipflop前都加一个MUX，可以实现双向移位（简单易懂耶）
 
-#### Counter 计数器
+### Counter 计数器
 - Asynchronous Counter (Ripple Counter)
 	- Slower
 	- Simple
@@ -108,20 +106,20 @@ Wow，so simply!
 	- Complex
 	- Cost is high
 
-##### Ripple Counter 行波计数器
+#### Ripple Counter 行波计数器
 也是数字逻辑设计这门课程唯一一个异步时序电路
 
 ![[4bitRIppleCounter.png]]{ width=200px }
 
 Easy to understand!
 
-##### Synchronous Counter 同步计数器
+#### Synchronous Counter 同步计数器
 ![[同步计数器两种实现.png]]
 
 !!! note "多出来的Carry out不要丢掉，可以用来组合成容量更大的计数器！"
 	![[拼装计数器.png]]
 
-##### 余N计数器
+#### 余N计数器
 
 通过将Counter的最大输出的与门作为的Load信号传回Counter，实现每次计数到N-1时重置计数
 
