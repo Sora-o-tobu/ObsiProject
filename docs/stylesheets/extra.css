@@ -80,3 +80,7 @@ img {
   vertical-align: middle;
   display: table-cell;
 }
+
+#sora {
+  max-height: 100%;
+}

@@ -18,7 +18,8 @@ statistics: true
 
 
 !!! danger ""
-	![[OneLastSora.png]]
+	<img src="image/OneLastSora.png" id="sora"/>
+
 
 
 !!! quote "这是一个试验功能"
