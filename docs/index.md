@@ -20,8 +20,6 @@ statistics: true
 !!! danger ""
 	<img src="image/OneLastSora.png" id="sora"/>
 
-
-
 !!! quote "这是一个试验功能"
 	- [x]  [CTF 短学期](./课程笔记/网络攻防实践基础短学期/index.md)
 	- 暑假待办
