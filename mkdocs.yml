@@ -179,6 +179,8 @@ nav:
       - Chapter 2. 信息的表示与处理: 课外积累/CSAPP/Chapter2.md
       - Chapter 3. 程序的机器级表示: 课外积累/CSAPP/Chapter3.md
       - Chapter 4. 处理器体系结构: 课外积累/CSAPP/Chapter4.md
+      - Chapter 5. 优化程序性能: 课外积累/CSAPP/Chapter5.md
+      - Chapter 6. 存储器层次结构: 课外积累/CSAPP/Chapter6.md
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
