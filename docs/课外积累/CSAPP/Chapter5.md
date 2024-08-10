@@ -1,5 +1,4 @@
 # Chapter 5. Optimizing Program Performance
-
 !!! quote "编写高效的程序"
 	- 选择合适的算法和数据结构
 	- 理解编译器的能力与局限性

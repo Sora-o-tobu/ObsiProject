@@ -22,7 +22,10 @@ int main()
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">第一阶段</font> : 预处理器会根据以 `#` 开头的代码修改原始程序，例如上述 `hello.c` 中引入了头文件 `stdio.h` 
 
-通过 `gcc -E hello.c -o hello.i` 来对 `hello.c` 进行预处理，能够看到生成的文件中仅仅对 `#include <stdio.h>` 进行了替换，而将 `stdio.h` 库的内容全部写入
+通过 `gcc -E hello.c -o hello.i` 来对 `hello.c` 进行预处理，能够看到生成的文件中仅仅对 `#include <stdio.h>` 进行了替换，而将 `stdio.h` 库的内容全部写入，这是一个 ascii 码的中间文件
+
+!!! info "CPP"
+	C预处理器 (c preprocessor) 也可以完成对c程序的预处理 `cpp main.c -o main.i`
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">第二阶段</font> : 编译器将 `hello.i` 文件翻译成 `hello.s` 文件，包括词法分析、语法分析、语义分析、中间代码生成与优化等一系列的中间操作
 
@@ -49,6 +52,9 @@ main:
         leaq    .LC0(%rip), %rax
         movq    %rax, %rdi
 ```
+
+!!! info "cc"
+	同理，也可以使用C编译器 (c compiler) 来代替 `gcc` ： `cc -S main.i -o main.s`
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">第三阶段</font> : 汇编器根据指令集将汇编程序 `hello.s` 翻译成机器指令，并把这一系列的机器指令按照固定的规则进行打包，得到可重定位目标文件 `hello.o` 
 
