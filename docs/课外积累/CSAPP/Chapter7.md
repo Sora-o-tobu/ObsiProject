@@ -288,3 +288,455 @@ Symbol table '.symtab' contains 13 entries:
 - **(3)** 只能被该模块定义和引用的局部符号
 	- 区别局部符号和全局符号的关键在于 `static` 属性，带有 `static` 属性的函数和变量不能被其它模块引用，功能类似 Java 中的 `public` 和 `private`
 
+### 符号解析
+
+在编译时，编译器会定义每个 ==全局符号== 为强符号或弱符号，并把强弱信息隐含在符号表中：
+
+- **Strong Symbols** ： 函数和已初始化的全局变量
+- **Weak Symbols** ： 未初始化的全局变量
+
+接下来，分三种情况讲解如何处理多重定义的符号名
+
+<font style="font-weight: 1000;font-size: 20px" color="Gold">多个同名的强符号一起出现</font>
+
+```c
+foo1.c
+int main(){
+	return 0;
+}
+---
+bar1.c
+int main(){
+	return 0;
+}
+```
+
+两个源文件中都有函数名为 `main` 的函数，强符号 `main` 被定义了两次，在这种情况下，链接器会生成一条错误的信息
+
+```c
+foo2.c
+int x=114514;
+int main(){
+	return 0;
+}
+---
+bar1.c
+int x=114514;
+int func(){
+	return 0;
+}
+```
+
+同理，具有相同初始化的全局变量名也会产生类似错误
+
+<font style="font-weight: 1000;font-size: 20px" color="Gold">一个强符号和多个同名弱符号一起出现</font>
+
+```c
+foo3.c
+void f(void);
+int x = 114514;
+int main(){
+	f();
+	printf("x=%d\n",x);
+	return 0;
+}
+---
+bar3.c
+int x;
+void f(){
+	x = 1919810;
+}
+```
+
+由于 `bar3.c` 中的 `int x` 未初始化，为弱符号，那么对二者执行链接生成可执行文件的时候，链接器会选择在 `foo3.c` 中定义的强符号，不会提示错误或者警告（即，`bar3.c` 中`x=1919810` 的 `x` 指的是 `foo3.c` 中的全局变量 `x`）
+
+输出 `x=1919810`
+
+```c
+foo4.c
+void f(void);
+int y = 1919810;
+int x = 114514;
+int main(){
+	f();
+	printf("x=%d y=%d\n",x,y);
+	return 0;
+}
+---
+bar4.c
+double x;
+void f(){
+	x = -0.0;
+//10 00 00 ... 00 00
+}
+```
+
+由于 `double` 类型占 8 个字节，而 `int` 类型占 4 个字节，对于地址紧邻的全局变量（在堆中），`x` 和 `y` 的值都会改变
+
+为了避免这种情况，可以在编译的时候添加 `-fno-common` 编译选项，当遇到多重定义的全局符号时，会触发一个错误
+
+!!! note "使用 `-Werror` 选项，把所有警告变成错误"
+
+<font style="font-weight: 1000;font-size: 20px" color="Gold">多个同名的弱符号一起出现</font>
+
+**待办中...**
+
+### 静态库
+
+在 linux 系统中，静态库以 archive 的特殊文件格式存放在磁盘上。archive (存档)是一组可重定位目标文件的集合，文件后缀为 `.a`
+
+其中，C语言的库函数大多都在 `libc.a` 的库中，可以使用 `objdump -t` 命令查看其内容
+
+```
+❯ objdump -t /usr/lib/x86_64-linux-gnu/libc.a > libc
+❯ grep -n printf libc
+5403:asprintf.o：     文件格式 elf64-x86-64
+5438:dprintf.o：     文件格式 elf64-x86-64
+5461:fprintf.o：     文件格式 elf64-x86-64
+5735:printf.o：     文件格式 elf64-x86-64
+6182:reg-printf.o：     文件格式 elf64-x86-64
+6280:snprintf.o：     文件格式 elf64-x86-64
+6291:sprintf.o：     文件格式 elf64-x86-64
+6427:vfprintf.o：     文件格式 elf64-x86-64
+6571:vfwprintf.o：     文件格式 elf64-x86-64
+6714:vprintf.o：     文件格式 elf64-x86-64
+6889:fxprintf.o：     文件格式 elf64-x86-64
+7505:iovsprintf.o：     文件格式 elf64-x86-64
+7841:fwprintf.o：     文件格式 elf64-x86-64
+7852:swprintf.o：     文件格式 elf64-x86-64
+7863:vwprintf.o：     文件格式 elf64-x86-64
+7874:wprintf.o：     文件格式 elf64-x86-64
+7920:vswprintf.o：     文件格式 elf64-x86-64
+8381:vasprintf.o：     文件格式 elf64-x86-64
+8401:iovdprintf.o：     文件格式 elf64-x86-64
+8429:vsnprintf.o：     文件格式 elf64-x86-64
+8446:obprintf.o：     文件格式 elf64-x86-64
+33275:dl-printf.o：     文件格式 elf64-x86-64
+```
+
+由于内容过多，我们在后面加上 `> libc` 将其输出到当前目录的 `libc` 文件下，并使用 `grep` 命令查找 `printf` ，可以看到 `printf` 位于 5735 行
+
+打开这个文件，找到对应行，可以看到 `printf` 定义在 `printf.o` 中：
+
+```
+ 5735 printf.o：     文件格式 elf64-x86-64
+ 5736
+ 5737 SYMBOL TABLE:
+ 5738 0000000000000000 l    d  .text  0000000000000000 .text
+ 5739 0000000000000000 g     F .text  00000000000000c6 __printf
+ 5740 0000000000000000         *UND*  0000000000000000 stdout
+ 5741 0000000000000000         *UND*  0000000000000000 .hidden __vfprintf_internal
+ 5742 0000000000000000         *UND*  0000000000000000 __stack_chk_fail
+ 5743 0000000000000000 g     F .text  00000000000000c6 _IO_printf
+ 5744 0000000000000000 g     F .text  00000000000000c6 printf
+```
+
+!!! tip "使用 `ar -x /usr/lib/x86_64-linux-gnu/libc.a` 将 `libc.a` 的所有目标文件解压"
+
+<font style="font-weight: 1000;font-size: 20px" color="SpringGreen">接下来通过一个简单的例子演示构造静态库的过程</font>
+
+
+```c
+addvec.c:
+ 1 int addcnt = 0;
+ 2 void addvec(int *x,int *y,int *z,int n){
+ 3         int i;
+ 4         addcnt++;
+ 5         for(i=0;i<n;i++)
+ 6                 z[i] = x[i] + y[i];
+ 7 }
+ ---
+ multvec.c:
+  1 int multcnt = 0;
+ 2 void multvec(int *x,int *y,int *z,int n){
+ 3         int i;
+ 4         multcnt++;
+ 5         for(i=0;i<n;i++)
+ 6                 z[i] = x[i] * y[i];
+ 7 }
+```
+
+`addvec` 用来实现向量元素累加，`multvec` 用来实现向量元素累积。使用 `gcc -c addvec.c multvec.c` 来编译这两个文件，其中编译选项 `-c` 表示只进行编译和汇编，不进行链接的操作，从而得到可重定位文件 `addvec.o` 和 `multvec.o` 
+
+使用 `ar rcs libvecter.a addvec.o multvec.o` 命令构造静态库文件，得到一个名为 `libvector.a` 的静态库，其内容可以通过 `objdump` 查看：
+
+```
+❯ objdump -t libvecter.a
+在归档文件 libvecter.a 中：
+
+addvec.o：     文件格式 elf64-x86-64
+
+SYMBOL TABLE:
+0000000000000000 l    df *ABS*  0000000000000000 addvec.c
+0000000000000000 l    d  .text  0000000000000000 .text
+0000000000000000 g     O .bss   0000000000000004 addcnt
+0000000000000000 g     F .text  0000000000000083 addvec
+
+
+
+multvec.o：     文件格式 elf64-x86-64
+
+SYMBOL TABLE:
+0000000000000000 l    df *ABS*  0000000000000000 multvec.c
+0000000000000000 l    d  .text  0000000000000000 .text
+0000000000000000 g     O .bss   0000000000000004 multcnt
+0000000000000000 g     F .text  0000000000000085 multvec
+```
+
+构造测试函数，函数 `main` 调用了函数 `addvec` ，头文件 `vector.h` 中定义了 `libvector.a` 中的函数原型
+
+```c
+main.c:
+ 1 #include <stdio.h>
+ 2 #include "vector.h"
+ 3
+ 4 int x[2] = {1,2};
+ 5 int y[2] = {3,4};
+ 6 int z[2];
+ 7
+ 8 int main(){
+ 9         addvec(x,y,z,2);
+10         printf("z = [%d,%d]\n",z[0],z[1]);
+11         return 0;
+12 }
+```
+
+其中，头文件 `vector.h` 的内容如下：
+
+```c
+#ifndef _vector_H_
+#define _vector_H_
+    void addvec(int *x,int *y,int *z,int n);
+    void multvec(int *x,int *y,int *z,int n);
+#endif
+```
+
+使用如下语句，依次进行编译、链接：
+
+```
+> gcc -c main.c
+> gcc -static -o prog main.o ./libvector.a
+```
+
+从而得到可执行文件 `prog` ，可以正确运行
+
+```c
+❯ ./prog
+z = [4,6]
+```
+
+!!! info "更多静态库使用方式"
+	不导入 `vector.h` ，使用 `gcc main.c ./libvector.a` 可以生成正确的可执行程序
+	
+	也可以使用 `gcc main.c -L./ -lvector` ，其中 `-L` 选项指定了库文件搜索默认目录， `-l` 后面要接库名，即不包含`lib`和拓展名的字符串
+
+![[静态库构建示例.png]]
+
+
+
+!!! question "为什么使用了库文件 `libc.a` 但是手动链接时不需要导入呢？"
+	编译器驱动程序总是自动把 `libc.a` 传给链接器，因此其实上述链接命令的完整写法为 `gcc -static -o prog main.o ./libvector.a libc.a`
+
+在链接器对库文件进行扫描的过程中，实际上需要维护三个集合：
+
+- **集合E**：用来存放链接器扫描过程中发现的可重定位文件。在连接即将完成的时候，这个集合中的文件会被合并形成一个可执行文件。
+- **集合U**：用来存放被引用了，但是尚未定义的符号。
+- **集合D**：用来存放输出文件中已定义的符号。
+
+对于命令行中每一个输入文件，链接器都会判断其是一个目标文件还是一个静态库文件，如果是目标文件，则放入集合E中，同时修改集合U和D来反映该输入文件中的符号定义和引用
+
+如上例中，链接器首先判断 `main.o` 为一个目标文件，将其置入集合E，然后根据其符号表，将 `UND` 类型的 `addvec` 和 `printf` 置入集合U，其它已定义的符号置入集合D
+
+!!! info ""
+	![[判断maino后.png]]
+
+当链接器读取到静态库文件 `libvector.a` 时，链接器会发现该静态库文件成员 `addvec.o` 中存在符号 `addvec` 的定义，此时将 `addvec.o` 加入集合E，并移动集合U中的 `addvec` 到集合D中
+
+对 `libc.a` 的判断同理，不再解释。
+
+!!! warning "如果对所有输入文件的扫描均已完成，但集合U非空，则链接器输出一个错误并终止"
+
+因此，命令行中对输入文件的顺序也有要求。
+
+例如，`foo.c` 调用了 `libx.a` 和 `libz.a` 中的函数，`libx.a` 和 `libz.a` 又调用了 `liby.a` 中的函数，此时链接方式为：
+
+```
+> gcc foo.c libx.a libz.a liby.a
+```
+
+（拓扑排序）
+
+另一个特殊例子，如果 `libx.a` 调用了 `liby.a` 的函数，但是 `liby.a` 也调用了 `libx.a` 的函数，即存在相互引用，此时 `libx.a` 需要在命令行中重复出现：
+
+```
+> gcc foo.c libx.a liby.a libx.a
+```
+
+!!! note "也可以直接把 `libx.a` 和 `liby.a` 合并成一个静态库文件"
+
+## 重定位
+
+重定位过程中，链接器合并输入模块，并为每个符号分配运行时的地址，具体分为两步：
+
+- **第一步**：重定位 section 和符号定义
+- **第二步**：重定位 section 中的符号引用
+
+### 重定位 section 和符号定义
+
+假设要对 `main.o` 和 `sum.o` 进行链接生成可执行文件，藉此讲解重定位第一步做了什么：
+
+```c
+> gcc -Og main.c sum.c -o prog
+```
+
+链接器将 `main.o` 和 `sum.o` 中所有相同类型的 section 合并为一个新的 section
+
+![[合并section.png]]
+
+由于在 64 位 linux 系统中，ELF 可执行文件的默认从地址 `0x400000` 处开始分配，所以原书中假设合成后的 `.text` 的起始地址为 `0x4004d0` 
+
+合成完成后，程序中每条指令和全局变量都有了唯一的运行时内存地址
+
+### 重定位 section 中的符号引用
+
+#### 重定位条目
+
+即 **Relocation Entries**
+
+当汇编器遇到最终位置不确定的符号引用时，会产生一个重定位条目，用来告诉汇编器在合成可执行文件时应该如何修改这个引用
+
+代码的重定位条目放在 `.rel text` 中，而已初始化数据的重定位条目位于 `.rel data` 中
+
+ELF 重定位条目的结构体定义如下：
+
+```c
+typedef struct{
+	long offset;
+	long type:32,
+		symbol:32;
+	long addend;
+} ELF64_Rela
+```
+
+- 每个条目由四个字段组成
+	- **offset** 表示被修改的引用的节偏移量
+	- **type** 是链接器修改新的引用的参考，ELF 中定义了 32 种重定位类型，一般只记如下两种即可
+		- `R_X86_64_PC32` PC 相对地址
+		- `R_X86_64_32` 绝对地址
+	- **symbol** 表示被修改的引用是哪个符号
+	- **addend** 是符号常数，一些类型的重定位要使用它对被修改应用的值做偏移调整
+
+#### 重定位相对引用
+
+对于第二步，假设函数 `main` 中调用了函数 `sum` ，那么其机器码的 `call` 指令所调用的地址在链接过程中必须重定位到 `sum` 的真正地址
+
+```
+0000000000000000 <main>:
+   0:   48 83 ec 08             mov    $0x8 ,%rsp
+   4:   be 02 00 00 00          mov    $0x2, %esi
+   9:   bf 00 00 00 00          mov    $0x0, %edi
+                                a : R_X86_64_32 array
+   e:   e8 00 00 00 00          callq  13<main+13>
+                                f : R_X86_64_PC32 sum
+  13:   48 83 c4 08             add    $0x8, %rsp
+  17:   c3                      retq
+```
+
+在这个例子中，汇编器产生了两个重定位条目，一个是对全局变量 `array` 的引用，另一个是对 `sum` 的引用
+
+在重定位前，指令 `call` 的起始地址位于偏移 `0xe` 的地方，`0xe8` 表示指令的操作码，紧跟在操作码后的内容被填充为 0 ，接下来，链接器根据对于函数 `sum` 的重定位条目来确定这部分的具体内容：
+
+```
+r.offset = 0xf
+r.symbol = sum
+r.type = R_X86_64_PC32
+r.addend = -4
+```
+
+所以函数 `sum` 在引用的运行时地址可以由函数 `main` 的地址与 `r.offset` 相加得到：
+
+先前我们假设 `.text` 起始地址为 `0x4004d0` ，函数 `main` 起始地址自然就是 `.text` 的起始地址，且原书有假设函数 `sum` 的地址为 `0x4004e8` ，那么根据地址之间的关系，有：
+
+```
+ref_addr = ADDR(main) + r.offset
+         = 0x4004d0 + 0xf
+         = 0x4004df
+*ref_ptr = ADDR(sum) - ref_addr + r.addend
+         = 0x4004e8 - 0x4004df + (-4)
+         = 0x5
+```
+
+实际上，这一步就是求两个地址间的相对位置，最终修改得到该 `call` 指令在可执行程序中的形式为：
+
+```
+e:       e8 00 00 00 00     callq  13<main+13>
+         ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ 
+4004de:  e8 05 00 00 00     callq  4004e8<sum>
+```
+
+!!! info "`addend`"
+	当程序执行到该 `call` 指令时，PC 的值为 `0x4004e3` ，即下一条指令的地址，这也是为什么计算时需要加上 `r.addend`
+	
+	PC 已经存储着下一条指令 `add` 的地址，但因为指令 `call` 要执行函数调用实现跳转，这时候程序：
+	
+	**(1)** 把 `add` 的地址(当前 PC 的值)压栈保存
+	
+	**(2)** 修改 PC 的值，将当前 PC 的值加上偏移量 `0x5` ，得到 `sum` 的地址 `0x4004e8` 
+
+
+#### 重定位绝对引用
+
+指令 `mov` 尝试把 `array` 的起始地址传给寄存器 `%edi` ，这一条指令的起始地址为 `0x9` ，操作码为 `0xbf` ，后面被填充为 0 的内容即对符号 `array` 引用的绝对地址
+
+```
+9:   bf 00 00 00 00          mov    $0x0, %edi
+```
+
+对符号 `array` 的引用也对应一条可重定位条目：
+
+```c
+r.offset = 0xa
+r.symbol = array
+r.type = R_X86_64_32
+r.append = 0
+```
+
+`offset` 字段告诉编译器要从偏移量 `0xa` 处开始修改（即 `mov` 指令引用地址起始位置）
+
+假设链接器已经确定 `array` 所在的 `.data` 位于 `0x601018` ，那么这里的绝对地址引用为：
+
+```
+*ref_ptr = ADDR(array) + r.addend
+         = 0x601018 + 0x0
+```
+
+那么最终修改指令为：
+
+```
+9:      bf 00 00 00 00      mov  $0x0, %edi
+        ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ 
+4004d9: bf 18 10 60 00      mov  $0x601018, %edi
+```
+
+!!! note "因为是 `x86` ，所以自然是小端法哦~"
+
+---
+
+综上所述，修改结果为：
+
+```
+00000000004004d0 <main>:
+   4004d0:   48 83 ec 08        mov    $0x8 ,%rsp
+   4004d4:   be 02 00 00 00     mov    $0x2, %esi
+   4004d9:   bf 18 10 60 00     mov    $0x0, %edi
+   4004de:   e8 05 00 00 00     callq  4004e8<sum>
+   4004e3:   48 83 c4 08        add    $0x8, %rsp
+   4004e7:   c3    
+00000000004004e8 <sum>:
+	... ...
+```
+
+
+## 可执行目标文件
+
+

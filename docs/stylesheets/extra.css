@@ -68,6 +68,10 @@ h2::before, h3::before, h4::before, h5::before {
     --md-shadow-z3: 1px 1px 3px #fff5ee, 2px 2px 9px #cebeb3;
 }
 
+.md-typeset code {
+  background-color: #ffeeca21;
+}
+
 img {
   max-width: 100%;
   max-height: 500px;
