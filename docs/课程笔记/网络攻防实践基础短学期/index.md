@@ -20,5 +20,7 @@
 - [quipqiup](https://www.quipqiup.com/) 词频分析网站
 - [OneCompiler](https://onecompiler.com/) 在线编译网站
 
+最后分数出来了，各位助教也都是学生，能给的分都会尽量给你的，所以只要不抄袭认真完成所有 lab 就很容易拿满的！
 
+重在实践，所以其实你看我写的这些烂话是没用的（
 
