@@ -154,6 +154,9 @@ nav:
       - Verilog:
         - Verilog基础: 课程笔记/数字逻辑设计/Verilog/Verilog基础.md
         - Verilog补充: 课程笔记/数字逻辑设计/Verilog/Verilog补充.md
+    - 计算机组成:
+      - 课程笔记/计算机组成/index.md
+      - Chapter 1. 计算机概念与技术: 课程笔记/计算机组成/Chapter1.md
     - 数据结构:
       - 数据结构基础:
         - 课程笔记/数据结构/数据结构基础/index.md 
@@ -163,6 +166,9 @@ nav:
         - 图: 课程笔记/数据结构/数据结构基础/图.md
         - 排序 & 哈希表: 课程笔记/数据结构/数据结构基础/排序.md
         - 题目: 课程笔记/数据结构/数据结构基础/一些经典题目.md
+      - 高级数据结构与算法分析:
+        - 课程笔记/数据结构/高级数据结构与算法分析/index.md 
+        - AVL Trees,Splay Tree & Amortized Analysis: 课程笔记/数据结构/高级数据结构与算法分析/AVL Trees,Splay Tree & Amortized Analysis.md
     - 网络攻防实践基础 短学期:
       - 课程笔记/网络攻防实践基础短学期/index.md
       - Web 基础: 课程笔记/网络攻防实践基础短学期/Web基础.md
