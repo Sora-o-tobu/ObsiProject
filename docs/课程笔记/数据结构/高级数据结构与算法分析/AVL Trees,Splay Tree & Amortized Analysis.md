@@ -17,6 +17,8 @@ AVL Tree 的名字由来于它的三个作者 Adelson , Velskii , Landis ，其�
 
 根据 AVL 树的性质，我们也可以确定其高度 h 仍然为 $O(\ln n)$ 量级
 
+其最少节点树的递推公式为 $n_h= n_{h-1} +n_{h-2} +1$ ，其中 $n_{-1} = 0,n_0 =1$ ，那么递推可以得到 $n_6 =33$
+
 ### 维护
 
 关于 AVL 树的维护，最重要的操作在于 Left-Rotate 和 Right-Rotate，其记忆要点为各个叶节点的左右顺序不变：
@@ -85,7 +87,7 @@ AVL Tree 的名字由来于它的三个作者 Adelson , Velskii , Landis ，其�
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Case 1：</font>
 
-父节点 **P** 是根节点，那么直接交换节点 **X** 和 节点 **P** 即可
+父节点 **P** 是根节点，那么直接对节点 **X** 和 节点 **P** 做一次对应方向的 Rotate 即可
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Case 2：</font>
 
