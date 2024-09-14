@@ -1,6 +1,6 @@
 # Chapter 1. Computer abstractions and Technology
 
-!!! warning "该章大部分内容都仅作了解，在后续章节会更深入讲解"
+!!! warning "该章大部分内容都仅作了解，在后续章节会更深入讲解 (只需注意 CPU 的性能)"
 
 ## Introduction
 
@@ -61,6 +61,9 @@ RISC Architecture (1980s) 的全名为 Reduced Instruction Set Computer ，即�
 
 ![[芯片制造流程.png]]
 
+!!! extract "摩尔定律"
+	每隔 18-24 个月，集成电路上可容纳的元器件的数目，约每隔18-24个月便会增加一倍，性能也将提升一倍
+
 目前集成芯片制造面临的主要困难为：
 
 - 集成度越来越高，复杂度快速增加
@@ -81,7 +84,7 @@ RISC Architecture (1980s) 的全名为 Reduced Instruction Set Computer ，即�
 
 - **Response Time / Execution Time** 响应时间/执行时间
 	- 执行任务所需的时间
-- **Throughput / Bandwidth** 吞吐量
+- **Throughput / Bandwidth** 吞吐率
 	- 单位时间内完成的总任务量
 
 一般地，我们将计算机的 Performance 定义为：
@@ -89,4 +92,36 @@ RISC Architecture (1980s) 的全名为 Reduced Instruction Set Computer ，即�
 $$
 Performance = \frac{1}{Execution\ Time}
 $$
+
+这里的 Execution Time 可以有两种概念，一是该任务的总运行时间，英文为 Elapsed Time ，包括处理时间、I/O 延迟、操作系统响应时间、idle time 等；另一类是 CPU Time ：
+
+- CPU clock cycle 时钟周期数
+- clock rate 时钟频率
+- clock cycle time 时钟周期长度
+
+那么 CPU Time 即为：
+
+$$
+CPU\ Time =CPU\ Clock\ Cycles \times Clock\ Cycle\ Time=\frac{CPU\ Clock\ Cycles}{Clock\ Rate} 
+$$
+
+又很容易想到 $Clock\ Cycles=Instruction\ Count\times Cycles\ per\ Instruction$ **(CPI)**
+
+将上面两条公式整合得到：
+
+$$
+CPU\ Time = Instruction\ Count\times CPI\times Clock\ Cycle\ Time= \frac{Instruction\ Count\times CPI} {Clock\ Rate}
+$$
+
+## Eight Great Ideas
+
+- Design for Moore’s Law （设计紧跟摩尔定律）
+- Use Abstraction to Simplify Design (采用抽象简化设计)
+- Make the Common Case Fast (加速大概率事件)
+	- 优先优化大概率事件对性能的影响更大
+- Performance via Parallelism (通过并行提高性能)
+- Performance via Pipelining (通过流水线提高性能)
+- Performance via Prediction (通过预测提高性能)
+- Hierarchy of Memories (存储器层次)
+- Dependability via Redundancy (通过冗余提高可靠性)
 
