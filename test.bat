@@ -1,6 +1,6 @@
-title "git上傳"
+title "Upload!"
 git add .
 git commit -m "Update"
 git push
-echo "上傳成功！"
+echo "Done Successfully!"
 pause
