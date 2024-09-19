@@ -117,6 +117,7 @@ $$
 
 - Design for Moore’s Law （设计紧跟摩尔定律）
 - Use Abstraction to Simplify Design (采用抽象简化设计)
+	- 分层设计，各层之间提供接口
 - Make the Common Case Fast (加速大概率事件)
 	- 优先优化大概率事件对性能的影响更大
 - Performance via Parallelism (通过并行提高性能)

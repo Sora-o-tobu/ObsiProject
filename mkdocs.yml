@@ -202,6 +202,7 @@ nav:
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
+    - LeetCode: 课外积累/Leetcode刷题.md
   - 技术积累:
     - 建立在线笔记: 技术积累/建立在线笔记.md
     - 正则表达式: 技术积累/正则表达式.md
@@ -211,6 +212,7 @@ nav:
   - 兴趣:
     - Galgame: 
       - 个人评价: blog/Galgame/个人评价.md
+      - 汉化: blog/Galgame/汉化.md
     - 番剧:
       - 番剧: blog/番剧/番剧.md
       - 异世界推荐: blog/番剧/异世界推荐.md
