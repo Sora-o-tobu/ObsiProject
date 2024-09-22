@@ -174,6 +174,7 @@ nav:
       - 高级数据结构与算法分析:
         - 课程笔记/数据结构/高级数据结构与算法分析/index.md 
         - AVL Trees,Splay Tree & Amortized Analysis: 课程笔记/数据结构/高级数据结构与算法分析/AVL Trees,Splay Tree & Amortized Analysis.md
+        - Red-Black Trees & B+ Trees: 课程笔记/数据结构/高级数据结构与算法分析/Red-Black Trees & B+ Trees.md
     - 无线网络应用 通识课:
       - 课程笔记/无线网络应用/index.md
       - 模块一：当今网络: 课程笔记/无线网络应用/当今网络.md
@@ -202,6 +203,7 @@ nav:
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
+    - 汇编语言: 课外积累/汇编语言.md
     - LeetCode: 课外积累/Leetcode刷题.md
   - 技术积累:
     - 建立在线笔记: 技术积累/建立在线笔记.md
