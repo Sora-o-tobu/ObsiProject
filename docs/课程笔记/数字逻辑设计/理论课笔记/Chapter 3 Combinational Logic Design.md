@@ -285,7 +285,7 @@ $$
 其中我们能发现可以复用的term，将$XY$称为carry generate，$X\oplus Y$称为carry propagate
 
 全加器可以由两个半加器组合而成。
-![[全加器.png]]
+![[ObsiProject/docs/课程笔记/数字逻辑设计/image/全加器.png]]
 
 #### Ripple-Carry Binary Adder 行波加法器
 
