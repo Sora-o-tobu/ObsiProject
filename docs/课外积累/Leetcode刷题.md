@@ -30,7 +30,6 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
 }
 ```
 
-![[两数之和.png]]
 
 可以看出来效率非常一般，以后有时间了解一下更高效的解法 （其实就是哈希表）
 
