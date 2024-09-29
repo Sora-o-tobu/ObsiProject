@@ -20,6 +20,7 @@
 - Word Stemming
 	- 提取该 Term 的词根，如 says,said,saying 都看作词根 say
 	- https://tartarus.org/martin/PorterStemmer/
+	- https://github.com/wooorm/stmr.c
 - Stop Words
 	- 一些 Term 太过常见，没有价值，所以需要过滤它们
 	- 搜索 Word Stop List 即可找到过滤列表
