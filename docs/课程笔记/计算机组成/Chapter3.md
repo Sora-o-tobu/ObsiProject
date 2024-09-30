@@ -144,4 +144,71 @@ Booth 算法基于此给出了一定规则：
 
 ## Division
 
-TO BE DONE
+与乘法类似，除法采用移位+减法的形式运算。
+
+![[Div0.png]]
+
+对于 64bit 的除法运算，除法器由 128bit 的余数寄存器、64bit 的除数寄存器以及 64bit ALU 组成
+
+![[DivALU.png]]
+
+初始状态除数寄存器 Divsor 存储除数，Remainder 右半部分存储被除数。加减计算均在 Remainder 的左半部分进行，按照如下逻辑运算：
+
+```c
+Div = Divsor;
+Rem[0:4] = Dividend;
+sll Rem;
+loop(4): // 这里以 4bit 除法为例子，在 64bit 则要循环计算 64 次
+	Rem = Rem - Div;
+	if(Rem < 0)
+	{
+		Rem += Div;
+		sll Rem;
+		Rem[0] = 0; //从右往左的 0
+	} else {
+		sll Rem;
+		Rem[0] = 1;
+	}
+srl Rem[4:8];
+```
+
+![[Divexample.png]]
+
+最后 Remainder 寄存器中，左半部分为余数，右半部分为商。
+
+!!! info "SLL: Shift Left Logical"
+
+## Floating Point Numbers
+
+IEEE 754 规定了浮点数的两种标准格式，分别为单精度和双精度：
+
+![[fpn0.png]]
+
+为了能够表示小数，指数部分需要减去 `bias` ，即最大范围的一半，因此对于单精度浮点数，`bias` 为 **127** ；对于双精度浮点数， `bias` 为 **1023**
+
+那么浮点数的值为：
+
+$$
+(-1)^\text{sign} \cdot (1+\text{fraction})\cdot 2^{\text{exponent}-\text{bias}}
+$$
+
+例如，$-0.75= -(\frac{1}{2} + \frac{1}{4})= -1.1\cdot 2^{-1}$
+
+那么 $-0.75$ 的单精度、双精度表示分别为：
+
+![[075precision.png]]
+
+!!! waring "fraction是直接拼接在小数点后面的"
+
+!!! bug ""
+	=== "Single-Precision Range"
+		![[Single-Precision Range.png]]
+	=== "Double-Precision Range"
+		![[Double-Precision Range.png]]
+
+- 当 **exponent** 全为 1 时
+	- 若 Fraction 为 0，则表示正负无限
+	- 若 Fraction 不为 0 ，则表示 Not a Number (NaN)
+- 当 **exponent** 全为 0 时
+	- 表示极小数，且计算的时候 Fraction 不用加 1 
+
