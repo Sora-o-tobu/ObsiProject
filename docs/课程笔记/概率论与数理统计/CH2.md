@@ -87,7 +87,7 @@ $$
 设随机变量 $X$ 的概率分布律为：
 
 $$
-P(X=k) =\frac{\lambda^k e^{-\lambda}}{k!},\ k=1,2,...,\ \lambda \gt 0
+P(X=k) =\frac{\lambda^k e^{-\lambda}}{k!},\ k=0,1,2,...,\ \lambda \gt 0
 $$
 
 则称 $X$ 服从参数为 $\lambda$ 的泊松分布，记为 $X=P(\lambda)$
