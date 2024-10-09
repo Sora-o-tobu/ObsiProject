@@ -183,6 +183,11 @@ nav:
         - Red-Black Trees & B+ Trees: 课程笔记/数据结构/高级数据结构与算法分析/Red-Black Trees & B+ Trees.md
         - Inverted File Index: 课程笔记/数据结构/高级数据结构与算法分析/Inverted File Index.md
         - Leftist Heap & Skew Heap: 课程笔记/数据结构/高级数据结构与算法分析/Leftist Heap & Skew Heap.md
+    - 8086 汇编语言: 
+      - 课程笔记/8086汇编语言/index.md
+      - 什么是汇编语言: 课程笔记/8086汇编语言/什么是汇编语言.md
+      - 数据的表示方式和运算: 课程笔记/8086汇编语言/数据的表示方式和运算.md
+      - CPU、内存和端口: 课程笔记/8086汇编语言/CPU、内存和端口.md
     - 无线网络应用 通识课:
       - 课程笔记/无线网络应用/index.md
       - 当今网络: 课程笔记/无线网络应用/当今网络.md
