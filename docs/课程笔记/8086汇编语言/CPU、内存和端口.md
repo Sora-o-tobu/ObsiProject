@@ -147,3 +147,121 @@ DOS 把某个 EXE 载入到内存后，在将控制权交给程序之前，会�
 
 ### 标志寄存器
 
+`FL` 是标志寄存器，它里面有些位用来反应当前指令的执行状态，称为**状态标志**；有些位用于控制 CPU，称为**控制标志**；剩余 7 位是保留位，除了第一位恒为 `1` 外，其它保留位恒为 `0`。
+
+- 状态标志共 6 个，包括：`CF`.`ZF`,`SF`,`OF`,`PF`,`AF`
+- 控制标志共 3 个，包括：`DF`,`IF`,`TF`
+
+!!! quote ""
+	<font style="font-weight: 1000;font-size: 24px">进位标志 CF</font>
+	
+	- `add`,`sub`,`mul`,`imul` 以及移位指令都会影响 CF（Carry Flag）
+		- 两数相加产生进位时 CF 置 1
+		- 两数相减产生借位时 CF 置 1
+		- 两数相乘乘积超过被乘数宽度时 CF 置 1
+		- 移位指令最后移出的那一位保存在 CF 中
+
+
+如，可以利用带进位加法指令 `adc` 以及逻辑左移指令 `shl` 实现进制转换：
+
+```asm
+comment @---------------------------------------------------------
+该汇编程序实现 16 位整数转换成 2 进制输出
+------------------------------------------------------------------@
+data segment
+abc dw 00AF0h
+data ends
+
+code segment
+assume cs:code, ds:data
+main:
+	mov ax, data
+	mov ds, ax
+	mov ax, [abc]
+	mov cx, 16 ; 16 次循环
+again:
+	shl ax, 1  ;逻辑左移一位，影响 CF
+	mov dl, '0'
+	adc dl, 0  ;DL = DL + 0 + CF
+	push ax    ;把AX压入栈
+	mov ah, 2
+	int 21h    ;输出DL中的字符
+	pop ax     ;恢复AX的值
+	sub cx, 1
+	jnz again  ;若CX不等于0，则跳回 again
+	mov ah, 1
+	int 21h ; 敲任意键继续
+	mov ah, 4Ch
+	int 21h    ;return 0
+code ends
+end main
+```
+
+
+!!! quote ""
+	<font style="font-weight: 1000;font-size: 24px">零标志 ZF</font>
+	
+	- 算术运算指令、逻辑运算指令、移位运算指令均会影响 ZF（Zero Flag）
+		- 当运算结果为 0 时 ZF 置 1
+		- 当运算结果非 0 时 ZF 置 0
+	- **注意：** `jz`(jump if zero) 和 `je`(jump if equal) 跳转依据均为 ZF==1，故二者等价；同理，`jnz` 和 `jne` 也等价
+
+!!! quote ""
+	<font style="font-weight: 1000;font-size: 24px">符号标志 SF</font>
+	
+	- 算术运算指令、逻辑运算指令、移位运算指令均会影响 SF（Sign Flag）
+		- 当运算结果为正时 SF 置 0
+		- 当运算结果为负时 SF 置 1
+	- **注意：** 相当于运算结果的最高位；符号标志相关的跳转指令可以用来判定正负
+		- `js`(jump if sign) 依据为 SF==1
+		- `jns`(jump if no sign) 依据为 SF==0
+
+
+!!! quote ""
+	<font style="font-weight: 1000;font-size: 24px">溢出标志 OF</font>
+	
+	- `add`,`sub`,`mul`,`imul`、移位运算指令均会影响 OF（Overflow Flag）
+		- 当两正数相加变负数时 OF 置 1
+		- 当两负数相加变正数时 OF 置 0
+		- 当两数相乘乘积宽度超过被乘数宽度时 OF 置 1（此时 CF 也置 1）
+		- 当仅移动一位，且移位前最高位不等于移位后最高位时 OF 置 1
+
+
+!!! quote ""
+	<font style="font-weight: 1000;font-size: 24px">奇偶校验位 PF</font>
+	
+	- 当运算结果低 8 位中二进制 1 的个数为偶数时 PF 置 1；否则置 0
+
+!!! quote ""
+	<font style="font-weight: 1000;font-size: 24px">辅助进位标志 AF</font>
+	
+	- 若执行加法指令时第 3 位向第 4 位产生进位则 AF 置 1
+	- 若执行减法指令时第 3 位向第 4 位产生借位则 AF 置 1
+	- **注意：** AF（Auxiliary Flag） 并没有相关跳转指令，它跟 BCD 码调整指令有关，如 `AAA`,`AAS`,`DAA`,`DAS`
+
+!!! quote ""
+	<font style="font-weight: 1000;font-size: 24px">方向标志 DF</font>
+	
+	- DF（Direction Flag）用来控制字符串操作指令如 `rep`,`movsb` 的运行方向
+		- 当 DF=0 时，字符串操作指令按正方向运行（先操作低地址再操作高地址）
+		- 当 DF=1 时，字符串操作指令按反方向运行（先操作高地址再操作低地址）
+	- **注意：** `cld`(clear direction) 指令使 DF=0；`std`(set direction) 指令使 DF=1
+
+!!! quote ""
+	<font style="font-weight: 1000;font-size: 24px">中断标志 IF</font>
+	
+	- IF（Interrupt Flag）用于禁止、允许硬件中断
+		- 当 IF=0 时，禁止硬件中断
+		- 当 IF=1 时，允许硬件中断
+
+!!! quote ""
+	<font style="font-weight: 1000;font-size: 24px">陷阱标志 TF</font>
+	
+	- TF（Trap Flag）位于 `FL` 寄存器第八位，用于设置 CPU 的运行模式
+		- 当 TF=1 时，CPU 进行单步模式
+		- 当 TF=0 时，CPU 进行常规模式
+	- **注意：** 当 CPU 进入单步模式后，每执行一条指令后都会跟随执行一条 int 01h 中断指令
+
+## 端口
+
+To Be Continue......
