@@ -183,10 +183,10 @@ again:
 	shl ax, 1  ;逻辑左移一位，影响 CF
 	mov dl, '0'
 	adc dl, 0  ;DL = DL + 0 + CF
-	push ax    ;把AX压入栈
+	push ax    ;把AX压入栈(保存ax状态，因为下一步ah被修改了)
 	mov ah, 2
 	int 21h    ;输出DL中的字符
-	pop ax     ;恢复AX的值
+	pop ax     ;恢复AX的值(不想用栈的话直接用bx存储数据即可)
 	sub cx, 1
 	jnz again  ;若CX不等于0，则跳回 again
 	mov ah, 1
@@ -264,4 +264,56 @@ end main
 
 ## 端口
 
-To Be Continue......
+端口地址独立于内存地址，并且不像内存那样既有段地址又有偏移地址，端口地址仅有 16 位偏移地址，范围是 `[0000h,0FFFFh]` 。
+
+读写端口地址的指令是 `in`,`out` ，例如 `in al, 61h` 表示从 61h 号端口读取一个字节的信号并保存到 `AL` 中。
+
+以下程序利用端口实现输出当前时间信息：
+
+```asm
+.386
+data segment use16
+;
+current_time db "00:00:00", 0Dh, 0Ah, '$'
+data ends
+
+code segment use16
+assume cs:code, ds:data
+main:
+	mov ax, data
+	mov ds, ax
+	mov al, 4
+	out 70h, al  ; 向 70h 端口发送信号 4，表示接下来要读或写CMOS的四号内存单元
+	in al, 71h	 ; 从 71h 端口读取CMOS的四号单元之值(BCD码格式的小时值)
+				 ; e.g. AL = 19h => 7pm
+	call convert ; 调用函数 convert 转换 AL 中的小时值，如把 19h 转换成 AL='1',AH='9'
+	mov word ptr current_time[0], ax
+	mov al, 2
+	out 70h, al  ; 同理，表示接下来要读或写CMOS的二号内存单元
+	in al, 71h   ; 读取BCD码格式的分钟值
+	call convert
+	mov word ptr current_time[3], ax
+	mov al, 0
+	out 70h, al
+	in al, 71h
+	call convert
+	mov word ptr current_time[6], ax
+	mov ah, 9
+	mov dx, offset current_time
+	int 21h		 ; 输出 ds:dx 指向的字符串
+	mov ah, 1
+	int 21h      ; 敲任意键继续
+	mov ah, 4Ch
+	int 21h 	 ; return 0
+;---------Convert---------
+convert:
+	mov ah, al
+	and ah, 0Fh
+	shr al, 4
+	add ah, '0'
+	add al, '0'
+	ret
+;-------End of Convert-----
+code ends
+end main
+```

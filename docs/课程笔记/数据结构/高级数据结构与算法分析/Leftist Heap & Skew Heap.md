@@ -63,7 +63,7 @@ LeftistHeapNode * merge(Node * x, Node * y) {
 
     x->rs = merge(x->rs, y);
 
-    if (x->ls->dist == NULL || x->ls->dist < x->rs->dist) {
+    if (x->ls == NULL || x->ls->dist < x->rs->dist) {
         swap(x->ls, x->rs);
     }
 
