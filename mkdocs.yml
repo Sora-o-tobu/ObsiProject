@@ -88,8 +88,8 @@ plugins:
   - statistics:
       words_per_minute: 200
   - search
-  - git-revision-date-localized:
-      locale: zh
+  #- git-revision-date-localized:
+  #    locale: zh
   - roamlinks
   - blog:
       post_date_format: full #时间
