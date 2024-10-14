@@ -167,6 +167,7 @@ nav:
     - 计算机组成:
       - 课程笔记/计算机组成/index.md
       - Chapter 1. 计算机概念与技术: 课程笔记/计算机组成/Chapter1.md
+      - Chapter 2. RISC-V: 课程笔记/计算机组成/Chapter2.md
       - Chapter 3. 算术单元: 课程笔记/计算机组成/Chapter3.md
     - 数据结构:
       - 数据结构基础:
