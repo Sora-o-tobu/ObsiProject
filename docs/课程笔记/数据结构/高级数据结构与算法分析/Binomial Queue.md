@@ -3,7 +3,7 @@
 
 Leftist Heap 和 Skew Heap 并不支持 Decrease-Key 操作（减少某个key值，并进行调整），但本节讨论的 **Binomial Queue(二项队列)** 的 Decrease-Key 操作仅需 $O(\log N)$ 
 
-!!! quote "对于Dijk算法来说，Decrease-Key操作是必要的"
+!!! quote "Decrease-Key是许多使用优先级队列的算法的重要组成部分"
 
 定义 Binomial Tree 为满足 Heap-ordered 的大小顺序，且结构类似于二进制性质的数，其合并方式为令其中一颗树直接成为另一颗树的子树。
 
@@ -160,5 +160,24 @@ $$
 
 ## Project2: Fibonacci Queue
 
-YouTube: https://www.youtube.com/watch?v=6JxvKfSV9N
+YouTube: https://www.youtube.com/watch?v=6JxvKfSV9Ns
 
+Insert： 将待插入节点作为一颗新树插入，并判断一次最小值的更新，且不进行树的合并
+
+Delete-Min： 删除最小值对应的节点，其子树重新插入回斐波那契堆中；对拥有相同度的树进行合并，保证每个度的树最后都只剩一个，均摊分析可得时间复杂度为 $O(\log N)$
+
+Decrease-Key： 将键值改变的节点连带子树作为一颗新树插入斐波那契堆，但是要求每个节点最多只能失去一个子节点，否则将其也删去作为新树插入斐波那契堆：
+
+```python
+del cut_out(node):
+	move node into root list
+	node.marked = False
+	if not node.parent.marked:
+		parent.marked = True
+	else
+		cut_out(node.parent)
+```
+
+时间复杂度为 $O(1)$
+
+斐波那契堆中各个树的最少节点数呈斐波那契数列排列（假设每个度的树都存在且唯一）
