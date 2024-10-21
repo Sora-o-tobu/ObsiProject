@@ -173,7 +173,7 @@ $$
 根据定义可得指数分布的分布函数为：
 
 $$
-F(x) =\left \{ \begin{array}l 1-e^{-\lambdax}, & x\gt 0 \\
+F(x) =\left \{ \begin{array}l 1-e^{-\lambda x}, & x\gt 0 \\
 0, & x\le 0
 \end{array} \right .
 $$
@@ -199,7 +199,7 @@ $$
 设随机变量 $X$ 具有概率密度函数：
 
 $$
-f(x)=\frac{1}{\sqrt{2\pi} \sigma} e^{\frac{(x-\mu) ^2}{2\sigma ^2}},\ -\infty \lt x\lt \infty
+f(x)=\frac{1}{\sqrt{2\pi} \sigma} e^{-\frac{(x-\mu) ^2}{2\sigma ^2}},\ -\infty \lt x\lt \infty
 $$
 
 其中 $-\infty \lt \mu\lt \infty,\ \sigma \gt 0$ 为常数，则称随机变量 $X$ 服从参数为 $\mu,\sigma$ 的正态分布（Gauss分布），记为 $X\sim N(\mu,\sigma^2)$
