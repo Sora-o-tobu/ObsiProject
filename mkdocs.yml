@@ -169,6 +169,7 @@ nav:
       - Chapter 1. 计算机概念与技术: 课程笔记/计算机组成/Chapter1.md
       - Chapter 2. RISC-V: 课程笔记/计算机组成/Chapter2.md
       - Chapter 3. 算术单元: 课程笔记/计算机组成/Chapter3.md
+      - Chapter 4. 处理器: 课程笔记/计算机组成/Chapter4.md
     - 数据结构:
       - 数据结构基础:
         - 课程笔记/数据结构/数据结构基础/index.md 
@@ -185,6 +186,7 @@ nav:
         - Inverted File Index: 课程笔记/数据结构/高级数据结构与算法分析/Inverted File Index.md
         - Leftist Heap & Skew Heap: 课程笔记/数据结构/高级数据结构与算法分析/Leftist Heap & Skew Heap.md
         - Binomial Queue: 课程笔记/数据结构/高级数据结构与算法分析/Binomial Queue.md
+        - Backtracing: 课程笔记/数据结构/高级数据结构与算法分析/Backtracing.md
     - 8086 汇编语言: 
       - 课程笔记/8086汇编语言/index.md
       - 什么是汇编语言: 课程笔记/8086汇编语言/什么是汇编语言.md
