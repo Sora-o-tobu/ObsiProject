@@ -126,7 +126,7 @@ bool Backtracking ( int i )
 === "Step 2"
 	![[abjcss2.png]]
 === "Step 3"
-![[abjcss3.png]]
+	![[abjcss3.png]]
 === "Step 4"
 	![[abjcss4.png]]
 
