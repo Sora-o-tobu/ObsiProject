@@ -50,6 +50,12 @@ RISC-V 指令格式如下：
 
 可以观察到 I-Type 有两个条目，下面那个条目只对应 `slli`,`srli`,`srai` ，因为立即数移位操作并不可能对一个 64 位寄存器进行大于 63 位的移位操作，因此 immediate 中只有后 6 位能实际用上，因此前六位可以用来当作额外的操作码字段。
 
+??? note "UJ 格式无条件跳转指令 `jal` 和 SB 格式条件跳转指令 `branch`"
+	注意到，这两个格式指令的立即数没有最低位，这是因为地址偏移量必须是 2 的整数倍，即最低位默认看作 0
+	
+	- **Offset of `jal`** : $(-2^{20}, 2^{20}-2)$
+	- **Offset of `branch`** : $(-2^{12} , 2^{12}-2)$
+
 === "R-type"
 	![[RtypeEncoding.png]]
 === "I-type"
@@ -126,6 +132,44 @@ L3:
 	- **寄存器寻址**（从 Register 中取数据）
 	- **基址寻址**（从 Memory 中取数据）
 	- **PC相对寻址**（数据为相对PC的立即数）
+
+当调用函数时，使用栈来存储函数返回地址、传递的参数（且 `x10` 还充当 return 值）。例如，将下列递归计算斐波那契数列的函数转换成 RISC-V 汇编语言：
+
+```c
+int fib(int n) {
+	if (n == 0)
+		return 0;
+	else if (n == 1)
+		return 1;
+	else
+		return fib(n-1) + fib(n-2);
+}
+```
+
+
+```asm
+fib:
+	beq x10, x0, done// n == 0
+	addi x5, x0, 1
+	beq x10, x5, done// n == 1
+//分配栈空间
+	addi x2, x2, -16 // allowcate stack space
+	sd x10, 8(x2)    // push x10 (the value of n)
+	sd x1, 0(x2)     // push x1 (the return address)
+	addi x10, x10, -1
+	jal x1, fib      // fib(n-1)
+	ld x5, 8(x2)     // load n in this loop
+	sd x10, 8(x2)    // push fib(n-1)
+	addi x10, x5, -2 // x10 = n-2
+	jal x1, fib      // fib(n-2)
+	ld x5, 8(x2)     // x5 = fib(n-1)
+	add x10, x10, x5 // x10 = fib(n-1) + fib(n-2)
+//恢复栈
+	ld x1, 0(x2)     // load return address
+	addi x2, x2, 16  // restore the stack
+done:
+	jalr x0, x1
+```
 
 ## 杂项
 
