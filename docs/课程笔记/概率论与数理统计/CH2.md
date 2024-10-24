@@ -164,8 +164,8 @@ $$
 设随机变量 $X$ 具有概率密度函数：
 
 $$
-f(x)= \left \{ \begin{array}l  \lambda e^{-\lambda x} & x\gt 0 \\
-0, & x\le 0  \end{array} \right .
+f(x)= \left \{ \begin{array}l  \lambda e^{-\lambda x} & , x\gt 0 \\
+0 & , x\le 0  \end{array} \right .
 $$
 
 其中 $\lambda \gt 0$ 为常数，则称随机变量 $X$ 服从参数为 $\lambda$ 的指数分布，记为 $X\sim Exp(\lambda)$ 或 $X\sim E(\lambda)$
@@ -210,7 +210,7 @@ $$
 
 ![[正态分布关键节点.png]]
 
-## 随机变量的分布函数
+## 随机变量的概率分布函数
 
 随机变量 $X$ ，若对任意实数 $x$ ，函数 $F(x)=P(X\le x)$ ，称其为 $X$ 的分布函数。
 
@@ -229,4 +229,32 @@ F(x)=\sum _{x_k\le x} p_k
 $$
 
 分布函数在 $x=x_k$ 处均有跳跃，跳跃值为 $p_k=P(X= x_k)$
+
+## 随机变量函数的分布
+
+在实际问题中，我们常会碰到已知一随机变量的分布，要求这一变量的函数分布问题。例如，测量一个圆的面积，总是测量其半径；而半径的测量值可看作随机变量 $X$ ，则求对应圆面积的分布。
+
+这类题的做题步骤为：
+
+- <1> 确定 $Y$ 的取值范围
+- <2> 写出 $Y$ 的概率分布函数 $F_Y (y)=P\{Y\le y\}$ ，找出 $\{Y\le y\}$ 的等价事件 $\{x\in D\}$ 
+- <3> 对得到的 $F_Y (y)$ 求导，得到对应的概率密度函数 $f_Y(y)$
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">例子</font>
+
+设随机变量 $X$ 具有密度函数 $f_X(x)$ ，求随机变量 $Y=|X|$ 的概率密度函数：
+
+- 当 $y\le 0$ 时，$F_Y(y)=0$ 
+- 当 $y\gt 0$ 时：
+	- $F_Y (y)=P\{Y\le y\}=P\{|X|\le y\}=F_X(y) - F_X(-y)$
+	- 求导可得 $f_Y(y)= f_X(y) + f_X(-y)$
+
+综上：
+
+$$
+f_Y(y) = \left \{ \begin{array}l f_X(y) + f_X(-y) & ,y\gt 0 \\
+0 &, y\le 0
+\end{array}
+\right .
+$$
 
