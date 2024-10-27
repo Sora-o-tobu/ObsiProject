@@ -203,3 +203,10 @@ alphabeta(origin, depth, −∞, +∞, TRUE)
 | Worst-case performance | Best-case Performance |
 | ---------------------- | --------------------- |
 | $O(b ^d)$              | $O(\sqrt{b ^d})$      |
+
+哪个节点最先被剪枝？
+
+![[adsabjzlt1.png]]
+
+??? info "Answer"
+	节点c。当搜索到节点b时，回溯到 Min 祖节点 68 ，发生 β 剪枝，不需要再对节点 c 进行搜索。
