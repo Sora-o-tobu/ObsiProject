@@ -9,6 +9,8 @@
 - 期中考试 **10%**
 - 期末考试 **40%**
 
+[rvcodec.js · RISC-V Instruction Encoder/Decoder](https://luplab.gitlab.io/rvcodecjs/)
+
 ??? info "实验安排"
 	![[计组实验安排.png]]
 
