@@ -54,3 +54,91 @@
 
 实际的数据传输例子，请看课件或是 [咸鱼暄的笔记](https://xuan-insr.github.io/computer_organization/4_processor/)
 
+## 流水线
+
+### Overview
+
+假定 CPU 对于下列操作消耗时间如下：
+
+![[piplinedl.png]]
+
+那么，对于各种不同的指令，它们各自执行完所需要的总时间为:
+
+![[gzbtzlzxwsxydsj.png]]
+
+!!! note "Latancy: 每一条指令执行需要的时间"
+
+对于单周期处理器，最长的时钟延迟决定了处理器的时钟频率，但是最耗时指令不一定是最常用的指令，这违背了八大思想的 *Making common case fast* 。为了解决这个问题，我们引入 pipelining 以提升处理器的性能。
+
+1. **IF**: Instruction fetch from memory
+2. **ID**: Instruction decode & register read
+3. **EX**: Execute operation or calculate address
+4. **MEM**: Access memory operand
+5. **WB**: Write result back to register
+
+处理器执行一条指令共有五个阶段，在流水线中，每个阶段对应一个状态，为了更高效利用处理器，在任一时钟周期我们期望每个阶段都有指令正在执行，形成理想流水线如下：
+
+![[pipelineoverview.png]]
+
+而时钟周期由最长时钟延迟的阶段决定。
+
+!!! note "CPI 从 1 变成了 5 !"
+
+仍然使用上述各种操作耗费时间，下图对比单周期处理器和流水线处理器流程图：
+
+![[singlecyclec2pipeline.png]]
+
+可见，各个阶段耗时越平衡，流水线的性能提升越大。
+
+RISC-V 指令集较方便进行流水线设计：
+
+- All instruction are 32-bits
+	- 更方便 fetch 和 decode 的运作
+- 指令格式更少，也更规律
+	- 更方便 decode 和 read register
+- 只在 load 或 store 指令中操作 data memory 而不会将存取的结果做进一步运算，这样就可以将 `MEM` 放在比较后面的位置；如果还能对结果做运算则还需要一个额外的阶段，此时流水线的变长并没有什么正面效果
+
+!!! note "对于流水线，指令的 Latancy 并没有提升"
+
+### Hazards
+
+Hazards(冒险)是阻止指令进入下一阶段的情况，可分为：
+
+- **Structure Hazards** 结构冒险
+	- A required resource is busy
+- **Data Hazards** 数据冒险
+	- Need to wait for previous instruction to complete its data read/write
+- **Control Hazards** 控制冒险
+	- Deciding on control action depends on previous instruction
+
+#### Structure Hazards
+
+由于不同指令的各个阶段很可能在处理器中同时执行，会遇到处理器同时读写寄存器或Memory!?这显然是不被允许的，为了解决这个矛盾，在实际的流水线实现中我们需要不同阶段之间加上 pipeline register 来保存下一个时钟周期要写入该阶段的数据。
+
+!!! info "流水线寄存器和 PC 一样，都在每个时钟周期下降沿写入数据"
+
+
+#### Data Hazards
+当两个指令所用到的数据有先后要求时，会发生数据冒险。
+
+为了解决这个矛盾，后来的指令要先等到上一条指令的运算结果写回到寄存器或是Memory中，才可以继续译码。那么，后来的指令的 **IF** 阶段需要 Stall ，等待期间处理器流水线会插入 Bubble 来代替空指令。
+
+例如，对于下面两条连续指令，它们一个需要写回 x19，一个需要读取 x19：
+
+```asm
+add x19, x0, x1
+sub x2, x19, x3
+```
+
+![[datahazedexample.png]]
+
+当然，如果 Datapath 有额外的数据通路，处理器也允许中间数据进入 **WB** 阶段之前，直接传输到下一条指令的 **EX** 阶段：
+
+![[datahazardsexample2.png]]
+
+!!! example "从 Memory 读取的数据直接传入下一指令 EX 阶段"
+	![[congmemroyduqudeshuju.png]]
+
+#### Control Hazards
+
+对于跳转指令，下一条指令地址究竟是 PC+4 还是 PC+address 起码要等到 EX 阶段后🤔
