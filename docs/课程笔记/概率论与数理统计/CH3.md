@@ -146,3 +146,95 @@ $$
 f(x,y) =m(x)\cdot n(y), \ \ -\infty \lt x\lt +\infty, \ -\infty \lt y\lt +\infty 
 $$
 
+## 二元随机变量的函数分布
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 1：</font>
+
+设 $X$ 的密度函数 $f(x)=\left \{ \begin{array}l e^{-x}, & x\gt 0 \\ 0, & x\le 0 \end{array} \right .$
+
+令：
+
+$$
+U = \left \{\begin{array}l 1, x\gt 1 \\ 0, x\le 1\end{array} \right .
+\ ,\ \ \ V=\left \{\begin{array}l 1, x\gt 2 \\ 0, x\le 2\end{array} \right .
+$$
+
+求 $(U,V)$ 的联合分布律
+
+$$\begin{array}l
+P(U=1,V=1)=P(X\gt 1,X\gt 2)=P(X\gt 2)=e^{-2} \\
+P(U=1,V=0)=P(X\gt 1,X\le 2)=P(1\lt X\le 2)=e^{-1}- e^{-2} \\
+P(U=0,V=1)=P(X\le 1,X\gt2)=0 \\
+P(U=0,V=0)=P(X\le 1, X\le 2)=P(X\le 1)=1-e^{-1}
+\end{array}
+$$
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 2：</font>
+
+设随机变量满足泊松分布：
+
+$$
+X\sim P(\lambda_1) ,\ \ Y\sim P(\lambda_2)
+$$
+
+且 $X,Y$ 相互独立。若 $Z=X+Y$，求 $Z$ 的概率分布律
+
+$$\begin{array}c
+P(X=i)= \frac{\lambda_1^i e^{-\lambda_1}}{i!} \\
+P(Y=j)= \frac{\lambda_2^j e^{-\lambda_2}}{j!} \\
+\begin{array}l
+P(Z=k)& =\sum ^k_{i=0} P(X=i)P(Y=k-i) \\
+& =\sum ^k_{i=0} \frac{\lambda_1^i e^{-\lambda_1}}{i!} \frac{\lambda_2^{k-i} e^{-\lambda_2}}{(k-i)!} \\
+& = \frac{e^{-(\lambda_1 +\lambda_2)}}{k!} \sum^k_{i=0} \frac{k!}{i!(k-1)!} \lambda_1^{i} \lambda_2^{k-i} \\
+& =\frac{(\lambda_1+\lambda _2)^k e^{-(\lambda_1 +\lambda_2)}}{k!} \\
+\end{array}
+\\ \Rightarrow Z=X+Y\sim P(\lambda_1 +\lambda_2)
+\end{array}
+$$
+
+### 卷积公式
+
+对于密度函数为 $f(x,y)$ 的连续型随机变量 $X,Y$ ，$Z=X+Y$ 的分布函数为：
+
+$$\begin{array}l
+F_Z(z)=P(Z\le z) & = \iint_{x+y\le z} f(x,y)dxdy \\
+& =\int^{+\infty}_{-\infty}[ \int_{-\infty}^{z-y}f(x,y)dx]dy \\
+\text{(Let u=x+y)}& =\int^{+\infty}_{-\infty} [ \int_{-\infty}^{z}f(u-y,y)du]dy \\
+& = \int^z_{-\infty}[ \int_{-\infty}^{+\infty}f(u-y,y)dy]du \\
+& = \int^z_{-\infty} f_Z(u)du
+\end{array}
+$$
+
+故得出结论：
+
+$$
+f_Z(z)=\int_{-\infty}^{+\infty}f(z-y,y)dy = \int_{-\infty}^{+\infty}f(x,z-x)dx
+$$
+
+若 $X,Y$ 相互独立,则：
+
+$$
+f_Z(z)=\int_{-\infty}^{+\infty} f_X(z-y) f_Y(y)dy =\int_{-\infty}^{+\infty} f_X(x) f_Y(z-x)dx
+$$
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 3：</font>
+
+$$
+f(x,y)=\left \{\begin{array}l 3x , & 0\lt y\lt x\lt 1\\0, & \text{其他} \end{array} \right .
+$$
+
+求 $Z=X+Y$ 的概率密度函数
+
+$$\begin{array}c
+f_Z(z)=\int ^{+\infty}_{-\infty} f(x,z-x)dx \\
+f(x,z-x)=\left \{\begin{array}l 3x, & 0\lt z-x\lt x\lt 1 \\
+0, \text{其他}
+\end{array} \right . \\
+0\lt z-x\lt x\lt 1 \Leftrightarrow \frac{z}{2}\le x\le \min (z,1) \\
+f_Z(z) = \left \{\begin{array}l 
+\int ^z_{\frac{z}{2}} 3xdx = \frac{9}{8}z^2 , & 0\lt z\le 1 \\
+\int ^1_{\frac{z}{2}} 3xdx = \frac{3}{2}(1- \frac{z^2}{4}), & 1\lt z\lt 2 \\
+0, & \text{其他}
+\end{array} \right .
+\end{array}$$
+

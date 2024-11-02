@@ -115,6 +115,22 @@ $$
 
 感觉不是很重要？总之层数按最深的那个来。
 
+**【Example】** $T(N)=2T(\sqrt{N})+\log N$
+
+**Proof：**
+
+一直递归到最后一层，有：
+
+$$
+T(N)=2^k T(N^{1 / 2^k})+(k+1)\log N
+$$
+
+令 $N^{1 / 2^k}=2$ ，可得 $k=\log \log N$，则：
+
+$$
+T(n)=O(\log N+(k+1)\log N) = O(\log N\log \log N)
+$$
+
 ### Master method
 
 $$\begin{gather}T(N)=aT(\frac{N }{b})+\Theta(N^k \log^pN),a\ge 1,b\gt 1 ,p\ge 0 \\
