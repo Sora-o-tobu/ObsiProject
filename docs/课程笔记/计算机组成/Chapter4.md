@@ -113,17 +113,39 @@ Hazards(冒险)是阻止指令进入下一阶段的情况，可分为：
 
 #### Structure Hazards
 
-由于不同指令的各个阶段很可能在处理器中同时执行，会遇到处理器同时读写寄存器或Memory!?这显然是不被允许的，为了解决这个矛盾，在实际的流水线实现中我们需要不同阶段之间加上 pipeline register 来保存下一个时钟周期要写入该阶段的数据。
+由于不同指令的各个阶段很可能在处理器中同时执行，会遇到处理器同时读写寄存器或Memory!?这显然是不被允许的，为了解决这个矛盾，在实际的流水线实现中我们需要不同阶段之间加上 **pipeline register** 来保存上一个时钟周期的数据。
 
 !!! info "流水线寄存器和 PC 一样，都在每个时钟周期下降沿写入数据"
 
+![[pipelineregister.png]]
+
+对于 `load` 指令，它的 single-clock-cycle 的数据通路图如下图所示：
+
+=== "IF"
+	![[loadif.png]]
+=== "ID"
+	![[loadid.png]]
+=== "EX"
+	![[loadex.png]]
+=== "MEM"
+	![[loadmem.png]]
+=== "WB"
+	![[loadwb.png]]
+	Tips: 这里对 Datapath 修正在于 `WriteRegister` 要从 `MEM/WB` 流水线寄存器中读取 
+
+
+最终得到的简化的 Pipeline with control 的 Datapath 如图：
+
+![[pipelinewithcontrolsimplified.png]]
+
+当处理器需要插入 Bubble 时，将所有流水线寄存器的控制信号全部置 0，并阻止 PC 和 `IF/ID` 流水线寄存器的更新
 
 #### Data Hazards
 当两个指令所用到的数据有先后要求时，会发生数据冒险。
 
 为了解决这个矛盾，后来的指令要先等到上一条指令的运算结果写回到寄存器或是Memory中，才可以继续译码。那么，后来的指令的 **IF** 阶段需要 Stall ，等待期间处理器流水线会插入 Bubble 来代替空指令。
 
-例如，对于下面两条连续指令，它们一个需要写回 x19，一个需要读取 x19：
+例如，对于下面两条连续指令，它们一个需要写回 x19，一个需要读取 x19，没有优化的处理器中间需要插入两轮 Bubble ，直到上一条指令的 **WB** 结束，下一条指令才能进入 **EXE** 阶段：
 
 ```asm
 add x19, x0, x1
@@ -132,13 +154,127 @@ sub x2, x19, x3
 
 ![[datahazedexample.png]]
 
-当然，如果 Datapath 有额外的数据通路，处理器也允许中间数据进入 **WB** 阶段之前，直接传输到下一条指令的 **EX** 阶段：
+当然，如果 Datapath 有额外的数据通路，处理器也允许中间数据进入 **WB** 阶段之前，直接传输到下一条指令的 **EX** 阶段，这种优化名为 **Forwarding** (or **Bypassing**)：
 
 ![[datahazardsexample2.png]]
 
-!!! example "从 Memory 读取的数据直接传入下一指令 EX 阶段"
+!!! example "从 Memory 读取的数据直接传入下一指令 EX 阶段(Load-use Hazard)"
 	![[congmemroyduqudeshuju.png]]
+	load 型指令即便使用 Forwarding 也要插入一个 Bubble
+
+对于使用 Forwarding 优化的处理器，执行下列指令过程中会发生两个数据冒险，导致总运行时间会增加两个时钟周期：
+
+```asm
+ld x1, 0(x0)
+ld x2, 8(x0)
+add x3, x1, x2 ; stall happened
+sd x3, 24(x0)
+ld x4, 16(x0)
+add x5, x1, x4 ; stall happened
+sd x5, 32(x0)
+
+;Need 7+4+2 = 13 cycles if using forwarding
+```
+
+我们在写汇编代码时，将两个 `ld` 指令提前，能够使硬件有更快的运行速度：
+
+```asm
+ld x1, 0(x0)
+ld x2, 8(x0)
+ld x4, 16(x0)
+add x3, x1, x2 ; stall happened
+sd x3, 24(x0)
+add x5, x1, x4 ; stall happened
+sd x5, 32(x0)
+```
+
+!!! info "我们使用编译器时，汇编器一般会自动优化排列"
+
+那么我们有个问题，在硬件层面上，处理器如何判断需要进行 Forward 操作？
+
+我们可以把需要 Forward 的情况分为三种：
+
+- EX Hazard
+	- 下一条指令需要用到当前指令的运算结果寄存器
+	- 此时 ALU 的一个输入从 `EX/MEM` 中转接
+- MEM Hazard
+	- 下下条指令需要用到当前指令的运算结果寄存器
+	- 此时 ALU 的一个输入从 `MEM/WB` 中转接
+- Load-use Hazard
+	- 当前指令为 `load` ，且下一条指令需要用到其 `load` 读取的数据
+
+**EX Hazard:**
+
+```c
+if(EX/MEM.RegWrite
+  and (EX/MEM.RegisterRd != 0)
+  and (EX/MEM.RegisiterRd == ID/EX.RegisterRs1))
+  ForwardA = 10;
+if(EX/MEM.RegWrite
+  and (EX/MEM.RegisterRd != 0)
+  and (EX/MEM.RegisiterRd == ID/EX.RegisterRs2))
+  ForwardB = 10;
+```
+
+**MEM Hazard:**
+
+```c
+if(MEM/WB.RegWrite
+  and (MEM/WB.RegisterRd != 0)
+  and not(EX/MEM.RegWrite and EX/MEM.RegisterRd != 0)
+  and (EX/MEM.RegisterRd == ID/EX.RegisterRs1)
+  and (MEM/WB.RegisterRd == ID/EX.RegisterRs1))
+  ForwardA = 01;
+if(MEM/WB.RegWrite
+  and (MEM/WB.RegisterRd != 0)
+  and not(EX/MEM.RegWrite and EX/MEM.RegisterRd != 0)
+  and (EX/MEM.RegisterRd == ID/EX.RegisterRs2)
+  and (MEM/WB.RegisterRd == ID/EX.RegisterRs2))
+  ForwardB = 01;
+```
+
+对于不同的控制信号 `Forward(A/B)` ，ALU 的操作数选择如下表：
+
+| Mux Control  | Source | Explanation                                                      |
+| ------------ | ------ | ---------------------------------------------------------------- |
+| Forward = 00 | ID/EX  | This ALU operand comes from the register file                    |
+| Forward = 10 | EX/MEM | This ALU operand comes from the prior ALU result                 |
+| Forward = 01 | MEM/WB | This ALU operand comes from data memory or an earlier ALU result |
+
+
+同时存在 EX Hazard 和 MEM Hazard 时只执行 EX Hazard（选择 Most Recent 的冒险处理）。例如：
+
+```asm
+add x1, x1, x2 ; Instruction 1
+add x1, x1, x3 ; Instruction 2
+add x1, x1, x4 ; Instruction 3
+```
+
+其中，指令 1,3 之间发生 MEM Hazard；指令 2,3 之间发生 EX Hazard，那么处理器只需要处理 EX Hazard 即可，这也是为什么上面 MEM Hazard 的判断条件这么写。
+
+除此之外，还有特殊的 **Load-Use Hazard** ，它的判断标准为：
+
+```c
+ID/EX.MemRead and 
+((ID/EX.RegisterRd == IF/ID.RegisterRs1) or 
+ (ID/EX.RegisterRd == IF/ID.RegisterRs2))
+```
 
 #### Control Hazards
 
 对于跳转指令，下一条指令地址究竟是 PC+4 还是 PC+address 起码要等到 EX 阶段后🤔
+
+一种解决方法是在 `branch` 指令的ID阶段就提前对两个源寄存器进行比较（需要硬件支持），从而只需要一个Bubble就可以完成下一条指令地址的选择。
+
+但是对于更长的流水线来说，这种处理方式可能不能平稳运行，是 unacceptable 的。
+
+更多时候，我们使用预测来解决控制冒险：
+
+- Static Branch Prediction 
+	- 为特定指令设置默认预测命中
+	- 例如，对于 loop 和 if-statement
+		- 向回跳转默认命中
+		- 向下跳转默认不命中
+- Dynamic Branch Prediction
+	- 基于运行历史来预测是否命中
+

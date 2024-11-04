@@ -177,7 +177,7 @@ $$
 X\sim P(\lambda_1) ,\ \ Y\sim P(\lambda_2)
 $$
 
-且 $X,Y$ 相互独立。若 $Z=X+Y$，求 $Z$ 的概率分布律
+且 $X,Y$ 相互独立。若 $Z=X+Y$，求 $Z$ 的概率分布律：
 
 $$\begin{array}c
 P(X=i)= \frac{\lambda_1^i e^{-\lambda_1}}{i!} \\
@@ -191,6 +191,39 @@ P(Z=k)& =\sum ^k_{i=0} P(X=i)P(Y=k-i) \\
 \\ \Rightarrow Z=X+Y\sim P(\lambda_1 +\lambda_2)
 \end{array}
 $$
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 3：</font>
+
+设随机变量 $X\sim U(0,1)$，$Y$ 的密度函数为
+
+$$
+f_Y(y)=\left \{\begin{array}l 2y, & 0\lt y\lt 1 \\
+0, & \text{其他}
+\end{array}\right .
+$$
+
+且 $X$ 和 $Y$ *相互独立*。记 $M=\max \{X,Y\},N=\min \{X,Y\}$，分别求其密度函数：
+
+$$\begin{array}c
+F_X(x)=\left \{\begin{array}l 1, & 1\lt x\\
+x, & 0\lt x \lt 1 \\
+0, & x\lt 0
+\end{array}\right . , \ \ \ \ 
+F_Y(y)=\left \{\begin{array}l 1, & 1\lt y\\
+y^2, & 0\lt y \lt 1 \\
+0, & y\lt 0
+\end{array}\right . \\
+F_M(m)=P(M\le m)=P(X\le m,Y\le m)=F_X(m)\cdot F_Y(m) \\
+\Rightarrow \ f_M(m) = F'_M(m)=\left \{\begin{array}l 3m^2, & 0\lt m\lt 1 \\
+0, & \text{其他}\end{array} \right . \\
+F_N(n)=P(\min \{X,Y\}\le n)=F_X(n)+ (1-F_X(n))\cdot F_Y(n) \\
+\Rightarrow \ f_N(n)=F'_N(n)=\left \{ \begin{array}l 
+1+2n-3n^2, & 0\lt n\lt 1 \\
+0, & \text{其他}\end{array}\right .
+\end{array}
+$$
+
+
 
 ### 卷积公式
 
@@ -237,4 +270,6 @@ f_Z(z) = \left \{\begin{array}l
 0, & \text{其他}
 \end{array} \right .
 \end{array}$$
+
+!!! note "对谁积分就写出谁的取值范围，如该题的 $dx$"
 
