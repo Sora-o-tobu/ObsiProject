@@ -13,11 +13,9 @@
 	- 定义 black-height 为任一节点x到叶节点所经过的黑色节点数量（包括x）
 
 !!! abstract "Lemma"
-	一个具有 N 个内部节点（Internal nodes）的红黑树，它的高度不超过 $2\ln (N+1)$
+	一个具有 N 个内部节点（Internal nodes）的红黑树，它的高度不超过 $2\log (N+1)$
 
 ### Insert
-
-该小节内容直接参考 [Oneko](https://www.yuque.com/oneko/something/rbtree-bptree) 的笔记
 
 插入的节点默认颜色为红色，以下的图片通过 Insert 4 来展示关于红黑树插入的所有情况。
 
@@ -25,7 +23,9 @@
 
 ![[Insert4.png]]
 
-时间复杂度为 $O(\ln N)$
+> From  [Oneko](https://www.yuque.com/oneko/something/rbtree-bptree) 的笔记
+
+红黑树插入的时间复杂度也为 $O(\log N)$
 
 !!! success "红黑树维护的关键思想在于使用 Rotate 以及变色保持黑高相同"
 

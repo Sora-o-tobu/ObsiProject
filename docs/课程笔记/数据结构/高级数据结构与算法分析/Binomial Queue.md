@@ -181,3 +181,17 @@ del cut_out(node):
 时间复杂度为 $O(1)$
 
 斐波那契堆中各个树的最少节点数呈斐波那契数列排列（假设每个度的树都存在且唯一）
+
+
+## Summary: Heap
+
+| Heap               | Make Heap | Find-Min | Delete-Min                 | Merge                      | Insert                | Decrease-Key               |
+| ------------------ | --------- | -------- | -------------------------- | -------------------------- | --------------------- | -------------------------- |
+| **Leftist Heap**   | $O(1)$    | $O(1)$   | $O(\log N)$                | $O(\log N)$                | $O(\log N)$           | $O(\log N)$                |
+| **Skew Heap**      | $O(1)$    | $O(1)$   | $O(\log N)$<br>(amortized) | $O(\log N)$<br>(amortized) | $O(\log N)$           | $O(\log N)$<br>(amortized) |
+| **Binomial Heap**  | $O(1)$    | $O(1)$   | $O(\log N)$                | $O(\log N)$                | $O(1)$                | $O(\log N)$                |
+| **Fibonacci Heap** | $O(1)$    | $O(1)$   | $O(\log N)$<br>(amortized) | $O(\log N)$                | $O(1)$<br>(amortized) | $O(1)$<br>(amortized)      |
+| **Binary Heap**    | $O(n)$    | $O(1)$   | $O(\log N)$                | $O(n)$                     | $O(\log N)$           | $O(\log N)$                |
+
+
+- 除了 `Binary Heap` 外，其他堆都是延迟建堆，所以时间复杂度为常数级

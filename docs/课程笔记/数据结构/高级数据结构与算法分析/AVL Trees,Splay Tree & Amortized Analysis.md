@@ -15,9 +15,13 @@ AVL Tree 的名字由来于它的三个作者 Adelson , Velskii , Landis ，其�
 	对于 AVL 树，则有 **BF(Node)** = -1, 0, or 1
 
 
-根据 AVL 树的性质，我们也可以确定其高度 h 仍然为 $O(\ln n)$ 量级
+根据 AVL 树的性质，我们也可以确定其高度 h 仍然为 $O(\log n)$ 量级
 
-其最少节点树的递推公式为 $n_h= n_{h-1} +n_{h-2} +1$ ，其中 $n_{-1} = 0,n_0 =1$ ，那么递推可以得到 $n_6 =33$
+对于一个高度为 $h$ 的 AVL 树，且最少节点的情况可以看作是左子树为高度为 $h-1$ 最少节点的 AVL 树，右子树为高度为 $h-2$ 最少节点的 AVL 树。那么，它们的节点数量之间有递推关系：
+
+ $$n_h= n_{h-1} +n_{h-2} +1$$
+
+其中起始值 $n_{-1} = 0,n_0 =1$ ，那么递推可以得到 $n_6 =33$ 。
 
 ### 维护
 
@@ -68,6 +72,76 @@ AVL Tree 的名字由来于它的三个作者 Adelson , Velskii , Landis ，其�
 
 
 !!! note "通过旋转修正后的高度一定与插入新节点之前的高度相同，这意味着我们只需要处理第一个报错的节点即可"
+
+### 代码实现
+
+```c
+typedef struct AvlNode* AvlTree;
+
+struct AvlNode {
+	ElementType Element;
+	AvlTree Left;
+	AvlTree Right;
+	int Height;
+}
+
+static int Height(AvlTree P) {
+	if (P == NULL)
+		return -1;
+	else
+		return P->Height;
+}
+
+AvlTree Insert(ElementType X, AvlTree T) {
+	if(T == NULL) {
+		//Create and return a one-node tree
+		T = malloc(sizeof(struct AvlNode));
+		if(T == NULL)
+			FatalError("Out of Space!");
+		else {
+			T->Element = X;
+			T->Height = 0;
+			T->Left = T->Right = NULL;
+		}
+	} else if(X < T->Element) {
+		T->Left = Insert(X, T->Left);
+		if(Height(T->Left) - Height(T->Right) == 2)
+			if(X < T->Left->Element)
+				T = SingleRotateWithLeft(T);
+			else
+				T = DoubleRotateWithLeft(T);
+	} else if(X > T->Element) {
+		T->Right = Insert(X, T->Right);
+		if(Height(T->Right) - Height(T->Left) == 2)
+			if(X > T->Right->Element)
+				T = SignleRotateWithRight(T);
+			else
+				T = DoubleRotateWithRight(T);
+	}// Else X is already in the tree, do nothing
+	T->Height = Max(Height(T->Left), Height(T->Right)) + 1;
+	return T;
+}
+```
+
+旋转操作的实现（以Left为例）：
+
+```c
+static AvlTree SingleRotateWithLeft(AvlTree K2) {
+	AvlTree K1 = K2->Left;
+	K2->Left = K1->Right;
+	K1->Right = K2;
+
+	K2->Height = Max(Height(K2->Left), Height(K2->Right)) + 1;
+	K1->Height = Max(Height(K1->Left), Height(K1->Right)) + 1;
+
+	return K1;
+}
+
+static AvlTree DoubleRotateWithLeft(AvlTree K3) {
+	K3->Left = SingleRotateWithRight(K3->Left);
+	return SingleRotateWithLeft(K3);
+}
+```
 
 ## Splay 树
 
