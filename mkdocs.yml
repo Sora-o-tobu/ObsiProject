@@ -223,7 +223,9 @@ nav:
       - Chapter 8. 异常控制流: 课外积累/CSAPP/Chapter8.md
       - Chapter 9. 虚拟内存: 课外积累/CSAPP/Chapter9.md
     - Games101:
+        - 课外积累/Games101/index.md
         - Transformation: 课外积累/Games101/Transformation.md
+        - Rasterization: 课外积累/Games101/Rasterization.md
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
