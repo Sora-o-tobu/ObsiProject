@@ -90,7 +90,7 @@
 
 ![[红黑树删除Case4.png]]
 
-??? example "删除实例"
+??? example "删除实例 Delete 3, Delete 17, Delete 8"
 	![[红黑树删除实例.png]]
 
 
@@ -101,6 +101,18 @@
 | ------------- | ----------- | -------------- |
 | **Insertion** | $\le 2$     | $\le 2$        |
 | **Deletion**  | $O(\log N)$ | $\le 3$        |
+
+```c
+typedef enum { red, black } colors;
+typedef struct RBNode *PtrToRBNode;
+struct RBNode{
+    int Data;
+    PtrToRBNode Left, Right, Parent;
+    int BlackHeight;
+    colors Color;
+};
+typedef PtrToRBNode RBTree;
+```
 
 
 ## B+ 树

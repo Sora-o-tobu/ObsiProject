@@ -140,6 +140,7 @@ nav:
       - 大物 乙 II:
         - 电学部分: 课程笔记/大学物理/大学物理II/电学部分.md
         - 电磁学部分: 课程笔记/大学物理/大学物理II/电磁学部分.md
+        - 光学部分: 课程笔记/大学物理/大学物理II/光学部分.md
     - 离散数学:
       - 课程笔记/离散数学/index.md
       - CH 1. Logic and Proofs: 课程笔记/离散数学/笔记/Chapter1.md
@@ -226,6 +227,7 @@ nav:
         - 课外积累/Games101/index.md
         - Transformation: 课外积累/Games101/Transformation.md
         - Rasterization: 课外积累/Games101/Rasterization.md
+        - Shading: 课外积累/Games101/Shading.md
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
