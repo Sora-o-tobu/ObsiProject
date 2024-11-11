@@ -129,6 +129,9 @@ static Node* Merge1(Node* H1, Node* H2) {
 		![[斜堆合并后.png]]
 
 
+!!! info "按照顺序插入 $1\sim 2^k-1$ ，最终的堆呈现满二叉树形状，不过不能据此简单填入数据"
+	![[1215insertskewheap.png]]
+
 ### 均摊分析
 
 对 Skew Heap 的 Merge 操作进行均摊分析，定义势能函数 $\phi(D_i)$ 为以 $D_i$ 为根节点的树的 Heavy Nodes 的数量，其中 Heavy Nodes 定义为右子树的节点数大于等于左子树的节点数的 Node。

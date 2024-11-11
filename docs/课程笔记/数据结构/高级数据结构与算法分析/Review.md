@@ -44,7 +44,7 @@
 	- **[F]** With the same operations, the resulting skew heap is always more balanced than the leftist heap
 		- 倒反天罡
 		- 反过来说貌似也是错误的，总之不能这么绝对
-- A perfectly balanced tree forms if keys 1 to $2^​k​​−1$ are inserted in order into an initally empty leftist heap.
+- A perfectly balanced tree forms if keys 1 to $2^k-1$ are inserted in order into an initally empty leftist heap.
 	- **True** 记答案吧
 	- 改成 **Skew Heap** 也是对的
 - For a skew heap with N nodes, the worst-case running time of all operations (insert/delete min/merge) is O(N).
@@ -62,7 +62,7 @@
 - 有两个栈组成一个特殊队列，当执行 `enqueue` 时，将元素 $x$ 压入 `SA` ；当执行 `dequeue` 时，若 `SB` 栈顶有元素，则 `pop` 它，若没有，则不断 `pop SA` 并 `push` 进 `SB` 中。假设 `pop, push` 都有最坏复杂度 $O(1)$ ，求均摊分析势能函数。
 	- 消耗最大的操作显然就是 `pop` 时 `SB` 为空，此时将 `SA` 所有元素都 `pop,push` 了一遍。因此势能函数为 $2|SA|$。
 - In amortized analysis, a good potential function should always assume its maximum at the start of the sequence.
-	- **False** 记答案吧
+	- **False** 应该是 Minimum，记住答案！！！
 
 ## Inverted File Index
 
