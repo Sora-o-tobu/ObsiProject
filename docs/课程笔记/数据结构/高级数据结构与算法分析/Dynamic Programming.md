@@ -126,7 +126,7 @@ void OptMatrix( const long r[ ], int N, TwoDimArray M )
 }
 ```
 
-!!！info "最外层循环一定是子问题长度"
+!!! info "最外层循环一定是子问题长度"
 
 得到时间复杂度为 $T(N)=O(N^3)$
 

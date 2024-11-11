@@ -134,8 +134,8 @@ $$
 ### Master method
 
 $$\begin{gather}T(N)=aT(\frac{N }{b})+\Theta(N^k \log^pN),a\ge 1,b\gt 1 ,p\ge 0 \\
-T(N)=\begin{cases}O(N^{\log_ba})\ ,\ if\ \log_ba\gt k \\ O(N^k\log ^{p+1}N)\ ,\ if\ \log_ba=k \\  O(N^k \log ^pN)\ ,\ if\ log_ba\lt k
+T(N)=\begin{cases}O(N^{\log_ba})\  , &\ if\ \log_ba\gt k \\ O(N^k\log ^{p+1}N)\ , &\ if\ \log_ba=k \\  O(N^k \log ^pN)\ , &\ if\ log_ba\lt k
 \end{cases}
 \end{gather}$$
 
-证明过程见课本
+证明过程见课本 

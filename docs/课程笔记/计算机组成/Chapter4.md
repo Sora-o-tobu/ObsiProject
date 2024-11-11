@@ -262,9 +262,19 @@ ID/EX.MemRead and
 
 #### Control Hazards
 
-对于跳转指令，下一条指令地址究竟是 PC+4 还是 PC+address 起码要等到 EX 阶段后🤔
+对于跳转指令，下一条指令地址究竟是 PC+4 还是 PC+address 起码要等到 EX 阶段后，需要插入三个Bubble🤔
 
 一种解决方法是在 `branch` 指令的ID阶段就提前对两个源寄存器进行比较（需要硬件支持），从而只需要一个Bubble就可以完成下一条指令地址的选择。
+
+```asm
+36: sub x10, x4, x8
+40: beq x1, x3, 32 ; PC-relative branch
+   #Bubble         ; to 40 + 16*2 = 72
+44:
+48:
+...
+72: ld x4, 50(x7)
+```
 
 但是对于更长的流水线来说，这种处理方式可能不能平稳运行，是 unacceptable 的。
 
@@ -278,3 +288,8 @@ ID/EX.MemRead and
 - Dynamic Branch Prediction
 	- 基于运行历史来预测是否命中
 
+即便预测没有命中，最早的指令也才进行三个阶段到 EXE，并没有对整体状态进行更新（写回寄存器或写入内存等），恢复状态是较为方便的。
+
+## Exception & Interrupt
+
+中断来自于外部的 I/O controller；异常来自于 CPU 的意外控制流。

@@ -10,6 +10,8 @@
 	- **[T]** If v is a leaf node in T​1​​, then T​1​​ and T​3​​ might be different.
 	- **[F]** If v is not a leaf node in T​1​​, then T​1​​ and T​3​​ must be different.
 	- **[F]** If v is not a leaf node in T​1​​, then T​1​​ and T​3​​ must be the same.
+- There exists an AVL tree of depth (the depth of the root is 0) 6 and 31 nodes.
+	- **False** 碰到这题直接拿最少节点数公式算，$n_6 =33 > 31$
 
 ## Red-Black Tree
 
@@ -27,6 +29,8 @@
 
 - A B+ tree of order 3 with 21 numbers has at least __ nodes of degree 2.
 	- 答案大概是 0 个。一种典型错误思考是认为最少情况是有 $21/3=7$ 个叶节点，这样第二层分为 $3,2,2$ ，共两个度为2的节点。但是实际上叶节点可以大于 7，因此我们大手调控一下使其有 9 个叶节点，这样一个度为2的节点都不存在了
+- For a B+ tree with order M and N keys, the time complexity of find operations is $O(\log_M N)$
+	- **False** 不考虑 M 的话应该是 $O(\log N)$ ，考虑的话可能 $O(M\log_MN)$ ？搞不懂
 
 ## Leftist Heap & Skew Heap
 
@@ -36,17 +40,22 @@
 - Which one of the following statements is TRUE?
 	- **[T]** The relationship of skew heaps to leftist heaps is analogous to the relation between splay trees and AVL trees
 	- **[F]** For leftist heaps and skew heaps, the worst-case running time of a single insertion are both O(N)
-		- 堆的插入要么 $O(\log N)$ 要么 $O(1)$
+		- 左倾堆插入最坏时间复杂度仍为 $O(\log N)$，而斜堆确实为 $O(N)$
 	- **[F]** With the same operations, the resulting skew heap is always more balanced than the leftist heap
 		- 倒反天罡
 		- 反过来说貌似也是错误的，总之不能这么绝对
 - A perfectly balanced tree forms if keys 1 to $2^​k​​−1$ are inserted in order into an initally empty leftist heap.
 	- **True** 记答案吧
-
-
+	- 改成 **Skew Heap** 也是对的
+- For a skew heap with N nodes, the worst-case running time of all operations (insert/delete min/merge) is O(N).
+	- **True** 记答案吧
 
 ## Binomial Queue
 
+- To implement a binomial queue, the subtrees of a binomial tree are linked in increasing sizes
+	- **False** 不需要
+- Inserting a node into a binomial heap with 9 nodes costs less time than inserting a number into a binomial heap with 15 nodes.
+	- **True** 9 = 1001; 15 = 1111. 看谁的 0 在前面
 
 ## Amortized Analysis
 
@@ -57,12 +66,16 @@
 
 ## Inverted File Index
 
-
+- While accessing a term by hashing in an inverted file index, range searches are expensive
+	- **True** 记答案吧
 
 ## Backtracing
 
 - In backtracking, if different solution spaces have different sizes, start testing from the partial solution with the smallest space size would have a better chance to reduce the time cost
 	- **True**
+- Given the following game tree, node _d_ will be pruned with _α_−_β_ pruning algorithm if and only if \_\_\_\_\_.
+- ![[backtracingex2.png]]
+	- $65\le b \le 70$
 
 ## Divide & Conquer
 
