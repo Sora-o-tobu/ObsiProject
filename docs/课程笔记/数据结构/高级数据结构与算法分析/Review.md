@@ -12,6 +12,7 @@
 	- **[F]** If v is not a leaf node in T​1​​, then T​1​​ and T​3​​ must be the same.
 - There exists an AVL tree of depth (the depth of the root is 0) 6 and 31 nodes.
 	- **False** 碰到这题直接拿最少节点数公式算，$n_6 =33 > 31$
+	- 不过也要注意定义，有些题会定义 root 的深度为 1
 
 ## Red-Black Tree
 
@@ -49,6 +50,8 @@
 	- 改成 **Skew Heap** 也是对的
 - For a skew heap with N nodes, the worst-case running time of all operations (insert/delete min/merge) is O(N).
 	- **True** 记答案吧
+- A leftist heap with the null path length of the root being $r$ must have at least $2^{r+1}-1$ nodes
+	- **True** NPL = r 对应着右路径上有 $r+1$ 个节点，所以正确。
 
 ## Binomial Queue
 
@@ -56,6 +59,8 @@
 	- **False** 不需要
 - Inserting a node into a binomial heap with 9 nodes costs less time than inserting a number into a binomial heap with 15 nodes.
 	- **True** 9 = 1001; 15 = 1111. 看谁的 0 在前面
+- Making $N$ insertions into an initially empty binomial queue take $O(N)$ time in worst case.
+	- **True** 记答案吧，另外这也说明平均插入时间是常数级的
 
 ## Amortized Analysis
 
