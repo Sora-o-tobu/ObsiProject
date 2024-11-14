@@ -270,9 +270,9 @@ ID/EX.MemRead and
 36: sub x10, x4, x8
 40: beq x1, x3, 32 ; PC-relative branch
    #Bubble         ; to 40 + 16*2 = 72
-44:
-48:
-...
+44: and x1, x2, x5 ; 不执行
+48: orr x1, x2, x6 ; 不执行
+    ...            ; 不执行
 72: ld x4, 50(x7)
 ```
 
@@ -290,6 +290,54 @@ ID/EX.MemRead and
 
 即便预测没有命中，最早的指令也才进行三个阶段到 EXE，并没有对整体状态进行更新（写回寄存器或写入内存等），恢复状态是较为方便的。
 
+!!! example "2 bit Predictor"
+	![[2bitpredictor.png]]
+
 ## Exception & Interrupt
 
-中断来自于外部的 I/O controller；异常来自于 CPU 的意外控制流。
+- 中断来自于 CPU 外部的 I/O controller，通常用于信息的输入与输出
+- 异常来自于 CPU 内部的意外控制流，是与CPU当前执行指令相关的同步事件
+
+
+## Instruction-Level Parallelism
+
+### Static Multiple Issue
+
+静态多发射，由编译器完成发射相关判断。编译器会将同时执行不会冲突的指令分成不同 **issue packets**，一起发射，从而增加流水线的效率。
+
+!!! info "Speculation 猜测"
+	不管是静态多发射还是动态多发射，编译器或处理器都会“猜测指令”的行为，以尽早消除掉该指令与其它指令之间的依赖关系。
+
+在经典双发射例子中，ALU/Branch 类型指令可以和 Load/Store 同时执行：
+
+![[twoissuepackect.png]]
+
+!!! example "Example 1"
+	![[dualissueex1.png]]
+	该例中编译器对指令顺序进行了重排，从而提高了Instruction Per Cycle。但是并非无限制打包，同一个包内指令数据不能有依赖关系。
+
+!!! example "Example 2"
+	![[dualissueex2.png]]
+	配合循环展开，减少数据竞争，得到IPC=1.75，已经很接近理想数值 2 了。
+
+
+### Dynamic Multiple Issue
+
+动态多发射在动态执行过程中由硬件完成发射相关判断，允许CPU乱序执行指令。
+
+```asm
+ld x31, 20(x21)
+add x1, x31, x2
+sub x23, x23, x3
+andi x5, x23, 20
+```
+
+当 `add` 在等待 `x31` 数据时，CPU可以先执行 `sub` 的前几个阶段。
+
+为什么不只用编译器优化的静态多发射呢？
+
+- <1> 不是所有的 stalls 是可预测的
+	- e.g., cache misses
+- <2> 跳转指令的结果是动态决定的
+- <3> 对于一个 ISA，其不同执行方法有着不同的 Latency 和 Hazard
+

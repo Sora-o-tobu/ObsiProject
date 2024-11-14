@@ -99,6 +99,12 @@
 - ![[impossibledpquestion.png]]
 	- 对于 $f_{i,j,k}=f_{i,j+1,k}+\min (...)$ ，$j$ 的递归要从大到小计算 `for j in n to 0:`
 
+## Greedy Algorithm
+
+- Let S be the set of activities in Activity Selection Problem. Then the earliest finish activity am​ must be included in all the maximum-size subset of mutually compatible activities of S.
+	- **False** 
+
+
 ## NP-Completion
 
 - Given that problem A is NP-complete. If problem B is in NP and can be polynomially reduced to problem A, then problem B is NP-complete.
