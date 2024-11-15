@@ -232,3 +232,6 @@ for each rasterized screen sample (x,y):
 
 而各向异性过滤允许我们对横竖方向上长条形区域作快速的范围查询，能够解决一部分 Mipmap 解决不了的问题。
 
+!!! warning "Appendix"
+	还有环境贴图、凹凸贴图(Assignment3的Bump)、位移贴图(Assignment3的Displacement)等
+

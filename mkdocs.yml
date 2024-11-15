@@ -78,7 +78,6 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-
   - toc:
       permalink: true
 
@@ -132,9 +131,12 @@ nav:
       - 多元函数积分: 课程笔记/微积分甲II/积分.md
     - 概率论与数理统计:
       - 课程笔记/概率论与数理统计/index.md
+      - 错题本: 课程笔记/概率论与数理统计/review.md
       - 概率论的基本概念: 课程笔记/概率论与数理统计/CH1.md
       - 随机变量及其分布: 课程笔记/概率论与数理统计/CH2.md
       - 多维随机变量及其分布: 课程笔记/概率论与数理统计/CH3.md
+      - 随机变量的数字特征: 课程笔记/概率论与数理统计/CH4.md
+      - 大数定律与中心极限定理: 课程笔记/概率论与数理统计/CH5.md
     - 大学物理 乙:
       - 大物 乙 I: 课程笔记/大学物理/零碎知识点.md
       - 大物 乙 II:
