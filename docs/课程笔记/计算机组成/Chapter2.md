@@ -30,6 +30,9 @@ RISC-V 一共有 32 个寄存器，每个寄存器宽度均为 64 位，命名�
 !!! warning "Preserved on call"
 	是否保证调用前后这些寄存器的值不变。如果为 `yes`，则被调用函数开头结尾分别要将这些寄存器入栈出栈以恢复它们的值；如果为 `no` ，则需要主函数上自行入栈出栈恢复值。
 
+!!! success "程序调用"
+	RISC-V 使用 `jal x1, FunctionAddress` 来调用子程序，使用 `jalr x0, 0(x1)` 返回母程序。在程序调用中，RISC-V 必须使用额外的指令在调用前将调用者保存的寄存器压入内存栈，在调用后将这些寄存器数据弹出内存栈，从而保证这些数据的不变性。
+
 ## 指令格式
 
 不同于 8086 无定长的机器码，RISC-V 的指令都是 32 bit ，且有固定格式的。
@@ -136,43 +139,7 @@ L3:
 	- **基址寻址**（从 Memory 中取数据）
 	- **PC相对寻址**（数据为相对PC的立即数）
 
-当调用函数时，使用栈来存储函数返回地址、传递的参数（且 `x10` 还充当 return 值）。例如，将下列递归计算斐波那契数列的函数转换成 RISC-V 汇编语言：
 
-```c
-int fib(int n) {
-	if (n == 0)
-		return 0;
-	else if (n == 1)
-		return 1;
-	else
-		return fib(n-1) + fib(n-2);
-}
-```
-
-
-```asm
-fib:
-	beq x10, x0, done// n == 0
-	addi x5, x0, 1
-	beq x10, x5, done// n == 1
-//分配栈空间
-	addi x2, x2, -16 // allowcate stack space
-	sd x10, 8(x2)    // push x10 (the value of n)
-	sd x1, 0(x2)     // push x1 (the return address)
-	addi x10, x10, -1
-	jal x1, fib      // fib(n-1)
-	ld x5, 8(x2)     // load n in this loop
-	sd x10, 8(x2)    // push fib(n-1)
-	addi x10, x5, -2 // x10 = n-2
-	jal x1, fib      // fib(n-2)
-	ld x5, 8(x2)     // x5 = fib(n-1)
-	add x10, x10, x5 // x10 = fib(n-1) + fib(n-2)
-//恢复栈
-	ld x1, 0(x2)     // load return address
-	addi x2, x2, 16  // restore the stack
-done:
-	jalr x0, x1
-```
 
 ## 杂项
 
@@ -234,4 +201,79 @@ int main(void) {
 采用小段寻址 **little endian** 。
 
 ![[littleendianriscv.png]]
+
+### 递归
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">斐波那契数列：</font>
+
+
+当调用函数时，使用栈来存储函数返回地址、传递的参数（且 `x10` 还充当 return 值）。例如，将下列递归计算斐波那契数列的函数转换成 RISC-V 汇编语言：
+
+```c
+int fib(int n) {
+	if (n == 0)
+		return 0;
+	else if (n == 1)
+		return 1;
+	else
+		return fib(n-1) + fib(n-2);
+}
+```
+
+
+```asm
+fib:
+	beq x10, x0, done// n == 0
+	addi x5, x0, 1
+	beq x10, x5, done// n == 1
+//分配栈空间
+	addi x2, x2, -16 // allowcate stack space
+	sd x10, 8(x2)    // push x10 (the value of n)
+	sd x1, 0(x2)     // push x1 (the return address)
+	addi x10, x10, -1
+	jal x1, fib      // fib(n-1)
+	ld x5, 8(x2)     // load n in this loop
+	sd x10, 8(x2)    // push fib(n-1)
+	addi x10, x5, -2 // x10 = n-2
+	jal x1, fib      // fib(n-2)
+	ld x5, 8(x2)     // x5 = fib(n-1)
+	add x10, x10, x5 // x10 = fib(n-1) + fib(n-2)
+//恢复栈
+	ld x1, 0(x2)     // load return address
+	addi x2, x2, 16  // restore the stack
+done:
+	jalr x0, x1
+```
+
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">阶乘：</font>
+
+```c
+long long int fact(long long int n) {
+    if ( n < 1 ) return 1;
+    else         return n * fact(n - 1);
+}
+```
+
+
+```asm
+fact: addi sp, sp, -16      # adjust stack for 2 items
+      sd   x1, 8(sp)        # save the return address
+      sd   x10, 0(sp)       # save the argument n
+      addi x5, x10, -1      # x5 = n - 1
+      bge  x5, x0, L1       # if n >= 1, go to L1
+      addi x10, x0, 1       # return 1
+      addi sp, sp, 16       # adjust stack to pop 2 items (no need to ld)
+      jalr x0, 0(x1)        # return to caller
+L1:   addi x10, x10, -1     # n >= 1: argument gets (n - 1)
+      jal  x1, fact         # call fact with (n - 1)
+      addi x6, x10, 0       # move result of fact (n - 1) to x6
+      ld   x10, 0(sp)       # restore argument n
+      ld   x1, 8(sp)        # restore the return address
+      addi sp, sp, 16       # adjust stack to pop 2 items
+      mul  x10, x10, x6     # return n * fact(n - 1)
+      jalr x0, 0(x1)        # return to the caller
+```
+
+> From [Minjoker](https://note.minjoker.top/courses/co/note1/)
 

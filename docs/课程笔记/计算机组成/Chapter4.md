@@ -71,6 +71,12 @@
 	=== "jal"
 		![[jaldatapath.png]]
 
+!!! example "考试可能的题型"
+	=== "S & R"
+		![[midtermquestion.png]]
+	=== "Only S-type"
+		![[midtermonlywithS.png]]
+
 ## 流水线
 
 ### Overview

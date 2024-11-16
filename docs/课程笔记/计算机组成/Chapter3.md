@@ -260,7 +260,9 @@ while(result[23] == 0 && exp > 0)
 
 #### 示例
 
-<font style="font-weight: 1000;font-size: 20px" color="orange">Example 1</font>
+<font style="font-weight: 1000;font-size: 20px" color="orange">Example 1:半精度浮点数加法 with round up</font>
+
+![[halfpreciseadditionwithroundup.png]]
 
 
 
