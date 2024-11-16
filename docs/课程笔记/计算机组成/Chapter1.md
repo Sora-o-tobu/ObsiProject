@@ -32,9 +32,13 @@
 	![[冯诺依曼架构.png]]
 
 
+指令集主要分为两类：
 
+- **RISC**: Reduced Instruction Set Computer，例如 *ARM*,*MIPS*,*RISC-V* 等。
+- **CISC**: Complex Instruction Set Computer，例如 *x86*
 
-RISC Architecture (1980s) 的全名为 Reduced Instruction Set Computer ，即精简指令集，相对于复杂指令集 CISC ，其指令编码长度为定长，指令执行使用更少的时钟周期
+!!! note "RISC-V的优势"
+	精简指令集对指令数目和寻址方式都进行了精简，使其执行更容易，指令并行执行成都更好好，编译器效率更高。例如，精简指令集的指令编码长度为定长，更方便了取指。
 
 现在绝大部分芯片均采用 RISC 架构，包括 ARM 芯片、智能手机，我们课上需要了解的即 **RISC-V 321 指令集**
 

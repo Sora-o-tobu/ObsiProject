@@ -72,6 +72,11 @@ RISC-V 指令格式如下：
 ??? example "例子：对于 R 型指令 `add`"
 	![[add转化机器码.png]]
 
+??? example "考察对 IS 理解的题目"
+	假设有一指令 `rpt x29, loop` 的效果为 `x29` 自减 `1` ，若 `x29>0` ，则跳转到 `loop` 。如果该指令在 RISC-V 指令集内，它应该是什么格式的。
+	
+	答案其实是 **U-type** ，因为它只用到一个 rd 寄存器和一个立即数地址。
+
 RISC-V 使用 `Branch` 系列指令进行跳转，举一例演示其应用：
 
 ```asm
@@ -202,7 +207,7 @@ int main(void) {
 
 ![[littleendianriscv.png]]
 
-### 递归
+### 嵌套调用
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">斐波那契数列：</font>
 
@@ -257,7 +262,8 @@ long long int fact(long long int n) {
 
 
 ```asm
-fact: addi sp, sp, -16      # adjust stack for 2 items
+fact: 
+	  addi sp, sp, -16      # adjust stack for 2 items
       sd   x1, 8(sp)        # save the return address
       sd   x10, 0(sp)       # save the argument n
       addi x5, x10, -1      # x5 = n - 1
@@ -265,7 +271,8 @@ fact: addi sp, sp, -16      # adjust stack for 2 items
       addi x10, x0, 1       # return 1
       addi sp, sp, 16       # adjust stack to pop 2 items (no need to ld)
       jalr x0, 0(x1)        # return to caller
-L1:   addi x10, x10, -1     # n >= 1: argument gets (n - 1)
+L1:   
+	  addi x10, x10, -1     # n >= 1: argument gets (n - 1)
       jal  x1, fact         # call fact with (n - 1)
       addi x6, x10, 0       # move result of fact (n - 1) to x6
       ld   x10, 0(sp)       # restore argument n
@@ -277,3 +284,79 @@ L1:   addi x10, x10, -1     # n >= 1: argument gets (n - 1)
 
 > From [Minjoker](https://note.minjoker.top/courses/co/note1/)
 
+!!! note "读取和存储时都要注意位宽"
+	对基址为 `a0` 的 `int` 型数组，取第 `i` 个元素，需要使用 `load word` 指令：`lw rd, i*4(a0)` 
+	
+	像我们递归使用存 64bit 寄存器的值，就使用 `load doubleword`
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">互相调用，存在两个ra：</font>
+
+```c
+int foo(a, b) {
+	int c = bar(a, b);
+	return 2 * c;
+}
+
+int bar(a, b) {
+	return a + b;
+}
+```
+
+
+```asm
+foo:
+	addi sp, sp, -24  # 开辟栈空间，将函数返回地址 ra 以及
+	sd s0, 0(sp)      # 可能用到的临时栈寄存器都压入栈中，
+	sd s1, 8(sp)      # 在函数返回前，恢复它们的值
+	sd ra, 16(sp)     #
+	add s0, x0, a0    # 参数转移到当前占用的寄存器中
+	add s1, x0, a1    # 同上， s1 = b
+	
+	add a0, x0, s0    # 准备调用 bar，传入参数 a
+	add a1, x0, s1    # 同上，传入参数 b
+	jal x1, bar       # 调用 bar
+	add s0, x0, a0    # 返回值 c 存在 a0 中，先暂存在 s0 中
+	slli s0, s0, 1    # c = c * 2
+	add a0, x0, a0    # 将 foo 的返回值存入 a0
+	
+	ld ra, 16(sp)     # 恢复值
+	ld s1, 8(sp)
+	ld s0, 0(sp)
+	addi sp, sp, 24   # 清理栈
+	
+	jalr x0, 0(ra)    # 回到主函数
+```
+
+
+```asm
+bar:
+	addi sp, sp, -24    # 开辟栈空间，凭经验来讲传入
+	sd s0, 0(sp)        # n个参数，就开n+1个位置 
+	sd s1, 8(sp)        # (n+1)*8
+	sd ra, 16(sp)       #
+	add s0, x0, a0      # 参数转移到当前占用的寄存器中
+	add s1, x0, a1      # 同上，s1 = b
+	
+	add s0, s0, s1      # a = a + b
+	add a0, x0, s0      # 返回值存入 a0
+	
+	ld ra, 16(sp)       # 恢复栈
+	ld s1, 8(sp)        #
+	ld s0, 0(sp)        # 
+	addi sp, sp, 24     # 
+	
+	jalr x0, 0(ra)      # 回到 foo 函数
+```
+
+更严格的来讲，对于过程开头开辟栈空间部分:
+
+- **需要保留的寄存器**
+	- Saved Registers: `x8-x9`,`x18-x27` (**s0,s1...**)
+	- Return Address: `x1` (**ra**)
+	- Stack Point: `x2` (**sp**)
+	- Frame Point: `x8` (**tp**)
+	- Stack Above: `sp` 之上的数据
+- **不需要保留的寄存器**
+	- Argument Registers: `x10-x17` (**a0,a1,...**)
+	- Temporary Registers: `x5-x7`,`x28-x31` 
+	- Stack Below: `sp` 之下的数据
