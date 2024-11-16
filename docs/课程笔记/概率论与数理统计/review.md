@@ -1,5 +1,25 @@
 # 错题本
 
+## Chapter 3
+
+### 离散型和连续型的乘积可以用全概率公式
+
+**题面：**
+
+$X\sim N(0,1), Y$的取值是$\pm 1$，且$P\{Y=1\}=p$，若 $X,Y$ 相互独立，求证 $Z=X\cdot Y \sim N(0,1)$ 
+
+**解答：**
+
+$$\begin{array}c
+F_Z(t) = P(XY\le t)=P(Y=1)P(X\le t)+P(Y=-1)P(X\ge -t)\\
+ =P(Y=1)F_X(t) +P(Y=-1) (1-F_X(-t)) \\
+ =pF_X(t) +(1-p) F_X(t) = F_X(t)
+\end{array}
+$$
+
+
+
+
 ## Chapter 4
 
 ### 对于有放回，从单个事件推广到整体
@@ -67,3 +87,4 @@ E(X) = \sum_{i=1}^n \left(1 - \left(1 - \frac{1}{n}\right)^n\right) = n \left(1 
 \[
 \lim_{n \to +\infty} E(X/n) = 1 - e^{-1} \approx 0.632
 \]
+

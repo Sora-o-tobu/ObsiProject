@@ -27,6 +27,9 @@ RISC-V 一共有 32 个寄存器，每个寄存器宽度均为 64 位，命名�
 	- `x8` 一般也用作帧指针 `frame pointer` ，指向栈的底端
 - `x10-x17` 是参数寄存器，函数调用的前八个参数会存储在这些寄存器中，但如果参数超过 8 个就需要放到栈中传递（如果参数为 8 bytes，`fp+8` 是第九个参数，`fp+16` 是第十个参数...）。同时，过程的结果也会放到这些寄存器上，对于C语言这种只有一个返回值的语言，可能只会用到 `x10` 。
 
+!!! warning "Preserved on call"
+	是否保证调用前后这些寄存器的值不变。如果为 `yes`，则被调用函数开头结尾分别要将这些寄存器入栈出栈以恢复它们的值；如果为 `no` ，则需要主函数上自行入栈出栈恢复值。
+
 ## 指令格式
 
 不同于 8086 无定长的机器码，RISC-V 的指令都是 32 bit ，且有固定格式的。
@@ -87,16 +90,16 @@ EXIT:
 同时，也可以使用无条件跳转指令 `jal` 和 `jalr` (Jump And Link Register) 来达成C语言 switch 语句的效果：
 
 ```asm
-comment@
+comment @
 模拟 Jump Address Table
 @
 
 C CODE:
 switch(k){
-	case 1: f = i + j; break;
-	case 2: f = g + h; break;
-	case 3: f = g - h; break;
-	case 4: f = i - j; break;
+	case 0: f = i + j; break;
+	case 1: f = g + h; break;
+	case 2: f = g - h; break;
+	case 3: f = i - j; break;
 }
 
 RISC-V ASM CODE:
@@ -173,6 +176,8 @@ done:
 
 ## 杂项
 
+### 大数加载
+
 由于受指令宽度限制，立即数宽度不能超过 12bit，但是这个大小限制并不能涵盖计算机的常规工作范围。为此，RISC-V 通过组合 `addi` 和 `lui`(Load Upper Immediate) 指令来实现存储 32bit 大小立即数：
 
 `lui` 指令的作用为读取一个 20bit 的立即数，存储进寄存器低 32 位的高 20 位，左侧 32 位全部填充 bit 31（类似符号扩充），右侧 12 位全部填充 0，其指令格式为：
@@ -200,6 +205,9 @@ lui x19, 977 # 976 + 1
 addi x19, x19, 2304 # 计算机视其为 negative
 ```
 
+??? tip "Addition"
+	![[addix19x192304.png]]
+
 在 [Compiler Explorer](https://godbolt.org/) 中用 RISC-V(32bit) gcc 编译下列代码：
 
 ```c
@@ -219,3 +227,11 @@ int main(void) {
  fef42623
  sw a5,-20(s0)
 ```
+
+
+### 寻址
+
+采用小段寻址 **little endian** 。
+
+![[littleendianriscv.png]]
+

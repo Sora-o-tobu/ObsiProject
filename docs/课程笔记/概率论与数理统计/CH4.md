@@ -104,7 +104,7 @@ $$
 
 $$\begin{array}l
 Cov(X,Y)=E(XY)-E(X)E(Y) \\
-Var(X,Y) =Var(X)+Var(Y) +2Cov(X,Y)
+Var(X+Y) =Var(X)+Var(Y) +2Cov(X,Y)
 \end{array}
 $$
 

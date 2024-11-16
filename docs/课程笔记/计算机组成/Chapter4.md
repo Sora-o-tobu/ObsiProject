@@ -24,26 +24,31 @@
 我们一共定义 7 个控制信号，用于控制 Datapath 进行正确的指令操作：
 
 
-| Signal Name              | Effect when =0                | Effect when =1                        |
-| ------------------------ | ----------------------------- | ------------------------------------- |
-| **RegWrite**             | 无                             | 将 Write Data 写入 Write Register        |
-| **ALUSrc**               | ALU 第二个输入选择寄存器堆第二个输出          | ALU 第二个输入选择指令中经过 sign-extention 后的立即数 |
-| **Branch**               | PC = PC + 4                   | PC = PC + imm(左移一位后的)                 |
-| **Jump**                 | 无                             | PC = PC + jump address(左移一位后的)        |
-| **MemRead**              | 无                             | 读取存储器对应地址上的数据                         |
-| **MemWrite**             | 无                             | 写入存储器对应地址上的数据                         |
-| **MemtoReg<br>(2 bits)** | 00：寄存器堆的 Write data 为 ALU 的输出 | 01：寄存器堆的 Write data 为 Memory 的输出      |
-|                          | 10：寄存器堆的 Write data 为 PC + 4  | 无                                     |
+| Signal Name              | Effect when =0                                    | Effect when =1                             |
+| ------------------------ | ------------------------------------------------- | ------------------------------------------ |
+| **RegWrite**             | 无                                                 | 将 Write Data 写入 Write Register             |
+| **ALUSrc**               | ALU 第二个输入选择寄存器堆第二个输出                              | ALU 第二个输入选择指令中经过 sign-extention 后的立即数      |
+| **Branch**               | PC = PC + 4                                       | PC = PC + imm(左移一位后的)                      |
+| **Jump**                 | 由 `Branch` 决定 PC                                  | PC = PC + jump address(左移一位后的)             |
+| **MemRead**              | 无                                                 | 读取存储器对应地址上的数据                              |
+| **MemWrite**             | 无                                                 | 写入存储器对应地址上的数据                              |
+| **MemtoReg<br>(2 bits)** | 00：寄存器堆的 Write data 为 ALU 的输出                     | 01：寄存器堆的 Write data 为 Memory 的输出           |
+|                          | 10：寄存器堆的 Write data 为 PC + 4(Only for `jal,jalr`) | 11：寄存器堆的 Write data 为 imme（Only for `lui`） |
 
-!!! note "控制信号只有 `MemtoReg` 是两位的，这是因为 Jump 指令要把 PC+4 存入寄存器"
+!!! note
+	其实控制信号 `Jump` 也是 2bit 的，因为指令 `jalr` 的跳转目标地址为 `rs1+imm`
 
-注意到上面示意中控制单元的输出还有一个 2bit 的 `ALUop` ，这其实是控制单元的一个中间输出，其经过两层译码后才能得到对应的 `ALU operation` 信号，以控制 ALU 进行何种计算。
+
+注意到上面示意中控制单元的输出还有一个 2bit 的 `ALUop` ，这其实是控制单元的一个中间输出，第一层对 `opcode` 进行译码，可以得到该指令对应的 `type` 及大部分控制信号；第二层再联合 `Funct3,Funct7,ALUop`，译码得出对应的 `ALU operation` 信号，以控制 ALU 进行何种计算。
 
 ![[2leveldecoder.png]]
 
 对于一般的指令，有表格如下：
 
 ![[ybzlbg.png]]
+
+??? failure "某lab中我自己设定的控制信号表，但是和理论课略有不同，没有太大参考价值"
+	![[myselfcontrolsignaltable.png]]
 
 其中 ALUop 不需要死记硬背，只要知道其最终对应的 ALU Function 是什么就够了，如：
 
@@ -53,6 +58,18 @@
 - 对于 `R-type` 指令，在第二层译码器根据 `ALUop`,`Fun3`,`Fun7` 来判断 ALU 执行的操作
 
 实际的数据传输例子，请看课件或是 [咸鱼暄的笔记](https://xuan-insr.github.io/computer_organization/4_processor/)
+
+!!! example "课件上的数据传输例子（有点丑说是）"
+	=== "R-type"
+		![[rtypedatepath.png]]
+	=== "load"
+		![[loaddatapath.png]]
+	=== "store"
+		![[storedatapath.png]]
+	=== "bea"
+		![[beqdatapath.png]]
+	=== "jal"
+		![[jaldatapath.png]]
 
 ## 流水线
 
@@ -68,7 +85,7 @@
 
 !!! note "Latancy: 每一条指令执行需要的时间"
 
-对于单周期处理器，最长的时钟延迟决定了处理器的时钟频率，但是最耗时指令不一定是最常用的指令，这违背了八大思想的 *Making common case fast* 。为了解决这个问题，我们引入 pipelining 以提升处理器的性能。
+对于单周期处理器，最长的时钟延迟决定了处理器的时钟频率，但是最耗时指令不一定是最常用的指令，这违背了八大思想的 *Making common case fast* 。为了解决这个问题，我们引入 pipeline 以提升处理器的性能。
 
 1. **IF**: Instruction fetch from memory
 2. **ID**: Instruction decode & register read
@@ -240,7 +257,6 @@ if(MEM/WB.RegWrite
 | Forward = 00 | ID/EX  | This ALU operand comes from the register file                    |
 | Forward = 10 | EX/MEM | This ALU operand comes from the prior ALU result                 |
 | Forward = 01 | MEM/WB | This ALU operand comes from data memory or an earlier ALU result |
-
 
 同时存在 EX Hazard 和 MEM Hazard 时只执行 EX Hazard（选择 Most Recent 的冒险处理）。例如：
 
