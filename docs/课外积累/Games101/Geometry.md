@@ -77,7 +77,7 @@ f  12/11/15 12/11/15 12/11/15        # 连接关系，face
    # 在Unity中相当于Mesh类的indices数组
 ```
 
-## Curves
+## Bezier Curves
 
 贝塞尔曲线使用一系列控制点来定义一段曲线。
 
@@ -187,7 +187,7 @@ public class BezierCurve : MonoBehaviour
 ```
 
 
-## Surfaces
+## Bezier Surfaces
 
 ![[beziersuface1.png]]
 
@@ -199,4 +199,69 @@ For bi-cubic Bezier surface patch,
 具体做法是对每四个点都画出对应的贝塞尔曲线，再对每四个贝塞尔曲线上 $t$ 时刻运动的四个点画出画出一个 moving curve。
 
 ![image](https://pic4.zhimg.com/v2-3fc838ab0c6600d6d6e49482f6bdf521_b.webp)
+
+## Mesh Operation
+
+- Subdivision 细分
+- Simplification 简化
+
+### Loop Subdivision
+
+!!! info "Loop 细分和循环没关系，是因为算法的发明人姓 Loop"
+
+- <1> Split each triangle into four
+	- 连接三角形每条边的中点，将其拆分为四个小三角形
+- <2> Assign new vertex positions according to weights
+	- 根据权重更新顶点的位置
+
+
+- **对于新顶点**（中点），它与两个顶点直接连接，与两个顶点不直接连接但在同一个三角形内，那么对其加权平均更新：
+
+![[fornewverticessubdivision.png]]
+
+- **对于旧顶点**，根据连接的旧定点数（该节点的度）选择不同的权重加权平均：
+
+![[foroldverticessubdivision.png]]
+
+### Catmull-Clark Subdivision
+
+上述 Loop 细分只能应用于网格呈三角形的模型，而 Catmull-Clark 细分适用于更 General 的网格。
+
+定义非四边形面为 `Non-quad face` ，定义度不为四的点为 `Extraordinary vertex` :
+
+![[catmullclarksubdivsione1.png]]
+
+对每一个面取中心点，对每一条边取中点，并把这些新的点全部连接起来。那么细分之后，在 `Non-quad face` 中会增加一个奇异点，而所有的非四边形面均消失：
+
+![[catmullclarksubdivisione2.png]]
+
+所以在之后的细分中，奇异点的个数不会增加。
+
+坐标更新的加权平均算法如下：
+
+![[catmullclarksubdivisionjiaquan.png]]
+
+!!! quote
+	![[quoteofsubdivision.png]]
+
+### Collapsing An Edge Simplification
+
+在保留整体形状的前提下减少网格面数，从而降低性能需求。
+
+在 Games101 课程中介绍的简化算法为边坍缩。
+
+为了实现这个算法，我们引入二次误差（**Quadric Error**）的概念，其定义为一个新顶点到原本相关的三角形平面的距离的平方和。
+
+![[introductionoferrorquadric.png]]
+
+!!! info "类似机器学习中的 `L2 Distance`"
+
+对于整个模型，计算每一条边坍缩后造成的二次误差，而选择误差最小的边坍缩。坍缩后更新与这两个点相连的所有边的误差值，然后继续坍缩。
+
+![[howtosimplificationwithquadric.png]]
+
+!!! info "数据结构"
+	该算法的一般操作为取最小值以及修改键值，所以用来存储二次误差值的数据结构应该选择优先队列。
+
+!!! note "这实际上是一种贪心算法，并不保证结果的最优性"
 

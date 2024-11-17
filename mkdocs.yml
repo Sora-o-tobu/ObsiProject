@@ -234,6 +234,7 @@ nav:
         - Rasterization: 课外积累/Games101/Rasterization.md
         - Shading: 课外积累/Games101/Shading.md
         - Geometry: 课外积累/Games101/Geometry.md
+        - Ray Tracing: 课外积累/Games101/Ray Tracing.md
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
