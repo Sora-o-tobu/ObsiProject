@@ -81,7 +81,7 @@ f  12/11/15 12/11/15 12/11/15        # 连接关系，face
 
 贝塞尔曲线使用一系列控制点来定义一段曲线。
 
-先考虑只有三个点的贝塞尔曲线（quadratic Bezier）：
+先考虑只有三个控制点的二阶贝塞尔曲线（quadratic Bezier）：
 
 ![[quadraticbezier.png]]
 
@@ -110,11 +110,13 @@ $$
 
 其中 $B_j^n(t)$ 称为 Bernstein polynomial。
 
+!!! note "最常用的是有四个控制点的四阶贝塞尔曲线 Cubic Bezier"
+
 贝塞尔曲线有如下性质：
 
 - 起点和终点满足：$b(0)= b_0, b(1)=b_n$
 - 起点和终点的切线满足：$b'(0)=n(b_1 -b_0), b'(1)= n(b_n -b_{n-1})$
-- 对控制点先做仿射变换再画贝塞尔曲线得到的结果与对控制点先画贝塞尔曲线再对曲线仿射变换一样
+- 对控制点先做仿射变换再画贝塞尔曲线得到的结果与对控制点先画贝塞尔曲线再对曲线仿射变换一样（**几何不变性**）
 - 贝塞尔曲线一定位于控制点形成的凸包内
 
 !!! info "Convex Hull"
@@ -124,8 +126,66 @@ $$
 
 ![[gangbigongju.png]]
 
+> You can try in [Bezier curve edit](https://math.hws.edu/eck/cs424/notes2013/canvas/bezier.html)
+
 !!! tip "连续性"
 	若只是方向相同，定义为该处 C0 Continuity；若方向和距离都相同，定义为该处 C1 Continuity
+
+用 `Unity` 写的一个贝塞尔曲线实现：
+
+```csharp
+public class BezierCurve : MonoBehaviour
+{
+    public Transform[] referencePointTransforms;
+    public Transform curvePointTransform;
+    Vector3[] mReferencePoints;
+    int mSign = 1;
+    float t = 0;
+    int mResolution = 100;
+
+    void Update()
+    {
+        TransformsToVectors();
+        t = Mathf.Clamp(t, 0, 1);
+        // curvePointTransform.position = GetCurvePointDeCasteljau(mReferencePoints, t);
+        curvePointTransform.position = GetCurvePointByBernstein(mReferencePoints, t);
+        t += Time.deltaTime * 0.2f * mSign;
+        if (t > 1 || t < 0)
+            mSign *= -1;
+    }
+    
+    void OnDrawGizmos()
+    {
+        TransformsToVectors();
+        if (mReferencePoints.Length == 0)
+            return;
+        
+        //画控制点连线
+        Gizmos.color = Color.red;
+        for (int i = 0; i < mReferencePoints.Length - 1; i++)
+            Gizmos.DrawLine(mReferencePoints[i], mReferencePoints[i + 1]);
+        
+        //画曲线
+        Gizmos.color = Color.green;
+        Vector3 start = mReferencePoints[0];
+        for (int i = 1; i <= mResolution; i++)
+        {
+            Vector3 end = GetCurvePointDeCasteljau(mReferencePoints, (float)i / mResolution);
+            Gizmos.DrawLine(start, end);
+            start = end;
+        }
+    }
+
+    void TransformsToVectors()
+    {
+        int referencePointCount = referencePointTransforms.Length;
+        mReferencePoints = new Vector3[referencePointCount];
+        for (int i = 0; i < referencePointCount; i++)
+            mReferencePoints[i] = referencePointTransforms[i].position;
+    }
+}
+```
+
 
 ## Surfaces
 
@@ -136,5 +196,7 @@ For bi-cubic Bezier surface patch,
 - Input: 4 * 4 Control Points
 - Output: 2D surface parameterized by $(u,v)$ in $[0,1]^2$
 
-具体做法是对每四个点都画出对应的贝塞尔曲线，再对每四个贝塞尔曲线画出画出一个 moving curve。 TOBEDONW
+具体做法是对每四个点都画出对应的贝塞尔曲线，再对每四个贝塞尔曲线上 $t$ 时刻运动的四个点画出画出一个 moving curve。
+
+![image](https://pic4.zhimg.com/v2-3fc838ab0c6600d6d6e49482f6bdf521_b.webp)
 
