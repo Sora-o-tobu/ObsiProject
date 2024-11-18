@@ -1,4 +1,4 @@
-# Chapter 1. Computer abstractions and Technology
+# Chapter 1. Computer Abstractions and Technology
 
 !!! warning "该章大部分内容都仅作了解，在后续章节会更深入讲解 (只需注意 CPU 的性能)"
 
@@ -8,18 +8,18 @@
 
 对计算机发展影响巨大的迭代基本可以概括为如下阶段：
 
-- <font color="orange">**First Generation**</font> - 1946 ~ 1956
+- <font color="orange">First Generation</font> - 1946 ~ 1956
 	- 电子管(亦称真空管)，可编程，图灵完全
 	- 第一台通用计算机 **ENIAC** in 1946
 		- 通用指令集、十进制、可编程、图灵完全
 		- 没有程序存储能力
-- <font color="orange">**Second Generation**</font> - 1956 ~ 1964
+- <font color="orange">Second Generation</font> - 1956 ~ 1964
 	- 晶体管，编程语言开始应用
 	- **IBM 1401** in 1959
 		- 可变字长、十进制
-- <font color="orange">**Third Generation**</font> - 1964 ~ 1971
+- <font color="orange">Third Generation</font> - 1964 ~ 1971
 	- 集成电路(IC)，操作系统开始应用
-- <font color="orange">**Fourth Generation**</font> - 1971 ~ now
+- <font color="orange">Fourth Generation</font> - 1971 ~ now
 	- 大规模微处理器(Microprocessor)，图形用户界面，个人电脑兴起
 	- **Mac OS** with GUI in 1984
 	- **Windows 1.0** in 1985

@@ -46,7 +46,7 @@
 
 由于上述加法器后一个 ALU 的 CarryIn 依赖于上一个 ALU 的 CarryOut ，当它的规模增大，时间延迟就会变得很明显。为了减少这个影响，我们将简单介绍 Carry look-ahead adder(CLA) ，即超前进位加法器
 
-![[ObsiProject/docs/课程笔记/计算机组成/image/全加器.png]]
+![[全加器.png]]
 
 取单个全加器来看，可以看出，要使 CarryOut 等于 1，那么 A,B,CarryIn 三者起码有两个等于 1。
 
@@ -253,6 +253,7 @@ while(result[23] == 0 && exp > 0)
 
 - <1> "0舍1入法" 
 	- 如果右移时丢弃的最高位为 0 则不做处理；为 1 则将尾数末位加一
+	- 类似十进制的四舍五入
 - <2> "恒置一法"
 	- 只要发生右移，就将尾数的末位更新为 1
 
@@ -264,7 +265,23 @@ while(result[23] == 0 && exp > 0)
 
 ![[halfpreciseadditionwithroundup.png]]
 
+<font style="font-weight: 1000;font-size: 20px" color="orange">Example 2：采用补码加减法的浮点数加法</font>
 
+$x=0.1101\times 2^{01},y= (-0.1010)\times 2^{11}$，求 $x+y$
+
+写出对应的补码形式：
+
+$$\begin{array}l
+[x]\text{补码：} 00,01; 00.1101 \\
+[y]\text{补码：} 00,11; 11.0110
+\end{array}$$
+
+!!! danger "双补码"
+	两位表示符号位
+
+![[floataddtemp.png]]
+
+![[floataddtemp2.png]]
 
 ### 浮点数乘法
 

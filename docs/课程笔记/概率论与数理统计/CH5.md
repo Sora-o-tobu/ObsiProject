@@ -33,7 +33,7 @@ g(X_n, Y_n)\xrightarrow p g(a,b)
 \end{array}
 $$
 
-### 马尔可夫不等式
+### 马尔可夫不等式 *
 
 若随机变量 $Y$ 的 $k$ 阶(原点)矩阵存在，则对任意 $\varepsilon \gt 0$ ，有：
 
@@ -46,6 +46,8 @@ $$
 $$
 P\{|Y|\lt \varepsilon\} \ge 1-\frac{E(|Y|^k)}{\varepsilon ^k}
 $$
+
+!!! warning "不在考察范围内"
 
 ### 切比雪夫不等式
 

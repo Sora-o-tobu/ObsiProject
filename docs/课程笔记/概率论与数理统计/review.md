@@ -120,3 +120,59 @@ E(X) = \sum_{i=1}^n \left(1 - \left(1 - \frac{1}{n}\right)^n\right) = n \left(1 
 \lim_{n \to +\infty} E(X/n) = 1 - e^{-1} \approx 0.632
 \]
 
+## Chapter 5
+
+### 随机变量乘积的方差
+
+**题面：**
+
+设随机变量 $X_i$ 的密度函数为：
+
+$$
+f_i(X)=\begin{cases} \frac{i|x|^{i-1}}{2}, & |x|\le 1  \\
+0, & \text{其他} \end{cases} ,\ \ \ i=1,2,3,...,n
+$$
+
+且 $X_1, X_2, ...,X_n$ 相互独立。令 $Y_n = \prod_{i=1}^n X_i$ ，用切比雪夫不等式求使得 $P\{|Y_n| \ge \frac{1}{2}\} \le \frac{1}{9}$ 成立的最小 $n$ 。
+
+**解答：**
+
+对于任意 $i$ ，由于 $xf_i(x)$ 为奇函数，所以 $E(X_i)=0$ ，同时有 $E(Y_n) =0$。
+
+当 $X_i, X_j$ **相互独立时**，有引理：
+
+$$
+Var(X_i\cdot X_j)=Var(X_i)Var (X_j) +Var(X_i) E(X_j)^2 +Var(X_j) E(X_i)^2
+$$
+
+由于本题中 $E(X_i) =E(X_j) =0$
+
+所以有：
+
+$$
+Var(X_i\cdot X_j) =Var(X_i)\cdot Var(X_j)
+$$
+
+又：
+
+$$
+\begin{array}l Var(X_i)  & =\int _{-1}^1 (x-0)^2f(x)dx 
+\\ & = \int_{-1}^1 x^2 \frac{i|x|^{i-1}}{2}dx 
+\\ & = \int _0^1 ix^{i+1}dx
+\\ & = \frac{i}{i+2}
+\end{array}$$
+
+所以：
+
+$$
+Var(Y_n)= \prod_{i=1}^n X_i = \frac{1}{1+2} \cdot \frac{2}{2+2} \cdot \frac{3}{3+2}... \frac{n}{n+2} = \frac{2}{(n+1)(n+2)}
+$$
+
+带入切比雪夫不等式：
+
+$$
+P\left(|Y_n| \ge \frac{1}{2}\right) \le \frac{2\cdot 2^2}{(n+1)(n+2)} \le \frac{1}{9}
+$$
+
+得 $n$ 最小值为 7。
+
