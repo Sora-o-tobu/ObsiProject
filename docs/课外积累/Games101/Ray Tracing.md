@@ -204,25 +204,89 @@ Bounding Volume Hierarchy(**BVH**) 是非常广泛引用的加速结构，它解
 - **Irradiance** 辐射照度
 - **Radiance** 辐射亮度
 
-Radiant Energy 是电磁辐射的能量，而 Radiant Flux 是单位时间内 emitted,reflected,transmitted, or received 的能量：
-
-$$\begin{array}c
-Q[J=Joule] \\
-\Phi = \frac{dQ}{dt}[W=Watt][lm=lumen]
-\end{array}
-$$
 
 ![[morepropertyoflight.png]]
 
-定义 Radiant Intensity 为 power per unit solid angle emitted by a point light source.
+???+ tip "Radiant Flux"
+	Radiant Energy 是电磁辐射的能量，但是在图形学中并不常用。而 **Radiant Flux** 是单位时间内 emitted,reflected,transmitted, or received 的能量，即 energy per unit：
+	
+	$$\begin{array}cQ[J=Joule] \\ \Phi = \frac{dQ}{dt}[W=Watt][lm=lumen] \end{array}$$
+
+???+ tip "Intensity"
+	定义 **Radiant Intensity** 为 power per unit solid angle emitted by a point light source.
+	
+	$$I(\omega) = \frac{d\Phi}{d\omega}[\frac{W}{sr}][\frac{lm}{sr}=cd=candla]$$
+	
+	其中立体角 Solid Angle 为面积除以半径平方，那么整个球的立体角为 $4\pi$
+	
+	$$d\omega = \frac{dA}{r^2}=\sin \theta d\theta d\phi $$
+	
+	![[solidanglewithweifen.png]]
+
+???+ tip "Irradiance"
+	定义 **Irradiance** 为 power per unit area incident on a surface point.
+	
+	$$E(x)= \frac{d\Phi (x)}{dA}[\frac{W}{m^2}][ \frac{lm}{m^2}=lux]$$
+	
+	此时再回过头去看着色模型中的 Lambert's Cosine Law：
+	
+	![[radiometrylambertcosine.png]]
+
+???+ tip "Radiance"
+	定义 **Radiance** 为 power per unit solid angle, per projected unit area，即一个微小的面，向一个微小的方向射出的能量：
+	
+	$$L(p,\omega)= \frac{d^2 \Phi (p,\omega)}{d\omega dA \cos \theta}[nit]$$
+	
+	Radiance 用来描述光线，而光线追踪就是计算 radiance。
+	
+	![[radiencefigure.png]]
+
+我们可以将 Radiance 和前面两个基本属性联系起来：
+
+- **Radiance：** Irradiance pre solid angle
+	- $L(p,\omega) = \frac{dE(p)}{d\omega \cos \theta}$
+- **Radiance：** Intensity per projected unit area
+	- $L(p,\omega)=\frac{dI(p,\omega)}{dA\cos \theta}$
+
+其中，**Irradiance** 和 **Radiance** 的关系尤为重要。
+
+Irradiance 是单位面积 $dA$ 接受到的能量总和，而 Radiance 是从单位立体角射到 $dA$ 的能量：
+
+![[irradianceversusradiance.png]]
+
+## Bidirectional Reflectance Distribution Function
+
+双向反射分布函数(BRDF)用来解决已知入射光能量和角度，求射到物体表面向各个方向辐射出去的能量和角度。
+
+我们假设物体表面并不是直接反射光线，而是将光线能量吸收，再重新发射出去，则对于一单位面积，其用来决定入射方向为 $\omega_i$ 的光线能量和出射方向为 $\omega_r$ 的光线关系的BRDF函数为：
 
 $$
-I(\omega) = \frac{d\Phi}{d\omega}[\frac{W}{sr}][\frac{lm}{sr}=cd=candla]
+f_r (\omega _i \rightarrow \omega _r) =\frac{dL_r(\omega _r)}{dE_i( \omega _i)} = \frac{dL_r(\omega _r)}{L_i(\omega _i)\cos \theta_i d\omega_i}
 $$
 
-其中立体角 Solid Angle 为面积除以半径平方，那么整个球的立体角为 $4\pi$
+![[therelectionfequation.png]]
+
+那么，对入射方向进行一次积分，可到到该出射方向的光线：
 
 $$
-d\omega = \frac{dA}{r^2}=\sin \theta d\theta d\phi
+\Rightarrow L_r (p,\omega_r)=\int _{H^2} f_r (p,\omega _r) L_i (p,\omega _i) \cos \theta _i d\omega _i 
 $$
+
+!!! info "$L_e(p,\omega_0)$ 是物体本身的光。不发光则为 0"
+
+再考虑到物体本身可能存在的发光，最终可以得到更一般化的渲染方程：
+
+$$
+\Rightarrow L_o (p,\omega_o)=L_e(p,\omega_o) + \int _{\Omega ^+} f_r (p, \omega_i, \omega _o) L_i (p,\omega _i) (n\cdot \omega_i) d\omega _i
+$$
+
+但是实际渲染中，光线从多个方向射入，使得上述积分难以计算。在此，我们不深入证明的给出全局光照的方程：
+
+$$
+L=E+KE +K^2E +K^3E+...
+$$
+
+$E$ 就代表直接从光源发出的光，$KE$ 表示直接光照，即光照射到表面后反射一次的光照，相应的 $K^nE$ 表示光弹射 n 次后的光照。
+
+## Probability Review
 
