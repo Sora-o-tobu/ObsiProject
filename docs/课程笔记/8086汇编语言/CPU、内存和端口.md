@@ -1,4 +1,32 @@
 
+## 数据的表示方式
+
+汇编语言使用关键词 **db** (Define Byte) 来定义字节类型的变量，展开来讲即：
+
+| 关键词    | 位数  | 符号             | 变量                                                            |
+| ------ | --- | -------------- | ------------------------------------------------------------- |
+| **db** | 8   | byte           | `char`                                                        |
+| **dw** | 16  | word           | `short int`                                                   |
+| **dd** | 32  | double word    | `long int` 或 `float`                                          |
+| **dq** | 64  | quadruple word | `__int64` , `long long` (十进制 `%lld` , 十六进制 `%llx`) 或 `double` |
+| **dt** | 80  | ten bytes      | `long double` （`%Lf`）                                         |
+
+!!! info "不同位数的系统重，1 word 的位数不同"
+
+那么变量定义的格式如下：
+
+```asm
+变量名 db|dw|dd|dq|dt 初始值
+```
+
+当我们需要多个相同的初始值时，可以使用 DUP 运算符：
+
+```asm
+xyz dw 1000h dup(55AAh) ; 共1000h个元素，每个元素值都初始化为55AAh
+x db 3 dup(1,2) ; 共6个元素，分别为 1，2，1，2，1，2
+y db 2 dup('A',3 dup('B'), 'C') ; y = "ABBBCABBBC"
+```
+
 ## 内存
 
 内存以字节为单位分配地址，DOS系统运行在 CPU 的实模式下，可访问的地址范围为 `[00000h,0FFFFFh]` ，即最多只能访问 1MB 内存空间
@@ -152,15 +180,22 @@ DOS 把某个 EXE 载入到内存后，在将控制权交给程序之前，会�
 - 状态标志共 6 个，包括：`CF`.`ZF`,`SF`,`OF`,`PF`,`AF`
 - 控制标志共 3 个，包括：`DF`,`IF`,`TF`
 
-!!! quote ""
-	<font style="font-weight: 1000;font-size: 24px">进位标志 CF</font>
-	
-	- `add`,`sub`,`mul`,`imul` 以及移位指令都会影响 CF（Carry Flag）
-		- 两数相加产生进位时 CF 置 1
-		- 两数相减产生借位时 CF 置 1
-		- 两数相乘乘积超过被乘数宽度时 CF 置 1
-		- 移位指令最后移出的那一位保存在 CF 中
+```
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+|  |  |  |  |OF|DF|IF|TF|SF|ZF|  |AF|  |PF|  |CF|
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+```
 
+#### 状态标志
+
+<font style="font-weight: 1000;font-size: 24px;" color="red">进位标志 CF</font>
+
+- `add`,`sub`,`mul`,`imul` 以及移位指令都会影响 CF（Carry Flag）
+	- 两数相加产生进位时 CF 置 1
+	- 两数相减产生借位时 CF 置 1
+	- 两数相乘乘积超过被乘数宽度时 CF 置 1
+	- 移位指令最后移出的那一位保存在 CF 中
 
 如，可以利用带进位加法指令 `adc` 以及逻辑左移指令 `shl` 实现进制转换：
 
@@ -198,69 +233,136 @@ end main
 ```
 
 
-!!! quote ""
-	<font style="font-weight: 1000;font-size: 24px">零标志 ZF</font>
-	
-	- 算术运算指令、逻辑运算指令、移位运算指令均会影响 ZF（Zero Flag）
-		- 当运算结果为 0 时 ZF 置 1
-		- 当运算结果非 0 时 ZF 置 0
-	- **注意：** `jz`(jump if zero) 和 `je`(jump if equal) 跳转依据均为 ZF==1，故二者等价；同理，`jnz` 和 `jne` 也等价
+<font style="font-weight: 1000;font-size: 24px" color="red">零标志 ZF</font>
 
-!!! quote ""
-	<font style="font-weight: 1000;font-size: 24px">符号标志 SF</font>
-	
-	- 算术运算指令、逻辑运算指令、移位运算指令均会影响 SF（Sign Flag）
-		- 当运算结果为正时 SF 置 0
-		- 当运算结果为负时 SF 置 1
-	- **注意：** 相当于运算结果的最高位；符号标志相关的跳转指令可以用来判定正负
-		- `js`(jump if sign) 依据为 SF==1
-		- `jns`(jump if no sign) 依据为 SF==0
+- 算术运算指令、逻辑运算指令、移位运算指令均会影响 ZF（Zero Flag）
+	- 当运算结果为 0 时 ZF 置 1
+	- 当运算结果非 0 时 ZF 置 0
+- **注意：** `jz`(jump if zero) 和 `je`(jump if equal) 跳转依据均为 `ZF==1`，故二者等价；同理，`jnz` 和 `jne` 也等价
 
 
-!!! quote ""
-	<font style="font-weight: 1000;font-size: 24px">溢出标志 OF</font>
-	
-	- `add`,`sub`,`mul`,`imul`、移位运算指令均会影响 OF（Overflow Flag）
-		- 当两正数相加变负数时 OF 置 1
-		- 当两负数相加变正数时 OF 置 0
-		- 当两数相乘乘积宽度超过被乘数宽度时 OF 置 1（此时 CF 也置 1）
-		- 当仅移动一位，且移位前最高位不等于移位后最高位时 OF 置 1
+<font style="font-weight: 1000;font-size: 24px" color="red">符号标志 SF</font>
+
+- 算术运算指令、逻辑运算指令、移位运算指令均会影响 SF（Sign Flag）
+	- 当运算结果为正时 SF 置 0
+	- 当运算结果为负时 SF 置 1
+- **注意：** 相当于运算结果的最高位；符号标志相关的跳转指令可以用来判定正负
+	- `js`(jump if sign) 依据为 `SF==1`
+	- `jns`(jump if no sign) 依据为 `SF==0`
 
 
-!!! quote ""
-	<font style="font-weight: 1000;font-size: 24px">奇偶校验位 PF</font>
-	
-	- 当运算结果低 8 位中二进制 1 的个数为偶数时 PF 置 1；否则置 0
+<font style="font-weight: 1000;font-size: 24px" color="red">溢出标志 OF</font>
 
-!!! quote ""
-	<font style="font-weight: 1000;font-size: 24px">辅助进位标志 AF</font>
-	
-	- 若执行加法指令时第 3 位向第 4 位产生进位则 AF 置 1
-	- 若执行减法指令时第 3 位向第 4 位产生借位则 AF 置 1
-	- **注意：** AF（Auxiliary Flag） 并没有相关跳转指令，它跟 BCD 码调整指令有关，如 `AAA`,`AAS`,`DAA`,`DAS`
+- `add`,`sub`,`mul`,`imul`、移位运算指令均会影响 OF（Overflow Flag）
+	- 当两正数相加变负数时 OF 置 1
+	- 当两负数相加变正数时 OF 置 0
+	- 当两数相乘乘积宽度超过被乘数宽度时 OF 置 1（此时 CF 也置 1）
+	- 当仅移动一位，且移位前最高位不等于移位后最高位时 OF 置 1
 
-!!! quote ""
-	<font style="font-weight: 1000;font-size: 24px">方向标志 DF</font>
-	
-	- DF（Direction Flag）用来控制字符串操作指令如 `rep`,`movsb` 的运行方向
-		- 当 DF=0 时，字符串操作指令按正方向运行（先操作低地址再操作高地址）
-		- 当 DF=1 时，字符串操作指令按反方向运行（先操作高地址再操作低地址）
-	- **注意：** `cld`(clear direction) 指令使 DF=0；`std`(set direction) 指令使 DF=1
 
-!!! quote ""
-	<font style="font-weight: 1000;font-size: 24px">中断标志 IF</font>
-	
-	- IF（Interrupt Flag）用于禁止、允许硬件中断
-		- 当 IF=0 时，禁止硬件中断
-		- 当 IF=1 时，允许硬件中断
+<font style="font-weight: 1000;font-size: 24px" color="red">奇偶校验位 PF</font>
 
-!!! quote ""
-	<font style="font-weight: 1000;font-size: 24px">陷阱标志 TF</font>
-	
-	- TF（Trap Flag）位于 `FL` 寄存器第八位，用于设置 CPU 的运行模式
-		- 当 TF=1 时，CPU 进行单步模式
-		- 当 TF=0 时，CPU 进行常规模式
-	- **注意：** 当 CPU 进入单步模式后，每执行一条指令后都会跟随执行一条 int 01h 中断指令
+- 当运算结果低 8 位中二进制 1 的个数为偶数时 PF 置 1；否则置 0
+
+
+<font style="font-weight: 1000;font-size: 24px" color="red">辅助进位标志 AF</font>
+
+- 若执行加法指令时第 3 位向第 4 位产生进位则 AF 置 1
+- 若执行减法指令时第 3 位向第 4 位产生借位则 AF 置 1
+- **注意：** AF（Auxiliary Flag） 并没有相关跳转指令，它跟 BCD 码调整指令有关，如 `AAA`,`AAS`,`DAA`,`DAS`
+
+#### 控制标志
+
+<font style="font-weight: 1000;font-size: 24px" color="red">方向标志 DF</font>
+
+- DF（Direction Flag）用来控制字符串操作指令如 `rep`,`movsb` 的运行方向
+	- 当 `DF=0` 时，字符串操作指令按正方向运行（先操作低地址再操作高地址）
+	- 当 `DF=1` 时，字符串操作指令按反方向运行（先操作高地址再操作低地址）
+- **注意：** `cld`(clear direction) 指令设置 `DF=0`；`std`(set direction) 指令设置 `DF=1`
+- 通常，若源首地址小于目标首地址，则置 `DF` 为 1；相应的，若源首地址大于目标首地址，则置 `DF` 为 0
+
+例如，我们希望将位于 `1000` 处的字符串 `ABCDE` 复制到地址 `1002` 处，如果我们设置 `DF=0` 的话：
+
+```
+Before copy:
+	Source		Destination
+	 +---+		+---+
+ 1000|'A'|	1002|	|
+	 +---+		+---+
+ 1001|'B'|	1003|	|
+	 +---+		+---+
+ 1002|'C'|  1004|	|
+	 +---+		+---+
+ 1003|'D'|	1005|	|
+	 +---+		+---+
+ 1004|'E'|	1006|	|
+	 +---+		+---+
+-------------------------------------
+After copy:
+	Source		Destination
+	 +---+		+---+
+ 1000|'A'|	1002|'A'|
+	 +---+		+---+
+ 1001|'B'|	1003|'B'|
+	 +---+		+---+
+ 1002|'A'|  1004|'A'|
+	 +---+		+---+
+ 1003|'B'|	1005|'B'|
+	 +---+		+---+
+ 1004|'A'|	1006|'A'|
+	 +---+		+---+
+-------------------------------------
+Well, the right answer is when DF = 1:
+	Source		Destination
+	 +---+		+---+
+ 1000|'A'|	1002|'A'|
+	 +---+		+---+
+ 1001|'B'|	1003|'B'|
+	 +---+		+---+
+ 1002|'A'|  1004|'C'|
+	 +---+		+---+
+ 1003|'B'|	1005|'D'|
+	 +---+		+---+
+ 1004|'C'|	1006|'E'|
+	 +---+		+---+
+```
+
+<font style="font-weight: 1000;font-size: 24px" color="red">中断标志 IF</font>
+
+- IF（Interrupt Flag）用于禁止、允许硬件中断
+	- 当 `IF=0` 时，禁止硬件中断
+	- 当 `IF=1` 时，允许硬件中断
+- **注意：** `cli`(clear interrupt) 指令设置 `IF=0`；`sti`(set interrupt) 指令设置 `IF=1`
+- 我们通常使用的 `int 21h` 属于软件中断，是显式(Explicit)的
+- 硬件中断是指由硬件某个事件触发，并由CPU自动插入并调用一个隐式(implicit)的 `int n` 指令来调用中断服务子函数
+
+`int n` 函数的指针保存在 `0:0*4` 处，例如 `int 1h` 函数的首地址为 `1234h:5678h` ：
+
+```
+0:4 78h
+0:5 56h
+0:6 34h
+0:7 12h
+```
+
+我们可以手动将其地址修改，将 `int` 中断的指针指向我们自己定义的函数，实现侵入。
+
+<font style="font-weight: 1000;font-size: 24px" color="red">陷阱标志 TF</font>
+
+- TF（Trap Flag）位于 `FL` 寄存器第八位，用于设置 CPU 的运行模式
+	- 当 `TF=1` 时，CPU 进行单步模式
+	- 当 `TF=0` 时，CPU 进行常规模式
+- **注意：** 当 CPU 进入单步模式后，每执行一条指令后都会跟随执行一条 `int 01h` 中断指令
+
+`TF` 并不能通过单独指令修改，但可以通过如下操作置 1：
+
+```asm
+pushf      ; push FL
+pop ax     ; AX = FL
+or ax, 100h; TF位于FL第八位，通过or指令置一
+push ax    ; 
+popf       ; pop FP 即 FL=AX,TF=1
+```
 
 ## 端口
 
@@ -317,3 +419,31 @@ convert:
 code ends
 end main
 ```
+
+对于从键盘读取输入：
+
+<1> 高 dos中断调用
+
+```asm
+mov ah, 1
+int 21h
+```
+
+相当于 `al=getchar()` 但不能读取方向键
+
+<2> 中 bios中断调用(basic input/output system)
+
+```asm
+mov ah, 0
+int 16h
+```
+
+AX = 键盘编码，可以读取方向键、功能键、PgUp等键，但不能读取单独的ctrl键
+
+<3> 低 端口操作
+
+```asm
+in al, 60h
+```
+
+`60h` 是键盘输入的端口，可以读取各个键的编码

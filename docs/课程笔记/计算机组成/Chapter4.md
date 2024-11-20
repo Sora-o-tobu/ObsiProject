@@ -43,6 +43,30 @@
 
 ![[2leveldecoder.png]]
 
+不过对于 `ALU_Operation` 最终译码出来的结果，课本和课件略有差异，具体选哪个我也不知道：
+
+| ALU Control | Function      |
+| ----------- | ------------- |
+| 0000        | AND           |
+| 0001        | OR            |
+| 0010        | Add           |
+| 0110        | Subtract      |
+| 0111        | Set Less Than |
+| 1100        | NOR           |
+
+
+| ALU Control | Function      |
+| ----------- | ------------- |
+| 000         | AND           |
+| 001         | OR            |
+| 010         | Add           |
+| 110         | Subtract      |
+| 111         | Set Less Than |
+| 100         | NOR           |
+| 101         | SRL           |
+| 011         | XOR           |
+
+
 对于一般的指令，有表格如下：
 
 ![[ybzlbg.png]]
@@ -327,10 +351,11 @@ ID/EX.MemRead and
 
 在计组实验中，异常以非法指令、`ecall` 等形式出现，而中断以外设中断等形式出现。
 
-CPU 遇到异常时，需要进行异常处理，一般步骤如下：
+CPU 遇到异常时，需要进行异常处理，机器模式下的一般步骤如下：
 
 - **Save the Context:** 保存当前 CPU 状态。包括PC，寄存器等
-- **Trap Handler:** 跳转到异常处理程序。这个程序一般是预先定义好的，放在 `mtvec` 寄存器中
+- **Trap Handler:** 跳转到异常处理程序。这个程序一般是预先定义好的，其 PC 地址放在 `mtvec` 寄存器中
+	- 同时更新机器模式异常原因寄存器 `mcause`，更新机器模式异常PC寄存器 `mepc`，更新机器模式异常值寄存器 `mtval`，更新机器模式状态寄存器 `mstatus`
 - **Return:** 处理完异常后，恢复 CPU 状态，继续执行
 
 有一些系统级别的控制指令，其 `opcode` 均为 `1110011`。这些指令包括：
@@ -338,6 +363,20 @@ CPU 遇到异常时，需要进行异常处理，一般步骤如下：
 - `CSR` 指令
 - `ecall` 和 `ebreak` ，用于异常处理
 - `mret` 和 `sret` ，用于从异常处理中返回
+
+`mtvec` 寄存器格式：
+
+```
+31                     1    0
++----------------------+----+
+|         BASE         |MODE|
++----------------------+----+
+```
+
+- `MODE=0`，异常相应时，跳转到 `BASE`
+- `MODE=1`，异常相应时，跳转到 `BASE`
+- `MODE=1`，中断响应时，跳转到 `BASE+4*Cause`
+	- 其中 `CASUE` 为中断对应的异常编号
 
 ## Instruction-Level Parallelism
 

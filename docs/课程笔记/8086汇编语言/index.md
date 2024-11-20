@@ -4,11 +4,11 @@
 中断指令大全： [Ralf Brown's Interrupt List](./interruptlist/rbrown.htm)
 
 ```
-tasm test.asm
+tasm test.asm    ; masm test;
 
-tlink test.asm
+tlink test.asm   ; link test;
 
-td test.asm
+td test.asm      ; 
 ```
 
 使用 `command` 打开 Dos，不过不用 Dos 也无所谓就是了。
