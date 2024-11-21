@@ -63,7 +63,7 @@ $$
 P\{|X-\mu| \lt \varepsilon\} \ge 1- \frac{\sigma^2 }{\varepsilon^2}
 $$
 
-### 两个大数定律
+### 三个大数定律
 
 设 $\{X_i, i\ge 1\}$ 为一随机变量序列，若存在常数序列 $\{c_n, n\ge 1\}$ 使得对于任意 $\varepsilon \gt 0$ 有以下成立：
 
@@ -75,9 +75,76 @@ $$
 
 实践中 , 人们发现大量测量值的算术平均具有一定的稳定性, 这一稳定性其实就是大数定律的客观背景. 最早的大数定律是著名的伯努利大数定律。
 
+[定义] **伯努利大数定律：**
+
 设 $n_A$ 为 $n$ 重伯努利试验中事件 $A$ 的发生次数，$p$ 为其每次试验中发生的概率，则对任意 $\varepsilon \gt 0$ 有：
 
 $$
 \lim _{n\rightarrow +\infty} P\{|\frac{n_A}{n}-p| \ge \varepsilon\} =0
+$$
+
+!!! note "$n_A/n$ 即事件A的频率"
+
+[定义] **切比雪夫大数定律：**
+
+设 $X_1, X_2, ...,X_n$ 相互独立，具有相同数学期望 $\mu$ 和方差 $\sigma^2$ 。则当 $n\rightarrow \infty$ 时：
+
+$$
+\frac{1}{n}\sum_{k=1}^n X_k \xrightarrow P \mu
+$$
+
+[定义] **辛钦大数定律：**
+
+设 $X_1, X_2, ...,X_n$ 独立同分布，且 $E(X_i) =\mu$ ，则当 $n\rightarrow \infty$ 时：
+
+$$
+\frac{1}{n}\sum_{k=1}^n X_k \xrightarrow P \mu
+$$
+
+!!! danger "不是简单的切比雪夫大数定律的特例，因为方差可能不存在"
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 1：</font>
+
+设 $X_1, X_2, ...,X_n$ 独立同分布，且 $X_i\sim U(0,1)$，则 $\sqrt[n]{X_1 X_2 ...X_n}$ 依概率收敛吗?
+
+**解答：**
+
+令 $Y_n = \sqrt[n]{X_1 X_2 ...X_n}, \ Z_n =\ln Y_n$ ，则 $Z_n= \frac{1}{n}(\ln X_1 +.. +\ln X_n)$
+
+$$
+E(\ln X_n)= \int ^1_0 \ln xdx= -1
+$$
+
+根据辛钦大数定律可得 $Z_n \xrightarrow p -1$ ，由依概率收敛的性质得到 $Y_n \xrightarrow p e^{-1}$
+
+## 中心极限定理
+
+[定义] **独立同分布的中心极限定理：**
+
+设 $X_1, X_2, ...,X_n$ 独立同分布，$E(X_i)=\mu, D(X_i)=\sigma^2$，则对任意实数 $x$ :
+
+$$
+\lim _{n\rightarrow \infty} P(\frac{\sum_{i=1}^n X_i-n\mu }{\sqrt{n} \sigma}\le x)=\int ^x_{-\infty} \frac{1}{\sqrt{2\pi}}e^{-\frac{t^2}{2}}dt = \Phi(x)
+$$
+
+因此，当 $n$ **充分大**时:
+
+$$\begin{array}c
+\sum _{i=1}^n X_i \sim N(n\mu, n\sigma ^2)
+\\ \frac{1}{n}\sum _{i=1}^n X_i \sim N(\mu, \sigma ^2/n)
+\end{array}$$
+
+[推论] **隶莫弗-拉普拉斯中心极限定理：**
+
+设 $n_A$ 为在 n 重伯努利试验中事件 $A$ 发生的次数，$p$ 为事件 $A$ 在每次试验中发生的概率，即 $P(A)=p$，则对任意 $x\in R$ ：
+
+$$
+\lim_{n\rightarrow \infty} P(\frac{n_A -np}{\sqrt{np(1-p)}}\le x)=\int ^x_{-\infty} \frac{1}{\sqrt{2\pi}}e^{-\frac{t^2}{2}}dt = \Phi(x)
+$$
+
+即，当 $n$ 足够大时：
+
+$$
+B(n,p)\sim N(np, np(1-p))
 $$
 
