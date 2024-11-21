@@ -288,6 +288,8 @@ std::vector<int>& bad_ref{ cont_vec };  // bad reference
 
 ## Streams
 
+> **Recommended Reading:** https://web.stanford.edu/class/archive/cs/cs106l/cs106l.1204/lectures/types/types.pdf
+
 Streams is a general input/output abstraction for C++.
 
 - **Input Streams** 
@@ -318,6 +320,91 @@ int main(){
     return 0;
 }
 ```
+
+!!! info "`std::endl` 和 `\n` 的区别"
+	`std::endl` 不仅告诉stream要结束这一行，还要求其立即将buffer中的数据输出显示，即 **flush** 。但是 flush 操作开销较大，所以当需要频繁输出时，不妨尝试一下使用 `\n`，并且C++会自己判断什么时候要进行 flush。
+
+考虑以下程序：
+
+```c++
+#include <iostream>
+
+int main(void) {
+    double d1, d2;
+    std::string name;
+    std::cin >> d1;
+    std::cin >> name;
+    std::cin >> d2;
+
+    std::cout << "d1: " << d1 << "\n" << "d2: " << d2 << "\n" << "name: " << name << "\n";
+}
+```
+
+由于英文姓名之间存在空格，假定我们的输入为 `3.14 Miu Amaha 1.11` ，这将会产生意料之外的输出：
+
+```c++
+d1: 3.14
+d2: 0
+name: Miu
+```
+
+这是因为 `std::cin >> name` 同样是以空格和换行符为分隔。为了解决这个问题，在读取时不以空格为作为字符串分隔，我们应使用 `std::getline()` 函数：
+
+```c++
+#include <iostream>
+
+int main(void) {
+    double d1, d2;
+    std::string name;
+    std::cin >> d1;
+    std::getline(std::cin, name);
+    std::cin >> d2;
+
+    std::cout << "d1: " << d1 << "\n" << "d2: " << d2 << "\n" << "name: " << name << "\n";
+}
+/*
+Input:
+3.14
+Amaha miu
+1.11
+----------
+Output:
+d1: 3.14
+d2: 0
+name:
+
+*/
+```
+
+但是答案仍然不符合预期，这是因为 `getline` 识别了上一行的换行符，使得 `name` 的内容仅为 `\n` 。因此，在这种情况，我们通常连续使用两次 `getline` 来解决：
+
+```c++
+#include <iostream>
+
+int main(void) {
+    double d1, d2;
+    std::string name;
+    std::cin >> d1;
+    std::getline(std::cin, name);
+    std::getline(std::cin, name);
+    std::cin >> d2;
+
+    std::cout << "d1: " << d1 << "\n" << "d2: " << d2 << "\n" << "name: " << name << "\n";
+}
+/*
+Input:
+3.14
+Amaha miu
+1.11
+----------
+Output:
+d1: 3.14
+d2: 1.11
+name: Amaha miu
+*/
+```
+
+!!! warning "实际上将 `getline` 和 `std::cin` 组合使用是不被推荐的"
 
 `stringstream` 定义于头文件 `<sstream>` ，它其实是一个别名，具体定义如下：
 
@@ -372,5 +459,73 @@ Then the output: I hate python,  but I love
 */
 ```
 
+!!! info "使用 `ss.str()` ，可以将对象 `ss` 内部字符串输出"
 
+```c++
+#include <fstream>
+
+int main(){
+	// if `output.txt` not exit, the program will touch it.
+    std::ofstream ofs("output.txt");
+    if (ofs.is_open())
+        ofs << "Hello, CS106L" << "\n";
+    ofs.close();
+
+	// bad try
+    ofs << "this will not get written";
+
+	// ios::app: 表示添加数据，而不是覆盖数据
+    ofs.open("output.txt",  std::ios::app);
+    ofs << "It's open again!";
+    return 0;
+}
+
+/*output.txt:
+Hello, CS106L
+It's open again!
+*/
+```
+
+```c++
+int inputFileStreamExample() {
+    std::ifstream ifs("output.txt");
+    if (ifs.is_open()) {
+        std::string line;
+        std::getline(ifs, line);
+        std::cout << "Read from the file: " << line << "\n"; 
+    }
+    if (ifs.is_open()) {
+        std::string lin2;
+        std::getline(ifs, lin2);
+        std::cout << "Read from the file: " << lin2 << "\n";
+    }
+    return 0;
+}
+
+/*Output:
+Read from the file: Hello, CS106L
+Read from the file: It's open again!
+*/
+```
+
+!!! warning "`ofs.close`"
+	在实际尝试中，我的第二行数据一直读不出来。经过尝试发现是上面那个输出数据到文件的程序在输入第二行数据后并没有关闭文件，所以导致调用这个函数时该文件只有一行数据。但是程序运行完后能够发现第二行数据还是写入的，这是因为程序会在结束前关闭所有打开的文件，而关闭时才将数据写入。
+
+## Containers
+
+Container is an object that allows us to collect other objects together and interact with them in some way.
+
+STL 中包含许多类型的容器：
+
+- Vector
+- Stack
+- Queue
+- Set
+- Map
+- Array (Primitive form of vector with fixed size)
+- Deque (Double Ended Queue)
+- List (Doubly Linked List)
+- Unordered set
+- Unordered map
+- ...
 
