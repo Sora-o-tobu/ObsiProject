@@ -517,15 +517,357 @@ Container is an object that allows us to collect other objects together and inte
 
 STL 中包含许多类型的容器：
 
-- Vector
-- Stack
-- Queue
-- Set
-- Map
-- Array (Primitive form of vector with fixed size)
-- Deque (Double Ended Queue)
-- List (Doubly Linked List)
-- Unordered set
-- Unordered map
-- ...
+- `<array>` 定长数组容器
+- `<vector>` 动态数组容器
+- `<deque>` 双端队列容器
+- `<list>` 双端链表容器
+- `<forward_list>` 单向链表容器
+- `<stack>` 栈容器适配器
+- `<queue>` 队列容器适配器
+- `<priority_queue>` 优先队列容器适配器
+- `<set>` 集合容器，基于平衡二叉树
+- `<unordered_set>` 无序集合容器，基于哈希表
+- `<map>` 映射容器，基于平衡二叉树
+- `<unordered_map>` 无序映射容器，基于哈希表
+
+此处只先列出关于 `<vector>` 的基本用法，其它的用到再说。
+
+```c++
+#include <vector>
+#include <iostream>
+
+int main(void) {
+    // create a vector object that holds integers
+    std::vector<int> v0; // empty vector
+    std::vector<int> v1(5); // 5 integers, all initialized to 0
+    std::vector<int> v2(5, 2); // 5 integers, all initialized to 2
+    std::vector<int> v3 = {1, 2, 3, 4, 5}; // 5 integers, initialized to 1, 2, 3, 4, 5
+
+    // use push_back to add elements to the end of the vector
+    v0.push_back(1);
+    v0.push_back(2);
+    std::cout << v0[1] << "\n"; // or you can use v0.at(1)
+
+    // use erase to remove elements from the vector
+    v3.erase(v3.begin() + 1); // remove the second element
+
+    // use size() to get the number of elements in the vector
+    int size = v1.size();
+
+    // use iterator to access elements in the vector
+    for (auto it = v3.begin(); it != v3.end(); ++it)
+        std::cout << *it << " ";
+
+    // use range-based for loop to access elements in the vector
+    for (int i : v3)
+        std::cout << i << " ";
+
+    // use clear to remove all elements from the vector
+    v3.clear();
+}
+```
+
+以下程序利用嵌套 vector 打印乘法表：
+
+```c++
+#include <vector>
+#include <iostream>
+#include <bits/stdc++.h>
+
+int main(void) {
+    // create a vector object that holds integers
+    std::vector<std::vector<int>> outer;
+
+    for (int i = 1 ; i < 10 ; ++i )
+    {
+        std::vector<int> inner;
+        for (int j = 1 ; j < 10 ; ++j )
+            inner.push_back(i * j);
+        outer.push_back(inner);
+    }
+
+    for (auto row : outer)
+    {
+        for (auto elem : row)
+            // 设置宽度为 4 个字符对齐，位于 <bits/stdc++.h> 库中
+            std::cout << std::setw(4) << elem;
+        std::cout << "\n";
+    }
+}
+```
+
+## Iterators
+
+In STL, each container has its own iterator, which can have different behavior.
+
+迭代器类似于一种特殊的指针。
+
+- **Initializing:** `iter = s.begin();`
+- **Incrementing:** `++iter;`
+- **Dereferencing:** `*iter;`
+- **Comparing:** `iter != s.end();`
+
+迭代器根据包含关系 RANDOM-ACCESS\[BIDIRECTION\[FORWARD\]\] 可以分为三类：
+
+- **forward:** 只能对迭代器对象执行递增一操作 `iter++`
+- **bidirection:** 可以递增，也可以递减 `iter--`
+- **random-access:** 可以手动设置改变的值 `iter += 5`
+
+
+| Container      | Type of iterator |
+| -------------- | ---------------- |
+| Vector         | Random-Access    |
+| Deque          | Random-Access    |
+| List           | Bidirectional    |
+| Map            | Bidirectional    |
+| Set            | Bidirectional    |
+| Stack          | No iterator      |
+| Queue          | No iterator      |
+| Priority Queue | No iterator      |
+
+```c++
+#include <map>
+#include <iostream>
+
+int main(void) {
+    std::map<int, int> map{{1,6}, {2,8}, {0,3}, {3,9}};
+
+    for (auto iter = map.begin(); iter != map.end(); ++iter) {
+        const auto& [key, value] = *iter;
+        std::cout << iter->first << " " << iter->second << std::endl;
+        std::cout << key << " " << value << std::endl;
+    }
+}
+```
+
+!!! info "WHY CONST???"
+	迭代器的属性为 `const` ，这意味着我们不能通过迭代器修改容器内的值。不过上述代码中的 `const` 可以不用加，`auto` 会自动为其附加这个属性。
+
+## Classes
+
+Classes are user-defined types that allow a user to encapsulate data and functionality using member variables and member functions.
+
+C++属于面向对象的语言，类是其核心特性，通常称为用户定义的类型。它是一种封装了数据和函数的组合，类中数据称为成员变量，函数称为成员函数。可以使用类作为模板创建具有相同属性和行为的多个对象。
+
+```c++
+class classname
+{
+	Access specifiers:        // private/public/portected...
+		Data members;         // 成员变量
+		Member functions() {} // 方法
+}; // end of class
+```
+
+一个 class 的设计可以分为四个部分：
+
+- Constructor
+- Private member function/varibles
+- Public member function/varibles
+- Destructor
+
+其基本思路是将声明和定义放在 `.hpp` 文件中，具体实现放在 `.cpp` 文件中：
+
+```c++
+//lec7.hpp
+#include <string>
+
+class Student {
+    private:
+        std::string name;
+        std::string major;
+        int age;
+
+    public:
+        // default constructor
+        Student();
+        // parameterized constructor
+        Student(std::string name, std::string major, int age);
+
+        std::string getName();
+        std::string getMajor();
+        int getAge();
+        std::string setName(std::string name);
+        std::string setMajor(std::string major);
+        int setAge(int age);
+
+        // destructor
+        ~Student();
+};
+
+//lec7.cpp
+#include "lec7.hpp"
+#include <string>
+
+Student::Student () {
+    name = "Nimisora";
+    major = "CS";
+    age = 17;
+}
+
+Student::Student(std::string name, std::string major, int age) {
+    this->name = name;
+    this->major = major;
+    if (age > 0)
+        this->age = age;
+}
+
+std::string Student::getName() {
+    return name;
+}
+
+std::string Student::getMajor() {
+    return major;
+}
+
+int Student::getAge() {
+    return age;
+}
+
+std::string Student::setName(std::string name) {
+    this->name = name;
+}
+
+std::string Student::setMajor(std::string major) {
+    this->major = major;
+}
+
+int Student::setAge(int age) {
+    if (age > 0)
+        this->age = age;
+}
+
+Student::~Student() {
+    // destructor
+}
+
+int main()
+{
+    return 0;
+}
+```
+
+!!! success "All containers in STL are classes!!!"
+
+作为面向对象，类同样可以继承。 
+
+- **多态 Polymorphism**: Different objects might need to have the same interface
+- **拓展 Extensibility**: Inheritance allows you to extend a class by creating a subclass with specific properties
+
+```c++
+class Shape {
+    public:
+        virtual double area() const = 0;
+        // virtual 关键字声明虚函数，可以在派生类中覆盖重写。 const = 0 说明该函数不会修改类的成员变量，该函数无任何实现，是一个纯虚函数，要求所有派生类都要重写该函数。
+};
+
+class Circle : public Shape {
+    public:
+        // constructor with initialization list
+        Circle(double radius) : _radius(radius) {};
+        // 由于基类虚函数有关键字 const, 所以派生类重写的函数也要有 const 关键字
+        double area() const override {
+            return 3.14159 * _radius * _radius;
+        }
+
+    private:
+        double _radius;
+};
+```
+
+!!! info "`const` 用于成员函数时，表明该函数不会修改任何成员变量"
+	对于不修改成员变量的函数，尽量都加上 `const` ，且其在 `cpp` 中的实现也要加上 `const` ，否则编译器有时会因为无法确定该函数是否会修改成员变量而报错。
+
+模板是创建泛型类或函数的蓝图或公式。库容器，比如迭代器和算法，都是泛型编程的例子，它们都使用了模板的概念，例如 `vector<int>` 。
+
+```c++
+#include <iostream>
+#include <string>
+
+template <typename T>
+T const& max(T const& a, T const& b)
+{
+    return a < b ? b : a;
+}
+
+
+int main()
+{
+    int a = 7, b = 42;
+    std::cout << "max(a, b): " << max(a, b) << std::endl;
+
+    double x = 7.1, y = 42.2;
+    std::cout << "max(x, y): " << max(x, y) << std::endl;
+
+    return 0;
+}
+```
+
+同样，我们可以使用模板对类在实例化时进行指定：
+
+```c++
+// lec8.hh
+template <typename T> // also <class T>
+class Container
+{
+    public:
+        Container (T val);
+        T getVal();
+
+    private:
+        T _val;
+};
+-----------------------------------
+// lec8.cpp
+#include "lec8.hh"
+
+template <typename T> // also <class T>
+Container<T>::Container(T val) {
+    this->_val = val;
+}
+
+template <typename T> // also <class T>
+T Container<T>::getVal() {
+    return _val;
+}
+
+int main()
+{
+    Container<int> intContainer(7);
+    Container<std::string> stringContainer("Hello, world!");
+    return 0;
+}
+```
+
+静态对象只能使用静态接口，所以将变量或对象作为常量传入时需注意其在函数内部是否调用了非静态接口。可能的解决方法：
+
+```c++
+// .hh
+class arr
+{
+    public:
+        arr(int size);
+        int& findItem(int item);
+        const int& findItem(int item) const;
+
+    private:
+        std::vector<int> _arr;
+        int _size;
+};
+----------------------------------------------
+// .cpp
+int& arr::findItem(int item)
+{
+    for (auto& elem : _arr)
+        if (elem == item)
+            return elem;
+
+    throw std::out_of_range("Item not found");
+}
+
+// define a const version
+const int& arr::findItem(int item) const
+{
+    return const_cast<arr&>(*this).findItem(item);
+}
+```
 
