@@ -176,3 +176,26 @@ $$
 
 得 $n$ 最小值为 7。
 
+### 问有多少把握，肯定是转换成正态看
+
+**问题：**
+
+随机变量 $X$ 满足三角分布：
+
+$$
+f(x)=\begin{cases}x, & 0\le x \lt 1 \\ 2-x, & 1\le x\ \lt 2 \\ 0, & \text{其他} \end{cases}
+$$
+
+要保证至少有 $95\%$ 把握使事件 $\{\frac{1}{2} \lt X \lt \frac{3}{2}\}$ 出现次数不少于 80 ，则需要至少多少次观察？
+
+**解答：**
+
+$$\begin{array}c
+q=P\left(\frac{1}{2} \lt X\lt \frac{3}{2}\right)=\frac{3}{4} \\
+\text{随机变量Y为n次试验中满足条件的次数} \\
+\text{则 } E(Y)=nq, D(Y)=nq(1-q) \\
+Y\sim N(nq, nq(1-q)) \\
+95\% \le P(Y\ge 80) =1- \Phi\left(\frac{80-nq}{\sqrt{nq(1-q)}}\right)\\
+\text{解得}  n=117
+\end{array}$$
+

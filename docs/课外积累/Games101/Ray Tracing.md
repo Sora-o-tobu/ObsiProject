@@ -288,5 +288,155 @@ $$
 
 $E$ 就代表直接从光源发出的光，$KE$ 表示直接光照，即光照射到表面后反射一次的光照，相应的 $K^nE$ 表示光弹射 n 次后的光照。
 
-## Probability Review
+## 蒙特卡洛积分 & 路径追踪
+
+蒙特卡洛积分通过采样的方式计算一个定积分。
+
+我们在积分范围 $[a,b]$ 内取一随机变量 $X_i \sim p(x)$ ，则其定积分估计值为：
+
+$$
+\int _a^b f(x)dx =F_N= \frac{1}{N}\sum _{i=1}^N \frac{f(X_i)}{ p(X_i)}
+$$
+
+!!! info "$p(x)$ 指的是 PDF，概率密度函数（并非分布函数）"
+
+例如，我们取随机变量为 $U(a,b)$ ，即均匀采样，则 $p(x)=\frac{1}{b-a}$ :
+
+$$
+F_N = \frac{b-a}{N} \sum ^N_{i=1} f(X_i)
+$$
+
+- The more samples. the less varience 采样点越多，越近似
+- Sample on x, integrate on x 对谁采样就对谁积分
+
+在 Whitted-Style Ray Tracing 中，我们假定光线的路径有以下两点性质：
+
+- <1> 光打到光滑表面时，会发生反射或折射
+- <2> 在漫反射面上停止反射
+
+但是实际上这种简化理解存在很多问题，如不能反映 Glossy 材质的反射性质、漫反射面需要将光沿各个方向散开等。
+
+虽然 Whitted-Style Ray Tracing 是错误的，不过辐射度量学在物理上是正确的，即我们可以根据渲染方程来实现光线追踪。我们将尝试使用蒙特卡洛积分求解渲染方程。
+
+$$\begin{array}l
+L_0(p, \omega _o) & =\int _{\Omega^+} L_i(p, \omega_i) f_r(p, \omega_i, \omega_o) (n\cdot \omega _i) d\omega _i \\
+& =\frac{1}{N} \sum_{i=1} ^N \frac{L_i(o,\omega_i) f_r(p, \omega_i, \omega_o )( n\cdot \omega _i)}{ p(\omega_i)}
+\end{array}
+$$
+
+```python
+shade(p, wo):
+	Randomly choose N directions wi~pdf
+	Lo = 0.0
+	for each wi:
+		Trace a ray r(p, wi)
+		if ray r hit the light:
+			Lo += (1/N) * L_i * f_r * cosine / pdf(wi)
+		else if ray r hit an object at position q:
+			Lo += (1/N) * shade(q, -wi) * f_r * cosine / pdf(wi)
+	return Lo
+```
+
+但是上述实现有一个问题：光线在一个点上弹跳 N 次，递归次数太多，为超多项式级。为了解决这个问题，我们只能将弹跳次数设置为 1：
+
+```python
+shade(p, wo):
+	Randomly choose 1 directions wi~pdf(w)
+	Trace a ray r(p, wi)
+	if ray r hit the light:
+		Lo = L_i * f_r * cosine / pdf(wi)
+	else if ray r hit an object at position q:
+		Lo = shade(q, -wi) * f_r * cosine / pdf(wi)
+	return Lo
+```
+
+使用 $N=1$ 作蒙特卡洛积分，这就叫做路径追踪(Path Tracing)
+
+!!! info "$N!=1$ 则为分布式光线追踪"
+
+看起来 $N=1$ 的结果似乎是非常 noisy 的，但实际上，对于我们屏幕上显示的一个像素，我们可以对其内部取多个采样点进行路径追踪，每一个采样点都取相机到该点的方向作为光线采样方向，最后得到的效果仍然不错：
+
+![[pathtracingN1adquate.png]]
+
+
+```python
+ray_generation(camPos, pixel):
+	Uniformly choose N sample positions within pixel
+	pixel_radience = 0.0
+	for each sample in the pixel
+		shoot a ray r(camPos, cam_to_sample)
+		if ray r hit the scene at p
+			pixel_radience += 1/N * shade(p, sample_to_cam)
+	return pixel_radience
+```
+
+而对于 `shade` 函数，也需要设置一定的弹射次数防止递归层数太多。实际中使用的方法是俄罗斯轮盘赌(RR)：
+
+- 手动设置一个概率 $P$ 
+- 以一定概率 $P$ 向某一方向发出一条光线，并将返回的 `shade` 值除以 $P$
+- 以一定概率 $1-P$ 不射出光线，则返回的 `shade` 值为 0
+- 最终得到的期望值仍然是 $Lo$ ！
+	- $E= P\cdot (Lo / P) + (1-P)\cdot 0=Lo$
+
+```python
+shade(p, wo)
+	Manually specify a probability P_RR
+	Randomly select a ksi in a uniform dist, in [0,1]
+	if(ksi > P_RR) return 0.0
+
+	Randomly choose 1 directions wi~pdf(w)
+	Trace a ray r(p, wi)
+	if ray r hit the light:
+		Lo = L_i * f_r * cosine / pdf(wi) / P_RR
+	else if ray r hit an object at position q:
+		Lo = shade(q, -wi) * f_r * cosine / pdf(wi) / P_RR
+	return Lo
+```
+
+问题在于，如果对一个像素内采样点取较少的话，可能会得到噪点非常多的结果；而取较多采样点，则又运行时间过慢。为了能够实现取较少采样点的同时得到优秀的结果，我们选择采样光源，避免出现均匀采样下光线打不中光源的情况，防止造成效率浪费。
+
+其基本模型如下，我们希望对光源单位面积 $dA$ 采样，并对 $A$ 作积分。根据立体角定义，我们有 $dA$ 和 $d\omega$ 的关系：
+
+$$
+d\omega = \frac{dA\cos \theta '}{|x' -x|^2}
+$$
+
+![[basicmodelofguangyuancaiyang.png]]
+
+重写渲染方程为：
+
+$$\begin{array}l
+L_0(x, \omega_o) & = \int _{\Omega^+}L_i(p, \omega_i) f_r(p, \omega_i, \omega_o) (n\cdot \omega _i) d\omega _i \\
+& =\int _A L_i(x, \omega_i) f_r(x, \omega_i, \omega_o) \frac{\cos \theta \cos \theta '}{|x'-x|^2} dA
+\end{array}$$
+
+对该渲染方程再使用蒙特卡洛积分，则 $pdf=1/A$ ，步骤同上。
+
+因此，我们考虑光线来自于光源和其它物体表面反射两部分：
+
+- **Light source** (Direct, no need to use RR)
+- **Other reflector** (Indirect, RR)
+
+```
+shade(p, wo)
+	# contribution from the light source
+	Uniform sample the light at x', pdf_light = 1/A
+	L_dir = L_i * f_r * cos θ * cos θ' / |x'-p|^2 / pdf_light
+
+	# contribution from other reflector
+	L_indir = 0.0
+	Manually specify a probability P_RR
+	Randomly select a ksi in a uniform dist, in [0,1]
+	if(ksi > P_RR) return 0.0
+
+	Uniform sample the hemisphere toward wi, pdf_hemi = 1/2pi
+	Trace a ray r(p, wi)
+	if ray r hit a non-emitting object at position q:
+		L_indir = shade(q, -wi) * f_r * cos θ / pdf_hemi / P_RR
+
+	# return the sum of them
+	return L_dir + L_indir
+```
+
+!!! question "计算光源的贡献时，还要保证该点与光源之间无遮挡"
 

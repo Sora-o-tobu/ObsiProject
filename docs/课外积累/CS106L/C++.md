@@ -301,12 +301,13 @@ Streams is a general input/output abstraction for C++.
 
 C++的IO库分为三个头文件：
 
-
 | 头文件        | 类型                                                                              |
 | ---------- | ------------------------------------------------------------------------------- |
 | `iostream` | istream 从流读取数据<br>ostream 向流输出数据<br>iostream 读写流                                |
 | `fstream`  | ifstream 从文件读取数据<br>ofstream 向文件输出数据<br>fstream 读写文件                            |
 | `sstream`  | istringstream 从string读取数据<br>ostringstream 向string输出数据<br>stringstream 读写string |
+
+### iostream
 
 一个基本的 `iostream` 应用如下：
 
@@ -406,6 +407,8 @@ name: Amaha miu
 
 !!! warning "实际上将 `getline` 和 `std::cin` 组合使用是不被推荐的"
 
+### sstream
+
 `stringstream` 定义于头文件 `<sstream>` ，它其实是一个别名，具体定义如下：
 
 ```c++
@@ -460,6 +463,8 @@ Then the output: I hate python,  but I love
 ```
 
 !!! info "使用 `ss.str()` ，可以将对象 `ss` 内部字符串输出"
+
+### fstream
 
 ```c++
 #include <fstream>
@@ -777,13 +782,13 @@ class Circle : public Shape {
 !!! info "`const` 用于成员函数时，表明该函数不会修改任何成员变量"
 	对于不修改成员变量的函数，尽量都加上 `const` ，且其在 `cpp` 中的实现也要加上 `const` ，否则编译器有时会因为无法确定该函数是否会修改成员变量而报错。
 
-模板是创建泛型类或函数的蓝图或公式。库容器，比如迭代器和算法，都是泛型编程的例子，它们都使用了模板的概念，例如 `vector<int>` 。
+模板是创建泛型类或函数的蓝图或公式。库容器，比如迭代器和算法，都是泛型编程的例子，它们都使用了模板的概念，例如 `vector<int>` 。模板函数在你对其实例化前都不会被编译，当你调用了这个函数的一个版本，编译器会生成一个专属的版本以供后续使用。
 
 ```c++
 #include <iostream>
 #include <string>
 
-template <typename T>
+template <typename T> // <typename T=int> => define a default type
 T const& max(T const& a, T const& b)
 {
     return a < b ? b : a;
@@ -794,13 +799,33 @@ int main()
 {
     int a = 7, b = 42;
     std::cout << "max(a, b): " << max(a, b) << std::endl;
+    // or you can call max<int>(a, b)
 
     double x = 7.1, y = 42.2;
     std::cout << "max(x, y): " << max(x, y) << std::endl;
+	// or you can call max<double>(x, y)
 
     return 0;
 }
 ```
+
+??? note "Constraints and Concepts in C++20"
+	```c++
+	template <typename T>
+	concept Addaptable = requires(T a, T b) {
+	    a + b;
+	}; // if a+b can be compile, then `add` work
+	
+	template <typename T> requires Addaptable<T>
+	T add(T a, T b) {
+	    return a + b;
+	}
+
+	template <Addaptable T> // this shorthand also OK!
+	T add(T a, T b) {
+	    return a + b;
+	}
+	```
 
 同样，我们可以使用模板对类在实例化时进行指定：
 
@@ -871,3 +896,192 @@ const int& arr::findItem(int item) const
 }
 ```
 
+
+## Operator Overload
+
+C++ 允许在同一作用域中的某个**函数**和**运算符**指定多个定义，分别称为**函数重载**和**运算符重载**。
+
+重载声明是指一个与之前已经在该作用域内声明过的函数或方法具有相同名称的声明，但是它们的参数列表和定义（实现）不相同。
+
+当您调用一个**重载函数**或**重载运算符**时，编译器通过把您所使用的参数类型与定义中的参数类型进行比较，决定选用最合适的定义。选择最合适的重载函数或重载运算符的过程，称为**重载决策**。
+
+重载的运算符是带有特殊名称的函数，函数名是由关键字 operator 和其后要重载的运算符符号构成的。与其他函数一样，重载运算符有一个返回类型和一个参数列表。
+
+下面是一个实现通讯录的程序，要求两个 User 相加时，二人的通讯录都互相增加对方。
+
+```c++
+// user.h
+#include <set>
+#include <string>
+
+class User {
+public:
+    // constructor
+    User() { this->name = ""; };
+    User(std::string name);
+
+    // getter functions
+    std::string getName() const;
+    std::set<User>& getFriends();
+    const std::set<User>& getFriends() const;
+
+    // setter functions
+    void setName(std::string name);
+
+    // operator overload
+    bool operator< (const User &b) const;
+    // 能加 const 就加，不然报错
+    void operator+ (User& b);
+    
+private:
+    std::string name;
+    std::set<User> friends;
+
+};
+---------------------------------------------------
+// main.cpp
+#include <iostream>
+#include "User.h"
+
+void User::operator+ (User &b){
+    this->friends.insert(b);
+    b.friends.insert(*this);
+}
+
+bool User::operator< (const User &b) const {
+    return this->name < b.name;
+}
+
+void printFriends(const User& user) {
+    std::cout << user.getName() << " is friends with: " << std::endl;
+    for(auto& user : user.getFriends()) {
+        std::cout << "  " << user.getName() << std::endl;
+    }
+}
+
+int main() {
+    // create a bunch of users
+    User alice("Alice");
+    User bob("Bob");
+    User charlie("Charlie");
+    User dave("Dave");
+    User Inuisana;
+    Inuisana.setName("Inuisana");
+
+    // make them friends
+    alice + bob;
+    alice + charlie;
+    dave + bob;
+    charlie + dave;
+    alice + Inuisana;
+
+    // print out their friends
+    printFriends(alice);
+    printFriends(bob);
+    printFriends(charlie);
+    printFriends(dave);
+    
+    return 0;
+}
+
+/*Output:
+Alice is friends with: 
+  Bob
+  Charlie
+  Inuisana
+Bob is friends with:
+  Alice
+  Dave
+Charlie is friends with:
+  Alice
+  Dave
+Dave is friends with:
+  Bob
+  Charlie
+*/
+```
+
+!!! failure "`this` 是一个指针，还请不要忘记"
+
+上面代码重载的 `+` 是一个成员函数，如果要使用非成员函数作为重载的话，请使用：
+
+```c++
+User& operator+(User& fir, User& sec) {
+    fir.friends.insert(sec);
+    sec.friends.insert(fir);
+    return fir;
+}
+/*
+In this case, you can:
+	alice + bob;
+	alice = alice + bob;
+ALl OK!
+*/
+```
+
+以下运算符不能被重载：
+
+- `.` 成员访问运算符
+- `.*`, `->*` 成员指针访问运算符
+- `::` 域运算符
+- `sizeof` 长度运算符
+- `? :` 条件运算符
+- `#` 预处理符号
+
+## Special Member Functions
+
+C++ 中一共有六种 SMF，这些成员函数会在编译的时候默认生成，我们并不需要手动生成它们。
+
+```c++
+class Widget {
+public:
+	Widget ();                          // default constructor
+	Widget (const Wiget& w);            // copy constructor
+	Wiget& operator= (const Widget& w); // copy assignment constructor
+	~Widget ();                         // destructor
+	Widget (Widget&& rhs);              // move constructor
+	Widget& operator= (Widget&& rhs);   // move assignment constructor
+};
+```
+
+其中第二条和第三条虽然作用都是复制对象，但是实现方式不同：
+
+```c++
+// call Copy Constructor
+Widget widgetOne;
+Widget widgetTwo = widgetOne;
+
+// call Copy Assignment Constructor
+Widget widgetOne;
+Widget widgetTwo;
+widgeTwo = widgetOne;
+```
+
+如果我们不希望这些函数运作的话，可以使用关键字 `delete` 手动将其删去：
+
+```c++
+Wiget& operator= (const Widget& w) = delete;
+```
+
+`copy constructor` 的行为逻辑是将内部成员值一个一个复制过去，运行速度较慢；而 `mov constructor` 的行为逻辑是将目的对象指向原先的内容，运行速度较快。
+
+定义 `lvalue` 为既可以在等号左边，又可以在等号右边的对象；定义 `lvalue` 为只能出现在等号右边的对象，其不能被 `&` 引用，但是我们可以使用 `&&` 来将其作为临时对象引用它：
+
+```c++
+// lvalue reference:
+void upload (Photo& pic);
+
+int main() {
+	Photo selfie = takePhoto();
+	upload(selfie);
+}
+
+// rvalue reference:
+void upload (Photo&& pic);
+
+int main() {
+	upload(takePhoto());
+}
+```
+
+值得注意的是，当使用 `&&` 引用 `rvalue` 时，并不保证其最终处于合法的状态。

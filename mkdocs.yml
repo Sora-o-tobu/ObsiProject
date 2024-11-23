@@ -236,6 +236,7 @@ nav:
         - Shading: 课外积累/Games101/Shading.md
         - Geometry: 课外积累/Games101/Geometry.md
         - Ray Tracing: 课外积累/Games101/Ray Tracing.md
+        - Materials and Appearances: 课外积累/Games101/Materials and Appearances.md
     - CS106L:
       - 课外积累/CS106L/index.md
       - C++: 课外积累/CS106L/C++.md
