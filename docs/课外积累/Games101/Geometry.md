@@ -186,6 +186,56 @@ public class BezierCurve : MonoBehaviour
 }
 ```
 
+使用C++ `openCV` 的 **de Casteljau's algorithm** 实现方式：
+
+```c++
+void naive_bezier(const std::vector<cv::Point2f> &points, cv::Mat &window) 
+{
+    // Benstein basis: B_i^n(t) = C(n, i) * t^i * (1 - t)^(n - i), b^n = sum(B_i^n(t) * P_i)
+    auto &p_0 = points[0];
+    auto &p_1 = points[1];
+    auto &p_2 = points[2];
+    auto &p_3 = points[3];
+
+    for (double t = 0.0; t <= 1.0; t += 0.001) 
+    {
+        auto point = std::pow(1 - t, 3) * p_0 + 3 * t * std::pow(1 - t, 2) * p_1 +
+                 3 * std::pow(t, 2) * (1 - t) * p_2 + std::pow(t, 3) * p_3;
+
+        window.at<cv::Vec3b>(point.y, point.x)[2] = 255;
+        // Blue; Green; Red = (0, 0, 255)
+    }
+}
+
+cv::Point2f recursive_bezier(const std::vector<cv::Point2f> &control_points, float t) 
+{
+    // de Casteljau's algorithm by recursive
+    std::vector<cv::Point2f> points;
+    if (control_points.size() == 1)
+        return control_points[0];
+
+    cv::Point2f Pre_point = control_points[0];
+    for (auto iter = control_points.begin() + 1; iter != control_points.end(); ++iter)
+    {
+        points.push_back(Pre_point + t * (*iter - Pre_point));
+        Pre_point = *iter;
+    }
+    return recursive_bezier(points, t);;
+
+}
+
+void bezier(const std::vector<cv::Point2f> &control_points, cv::Mat &window) 
+{
+    for (double t = 0.0; t <= 1.0; t += 0.001)
+    {
+        auto point = recursive_bezier(control_points, t);
+        window.at<cv::Vec3b>(point.y, point.x)[1] = 255;
+    }
+
+}
+```
+
+!!! note "虽然递归形式慢，但是方便支持更多点的贝塞尔曲线"
 
 ## Bezier Surfaces
 

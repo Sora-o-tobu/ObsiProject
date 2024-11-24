@@ -101,6 +101,33 @@ $$\begin{array}c
 \overrightarrow{S_2} = S\times E_1
 \end{array}$$
 
+C++ 实现：
+
+```c++
+bool rayTriangleIntersect(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Vector3f& orig,
+                          const Vector3f& dir, float& tnear, float& u, float& v)
+{
+    // TODO: Implement this function that tests whether the triangle
+    // that's specified bt v0, v1 and v2 intersects with the ray (whose
+    // origin is *orig* and direction is *dir*)
+    // Also don't forget to update tnear, u and v.
+    Vector3f E_1 = v1 - v0;
+    Vector3f E_2 = v2 - v0;
+    Vector3f S = orig - v0;
+    Vector3f S_1 = crossProduct(dir, E_2);
+    Vector3f S_2 = crossProduct(S, E_1);
+    float inv = 1 / dotProduct(S_1, E_1);
+    tnear = dotProduct(S_2, E_2) * inv;
+    u = dotProduct(S_1, S) * inv;
+    v = dotProduct(S_2, dir) * inv;
+    if (u >= 0 && v >= 0 && u + v <= 1 && tnear >= 0)
+        return true;
+    return false;
+}
+```
+
+!!! warning "里面的点乘和叉乘是自己实现的"
+
 ### Bouding Volume
 
 为了进一步提升光线和三角形表面求交的速度，我们引入包围盒的概念（or 包围体积）：我们将一个复杂图形包围在包围盒内，如果光线不能命中包围盒，那光线也一定不能命中盒内的表面。
