@@ -109,3 +109,9 @@
 
 - Given that problem A is NP-complete. If problem B is in NP and can be polynomially reduced to problem A, then problem B is NP-complete.
 	- **False**
+- If $L_1 \le _p L_2$ and $L_2\in NP$ , then $L_1 \in NP$
+	- **True** $L_1$ 可以多项式归约至 $L_2$ ，也能够说明 $L_1$ 能够在非确定图灵机上以多项式时间解决
+- All the languages can be decided by a non-deterministic machine.
+	- **False** 还有不可判定问题，比如 Halting Problem
+- If a problem can be solved by dynamic programming, it must be solved in polynomial time.
+	- **True** 背包问题

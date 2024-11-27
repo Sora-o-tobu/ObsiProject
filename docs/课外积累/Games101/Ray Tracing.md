@@ -107,10 +107,9 @@ C++ 实现：
 bool rayTriangleIntersect(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Vector3f& orig,
                           const Vector3f& dir, float& tnear, float& u, float& v)
 {
-    // TODO: Implement this function that tests whether the triangle
+    // Implement this function that tests whether the triangle
     // that's specified bt v0, v1 and v2 intersects with the ray (whose
     // origin is *orig* and direction is *dir*)
-    // Also don't forget to update tnear, u and v.
     Vector3f E_1 = v1 - v0;
     Vector3f E_2 = v2 - v0;
     Vector3f S = orig - v0;
@@ -159,6 +158,36 @@ $$
 
 即有交点的条件当且仅当 $t_{enter} \lt t_{exit}\ \&\&\ t_{exit} \ge 0$ 
 
+```c++
+/*
+采用两个点表示 BoundingBox，分别为 pmin 和 pmax
+*/
+inline bool Bounds3::IntersectP(const Ray& ray, const Vector3f& invDir,
+                                const std::array<int, 3>& dirIsNeg) const
+{
+    // invDir: ray direction(x,y,z), invDir=(1.0/x,1.0/y,1.0/z), use this because Multiply is faster that Division
+    // 这里假设 v=\sqrt{x^2+y^2+z^2}，则 v_x = x，那么就能明白 invDir 的用处了
+    // dirIsNeg: ray direction(x,y,z), dirIsNeg=[int(x>0),int(y>0),int(z>0)], use this to simplify your logic
+    // TODO test if ray bound intersects
+    double t1 = 0, t2 = 0, tmin = 0, tmax = 0;
+    t1 = (pMin.x - ray.origin.x) * invDir.x;
+    t2 = (pMax.x - ray.origin.x) * invDir.x;
+    tmin = (dirIsNeg[0]>0)?t1:t2;
+    tmax = (dirIsNeg[0]>0)?t2:t1;
+    t1 = (pMin.y - ray.origin.y) * invDir.y;
+    t2 = (pMax.y - ray.origin.y) * invDir.y;
+    tmin = std::max(tmin, (dirIsNeg[1]>0)?t1:t2);
+    tmax = std::min(tmax, (dirIsNeg[1]>0)?t2:t1);
+    t1 = (pMin.z - ray.origin.z) * invDir.z;
+    t2 = (pMax.z - ray.origin.z) * invDir.z;
+    tmin = std::max(tmin, (dirIsNeg[2]>0)?t1:t2);
+    tmax = std::min(tmax, (dirIsNeg[2]>0)?t2:t1);
+    
+    if(tmin < tmax && tmax >= 0) return true;
+    else return false;
+}
+```
+
 #### Uniform Grids
 
 在实践中，我们将包围盒划分成一个个小格子，并对其进行预处理，判断某一格子内是否有物体表面存在。
@@ -203,7 +232,7 @@ Bounding Volume Hierarchy(**BVH**) 是非常广泛引用的加速结构，它解
 
 ![[bvhe1.png]]
 
-其思想为将物体划分为多个部分，对每部分求出它们的包围盒，这样一个物体只会出现在一个包围盒内，缺点是 Bounding Box 可能会存在重合部分。
+其思想为将物体划分为多个部分，对每部分求出它们的包围盒，这样每个包围盒都包含完整的物体(或面)，缺点是 Bounding Box 可能会存在重合部分。
 
 - How to subdivide a node ?
 	- Choose a dimension to split
