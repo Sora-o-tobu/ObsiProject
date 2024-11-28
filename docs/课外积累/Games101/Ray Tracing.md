@@ -496,3 +496,44 @@ shade(p, wo)
 
 !!! question "计算光源的贡献时，还要保证该点与光源之间无遮挡"
 
+Assignment 7中 C++ 的实现方式：
+
+```c++
+Vector3f Scene::shade(Intersection &pos, const Vector3f &wo) const
+{
+    Vector3f L_dir(0), L_indir(0);
+
+    // 直接光照
+    Intersection light;
+    float light_pdf;
+    sampleLight(light, light_pdf);
+    Vector3f obj2light = light.coords - pos.coords;
+
+    Vector3f obj2light_normalized = obj2light.normalized();
+    auto t = intersect(Ray(pos.coords, obj2light_normalized));
+    if(t.distance + EPSILON > obj2light.norm())
+    { // 光线未被遮挡，EPSILON放宽精度防止自相交
+        Vector3f f_r = pos.m->eval(obj2light, wo, pos.normal);
+        float cos_theta = std::max(0.0f, dotProduct(pos.normal, obj2light_normalized));
+        float cos_theta_prime = std::max(0.0f, dotProduct(light.normal, -obj2light_normalized));
+        L_dir = light.emit * f_r * cos_theta * cos_theta_prime / (obj2light.norm() * obj2light.norm()) / light_pdf;
+    }
+
+    // 间接光照
+    if(get_random_float() < RussianRoulette)
+    {
+        Vector3f wi = pos.m->sample(wo, pos.normal);
+        Ray ray(pos.coords, wi);
+        Intersection next_pos = intersect(ray);
+        if(next_pos.happened)
+        {
+            L_indir = shade(next_pos, -wi);
+            Vector3f f_r = pos.m->eval(wi, wo, pos.normal);
+            float cos_theta = std::max(0.0f, dotProduct(pos.normal, wi));
+            L_indir = L_indir * f_r * cos_theta * 2 * PI / RussianRoulette;
+        }
+    }
+
+    return L_dir + L_indir;
+}
+```
