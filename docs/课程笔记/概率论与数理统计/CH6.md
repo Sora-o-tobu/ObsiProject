@@ -102,7 +102,7 @@ t 分布的密度函数同样不用记，但是要知道长什么样：
 
 ![[tfenbumiduhanshu.png]]
 
-- <1> t 分布的密度函数是偶函数，关于 y 轴堆成
+- <1> t 分布的密度函数是偶函数，关于 y 轴对称
 - <2> 当 n 足够大时($\ge 45$)，t 分布近似于标准正态分布 $N(0,1)$
 - <3> **分位数**：同样查表
 
@@ -121,6 +121,7 @@ $$
 - <1> $F\sim F(n_1, n_2) \ \Rightarrow \frac{1}{F} \sim F(n_2, n_1)$
 - <2> 若 $X\sim t(n)$ ，则 $X^2 \sim F(1,n)$
 - <3> **分位数** : 同样查表，但要注意 $F_{1-\alpha}(n_1, n_2) = \frac{1}{F_\alpha( n_2, n_1)}$
+	- 对于较大的分位数，通常利用这个公式计算
 
 ## 正态整体下的抽样分布
 
@@ -128,6 +129,9 @@ $$
 - <2> $\frac{(n-1)S^2}{ \sigma^2}\sim \chi^2 (n-1)$ 
 - <3> $\bar{X}$ 和 $S^2$ 相互独立
 - <4> $\frac{\bar{X}-\mu}{ S / \sqrt{n}  } \sim t(n-1)$
+
+??? success "一点简单的证明"
+	![[yidianjiandandzhengm.png]]
 
 设 $X_1, X_2, ..., X_{ n_1}$ 和 $Y_1, Y_2, ..., Y_{ n_2}$ 分别为来自于正态总体 $N(\mu_1, \sigma_1^2)$ 和 $N(\mu_2, \sigma_2^2)$ 的两个相互独立的简单随机样本，则它们的样本方差和样本均值有如下关系：
 
@@ -139,7 +143,7 @@ $$
 当 $\sigma_1^2 = \sigma_2^2 = \sigma^2$ 时：
 
 $$\begin{array}l
-\frac{(\bar{X}-\bar{Y})- (\mu_1 -\mu_2)}{ S_\omega \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} \sim t(n_1 +n_2 +1) \\
+\frac{(\bar{X}-\bar{Y})- (\mu_1 -\mu_2)}{ S_\omega \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} \sim t(n_1 +n_2 -2) \\
 S_\omega^2= \frac{(n_1 -1) S_1^2 +(n_2-1) S_2^2}{ n_1+ n_2 -2}
 \end{array}$$
 

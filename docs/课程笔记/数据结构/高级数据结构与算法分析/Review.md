@@ -115,3 +115,22 @@
 	- **False** 还有不可判定问题，比如 Halting Problem
 - If a problem can be solved by dynamic programming, it must be solved in polynomial time.
 	- **True** 背包问题
+
+## Approximation
+
+- Suppose ALG is an $\alpha$-approximation algorithm for an optimization problem $\prod$ whose approximation ratio is tight. Then for every $\varepsilon \gt 0$ there is no $(\alpha-\varepsilon)$-approximation algorithm for $\prod$ unless P = NP. (T/F)
+	- **False**
+	- 对于一种算法而言，近似比为 $\alpha$ ，那么 ∀$\beta \gt \alpha$ ，都可以说 $\beta$ 是其近似比。如果 $\alpha$ 是 tight 的，则 $\alpha$ 是一个下确界。
+	- 但这都只是对这一种算法的分析，一个 tight 的近似比只能说明你对这种算法的分析到位了，而不能说明这个问题没有更好的算法。这里完全是两码事。
+- As we know there is a 2-approximation algorithm for the Vertex Cover problem. Then we must be able to obtain a 2-approximation algorithm for the Clique problem, since the Clique problem can be polynomially reduced to the Vertex Cover problem.
+	- **False** 关于 C 的衡量标准不一样
+	- ![[costhengliangbiaozhun.png]]
+- 憋憋，这也太难了，考试的时候也不会有时间想
+	- 题目的意思是，如果把每个点最大权值的边加入一个集合，那么这个集合的权值和最大生成树权值之比是多少。
+	- ![[shuichugeshabitimu.png]]
+- 遍历最小生成树，回溯的时候可能会把一条边走两次(也可以理解成两点之间直线最短)，所以该算法近似比为2。但是如果用层序遍历，就完全不走准确解的最小生成树的边了。
+	- ![[duolaAmeng.png]]
+- In the bin packing problem, we are asked to pack a list of items L to the minimum number of bins of capacity 1. For the instance L, let FF(L) denote the number of bins used by the algorithm First Fit. The instance L′is derived from L by deleting one item from L. Then FF(L′) is at most of FF(L).
+	- **False** 说是可以举出反例，但我想不到
+	- 改成 NF 算法则是正确的
+- 
