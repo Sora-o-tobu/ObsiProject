@@ -50,7 +50,13 @@ F_Z(t) = P(XY\le t)=P(Y=1)P(X\le t)+P(Y=-1)P(X\ge -t)\\
 $$
 
 
+### 虽然看起来明显相关，但是也可能是同分布
 
+![[suirankanqilaimingxin.png]]
+
+答案选 **ABD** 。
+
+虽然 $X_1, X_2$ 一眼不独立，但是实际计算后能发现二者分布相同（同时与 $Y_i$ 同分布）
 
 ## Chapter 4
 
@@ -119,6 +125,18 @@ E(X) = \sum_{i=1}^n \left(1 - \left(1 - \frac{1}{n}\right)^n\right) = n \left(1 
 \[
 \lim_{n \to +\infty} E(X/n) = 1 - e^{-1} \approx 0.632
 \]
+
+### 准确把握协方差的性质哦
+
+独立重复抛硬币，$X$ 表示前两次正面的次数，$Y$ 表示前四次正面的次数，求 $Cov(X,Y)$
+
+此题可以另设随机变量 $X'$ 为后两次正面的次数，则 $Y=X+X'$，且 $X'$ 与 $X$ 独立：
+
+$$
+Cov(X,Y)= Cov(X,X+X')= Cov(X,X)= Var(X)=\frac{1}{2}
+$$
+
+
 
 ## Chapter 5
 
@@ -197,5 +215,43 @@ q=P\left(\frac{1}{2} \lt X\lt \frac{3}{2}\right)=\frac{3}{4} \\
 Y\sim N(nq, nq(1-q)) \\
 95\% \le P(Y\ge 80) =1- \Phi\left(\frac{80-nq}{\sqrt{nq(1-q)}}\right)\\
 \text{解得}  n=117
+\end{array}$$
+
+
+## Chapter 6
+
+### 非线性的样本函数的数学期望和方差利用独立同分布求
+
+**题目：**
+
+$$
+f(x) = \begin{cases}\lambda e^{-\lambda x}, & x\gt 0 \\
+0, & x\le 0 \end{cases}
+$$
+
+从总体中抽取样本容量为 10 的样本。
+
+（1）求样本均值的数学期望和方差。
+
+（2）记 $X_{(1)}=\min (X_1, X_2,..., X_{10})$，求 $X_{(1)}$ 的数学期望和方差。
+
+**解答**
+
+（1）直接利用 $E(\bar{X}) = E(X), \ \ D(\bar{X}) = \frac{1}{n}D(X)$ 求即可：
+
+$$
+E(\bar{X}) = E(X) = \frac{1}{\lambda} , D(\bar{X})=\frac{1}{10\lambda^2}
+$$
+
+（2）利用 min 函数的性质求 $F_{min}(X) = 1- (1- F(X))^{10}$：
+
+$$\begin{array}l
+F(x)= \begin{cases}0, &  x\le 0 \\
+1- \lambda e^{-\lambda x}, & x\gt 0 \end{cases}
+\\ F_{min}(x) = \begin{cases}0 , & x\le 0 \\ 1-\lambda e^{-10\lambda x} , & x\gt 0\end{cases} \\
+f_{min}(x) = \begin{cases}0, & x\le 0 \\
+10\lambda e^{-10\lambda x}, & x\gt 0 \end{cases}\\
+\begin{cases}E(X_{(1)}) = \frac{1}{10\lambda} \\
+Var(X_{(1)}) = \frac{1}{100\lambda^2}\end{cases}
 \end{array}$$
 

@@ -77,11 +77,11 @@ $$
 上面谈过，对于二维连续型随机变量的条件分布函数，需要写成一段区间形式来计算：
 
 $$
-F_{Y|X}(y|x) \begin{array}l =\lim _{\delta \rightarrow 0^+} P\{Y\le y| x\lt X\ \le x+\delta\} \\
-=\lim _{\delta \rightarrow 0^+} \frac{P\{x\lt X\le x+\delta, Y\le y\}}{P\{x\lt X\le x+\delta\}} \\ 
-=\lim _{\delta \rightarrow 0^+}\frac{F(x+\delta, y)-F(x,y)}{F_X(x+\delta)- F_X(x)} \\
+\begin{array}l F_{Y|X}(y|x) & =\lim _{\delta \rightarrow 0^+} P\{Y\le y| x\lt X\ \le x+\delta\} \\ &
+=\lim _{\delta \rightarrow 0^+} \frac{P\{x\lt X\le x+\delta, Y\le y\}}{P\{x\lt X\le x+\delta\}} \\ &
+=\lim _{\delta \rightarrow 0^+}\frac{F(x+\delta, y)-F(x,y)}{F_X(x+\delta)- F_X(x)} \\ &
 = \lim _{\delta \rightarrow 0^+} \frac{(F(x+\delta, y)-F(x,y))/\delta  }{(F_X(x+\delta)- F_X(x))/\delta   }
-\\ =\int_{-\infty}^y \frac{f(x,v)}{f_X(x)}dv
+\\ & =\int_{-\infty}^y \frac{f(x,v)}{f_X(x)}dv
 \end{array}
 $$
 
@@ -261,7 +261,7 @@ $$
 $$\begin{array}c
 f_Z(z)=\int ^{+\infty}_{-\infty} f(x,z-x)dx \\
 f(x,z-x)=\left \{\begin{array}l 3x, & 0\lt z-x\lt x\lt 1 \\
-0, \text{其他}
+0, & \text{其他}
 \end{array} \right . \\
 0\lt z-x\lt x\lt 1 \Leftrightarrow \frac{z}{2}\le x\le \min (z,1) \\
 f_Z(z) = \left \{\begin{array}l 
@@ -273,3 +273,30 @@ f_Z(z) = \left \{\begin{array}l
 
 !!! note "对谁积分就写出谁的取值范围，如该题的 $dx$"
 
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 4：</font>
+
+相互独立的随机变量 $X\sim U(0,1), Y\sim U(0,1)$ ，求 $Z=X+Y$ 的概率密度函数：
+
+**解答**：
+
+（1）方法一，卷积公式：
+
+$$\begin{array}c
+f_Z(z)=\int _{-\infty}^{+\infty} f_X(x) f_Y(z-x) dx \\
+\text{当且仅当：} \begin{cases} 0\le x\le 1 \\
+0\le z-x\le 1\end{cases} \text{ 时被积函数不等于0}\\
+f_Z(z)= \begin{cases}\int_0^z dx = z, & 0\le z\le 1 \\
+\int _{z-1}^1 dx = 2-z, & 1\lt  z\le 2  \\
+0, & \text{其他}\end{cases}
+\end{array}$$
+
+（2）方法二，分布函数定义(画图)：
+
+![[方法2画图.png]]
+
+- 当 $z\lt 0$ 时，$F_Z(z)=P(X+Y\le z) =0$
+- 当 $z\ge 2$ 时，$F_Z(z)=P(X+Y\le z)=1$
+- 当 $0\le z\le 1$ 时，$F_Z(z)= P(X+Y\le z)=\frac{1}{2}z^2$
+- 当 $1\lt z\le 2$ 时，$F_Z(z)=P(X+Y\le z)= 1- \frac{1}{2}(1-(z-1)^2)$
+
+对分布函数求导可得概率密度函数。

@@ -43,8 +43,10 @@ $$
 
 - 样本均值
 	- $\bar{X}=\frac{1}{n}\sum _{i=1}^n X_i$
+	- $E(\bar{X}) = E(X), \ \ D(\bar{X}) = \frac{1}{n}D(X)$
 - 样本方差
 	- $S^2= \frac{1}{n-1}\sum_{i=1} ^n (X_i-\bar{X})^2 = \frac{1}{n-1}\left (\sum_{i=1} ^n X_i^2 -n\bar{X}^2 \right)$
+	- $E(S^2) = D(X)$
 - 样本标准差
 	- $S=\sqrt{S^2}$
 - 样本k阶(原点)矩
@@ -126,7 +128,8 @@ $$
 ## 正态整体下的抽样分布
 
 - <1> $\bar{X}\sim N(\mu, \frac{\sigma^2}{n})$
-- <2> $\frac{(n-1)S^2}{ \sigma^2}\sim \chi^2 (n-1)$ 
+- <2> $\frac{\sum_{i=1}^n (X_i- \bar{X})^2}{\sigma ^2} =\frac{(n-1)S^2}{ \sigma^2}\sim \chi^2 (n-1)$ 
+	- $\frac{\sum_{i=1}^n (X_i- \mu)^2}{\sigma ^2} = \chi^2 (n)$
 - <3> $\bar{X}$ 和 $S^2$ 相互独立
 - <4> $\frac{\bar{X}-\mu}{ S / \sqrt{n}  } \sim t(n-1)$
 
