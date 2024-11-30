@@ -234,6 +234,7 @@ nav:
       - Chapter 9. 虚拟内存: 课外积累/CSAPP/Chapter9.md
     - Games101:
         - 课外积累/Games101/index.md
+        - 作业框架: 课外积累/Games101/作业框架.md
         - Transformation: 课外积累/Games101/Transformation.md
         - Rasterization: 课外积累/Games101/Rasterization.md
         - Shading: 课外积累/Games101/Shading.md
