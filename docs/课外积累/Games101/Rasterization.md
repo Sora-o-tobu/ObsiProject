@@ -84,7 +84,7 @@ for (int x = 0;x < xmax; ++x)
 
 对于一个图片，该处亮度变化越明显，对应的函数频率越高，亦即一个边界。因此，模糊操作可以通过卷积或平均实现。
 
-![[ObsiProject/docs/课外积累/Games101/image/Convolutionexample1.png]]
+![[Convolutionexample1.png]]
 
 卷积定理：在时域上进行卷积效果上等同于在频域上乘积再逆傅里叶变换变回去。
 

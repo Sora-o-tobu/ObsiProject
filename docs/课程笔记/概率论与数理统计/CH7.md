@@ -124,3 +124,23 @@ L(\lambda) =\prod _{i=1}^n p(x_i; \lambda) =\prod_{i=1}^n \frac{\lambda ^{x_i}}{
 
 !!! warning "实际上还要对似然方程求二阶导看是否小于0，以确定这是极大值"
 
+## 估计量的评价准则
+
+### 无偏性
+
+估计量本身是统计量，其取值随着样本值改变而改变，因此我们不能根据某次抽样的结果来衡量估计量的好坏。一个自然评价标准是要求估计量无系统偏差，即要求在大量重复抽样时，所有估计值的平均值应与待估参数的真值相同，这就是**无偏性准则**。
+
+设 $\theta \in \Theta$ 是总体的待估参数，$X_1, X_2,..., X_n$ 是来自总体的样本，若估计量 $\hat{\theta}$ 的数学期望存在，且满足：
+
+$$
+E(\hat{\theta}) = \theta , \ \ \  \forall \theta \in \Theta 
+$$
+
+称 $\hat{\theta}$ 为 $\theta$ 的无偏估计。
+
+!!! info 
+	- 若 $E(\hat{\theta}) \ne \theta$ ，则称 $E(\hat{\theta}) - \theta$ 为估计量 $\hat{\theta}$ 的**偏差**
+	- 若 $E(\hat{\theta}) \ne \theta$ ，但 $\lim _{n\rightarrow +\infty}E(\hat{\theta}) = \theta$ ，则称 $\hat{\theta}$ 是 $\theta$ 的**渐近无偏估计**
+
+### 有效性
+

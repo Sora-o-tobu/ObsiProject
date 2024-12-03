@@ -101,18 +101,36 @@ plugins:
       categories:
         - categories
         - tags
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: 100%
+      height: auto
+      zoomable: true
+      draggable: true
+      skip_classes:
+        - custom-skip-class-name
+      auto_caption: false
+      caption_position: bottom
+      background: white
+      shadow: true
+      manual: false
   #- projects
   #- optimize
 
 extra_javascript:
   #- javascripts/mathjax.js 用这个的话还要换行，比较麻烦
   - javascripts/katex.js
+  # - javascripts/extra.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - https://unpkg.com/mermaid/dist/mermaid.min.js 
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
   - https://unpkg.com/katex@0/dist/katex.min.js
   - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+  # - https://unpkg.com/zooming/build/zooming.min.js
 
 extra_css:
   - stylesheets/extra.css
