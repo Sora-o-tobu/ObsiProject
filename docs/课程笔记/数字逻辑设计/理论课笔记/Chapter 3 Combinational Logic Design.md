@@ -33,6 +33,7 @@
 	- power dissipation 能量损耗
 
 ##### Fan-in and Fan-out
+
 - Fan-in 是一个逻辑门能够接受的最多输入，如果超过了，输出会变为 undefined 或者 incorrect
 - Fan-out 是一个逻辑门的输出所能连接到最多的输入（或称负载 load），且不影响电路正常性能的个数
 
@@ -285,7 +286,7 @@ $$
 其中我们能发现可以复用的term，将$XY$称为carry generate，$X\oplus Y$称为carry propagate
 
 全加器可以由两个半加器组合而成。
-![[ObsiProject/docs/课程笔记/数字逻辑设计/image/全加器.png]]
+![[数字逻辑全加器.png]]
 
 #### Ripple-Carry Binary Adder 行波加法器
 
@@ -295,15 +296,14 @@ $$
 
 #### Carry Lookahead Adder 超前进位加法器
 
-!!! info
-	数逻对此内容不做要求，补天的可以不看了
+!!! info "数逻对此内容不做要求，补天的可以不看了"
 
 为了探讨S、C的关系，我们可以令
 $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_i) C_i= G_i +P_i C_i$
 其中，$G_i$称为generate function，$P_i$称为propagate function。
 
+因此，我们可以通过将$C_i$用初始值表示进行超前进位来使得时间复杂度从 $O(n)$ 变为 $O(1)$
 
-因此，我们可以通过将$C_i$用初始值表示进行超前进位来使得时间复杂度从O(n)变为O(1).
 ![[超前进位加法器原理.png]]
 
 
@@ -311,7 +311,7 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 	可以对表达方式进行化简
 	![[化简.png]]
 
-实际使用过程中， 由于门具有有限的fan-in，我们通常将好几个CLA进行连接来实现功能，称为 ==group carry lookahead== ，如
+实际使用过程中， 由于门具有有限的fan-in，我们通常将好几个 CLA 进行连接来实现功能，称为 ==group carry lookahead== ，如
 ![[groupCLA.png]]
 
 ![[groupCLA2.png]]
@@ -319,6 +319,7 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 ![[groupCLA3.png]]
 
 #### 总结
+
 ![[加法总结.png]]
 
 ### Unsigned Subtraction
@@ -333,21 +334,26 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 ![[减法例子.png]]
 
 !!! note
-	the subtraction $2^n-X$ is called 2’s complement of X(2进制补码，与后文的概念有所区分)
+	The subtraction $2^n-X$ is called 2’s complement of X(2进制补码，与后文的概念有所区分)
 
-由此原理制作出来的加减法器结构相当复杂，我们希望由两种算法共用的逻辑来完成加减法操作
+由此原理制作出来的加减法器结构相当复杂，我们希望由两种算法共用的逻辑来完成加减法操作:
+
 ![[加减法器0.png]]
 
 ### Complement 补码
+
 ![[补码的概念.png]]
 
 #### Binary 1's Complement 反码
 
 ![[获得反码1.png]]
+
 你也可以直接对这个数按位取反得到反码
 
 #### Binary 2's Complement 补码
+
 ![[得到补码.png]]
+
 你也可以直接对反码加一得到补码
 
 - 另一种适用于计算机如何计算补码的方案:
@@ -355,6 +361,7 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 	- ![[计算机得到补码.png]]
 
 #### Method of Complement
+
 利用同余的思想，我们可以将减法运算转换为加法运算。
 
 **同余**
@@ -364,7 +371,9 @@ a\equiv b\ \&\ c\equiv d \Rightarrow a\pm c\equiv b\pm d \ \& \ ac\equiv bd
 $$
 
 
-![[同余1.png]]![[同余2.png]]
+![[同余1.png]]
+
+![[同余2.png]]
 
 !!! note
 	注意，carry为1的时候意味着不需要修正，为0的时候才要取补码修正哦
@@ -373,6 +382,7 @@ $$
 
 
 ### Signed Integers
+
 在计算机中，我们将most significant bit定为符号位，其为0时代表正数，为1时代表负数
 
 ???+ quote "对于有符号数的加法，我们有一下四种情景"
@@ -388,12 +398,14 @@ $$
 - 对于负数，符号位不变，其它位取2's Complement，因此将补码转换回负数的时候，可以先再取2's Complement ，然后加上负号。如10011 -> 01101 -> 13 -> -13
 
 另一种更方便的方法是认定most significant bit是negative weight，例如:
-$11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
+
+$$11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$$
 
 !!! danger "Sign-Magnitude"
 	历年题考过求一个负数的Sign-Magnitude(原码)，要记清楚概念
 
 对于nagative weighting的补码，我们对其进行 ==sign extension== 并不会改变其值
+
 ![[signextension.png]]
 
 #### Signed 2's Complement Arithmetic
@@ -410,22 +422,20 @@ $11111=-2^4 +2^3+ 2^2+ 2^1+ 2^0=-1$
 
 ![[合二为一.png]]
 
-!!! bug "碎碎念"
-	其实我感觉这属于unsigned的...哈...哈哈......
-
-
 !!! note
 	请注意，当应用减法的时候，C<sub>0</sub>要置1，所以我们将S接入C<sub>0</sub>
 
-
 如果我们希望用一种更为理化的思想来检测是否overflow，可以先认定$X_{k-1}$为操作数A的符号位，$Y_{k-1}$为操作数B的符号位，$S_{k-1}$为结果的符号位，则$V=X_{k-1} Y_{k-1}\overline {S_{k-1}}+\overline {X_{k-1}}\overline {Y_{k-1}} S_{k-1}$
 更加简化这个式子，可以直接认定$V=C_{k-1} \oplus C_{k-2}$
+
 ![[overflowdetection.png]]
 
 这意味着我们只需要将最后两个carry out用异或门连接起来就可以得到V:
+
 ![[overflowdetection2.png]]
 
 #### 总结
+
 ![[补码法总结.png]]
 
 ### Arithmetic Logic Unit (ALU)

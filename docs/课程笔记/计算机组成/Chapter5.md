@@ -96,7 +96,7 @@ $$
             - 暂停 CPU 运行，从 memory 里把对应的 block 拿到 cache，从第一个 step 开始重新运行当前这条指令。
 - **Write**
     - **Hit** 有两种可以选的方式：
-        - **write-through**，即每次写数据时，同时更新 Cache 和主存。这样的好处是 cache 和 main memory 总是一致的，但是这样很慢。
+        - **write-through**，即每次写数据时，同时更新 Cache 和主存。这样的好处是 cache 和 main memory 总是一致的，但是这样总时间相等于直接写主存，速度很慢。
             - 一个改进是引入一个 **write buffer**，即当需要写 main memory 的时候不是立即去写，而是先写入 Buffer 中，找机会再写进主存；此时 CPU 就可以继续运行了。当然，当 write buffer 满了的时候，也需要暂停处理器来做写入 main memory 的工作，直到 buffer 中有空闲的 entry。因此，如果 main memory 的写入速率低于 CPU 产生写操作的速率，多大的缓冲都无济于事。
         - **write-back**，只将修改的内容写在 cache 里，等到这个 block 要被覆盖掉的时候将其写回内存。这种情况需要一个额外的 **dirty bit** 来记录这个 cache block 是否被更改过，从而知道被覆盖前是否需要被写回内存。由于对同一个 block 通常会有多次写入，因此这种方式消耗的总带宽是更小的。
     - **Miss** 同样有两种方式：
@@ -118,6 +118,94 @@ n-way 组相联将每 n 个 Block 分为一组，找对应 Block 时先确定组
 
 ![[othermappingex1.png]]
 
+替换算法：
+
+- <1> 先入后出算法 FILO
+- <2> 随机替换算法 RAND
+	- 方法简单，易于实现；命中率较低
+- <3> 先入先出算法 FIFO
+	- 最先调入并被多次调用的Block可能会被优先替换，不符合局部性规律，所以命中率不满足要求
+- <4> 近期最少使用算法 LRU
+	- 较好反映了程序局部性规律，命中率较高
+
+### Performance
+
+$$\begin{array}l
+\text{Average Memory Access time}& = \text{hit time} \times \text{miss time} \\ & = \text{hit time} + \text{miss rate} \times \text{memory time}
+\end{array}
+$$
+
+因此，提高 Cache 性能的关键在于增加命中率和减少 Miss Penalty 时间。
+
+[Example] 假设：
+
+- instruction cache miss rate:  2%
+- data cache miss rate:  4%
+- CPI without any memory stall:  2
+- miss penalty:  100 cycles
+- The frequency of all `load` and `store` in gcc: 36%
+
+$$\begin{array}l
+\text{Instruction miss cycles} =I\times 2\% \times 100 & = 2.00I\\
+\text{Data miss cycles} = I\times 36\% \times 2\times 4\% \times 100 & = 1.44I \\
+\text{Total memory-stall cycles} =2.00 I +1.44I & =3.44I \\
+\text{CPU with stall} = 2 + 3.44 I / I & =5.44
+\end{array}
+$$
+
+!!! info "这也能看出 Memory 的性能严重制约了 CPU"
+
+[Solution]
+
+- <1> 通过更灵活的Block替换规则来减少 Miss Rate
+	- 组相连、LRU...
+	- 随着 Assoiciativity 提高，Miss Rate 越来越低（Direct > Set > Full）
+- <2> Least Recent Used
+	- 随着 Assoiciativity 提高，实现 LRU 算法越来越困难
+- <3> 选择合适 Block Size
+	- 一般来讲，选择更大的Block可以降低 Miss Rate，但也会带来更大的 Miss Penalty
+	- 并且对于一个大小有限的 Cache，更大的Block也意味着更少的Block数量，可能反而增加了 Miss Rate
+	- 对于 256KB 往下的Cache，Block Size选 64 bytes 的效果最好
+- <4> 设计一个存储系统来减少 Miss Penalty
+	- 仅供了解，不想看了
+- <5> 通过多级 Cache 减少 Miss Penalty
+	- L1 Cache、L2 Cache...
+- <6> Software Optimization Blocking
 
 
 ## Virtual Memory
+
+!!! quote "虚拟存储可以看作是 DRAM 和 Disk 间的 Cache（尽管我认为差别很大）"
+
+虚拟内存技术可以让多个程序之间高效、安全地共享内存，同时允许单个程序使用超过内存容量的内存。
+
+操作系统会为每一个进程分配一个 Page Table，进程通过虚拟内存这一中介来跟内存和磁盘读写信息。
+
+![[virtualmemory1.png]]
+
+虚拟地址转换到物理地址分为两步：
+
+- <1> 根据 Virtual page number 读取 Page Table 上对应数据，记作 Physical page number
+	- 如果 Valid 位为0，说明不在 DRAM 中，要去 Disk 中找
+- <2> 将 Physical page number 与 Page Offset 合并，得到物理地址
+
+```
+Virtual Address:
++---------------------+-------------+
+| Virtual page number | Page Offset |
++---------------------+-------------+
+      || Translation
+      \/
+Physical Address:
++----------------------+-------------+
+| Physical page number | Page Offset |
++----------------------+-------------+
+```
+
+!!! info "Page Offset"
+	与 Cache 中的 Byte Offset 概念类似，代表了一个 Page 的 Byte 数。例如，对于 Page Size = 4KB 的 Cache，Page Offset 为 $2^{12}$ ，即 12bit。
+
+由于 Virtual Memory 处于较下层的位置，如果出现 Page Fault 的情况，造成的性能损失会相当大，因此优化的主要目标在于减少 Page Fault 的发生。
+
+所以，Virtual Memory 采用 LRU、全相联映射的方式来处理 Page；同样，Write Through的代价也是非常昂贵的，所以使用Write Back。
+

@@ -63,3 +63,64 @@ $$
 
 ### 最大似然法
 
+极大似然法的基本思想: 设某事件 A 发生的概率依赖于待估参数 $\theta$ , 如果观察到 A 已经发生, 那么就取使得事件 A 发生的概率达到最大的 $\theta$ 的值作为 $\theta$ 的估计。
+
+当 $X$ 为连续型总体时，设其密度函数为 $f(x;\theta)$ ，$\theta \in \Theta$ 是未知的待估参数，$X_1,..., X_n$ 是来自总体的随机样本，并设 $x_1,..., x_n$ 是已得到的样本值，则似然函数定义为：
+
+$$
+L(\theta) = L(\theta ; x_1, x_2,..., x_n) =\prod_{i=1} ^n f(x_i;\theta)
+$$
+
+形式与样本的联合密度函数相同 $f(x_1, x_2,..., x_n; \theta)$ 相同。参数的最大似然估计值为似然函数取最大值的情况：
+
+$$
+L(\hat{\theta}) =L(\hat{\theta} ; x_1,..., x_n) = \max_{\theta\in \Theta} L(\theta; x_1,..., x_n)
+$$
+
+称相应的统计量 $\hat{\theta}(X_1, ...,X_n)$ 为 $\theta$ 的最大似然估计量，简称 **MLE**。
+
+!!! info "对于离散型总体"
+	$$L(\theta) = L(\theta ; x_1, x_2,..., x_n) =\prod_{i=1} ^n p (x_i;\theta)$$
+
+
+寻求最大似然估计时常用微分法，有**似然方程**：
+
+$$
+\frac{dL(\theta)}{d\theta}|_{\theta = \hat{\theta}} =0
+$$
+
+为了计算方便，往往对似然方程取对数，记为**对数似然函数**：
+
+$$
+l(\theta) =\ln L(\theta)
+$$
+
+则上式等价于：
+
+$$
+\frac{dl(\theta)}{d\theta} |_{\theta = \hat{\theta}} = 0
+$$
+
+!!! note "若有多个待估参数，则需要对每个参数分别求偏导"
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 1：</font>
+
+设总体服从泊松分布 $X\sim P(\lambda)$ ，其中 $\lambda$ 是未知参数，若 $X_1, X_2, ...,X_n$ 是来自总体的样本，求参数 $\lambda$ 的极大似然估计量。
+
+**解答：**
+
+$$\begin{array}c
+L(\lambda) =\prod _{i=1}^n p(x_i; \lambda) =\prod_{i=1}^n \frac{\lambda ^{x_i}}{ x_i!}e^{-\lambda} = \frac{\lambda ^{\sum_{i=1} ^n x_i}}{ \prod_{i=1}^n x_i!} e^{-n\lambda} \\
+\Rightarrow l(\lambda) = \left(\sum_{i=1}^n x_i \right)\ln \lambda -\sum_{i=1}^n x_i! -n\lambda \\
+\frac{dl(\lambda)}{d\lambda}|_{\lambda=\hat{\lambda}} = 0,\ \ \text{此方程有唯一解：} \\
+\hat{\lambda} = \frac{1}{n} \sum_{i=1}^n X_i = \bar{X}
+\end{array}$$
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 2：</font>
+
+设总体服从正态分布 $X\sim N(\mu, \sigma^2)$ ，求未知参数 $\mu, \sigma^2$ 的极大似然估计量:
+
+![[正态分布似然估计计算.png]]
+
+!!! warning "实际上还要对似然方程求二阶导看是否小于0，以确定这是极大值"
+

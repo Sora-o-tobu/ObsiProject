@@ -88,6 +88,7 @@ The PAL is the opposite of the ROM , having ==programmable set of ANDs== combine
 
 
 由于与门的 fan-in 有限，所以 ==不可能将所有minterm表示== ，这就导致有些function可能做不到，这个缺点可以由回手掏解决：
+
 ![[PAL.png]]
 
 ## Programmable Logic Array 可编程逻辑阵列
@@ -107,6 +108,7 @@ The PAL is the opposite of the ROM , having ==programmable set of ANDs== combine
 ### Lookup Table（LUT）
 
 通过组合多路选择器来选择要输出的真值表的值：
+
 ![[Lookuptable.png]]
 
 !!! info "Internal Structure"
@@ -126,15 +128,20 @@ FPGA基本的逻辑单元
 ## 总结
 
 **[Example](#)** 将格雷码转换成二进制码，用四种可重编程元器件实现：
-1. ROM
+
+- <1> ROM
+
 ![[ROM实现格雷码转换.png]]
 
-2. PAL
+- <2> PAL
+
 ![[PAL实现格雷码转换.png]]
 
-3. PLA
+- <3> PLA
+
 ![[PLA实现格雷码转换.png]]
 
-4. FPGA
+- <4> FPGA
+
 ![[FPGA实现格雷码转换.png]]
 

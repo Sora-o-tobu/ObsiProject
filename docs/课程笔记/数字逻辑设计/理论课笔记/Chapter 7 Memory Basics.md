@@ -3,10 +3,7 @@
 !!! quote "Memory Hierarchy in Computers"
 	![[计算机存储空间.png]]
 
-
 ## 基础定义
-
-
 
 - **Memory**：一系列存储单元及可以与其交换信息的必要电路
 	- **Read-Only Memory**：只读内存，在[第五章](https://nimisora.top//%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/%E6%95%B0%E5%AD%97%E9%80%BB%E8%BE%91%E8%AE%BE%E8%AE%A1/%E7%90%86%E8%AE%BA%E8%AF%BE%E7%AC%94%E8%AE%B0/Chapter%205%20Digital%20Hardware%20Implementation/#programmable-logic-device)有所提及
@@ -39,13 +36,11 @@
 	- **Data Bus**：从物理地址读取数据 or 传输数据给物理地址
 	- **Control Bus**：传输Control Signal，比如Chip Select,Read/Write,etc
 
-
 | CS  | $R/\overline{W}$ | Memory Operation        |
 | --- | ---------------- | ----------------------- |
 | 0   | X                | None                    |
 | 1   | 0                | Write to selected word  |
 | 1   | 1                | Read from selected word |
-
 
 
 === "Read Memory"
@@ -77,7 +72,6 @@
 	按照对于电源的依赖性分类，RAM属于 **Volatile** (易变的) ，当电源关闭，RAM会丢失存储的数据。
 	
 	而我们生活中常见的硬盘一般属于 **Non-volatile**
-
 
 
 !!! danger ""

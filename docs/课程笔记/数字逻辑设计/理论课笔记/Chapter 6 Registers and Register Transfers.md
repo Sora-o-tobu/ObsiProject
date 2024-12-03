@@ -8,6 +8,7 @@
 	- load = 0 : **Store** the values in the register
 
 可行的方法之一是将Enable信号由 $Clock$ 变为 $\overline{load}+clock$ ，这样当 load = 0 时，使能信号时钟为1，使得触发器中的slave锁存器无法写入数据，达到 store 的功能。
+
 ![[方案Aphoto.png]]
 
 !!! warning "Clock Skew"
@@ -36,7 +37,8 @@
 
 ### Register Transfer Structure
 #### Multiplexer-Based Transfers 基于MUX实现传输
-对于一个单一寄存器，它的**输入**可能有多种来源，例如其它寄存器，又或者是其他操作的结果。总而言之，它的输入很可能是不唯一的，而同一时刻我们只能接受一个来源的输入。因此，我们需要使用 `MUX` 来对输入进行选择。 -修佬
+
+对于一个单一寄存器，它的**输入**可能有多种来源，例如其它寄存器，又或者是其他操作的结果。总而言之，它的输入很可能是不唯一的，而同一时刻我们只能接受一个来源的输入。因此，我们需要使用 `MUX` 来对输入进行选择。
 
 ![[基于MUX实现传输例子.png]]
 
@@ -44,6 +46,7 @@
 	![[基于MUX的一组Register.png]]
 
 ### Multiplexer Bus 基于MUX总线实现传输
+
 上述实现要求每个Register都有其对应的MUX，这将大大增加电路的开销。因此我们不妨试想一个所有Register连接到一条线路的情况，这条线路也被称为**总线**(bus)
 
 接下来进行对比，以总线实现为主体，与 `MUX` 实现对比：
@@ -68,6 +71,7 @@
 
 ### Microoperations 实现
 #### Add and Substract 加减法
+
 ![[加减法微操作.png]]
 
 !!! note
@@ -75,16 +79,17 @@
 	![[加减法器更多功能.png]]
 
 #### Logic 逻辑运算
+
 Wow，so simply!
 
 ![[逻辑微运算.png]]
 
 #### Shift 移位运算
+
 ![[移位运算的基本实现.png]]
 
 - 上图Serial指串行输入，每过一个时钟周期，上一个寄存器的值会转移到下一个寄存器
 - input($D_{1,2,3,4}$)指并行输入，上图电路同时支持串行输入和并行输入，可以通过Shift和load加以控制
-
 
 | Shift | Load | Operation  |
 | ----- | ---- | ---------- |
@@ -107,6 +112,7 @@ Wow，so simply!
 	- Cost is high
 
 #### Ripple Counter 行波计数器
+
 也是数字逻辑设计这门课程唯一一个异步时序电路
 
 ![[4bitRIppleCounter.png]]{ width=200px }
@@ -114,6 +120,7 @@ Wow，so simply!
 Easy to understand!
 
 #### Synchronous Counter 同步计数器
+
 ![[同步计数器两种实现.png]]
 
 !!! note "多出来的Carry out不要丢掉，可以用来组合成容量更大的计数器！"
