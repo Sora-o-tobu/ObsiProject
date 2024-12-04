@@ -50,7 +50,8 @@ bool Reconstruct ( DistType X[ ], DistSet D, int N, int left, int right )
         return true; /* solved */
     D_max = Find_Max( D );
     /* option 1：X[right] = D_max */
-    /* check if |D_max-X[i]|D is true for all X[i]’s that have been solved */
+    /* check if |D_max-X[i]|in D is true for all X[i]’s that have been solved */
+    // 即判断新加入的点产生的新Dist是否都在集合 D 中，且无重复
     OK = Check( D_max, N, left, right ); /* pruning */
     if ( OK ) { /* add X[right] and update D */
         X[right] = D_max;
@@ -63,6 +64,7 @@ bool Reconstruct ( DistType X[ ], DistSet D, int N, int left, int right )
         }
     }
     /* finish checking option 1 */
+    
     if ( !Found ) { /* if option 1 does not work */
         /* option 2: X[left] = X[N]-D_max */
         OK = Check( X[N]-D_max, N, left, right );
@@ -77,7 +79,8 @@ bool Reconstruct ( DistType X[ ], DistSet D, int N, int left, int right )
             }
         }
         /* finish checking option 2 */
-    } /* finish checking all the options */
+    }
+    /* finish checking all the options */
     
     return Found;
 }
@@ -106,6 +109,7 @@ bool Backtracking ( int i )
 }
 ```
 
+
 ## Alpha-Beta 剪枝
 
 α-β 剪枝是一种对抗性搜索算法，用以减小极小化极大算法（Minimax算法）搜索树的节点数，主要应用于机器游玩的二人游戏，如井字棋、象棋、围棋等。
@@ -114,6 +118,11 @@ bool Backtracking ( int i )
 	是一种找出失败的最大可能性中的最小值的算法（最小化最坏情况）
 
 以下棋为例子，先手希望下一步的局面是自己胜算最大的局面，而后手希望下一步的局面是先手胜算最小的局面。而使用上述两种算法可以对当前局面进行估价。
+
+!!! info "Tic-tac-toc"
+	以人机井字棋为例，估价函数 $f(P)=W_{Computer} - W_{Human}$，其中 $W$ 代表当前场面选手能够获胜可能的布局。
+	
+	![[QQ_1733281718965.png]]
 
 那么我们用正方形代表先手，选择估价最大的局面；圆形代表后手，选择估价最小的局面。假设现在知道四步后所有可能场面的估价，其博弈树如下：
 
@@ -199,10 +208,13 @@ alphabeta(origin, depth, −∞, +∞, TRUE)
 ```
 
 
-
 | Worst-case performance | Best-case Performance |
 | ---------------------- | --------------------- |
 | $O(b ^d)$              | $O(\sqrt{b ^d})$      |
+
+!!! abstract "$\alpha -\beta$ 剪枝可以将要查找节点数减少至 $O(\sqrt{N})$"
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">Example：</font>
 
 哪个节点最先被剪枝？
 

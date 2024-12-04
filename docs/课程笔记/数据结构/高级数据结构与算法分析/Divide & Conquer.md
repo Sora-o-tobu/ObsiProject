@@ -9,18 +9,18 @@ To solve a problem recursively,we can:
 - **Conquer** the sub-problems by solving them recursively
 - **Combine** the solutions to the sub-problems into the solution for the original problem
 
-In general, the Time Complexity of recurence is:
+得到的递归时间复杂度等式的一般形式如下：
 
 $$
 T(N) = aT(N / b) +f(N)  
 $$
 
-!!! quote "Cases solved by divide and conquer"
-	- The maximum subsequence sum - the $O(N\log N)$ solution
-	- Tree traversals - $O(N)$
-	- Mergesort and quicksort - $O(N\log N)$
+!!! quote "采用分治思想的算法时间复杂度"
+	- The maximum subsequence sum 最大子串和 - the $O(N\log N)$ solution
+	- Tree traversals 树遍历 - $O(N)$
+	- Mergesort & quicksort - $O(N\log N)$
 
-## Closest Points Problem
+## 经典案例：Closest Points Problem
 
 Given $N$ points in a plane. Find the closest pair of points.
 
@@ -52,7 +52,7 @@ T(N) & = 2T(N / 2)+cN^2 \\ & = 2[2T(N / 2^2)+ cN^2 / 2] +cN^2\\
 \end{array}
 $$
 
-所以，我们必须确定一个算法，使得 Combine 部分的时间复杂度为 $O(N)$。
+所以，我们必须确定一个算法，使得 Combine 部分的时间复杂度为 $O(N)$，才能将整体时间复杂度降低至 $O(N\log N)$
 
 由于我们已知左右两侧平面点之间的最小值，那么整个平面的距离最小值不会大于这个值。选取已知最小值小的那个 $\delta$ 作为阈值，在分割线左右两侧划分一个范围，且超出这个范围的点都不会在考虑范围之内：
 
@@ -138,4 +138,4 @@ T(N)=\begin{cases}O(N^{\log_ba})\  , &\ if\ \log_ba\gt k \\ O(N^k\log ^{p+1}N)\ 
 \end{cases}
 \end{gather}$$
 
-证明过程见课本 
+主定理总共有很多版本，但我不想细分差别了，所以只记这个。

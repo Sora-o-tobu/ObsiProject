@@ -45,7 +45,6 @@ Iterative_activity_seletor(s, f)
 ```
 
 
-
 !!! failure "使用 DP 算法，则需要 $O(N^2)$ 时间复杂度"
 
 正确性证明：
@@ -55,7 +54,7 @@ Iterative_activity_seletor(s, f)
 
 ## 经典案例：哈夫曼编码
 
-没什么好说的！（懒）
+构造一个优先队列，每次操作取出两个根值最小的节点合并，新根值为二者之后，然后再入队。重复操作，知道队列只剩一个节点，所得的树即为哈夫曼编码树。
 
 ```c
 void Huffman(PriorityQueue heap[] = C)

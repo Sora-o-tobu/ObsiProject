@@ -21,7 +21,7 @@
 	- 如果任一 NPC 问题能在多项式时间内解决，则所有 $NP$ 问题均能在多项式时间内解决
 
 !!! info "多项式归约 Polynomially Reduce"
-	将一个问题通过有限步多项式复杂度转换为另一个问题
+	将一个问题通过有限步多项式复杂度转换为另一个问题。若某 NPC 问题可以多项式归约至另一个问题，则该问题属于 NP-Hard 问题。
 
 ## Turing Machine
 
@@ -62,3 +62,8 @@
 假设已有满足 Clique 问题的无向图 $G$ ，其包含一个节点数为 $\ge K$ 的最大子图。对 $G$ 关于完全图取补集 $\bar{G}$ ，则 $\bar{G}$ 中不在上述最大子图中的顶点可构成 $V'$ 满足每条边都至少有一个端点位于 $V'$ 中，且 $|V'|\le |V|-K$ 。
 
 而取补集的操作时间复杂度为 $O(N^2)$ ，属于多项式级别；且上述定义的 Vertex Cover Problem 属于 Vertex Cover Problem 的子问题，那么我们可以说在困难度上 $Clique \le _P Vertex\ Cover$ ，证明完毕。
+
+
+!!! quote "从 Carton 前辈那里偷来的图"
+	![[cartonsenpai.png]]
+
