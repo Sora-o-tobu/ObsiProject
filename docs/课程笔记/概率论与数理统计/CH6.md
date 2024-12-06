@@ -153,3 +153,4 @@ $$\begin{array}l
 S_\omega^2= \frac{(n_1 -1) S_1^2 +(n_2-1) S_2^2}{ n_1+ n_2 -2}
 \end{array}$$
 
+!!! info "$S_\omega$ 其实就是两个样本方差按照自由度的加权平均"

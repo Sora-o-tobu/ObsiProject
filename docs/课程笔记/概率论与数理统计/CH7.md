@@ -103,6 +103,9 @@ $$
 
 !!! note "若有多个待估参数，则需要对每个参数分别求偏导"
 
+!!! danger "有时候遇见求导无零点，则求最大值对应的点即可，但是要注意 $\theta$ 的取值范围"
+	$$\begin{array}c X\sim U(0,\theta) \\ L(\theta) = \begin{cases} \frac{1}{\theta ^n}, & 0\le x_1,...,x_n \le \theta \\ 0, & \text{其他}\end{cases} \\ \text{参数越小，似然方程越大，但是有 } \theta \ge \max (x_1, ...,x_n) \\ \Rightarrow \hat{\theta} = \max (x_1,..., x_n)\end{array}$$
+
 <font style="font-weight: 1000;font-size: 20px" color="orange">例 1：</font>
 
 设总体服从泊松分布 $X\sim P(\lambda)$ ，其中 $\lambda$ 是未知参数，若 $X_1, X_2, ...,X_n$ 是来自总体的样本，求参数 $\lambda$ 的极大似然估计量。
@@ -124,6 +127,10 @@ L(\lambda) =\prod _{i=1}^n p(x_i; \lambda) =\prod_{i=1}^n \frac{\lambda ^{x_i}}{
 
 !!! warning "实际上还要对似然方程求二阶导看是否小于0，以确定这是极大值"
 
+[极大似然估计的不变原理](#) 已经估计出参数，则对其统计量的极大似然估计可以直接带入这些参数。
+
+例如，均分分布 $E(X)$ 的极大似然估计为 $\frac{\hat{a} +\hat{b}}{2}$。
+
 ## 估计量的评价准则
 
 ### 无偏性
@@ -138,9 +145,47 @@ $$
 
 称 $\hat{\theta}$ 为 $\theta$ 的无偏估计。
 
+如果 $\hat{\theta}$ 是一个有偏估计，且有 $E(\hat{\theta})=a\theta +b$ ，则我们可以对其进行无偏纠正得到 $\theta$ 的无偏估计：
+
+$$
+\frac{1}{a}(\hat{\theta} - b)
+$$
+
 !!! info 
 	- 若 $E(\hat{\theta}) \ne \theta$ ，则称 $E(\hat{\theta}) - \theta$ 为估计量 $\hat{\theta}$ 的**偏差**
 	- 若 $E(\hat{\theta}) \ne \theta$ ，但 $\lim _{n\rightarrow +\infty}E(\hat{\theta}) = \theta$ ，则称 $\hat{\theta}$ 是 $\theta$ 的**渐近无偏估计**
 
+- 样本均值 $\bar{X}$ 和样本方差 $S^2$ 分别是 $\mu$ 和 $\sigma^2$ 的**无偏估计**
+- 样本二阶中心距 $B_2$ 是 $\sigma^2$ 的**渐近无偏估计**
+
 ### 有效性
+
+有些情况下，同一总体参数可能有多个无偏估计量，为比较无偏估计量的好坏，我们需进一步考察估计量取值的方差。估计量方差越小，说明该估计量的取值越集中在参数真值附近。
+
+设 $\hat{\theta_1} =\hat{\theta_1} (X_1, X_2, ...,X_n)$ 与 $\hat{\theta_2} =\hat{\theta_2} (X_1, X_2, ...,X_n)$ 都是参数 $\theta$ 的无偏估计，若 $\forall \theta \in \Theta$，$Var_\theta( \hat{\theta_1}) \le Var_\theta (\hat{\theta_2})$，且至少有一个 $\theta \in \Theta$ 使不等号成立，则称 $\hat{\theta_1}$ 比 $\hat{\theta_2}$ **有效**。
+
+
+
+还是对均匀分布 $U(0,\theta)$ 的参数 $\theta$ 进行分析：
+
+- **矩估计：** $\hat{\theta} = 2\bar{X}$
+- **最大似然估计：** $\hat{\theta} = \max (X_1, ...,X_n)$
+
+**无偏性：**
+
+- **矩估计：** $E(\hat{\theta}) = 2 E(\bar{X}) = \theta$ 
+	- 所以是参数 $\theta$ 的无偏估计，不需要纠正
+- **最大似然估计：** $E(\hat{\theta}) = \frac{n}{n+1}\theta$
+	- 所以是参数 $\theta$ 的有偏估计，需要纠正为 $\frac{n+1}{n}\hat{\theta}$
+
+**有效性：**
+
+- **矩估计：** $D(\hat{\theta})= 4\cdot \frac{\sigma^2}{n} = \frac{\theta^2}{3n}$
+- **最大似然估计：** $D(\hat{\theta}) = \frac{\theta^2}{n(n+2)}$
+
+所以最大似然估计的有效性更好。
+
+## 区间估计
+
+人们常常根据点估计对总体参数作出判断，但这种判断的把握有多大？可信度有多高？点估计无法回答这些问题。统计学家为了弥补此种不足，提出了区间估计。
 
