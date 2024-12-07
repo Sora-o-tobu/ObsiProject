@@ -185,6 +185,29 @@ $$
 
 所以最大似然估计的有效性更好。
 
+### 均方误差
+
+设 $\hat{\theta} = \hat{\theta} (X_1, X_2,..., X_n)$ 是总体参数的估计量，称 $E[(\hat{\theta} - \theta)^2]$ 是估计量 $\hat{\theta}$ 的**均方误差**，记为 $Mse(\hat{\theta})$ 。
+
+设 $\hat{\theta}_1$ 和 $\hat{\theta}_2$ 都是 $\theta$ 的估计量，若对于任意 $\theta \in \Theta$，$Mse(\hat{\theta}_1) \le Mse(\hat{\theta}_2)$ ，且存在某个 $\theta$ 使不等号成立，则称在均方误差准则下 $\hat{\theta}_1$ 优于 $\hat{\theta}_2$ 。
+
+!!! info "无偏估计量的均方误差"
+	对于无偏估计量，$Mse(\hat{\theta})= Var(\hat{\theta})$。因此，对于两个无偏估计量来说，均方误差准则等价于有效性准则
+
+### 相合性
+
+设 $\hat{\theta} = \hat{\theta} (X_1, X_2,..., X_n)$ 是总体参数的估计量，若对任意 $\varepsilon \gt 0$，有：
+
+$$
+\lim _{n \to +\infty} P\{ |\hat{\theta}_n -\theta|\lt \varepsilon\} =1
+$$
+
+即 $\hat{\theta}_n$ 依概率收敛于 $\theta$ ，则称 $\hat{\theta}_n$ 是 $\theta$ 的**相合估计量**，并记为 $\hat{\theta}_n \xrightarrow P \theta,\ n\to +\infty$
+
+!!! note "一般矩法求得的估计量都满足相合性；对于极大似然估计, 在总体分布满足一定的条件下, 求得的估计量也是待估参数的相合估计量"
+
+
+
 ## 区间估计
 
 人们常常根据点估计对总体参数作出判断，但这种判断的把握有多大？可信度有多高？点估计无法回答这些问题。统计学家为了弥补此种不足，提出了区间估计。
