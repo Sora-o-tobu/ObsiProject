@@ -153,10 +153,13 @@ Hazards(冒险)是阻止指令进入下一阶段的情况，可分为：
 
 - **Structure Hazards** 结构冒险
 	- A required resource is busy
+	- 硬件不支持多条指令在同一时钟周期执行
 - **Data Hazards** 数据冒险
 	- Need to wait for previous instruction to complete its data read/write
+	- 当前指令的执行需要等待前面指令的数据结果
 - **Control Hazards** 控制冒险
 	- Deciding on control action depends on previous instruction
+	- 指令非顺序执行而导致下一条执行的指令不是真实期望的
 
 #### Structure Hazards
 
@@ -185,7 +188,11 @@ Hazards(冒险)是阻止指令进入下一阶段的情况，可分为：
 
 ![[pipelinewithcontrolsimplified.png]]
 
-当处理器需要插入 Bubble 时，将所有流水线寄存器的控制信号全部置 0，并阻止 PC 和 `IF/ID` 流水线寄存器的更新
+当处理器需要插入 Bubble 时，将所有流水线寄存器的控制信号全部置 0，并阻止 PC 和 `IF/ID` 流水线寄存器的更新。
+
+!!! success "硬件资源冲突"
+	流水线执行期间，也可能发生两条及以上的指令同时对Memory发起资源请求，解决方法是将指令和数据分离存储，这样取指阶段只使用 IMEM ，访存阶段只使用 DMEM。
+
 
 #### Data Hazards
 当两个指令所用到的数据有先后要求时，会发生数据冒险。
@@ -207,7 +214,9 @@ sub x2, x19, x3
 
 !!! example "从 Memory 读取的数据直接传入下一指令 EX 阶段(Load-use Hazard)"
 	![[congmemroyduqudeshuju.png]]
-	load 型指令即便使用 Forwarding 也要插入一个 Bubble
+	load 型指令即便使用 Forwarding 也要插入一个 Bubble。
+	
+	幸亏的是，下一条指令在 Stall 前并没有对寄存器堆或 MEM 作出任何操作，因此可以直接将 NOP 指令取代它后面的阶段。
 
 对于使用 Forwarding 优化的处理器，执行下列指令过程中会发生两个数据冒险，导致总运行时间会增加两个时钟周期：
 

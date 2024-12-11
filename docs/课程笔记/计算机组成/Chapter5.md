@@ -137,7 +137,7 @@ $$
 
 因此，提高 Cache 性能的关键在于增加命中率和减少 Miss Penalty 时间。
 
-[Example] 假设：
+[Example](#) 假设：
 
 - instruction cache miss rate:  2%
 - data cache miss rate:  4%
@@ -149,13 +149,13 @@ $$\begin{array}l
 \text{Instruction miss cycles} =I\times 2\% \times 100 & = 2.00I\\
 \text{Data miss cycles} = I\times 36\% \times 2\times 4\% \times 100 & = 1.44I \\
 \text{Total memory-stall cycles} =2.00 I +1.44I & =3.44I \\
-\text{CPU with stall} = 2 + 3.44 I / I & =5.44
+\text{CPI with stall} = 2 + 3.44 I / I & =5.44
 \end{array}
 $$
 
 !!! info "这也能看出 Memory 的性能严重制约了 CPU"
 
-[Solution]
+[Solution](#)
 
 - <1> 通过更灵活的Block替换规则来减少 Miss Rate
 	- 组相连、LRU...
@@ -167,13 +167,15 @@ $$
 	- 并且对于一个大小有限的 Cache，更大的Block也意味着更少的Block数量，可能反而增加了 Miss Rate
 	- 对于 256KB 往下的Cache，Block Size选 64 bytes 的效果最好
 - <4> 设计一个存储系统来减少 Miss Penalty
-	- 仅供了解，不想看了
+	- 交叉地址访问...
 - <5> 通过多级 Cache 减少 Miss Penalty
 	- L1 Cache、L2 Cache...
 - <6> Software Optimization Blocking
 
 
 ## Virtual Memory
+
+### Mapping
 
 !!! quote "虚拟存储可以看作是 DRAM 和 Disk 间的 Cache（尽管我认为差别很大）"
 
@@ -183,11 +185,14 @@ $$
 
 ![[virtualmemory1.png]]
 
+!!! info "虚拟内存允许单个程序使用超过内存容量的内存，超出的部分可以临时存放在Disk中"
+
 虚拟地址转换到物理地址分为两步：
 
 - <1> 根据 Virtual page number 读取 Page Table 上对应数据，记作 Physical page number
 	- 如果 Valid 位为0，说明不在 DRAM 中，要去 Disk 中找
 - <2> 将 Physical page number 与 Page Offset 合并，得到物理地址
+
 
 ```
 Virtual Address:
@@ -207,5 +212,39 @@ Physical Address:
 
 由于 Virtual Memory 处于较下层的位置，如果出现 Page Fault 的情况，造成的性能损失会相当大，因此优化的主要目标在于减少 Page Fault 的发生。
 
-所以，Virtual Memory 采用 LRU、全相联映射的方式来处理 Page；同样，Write Through的代价也是非常昂贵的，所以使用Write Back。
+所以，Virtual Memory 采用 LRU、全相联映射的方式来处理 Page，从而减小失效率；同样，Write Through 写 Disk 的代价也是非常昂贵的，所以使用Write Back（这也需要为 Page Table 增加 Dirty 位）。
+
+### Translation-lookaside Buffer
+
+每个进程的 Page Table 都存放在内存中；而 **Page Table Register** 则存放着该 Page Table 的物理地址，因此进行 **Translation** 时将 Virtual Page Number 对应的偏移量和 Page Table 的物理地址相加即可得到该 Entry 的地址。
+
+但是上述方法存在效率问题，当进程希望访问内存中的数据时，都需要先访问内存中的 Page Table 以获取数据的物理地址，这意味着对内存访问时间会加倍。
+
+一种解决方法时使用 **TLB**，其作用相当于 Page Table 的高速缓存，位于进程和内存中间。其基本的 Entry 结构为：
+
+```
++-----+-----+---+---------------+-------------------------+
+|Valid|Dirty|Ref|      Tag      |  Physical Page Address  |
++-----+-----+---+---------------+-------------------------+
+
+- Reference 位: 最近是否被访问过(lru ?)
+- TLB: 16-512 Entries
+- Miss Rate: 0.01% - 1%
+```
+
+!!! note "TLB 在实际应用中选择组相联的方式，不过计组课程似乎并不深究原理"
+
+当 TLB Miss 时，处理器才会去内存中的 Page Table 找对应项；如果 Page Table 对应项是 Valid 的，则将其拿到 TLB 中；如果 Page Table 对应项不是 Valid 的，则触发 Page Fault，要继续向下层读取；若被替换的 Entry 的 Dirty 位为 1，则要将其写回 Page Table。
+
+![[TLBOverview.png]]
+
+| TLB  | Page Table | Cache | Description                                                 |
+| ---- | ---------- | ----- | ----------------------------------------------------------- |
+| Hit  | Hit        | Miss  | 在TLB中得到物理地址，但是在 Cache 中找不到该地址对应数据，要在内存中找                    |
+| Miss | Hit        | Hit   | TLB misses, 但是在 Page Table 中找到 Entry；Data在Cache中找到          |
+| Miss | Hit        | Miss  | TLB misses, 但是在 Page Table 中找到 Entry；在Cache中找不到对应数据，最后去内存中找 |
+| Miss | Miss       | Miss  | Page Fault；那么 Cache 中一定不存在这个地址及其数据                          |
+| Hit  | Miss       | Miss  | **Impossible**；TLB 命中了，那 Page Table 也一定能命中                  |
+| Hit  | Miss       | Hit   | **Impossible**；TLB 命中了，那 Page Table 也一定能命中                  |
+| Miss | Miss       | Hit   | **Impossible**；Page Table 中没有这个地址，说明 Cache 中也没有             |
 

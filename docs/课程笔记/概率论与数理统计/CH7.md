@@ -206,6 +206,34 @@ $$
 
 !!! note "一般矩法求得的估计量都满足相合性；对于极大似然估计, 在总体分布满足一定的条件下, 求得的估计量也是待估参数的相合估计量"
 
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 1：</font>
+
+$$
+f(x:\theta) =\begin{cases} \frac{1}{\theta}e^{- \frac{x}{\theta}} , & x\gt 0 \\ 0, & \text{其他}\end{cases}
+$$
+
+- （1）在形如 $c\sum_{i=1}^n X_i$ 的估计中求c，使其在均方误差准则下最优。
+- （2）判断上面得到的估计量是否为 $\theta$ 的相合估计量。
+
+$$\begin{array}l
+c\sum_{i=1}^n X_i & = cn\hat{\theta} \\
+Mse(cn\hat{\theta}) & = E[(cn\hat{\theta} - \theta)^2] \\
+ & = E^2 (cn\hat{\theta} -\theta) +D(cn\hat{\theta} -\theta) \\
+ & = [cnE(\hat{\theta}) -\theta]^2 +c^2 n^2 D(\hat{\theta}) \\
+ & = c^2 n^2 E^2(\hat{\theta}) - 2cn\theta E(\hat{\theta}) + c^2 n^2 \frac{1}{n} D(X) \\
+ & = \theta^2 [(n^2+n) c^2 -2cn +1]
+\end{array}$$
+
+$$
+\text{所以 } c=\frac{1}{n+1} \text{时} Mse \text{取得最小值}$$
+
+对于相合估计量的判断，应用切比雪夫不等式：
+
+$$
+P\{(\frac{n}{n+1}\hat{\theta} - \theta)\lt \varepsilon\} \ge 1- \frac{Var(\frac{n}{n+1}\hat{\theta})}{\varepsilon^2} = 1- \frac{n\theta^2}{(n+1)^2 \varepsilon^2}\to 1
+$$
+
+
 
 
 ## 区间估计
