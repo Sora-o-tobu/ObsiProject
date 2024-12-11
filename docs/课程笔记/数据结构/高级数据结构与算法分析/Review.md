@@ -140,3 +140,9 @@
 
 - 用 Local Search 求解 K-center 的近似比可以是 2 吗？？？并不能，可以举出反例。
 	- ![[localsearchkcenter.png]]
+- Local search algorithm can be used to solve lots of classic problems, such as SAT and N-Queen problems. Define the configuration of SAT to be X = vector of assignments of N boolean variables, and that of N-Queen to be Y = positions of the N queens in each column. The sizes of the search spaces of SAT and N-Queen are $O(2^N)$ and $O(N^N)$, respectively.
+	- **True** Search Space 就是所有情况，其中 SAT 是布尔可满足性问题
+- 神秘题目。从势能函数上考虑，只有最小生成树问题的 cost 函数只有一个极小值的，所以不会陷入局部最优解
+	- ![[shenmitimutimian.png]]
+	- ![[shenmitimujiexi.png]]
+- 

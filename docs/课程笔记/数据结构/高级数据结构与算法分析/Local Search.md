@@ -137,3 +137,13 @@ $$
 
 !!! note "事实上，这个问题的近似比理论下限为 $17 / 16$ （Unless P=NP）"
 
+如果我们为翻转设置一个阈值，即一个 Node 会被翻转当且仅当它会增加总 cut value 至少：
+
+$$
+\frac{\varepsilon}{|V|} w(A,B)
+$$
+
+那么有以下两点性质（可能会考）：
+
+- 最终结果 $(2+\varepsilon) w(A,B)\ge w(A^*, B^*)$，即近似比为 $2+\varepsilon$
+- 算法会在 $O(n / \varepsilon \log N)$ 次翻转内结束
