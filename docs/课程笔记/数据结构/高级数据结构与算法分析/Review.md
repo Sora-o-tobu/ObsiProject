@@ -133,4 +133,10 @@
 - In the bin packing problem, we are asked to pack a list of items L to the minimum number of bins of capacity 1. For the instance L, let FF(L) denote the number of bins used by the algorithm First Fit. The instance L′is derived from L by deleting one item from L. Then FF(L′) is at most of FF(L).
 	- **False** 说是可以举出反例，但我想不到
 	- 改成 NF 算法则是正确的
-- 
+
+
+
+## Local Search
+
+- 用 Local Search 求解 K-center 的近似比可以是 2 吗？？？并不能，可以举出反例。
+	- ![[localsearchkcenter.png]]
