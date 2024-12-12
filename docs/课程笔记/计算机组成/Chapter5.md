@@ -109,6 +109,9 @@ $$
 	
 	`Sace dirty block first` 指的是，如果要读/写的Block的dirty位为1，则这个Block还在主存中更新。所以要先 Write Memory 更新主存，在继续后面的操作。
 
+
+!!! warning "在做Cache计算时间类题目中，注意每步操作的时间要是时钟频率的整数倍（结果可以不是）"
+
 ### Other Mapping
 
 - 组相联 Set associated

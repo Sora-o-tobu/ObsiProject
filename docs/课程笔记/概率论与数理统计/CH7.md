@@ -238,5 +238,168 @@ $$
 
 ## 区间估计
 
+!!! quote ""
+	![[概率论与数理统计 (黄炜, 张帼奋, 张奕, 张彩伢) (Z-Library).png]]
+
+### 定义
+
 人们常常根据点估计对总体参数作出判断，但这种判断的把握有多大？可信度有多高？点估计无法回答这些问题。统计学家为了弥补此种不足，提出了区间估计。
+
+对于待估参数 $\theta \in \Theta$ ，其有两个统计量 $\hat{\theta}_1 =\hat{\theta}_1 (X_1, X_2, ..., X_n) \lt \hat{\theta}_2 = \hat{\theta}_2 (X_1, X_2,..., X_n)$，且对于给定的 $\alpha \in (0,1)$ 和任意 $\theta \in \Theta$，有：
+
+$$
+P\{\hat{\theta}_1 \lt \theta \lt \hat{\theta}_2\} \ge 1- \alpha
+$$
+
+则称随机区间 $(\hat{\theta}_1 , \hat{\theta}_2)$ 为参数 $\theta$ 的**置信水平**为 $1-\alpha$ 的**置信区间**。
+
+统计量 $\hat{\theta}_1$ 和 $\hat{\theta}_2$ 分别称为双侧置信下限和双侧置信上限；与之相对的，置信水平为 $1-\alpha$ 的单侧置信下限（上限）为：
+
+$$\begin{array}l
+P\{\hat{\theta}_1 \lt \theta\} \ge 1-\alpha, &\theta \in \Theta \\
+P\{\theta \lt \hat{\theta}_2\} \ge 1-\alpha, &\theta \in \Theta \\
+\end{array}
+$$
+
+**Lemma** 设统计量 $\hat{\theta}_1$ 和 $\hat{\theta}_2$ 分别为参数 $\theta$ 的置信水平为 $1-\alpha_1$ 和 $1-\alpha_2$ 的单侧置信上下限，那么 $(\hat{\theta}_1 , \hat{\theta}_2)$ 为参数 $\theta$ 的置信水平为 $1-\alpha_1 -\alpha_2$ 的置信区间。
+
+!!! info "奈曼原则"
+	称置信区间的平均长度 $E(\hat{\theta}_2 -\hat{\theta}_1)$ 为置信区间的**精确度**，由定义可知，当样本容量 $n$ 给定时，置信水平越高，精确度越低。因此我们在确定一定的置信水平前提下，尽可能提高精确度。如若总体 $X$ 是连续型随机变量，则我们尝试使 $P\{\hat{\theta}_1 \lt \theta \lt \hat{\theta}_2\}$ 等号成立。
+
+### 枢轴量法
+
+枢轴量（Pivot）为分布完全已知、且形式上不依赖于其它未知参数的函数，通常形式为 $G(X_1, X_2, ...,X_n;\theta)$ 。
+
+通过枢轴量法求置信区间的步骤通常分为三步：
+
+（1）构造一个已知的枢轴量 $G(X_1, X_2, ...,X_n;\theta)$；
+
+（2）选取适当常数 $a,b$ ，使得 $b -a$ 最小，且满足：
+
+$$
+P_\theta \{a\lt G(X_1, X_2, ...,X_n;\theta) \lt b\} = 1-\alpha
+$$
+
+（3）将参数 $\theta$ 从函数中分离出来，等价转换为：
+
+$$
+P\{\hat{\theta}_1 \lt \theta \lt \hat{\theta}_2\} = 1- \alpha
+$$
+
+!!! note "习惯上，我们常取 $a,b$ 为"
+	$$P_\theta\{G(X_1, X_2, ...,X_n;\theta) \le a\}=P_\theta\{G(X_1, X_2, ...,X_n;\theta) \ge b\}= \frac{\alpha}{2}$$
+
+
+### 正态总体参数的区间估计
+
+#### 单个正态总体
+
+<font style="font-weight: 1000;font-size: 20px" color="red">均值 $\mu$ 的置信区间</font>
+
+若总体方差 $\sigma^2$ 已知，则可以构造函数 $\frac{\bar{X}-\mu}{\sigma / \sqrt{n}} \sim N(0,1)$ ，式中仅有一个未知参数 $\mu$，且总体分布已知为标准正态分布，那么：
+
+$$\begin{array}c
+P\{a\lt \frac{\bar{X}-\mu}{\sigma / \sqrt{n}} \lt b\} =1 -\alpha \\
+\Rightarrow P\{\bar{X}-b \frac{\sigma}{\sqrt{n}} \lt \mu \lt \bar{X}+a \frac{\sigma}{\sqrt{n}}\}
+\end{array}$$
+
+此时，置信区间的平均长度为 $L=(b-a) \frac{\sigma}{\sqrt{n}}$ ，根据正态分布的对称性可知取 $-a =b= z_{\alpha / 2}$ 时，$L$ 最短，则置信区间为：
+
+$$
+(\bar{X}- \frac{\sigma}{\sqrt{n}}z_{\alpha / 2},\ \bar{X} + \frac{\sigma}{\sqrt{n}} z_{\alpha / 2})
+$$
+
+常写作 $(\bar{X} \pm \frac{\sigma}{\sqrt{n}}z_{\alpha / 2})$
+
+---
+
+若总体方差 $\sigma^2$ 未知，此时函数 $\frac{\bar{X}-\mu}{\sigma / \sqrt{n}}$ 含有两个未知量，不能再使用。考虑用 $\sigma^2$ 的无偏估计量 $S^2$ 代替： $\frac{\bar{X}-\mu}{S / \sqrt{n}} \sim t(n-1)$
+
+那么同理可得置信区间为：
+
+$$\begin{array}c
+\left(\bar{X} -\frac{S}{\sqrt{n}} t_{\alpha / 2} (n-1),\ \bar{X} +\frac{S}{\sqrt{n}} t_{\alpha / 2} (n-1)\right)\\
+Or\ \ \ (\bar{X} \pm \frac{S}{\sqrt{n}} t_{\alpha / 2} (n-1))
+\end{array}$$
+
+!!! success "实际应用中，$\sigma^2$ 未知的情况更多，因此该区间的价值更大"
+
+<font style="font-weight: 1000;font-size: 20px" color="red">方差 $\sigma^2$ 的置信区间</font>
+
+样本方差的函数 $\frac{(n-1)S^2}{ \sigma^2} \sim \chi^2(n-1)$ 不依赖任何未知参数，那么：
+
+$$
+P\left\{\chi^2_{1- \alpha / 2 }(n-1)\lt \frac{(n-1)S^2}{ \sigma^2} \lt \chi^2_{\alpha / 2 }\right\} = 1-\alpha
+$$
+
+转换得到方差 $\sigma^2$ 的置信水平为 $1-\alpha$ 的置信区间为：
+
+$$\left ( \frac{(n-1)S^2}{\chi^2_{\alpha / 2}(n-1)}, \frac{(n-1)S^2}{\chi^2_{1-\alpha / 2}(n-1)}\right)$$
+
+#### 两个正态总体
+
+##### 均值差 $\mu_1-\mu _2$ 的区间估计
+
+分三种情况讨论。
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">两总体的方差已知</font>
+
+$$
+\bar{X} -\bar{Y} \sim N\left(\mu_1 - \mu_2, \frac{\sigma_1^2}{ n_1} + \frac{\sigma^2_2}{ n_2}\right)
+$$
+
+则类似单个正态总体的推导，得到置信区间为：
+
+$$
+\left(\bar{X} -\bar{Y} \pm z_{\alpha / 2}\sqrt{ \frac{\sigma_1^2}{ n_1} + \frac{\sigma^2_2}{ n_2}} \right)
+$$
+
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">两总体的方差未知，但相同</font>
+
+此时可取 $\sigma^2_1 = \sigma^2_2= \sigma^2$ 的无偏估计量为：
+
+$$
+S_{\omega}^2 =\frac{(n_1-1) S_1^2 + (n_2-1) S_2^2}{ n_1+ n_2 -2}
+$$
+
+且由定理可知：
+
+$$
+\frac{\bar{X}-\bar{Y} - (\mu_1 -\mu_2)}{ S_\omega\sqrt{ \frac{1}{n_1} +\frac{1}{n_2}}} \sim t(n_1 +n_2 -2)
+$$
+
+同样仿照单个正态总体的推导，得到置信区间为：
+
+$$
+\left(\bar{X} -\bar{Y} \pm t_{\alpha / 2} (n_1 +n_2 -2) S_\omega \sqrt{\frac{1}{n_1} +\frac{1}{n_2}} \right)
+$$
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">两总体的方差未知，且不相同</font>
+
+当样本容量 $n_1, n_2$ 足够大时（大于50），可认为：
+
+$$
+\frac{\bar{X}-\bar{Y} - (\mu_1- \mu_2)}{ \sqrt{\frac{S_1^2}{ n_1} +\frac{S_2^2}{ n_2}}} \sim N(0,1)
+$$
+
+则其置信区间为：
+
+$$
+\left(\bar{X}-\bar{Y} \pm z_{\alpha / 2} \sqrt{\frac{S_1^2}{ n_1} +\frac{S_2^2}{ n_2}} \right)
+$$
+
+##### 方差比 $\sigma_1^2 / \sigma_2^2$ 的区间估计
+
+$$
+\frac{S_1^2 / S_2^2}{ \sigma_1^2 / \sigma_2^2} \sim F(n_1 -1, n_2-1)  
+$$
+
+可得置信区间结果：
+
+$$
+\left( \frac{S_1 ^2 / S_{2}^2}{ F_{\alpha / 2} (n_1 -1,n_2 -1)}  , \frac{S_1 ^2 / S_{2}^2}{ F_{1-\alpha / 2} (n_1 -1,n_2 -1)} \right)
+$$
+
+!!! warning "单个正态总体的方差区间估计和此处的方差比估计都不具备最优性，因为 $\chi^2$ 和 $F$ 分布都不具备对称性"
 
