@@ -117,3 +117,7 @@ reveal-md .\test.md --static static-dir --assets-dir assets
 ```
 
 部署完后，通过 URL 指定访问即可
+
+!!! warning "有时候表格渲染不出来，还没搞懂"
+
+此外，也可以去尝试一下将 mkdocs 和 reveal-md 结合的 mkslides，不过目前禁用了演讲者模式，我暂时不想用。

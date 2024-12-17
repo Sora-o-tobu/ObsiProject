@@ -82,6 +82,10 @@ $$
 === "给出 Byte Address，求 Block Number"
 	![[byteaddressqiublocknumber.png]]
 
+!!! danger "写题时出现的Block Size均指Data段大小，如 two-word block 指 64 bits data"
+
+!!! danger "通常，1 word 的大小要看题目给出的地址位数决定；在 8 位系统中，1 word = 1 byte"
+
 ### Cache Hit & Miss
 
 显然，读和写的时候发生 cache miss 的处理方式是不一样的；另外读也有读数据和读指令之分（指令 cache 和数据 cache 通常是分离的）。我们分别对其进行讨论：
@@ -121,6 +125,9 @@ n-way 组相联将每 n 个 Block 分为一组，找对应 Block 时先确定组
 
 ![[othermappingex1.png]]
 
+!!! warning "对于组相联"
+	由于实际应用中计算组别是用 块地址%组数 来得到的，因此一个组内 Block 对应的物理地址可能相差比较大。
+
 替换算法：
 
 - <1> 先入后出算法 FILO
@@ -130,6 +137,9 @@ n-way 组相联将每 n 个 Block 分为一组，找对应 Block 时先确定组
 	- 最先调入并被多次调用的Block可能会被优先替换，不符合局部性规律，所以命中率不满足要求
 - <4> 近期最少使用算法 LRU
 	- 较好反映了程序局部性规律，命中率较高
+
+??? quote "The implement of Four-way Set-associative Cache"
+	![[四路组相联cache示例.png]]
 
 ### Performance
 
@@ -236,6 +246,9 @@ Physical Address:
 ```
 
 !!! note "TLB 在实际应用中选择组相联的方式，不过计组课程似乎并不深究原理"
+	- 对于全相联 TLB 题目中的 Tag，一般认为就是 Virtual Page Number 。
+	- 对于组相联 TLB 题目中的 Tag，则认为是 Virtual Page Number 减去对应的 index 位数
+		- 例如，Virtual Page Number 为四位，TLB共有 2 个 set，则 Tag 为 `Virtual Page Number[3:1]`
 
 当 TLB Miss 时，处理器才会去内存中的 Page Table 找对应项；如果 Page Table 对应项是 Valid 的，则将其拿到 TLB 中；如果 Page Table 对应项不是 Valid 的，则触发 Page Fault，要继续向下层读取；若被替换的 Entry 的 Dirty 位为 1，则要将其写回 Page Table。
 
