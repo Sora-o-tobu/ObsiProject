@@ -130,6 +130,7 @@ $$
 
 - <1> $\bar{X}\sim N(\mu, \frac{\sigma^2}{n})$
 - <2> $\frac{\sum_{i=1}^n (X_i- \bar{X})^2}{\sigma ^2} =\frac{(n-1)S^2}{ \sigma^2}\sim \chi^2 (n-1)$ 
+	- $\frac{(n-1)^2 D(S^2)}{ \sigma^4} = 2(n-1)\Rightarrow D(S^2) =\frac{2\sigma^2}{n-1}$
 	- $\frac{\sum_{i=1}^n (X_i- \mu)^2}{\sigma ^2} = \chi^2 (n)$
 - <3> $\bar{X}$ 和 $S^2$ 相互独立
 - <4> $\frac{\bar{X}-\mu}{ S / \sqrt{n}  } \sim t(n-1)$

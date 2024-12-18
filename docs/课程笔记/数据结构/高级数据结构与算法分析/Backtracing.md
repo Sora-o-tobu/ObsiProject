@@ -122,7 +122,7 @@ bool Backtracking ( int i )
 !!! info "Tic-tac-toc"
 	以人机井字棋为例，估价函数 $f(P)=W_{Computer} - W_{Human}$，其中 $W$ 代表当前场面选手能够获胜可能的布局。
 	
-	![[QQ_1733281718965.png]]
+	![[tictactocrenji.png]]
 
 那么我们用正方形代表先手，选择估价最大的局面；圆形代表后手，选择估价最小的局面。假设现在知道四步后所有可能场面的估价，其博弈树如下：
 
