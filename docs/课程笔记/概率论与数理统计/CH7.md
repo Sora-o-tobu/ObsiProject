@@ -377,6 +377,8 @@ $$
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">两总体的方差未知，且不相同</font>
 
+!!! danger "不在考试范围内"
+
 当样本容量 $n_1, n_2$ 足够大时（大于50），可认为：
 
 $$

@@ -1,6 +1,8 @@
 
 # 大数定律和中心极限定理
 
+!!! quote "这章的题目其实是最简单的，只需要记住几个结论即可，写题都是转换成正态分布求解的"
+
 大数定律及中心极限定理这两类是极限定理中的基本理论。
 
 - 大数定律主要探讨随机变量序列的平均在一定条件下的稳定性规律
@@ -61,6 +63,16 @@ $$
 
 $$
 P\{|X-\mu| \lt \varepsilon\} \ge 1- \frac{\sigma^2 }{\varepsilon^2}
+$$
+
+!!! success "对样本均值使用切比雪夫不等式，由于 $D(\bar{X})= \frac{\sigma^2}{n}$，则 $P\{|\bar{X}-\mu| \ge \varepsilon\} \le \frac{\sigma^2 }{n\varepsilon^2}$"
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">例 1：</font>
+
+**题面：** 总体服从指数分布 $E(0.1)$，抽取一个容量为 5 的样本，根据切比雪夫不等式来估计：
+
+$$
+P\{ |\bar{X} -10| \ge 10\} \le \frac{1}{n\varepsilon^2 \lambda^2} = \frac{1}{5}
 $$
 
 ### 三个大数定律

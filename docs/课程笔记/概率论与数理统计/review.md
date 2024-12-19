@@ -372,3 +372,12 @@ f_{min}(x) = \begin{cases}0, & x\le 0 \\
 Var(X_{(1)}) = \frac{1}{100\lambda^2}\end{cases}
 \end{array}$$
 
+### 百变X方分布
+
+**题面：** 对于总体 $N(\mu, 1)$ ，下列不是 $\chi^2$ 分布的是：
+
+- A. $\sum_{i=1}^n (X_i -\mu)^2$ **True** $X_i$ 之间独立同分布，按定义求即可
+- B. $2(X_n -X_1)^2$ **False** 参数错误，应为 $\frac{1}{2}(X_n -X_1)^2$
+- C. $\sum_{i=1}^n( X_i -\bar{X})^2$ **True** 相当于 $(n-1)S^2$，由于总体方差为 1，所以服从 $\chi^2( n-1)$
+- D. $n(\bar{X} -\mu)$ **True** 按定义求即可
+

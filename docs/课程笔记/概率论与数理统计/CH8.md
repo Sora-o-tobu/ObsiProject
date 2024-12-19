@@ -28,6 +28,8 @@
 
 !!! info "奈曼-皮尔逊原则"
 	首先控制犯第I类错误的概率不超过某一常数 $\alpha \in (0,1)$ ，再寻找检验，使犯第II类错误的概率最小。其中常数 $\alpha$ 称为**显著水平**，常取 0.01，0.05，0.1
+	
+	因此，假设 $H_0, H_1$ 并不对等，通常只有假设 $H_0$ 有显著差异时才会将其推翻。
 
 下面，我们以课本例子 8.1.1 来演示如何计算错误判断的概率:
 
@@ -44,6 +46,8 @@ $$\begin{gather}
 $$
 H_0: \mu =0, \ \ H_1: \mu \gt 0
 $$
+
+!!! info "$\mu=0$ 即减肥药无效果，大于零则有效果"
 
 由于样本均值是参数 $\mu$ 的无偏估计，则当 $\mu$ 越小，样本均值 $\bar{X}$ 也应该偏小才正确。我们根据此理论来指定规则：
 
@@ -69,3 +73,185 @@ $$
 !!! note "这里我们取显著性水平为 0.05"
 
 因此，该假设的拒绝域为 $W=\{\bar{X}\ge 0.329\}$，但题目中给出的样本均值为 $\bar{x}=0.522\gt 0.329$，即样本落入拒绝域。因此，我们有 $95\%$ 的把握拒绝原假设 $H_0$，即认为该减肥药有效果。
+
+!!! quote
+	![[正态假设检验总结.png]]
+
+## 单个正态总体参数的假设检验
+
+### 参数 $\mu$ 的假设检验
+
+<font style="font-weight: 1000;font-size: 20px" color="red">若 $\sigma^2$ 已知</font>
+
+先考虑双边假设问题:
+
+$$
+H_0: \mu =\mu_0 ,\ H_1: \mu \ne \mu_0
+$$
+
+其中 $\mu_0$ 是已知的常量，此时可取假设统计量为：
+
+$$
+Z=\frac{\bar{X}- \mu_0}{ \sigma / \sqrt{n}}
+$$
+
+若原假设成立，即 $\mu_0= \mu$ ，则 $Z\sim N(0,1)$ ，则在给定的显著水平 $\alpha$ 下，检验的拒绝域为：
+
+$$
+W=\left\{ |Z| = \left|\frac{\bar{X}- \mu_0}{ \sigma / \sqrt{n}}\right| \ge  z_{\alpha / 2}\right\}
+$$
+
+因此，若将样本均值 $\bar{x}$ 代入得到结果 $|z_0| =\left|\frac{\bar{x}- \mu_0}{ \sigma / \sqrt{n}}\right|\ge z_{ \alpha / 2}$ 时，我们有 $100(1-\alpha)\%$ 的把握拒绝原假设，即 $\mu\ne \mu_0$ 。
+
+另一种判断方法是根据 P-值 进行判断:
+
+$$
+P值=P_{ H_0}\{|Z| \ge |z_0|\}= 2(1- \Phi (|z_0|)) \le \alpha
+$$
+
+即 P-值 小于等于 $\alpha$ 时拒绝原假设，否则不能拒绝原假设。
+
+而对于左侧、右侧检验，其拒绝域和 P-值 分别为：
+
+- 左侧检验
+	- $W=\left\{Z=\frac{\bar{X}- \mu_0}{\sigma / \sqrt{n}} \le -z_{\alpha}\right\}$
+	- $P值=P_{ H_0}\{Z\le z_0\}= \Phi( z_0)$
+- 右侧检验
+	- $W=\left\{Z=\frac{\bar{X}- \mu_0}{\sigma / \sqrt{n}} \ge z_{\alpha}\right\}$
+	- $P值=P_{ H_0}\{Z\ge z_0\}= 1-\Phi( z_0)$
+
+<font style="font-weight: 1000;font-size: 20px" color="red">若 $\sigma^2$ 未知</font>
+
+实际应用中，总体方差常常未知，此时我们不能采用 Z 检验，需要用样本方差代替 $\sigma^2$ ：
+
+$$
+T=\frac{\bar{X}-\mu_0} {S  / \sqrt{n}}
+$$
+
+若原假设成立，即 $\mu_0= \mu$ ，则 $T\sim t(n-1)$ ，则在给定的显著水平 $\alpha$ 下，检验的拒绝域为：
+
+$$
+W=\left\{|T|=\left|\frac{\bar{X}-\mu_0} {S  / \sqrt{n}}\right|\ge t_{\alpha / 2} (n-1)\right\}
+$$
+
+对应的 P-值 为：
+
+$$
+P值=2 P\{t(n-1) \ge |t_0|\} \le \alpha
+$$
+
+- 左侧检验
+	- $W=\left\{Z=\frac{\bar{X}- \mu_0}{S / \sqrt{n}} \le -t_{\alpha}(n-1)\right\}$
+	- $P值=P\{t(n-1)\le t_0\}$
+- 右侧检验
+	- $W=\left\{Z=\frac{\bar{X}- \mu_0}{S / \sqrt{n}} \ge t_{\alpha}(n-1)\right\}$
+	- $P值=P\{t(n-1)\ge t_0\}$
+
+### 参数 $\sigma^2$ 的假设检验
+
+我们不妨认为参数 $\mu$ 未知，其假设问题包括：
+
+- **双边假设：** $H_0: \sigma^2 =\sigma_0^2, \ H_1: \sigma^2 \ne \sigma_0^2$
+- **左侧检验：** $H_0: \sigma^2 \ge\sigma_0^2, \ H_1: \sigma^2 \lt \sigma_0^2$
+- **右侧检验：** $H_0: \sigma^2 \le \sigma_0^2, \ H_1: \sigma^2 \gt \sigma_0^2$
+
+其中 $\sigma_0^2$ 是已知的常量，若有 $\sigma_0^2 =\sigma^2$，则检验统计量 $\chi^2$ 服从 $\chi^2 (n-1)$ 分布：
+
+$$
+\chi^2 =\frac{(n-1)S^2} {\sigma_0^2 } \sim \chi^2(n-1)
+$$
+
+在给定显著水平 $\alpha$ ，以及值 $p_0= P\{\chi^2(n-1) \le \chi_0^2\}$
+
+- **双边检验：**
+	- $W=\{\chi^2 \ge \chi^2 _{\alpha / 2}(n-1) \text{ or }\chi^2 \le  \chi^2\le \chi^2_{1- \alpha / 2} (n-1)\}$
+	- $P值=2 \min (p_0, 1-p_0)$
+- **左侧检验：**
+	- $W=\{\chi^2\le \chi^2_{1- \alpha} (n-1)\}$
+	- $P值= p_0$
+- **右侧检验：**
+	- $W=\{\chi^2 \ge \chi^2 _{\alpha}(n-1)\}$
+	- $P值=1- p_0$
+
+## 两个正态总体参数的假设检验
+
+### 比较两个正态总体均值的假设检验
+
+实际上和一个正态总体的情况相同：
+
+$$
+\bar{X}-\bar{Y} \sim N(\mu_1 -\mu_2, \frac{\sigma_1^2}{n}+ \frac{\sigma_2^2}{n})
+$$
+
+我们考虑双侧假设问题：
+
+$$
+H_0: \mu_1 =\mu_2,\ H_1: \mu_1 \ne \mu_2
+$$
+
+<font style="font-weight: 1000;font-size: 20px" color="red">若 $\sigma_1^2, \sigma_2^2$ 已知</font>
+
+当假设 $H_0$ 成立时，$\frac{\bar{X}-\bar{Y}}{\sqrt{\frac{\sigma_1^2}{ n_1} + \frac{\sigma_2^2}{ n_2}}} \sim N(0,1)$ ，采用 Z 检验可得拒绝域为：
+
+$$
+W=\left\{\frac{|\bar{X}-\bar{Y}|}{\sqrt{\frac{\sigma_1^2}{ n_1} + \frac{\sigma_2^2}{ n_2}}} \ge z_{\alpha / 2}\right\}
+$$
+
+P-值仍为：
+
+$$
+P值=2\min (p_0, 1-p_0)=2 (1-\Phi(|z_0|))
+$$
+
+<font style="font-weight: 1000;font-size: 20px" color="red">若 $\sigma_1^2= \sigma_2^2$ 但未知</font>
+
+首先取参数 $\sigma_1^2 =\sigma_2^2= \sigma^2$ 的无偏估计量：
+
+$$
+S_{\omega}^2 = \frac{(n_1 -1) S_1^2 + (n_2-1) S_2^2}{ n_1 +n_2 -2}
+$$
+
+取检验统计量为：
+
+$$
+T=\frac{\bar{X} -\bar{Y}}{ S_\omega \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}
+$$
+
+当原假设 $H_0$ 成立时，$T\sim t(n_1 +n_2 -2)$，则检验的拒绝域为：
+
+$$
+W=\{|T| \ge t_{\alpha / 2}(n_1+ n_2 -2)\}
+$$
+
+P-值为：
+
+$$
+P值= 2P\{t(n_1 +n_2 -2) \ge  |t_0|\}
+$$
+
+### 比较两个正态总体方差的检验
+
+有时候，在检验两正态总体均值前，需要先对正态总体方差是否相等进行检验，我们考虑下面的假设问题：
+
+$$
+H_0: \sigma_1^2 =\sigma_2 ^2, \ H_1: \sigma_1 ^2 \ne \sigma_2^2
+$$
+
+取检验统计量为：
+
+$$
+F=\frac{S_1^2}{ S_2^2} 
+$$
+
+当原假设 $H_0$ 成立时，$F\sim F(n_1 -1, n_2-1)$，检验的拒绝域为：
+
+$$
+W=\{F\ge F_{\alpha / 2} (n_1 -1, n_2 -1)\ \text{or}\ F\le F_{1- \alpha / 2} (n_1 -1, n_2-1 )\}
+$$
+
+设 $p_0 = P\{F(n_1-1, n_2-1) \le f_0\}$，则：
+
+- **双边检验：** $P值=2\min \{p_0 , 1-p_0\}$
+- **左侧检验：** $P值= p_0$
+- **右侧检验：** $P值= 1- p_0$
+
