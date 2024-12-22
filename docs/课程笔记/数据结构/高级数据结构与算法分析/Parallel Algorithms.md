@@ -116,7 +116,7 @@ for h = 1 to log n
 
 // 向下算 C
 for h = log n to 0
-  for i even, 1 <= i <= n/2h pardo
+  for i even, 1 <= i <= n/2^h pardo
     C(h, i) := C(h + 1, i/2)
   for i = 1 pardo
     C(h, 1) := B(h, 1)

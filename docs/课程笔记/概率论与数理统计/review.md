@@ -1,6 +1,6 @@
 # 错题本
 
-## Chapter 1
+## Chapter 1. 概率论基本概率
 
 ### 多画图求解
 
@@ -54,7 +54,7 @@ $$
 P(X=2)=F(x)-F(x-0)|_{x=2}= \frac{1}{2}
 $$
 
-## Chapter 2
+## Chapter 2. 随机变量及其分布
 
 ### 注意标准正态分布的对应关系
 
@@ -62,7 +62,7 @@ $$
 
 **解答：** 设 $t=\frac{x-4}{2}$ ，则对于 $\Phi\left(\frac{x-4}{2}\right)$ ，$x=2t+4 \sim N(4,4)$，所以 $E(X) =0.5\times 0+ 0.5\times 4 =2$。
 
-## Chapter 3
+## Chapter 3. 多维随机变量及其分布
 
 ### 离散型和连续型的联合分布可以用全概率公式
 
@@ -131,7 +131,7 @@ $$
 E(Y)=\int_{-\infty}^{+\infty} \min (x,2) f(x)dx= \int_0^2 xe^{-x}dx +\int_2 ^{+\infty} 2e^{-x}dx = e^{-2}+1
 $$
 
-## Chapter 4
+## Chapter 4. 随机变量的数字特征
 
 ### $e^{- x^2}$ 积分
 
@@ -255,7 +255,19 @@ f_X(x) =\frac{1}{\sqrt{2\pi}} e^{- \frac{x^2}{2}}, f_{Y|X}(y|x)=\frac{1}{\sqrt{2
 !!! note "$N(\mu_1 ,\mu_2; \sigma_1^2, \sigma_2^2; \rho)$"
 	分别是两个变量的均值、方差和相关系数
 
-## Chapter 5
+### 求两个相关正态差值的平方的均值？？？
+
+**题面：** 二元正态总体 $(X,Y)\sim N(0,0; \sigma^2, 4\sigma^2; -0.5)$ ，从中抽取 n 个简单样本 $(X_i, Y_i)$ ，求 $\frac{1}{n} \sum_{i=1}^n (X_i -Y_i) ^2$ 依概率收敛到？
+
+**解答：** 不能把平方拆成 $X_i^2 -2 X_i Y_i + Y_i^2$ 来分别求均值，因为 $E(X_i Y_i)$ 应该不能求
+
+$$
+\frac{1}{n} \sum_{i=1}^n (X_i -Y_i) ^2 =E[ (X- Y)^2] =D(X - Y) + E(X -Y)^2 = D(X) +D(Y)  - 2Cov(X, Y)= \text{略}
+$$
+
+
+
+## Chapter 5. 大数定律和中心极限定理
 
 ### 随机变量乘积的方差
 
@@ -335,7 +347,7 @@ Y\sim N(nq, nq(1-q)) \\
 \end{array}$$
 
 
-## Chapter 6
+## Chapter 6. 数理统计的基本概念
 
 ### 非线性的样本函数的数学期望和方差利用独立同分布求
 
@@ -380,4 +392,67 @@ Var(X_{(1)}) = \frac{1}{100\lambda^2}\end{cases}
 - B. $2(X_n -X_1)^2$ **False** 参数错误，应为 $\frac{1}{2}(X_n -X_1)^2$
 - C. $\sum_{i=1}^n( X_i -\bar{X})^2$ **True** 相当于 $(n-1)S^2$，由于总体方差为 1，所以服从 $\chi^2( n-1)$
 - D. $n(\bar{X} -\mu)$ **True** 按定义求即可
+
+## Chapter 7. 参数估计
+
+### 求无偏估计量平均，可以先求出分布函数，再计算均值
+
+**题面：** 总体 $N(\mu, \sigma^2)$ ，$k\sum_{i=1}^n |X_i -\bar{X}|$ 是参数 $\sigma$ 的无偏估计量，求 $k$ 的大小
+
+**解答：** 要点在于，估计量也是正态分布，则先求出它的方差再代入正态公式
+
+$$\begin{array}c
+令 Y_i =X_i -\bar{X} = -\frac{X_1}{n} -\frac{X_n}{n} -...+ \frac{(n-1)X_i}{n} - ... - -\frac{X_n}{n} \\
+\Rightarrow E(Y_i)= 0, \ D(Y_i) = \left[\frac{1}{n^2}\times \left(n-1\right) + \frac{(n-1)^2}{ n^2}\right]\sigma ^2 = \frac{n-1}{n}\sigma ^2 \\
+\Rightarrow f_{ Y_i} (y)=\frac{1}{\sqrt{2\pi \frac{n-1}{n}}\sigma } e^{-\frac{y ^2}{ 2(\frac{n-1}{n}\sigma ^2)}} \\
+\text{计算可得} E(|Y_i|) =\int_{-\infty} ^{+\infty} |y|f(y)dy = \sigma \sqrt{\frac{2(n-1)}{n\pi}} \\
+\Rightarrow k\sigma \sqrt{\frac{2(n-1)}{n\pi}} = \sigma \\
+\Rightarrow k= \sqrt{\frac{n\pi}{2(n-1)}}
+\end{array}$$
+
+### 多个独立指数分布的最小值仍然服从指数分布
+
+**题面：** 设总体服从参数为 $\theta$ 的指数分布，$X_1, X_2, X_3$ 为来自总体的简单随机样本，若 $\bar{\theta} = k\min_{1\le i\le 3} (X_i)$ 为 $\theta$ 的无偏估计量，求 $k$ 
+
+**解答：** 
+
+$$\begin{array}c
+F(M)= P(min \lt M)= 1- P(min \ge M) = 1- F(x\ge M)^3= 1-3 e^{-3\theta M} \\
+\Rightarrow E(M)= \frac{1}{3\theta} \\
+\Rightarrow k=3
+\end{array}$$
+
+### 平方后不一定还是无偏估计
+
+**题面：** 总体 $B(1, p)$ ，取 n 个样本，易证明 $\hat{p}_M = \bar{X}$ 是参数 $p$ 的无偏估计，那么验证 $(\hat{p}_M^2)$ 是否是 $p^2$ 的无偏估计
+
+**解答：** 别搞混 $E(X^2) ,E(X)^2$ 就好了，要注意差别
+
+$$\begin{array}c
+E(\hat{p}_M^2) =E(\bar{X}^2) = \frac{1}{n} \left[\sum E(X_i ^2) + 2 \sum_{1\le i\lt j \le n} E(X_i X_j) \right]  \\
+E(X_i ^2) = D(X_i) +E(X_i)^2 =p(1-p) +p^2 =p , E(X_i X_j) =E(X_i) E(X_j) =p^2 \\
+\Rightarrow E(\hat{p}_M^2) = \frac{1}{n^2}( np + n(n-1)p^2) \ne p^2 \\
+\text{所以不是无偏估计}
+\end{array}$$
+
+
+### 二项分布只给出样本均值也能求极大似然估计
+
+**题面：** 设总体 $X\sim B(4, p)$，从总体中抽取容量为 8 的一组简单随机样本，记样本均值 $\bar{X}$ ，则分别求：
+
+- <1> $P(X=1)$ 的极大似然估计
+- <2> 用 $\bar{X} / 4$ 估计 $p$ 时，其均方误差
+
+**解答：** $P(X=1)$ 的估计，可以先求参数 $p$ 的似然估计，在用 $P(X=k) =C_n^k p^k (1-p)^{n-k}$ 代入
+
+$$\begin{array}c
+L(p)= \prod_{i=1}^8 P(X= X_i) = \prod_{i=1}^8 C_4^{ X_i} \times p^{\sum_{i=1} ^8 X_i} \times (1-p)^{ \sum_{i=1}^8 (4- X_i)} \\
+\frac{d\ln L(p)}{dp} = \frac{\sum X_i}{ p} - \frac{32- \sum X_i}{1-p} = 0 \\
+\Rightarrow \hat{p} = \frac{1}{32}\sum X_i = \frac{1}{4}\bar{X} \\
+\Rightarrow P(X=1)= 4p(1- p)^3 = \frac{\bar{X}( 4-\bar{X})^3}{64}
+\end{array}$$
+
+对于均方误差，由于 $E(\bar{X} / 4) =4p / 4 =p$ ，即这是一个无偏估计量，则均方误差 $Mse =Var$ ，即 $Mse(\bar{X} / 4) = Var(\bar{X} / 4) = \frac{1}{16} \frac{4p(1-p)}{8}$
+
+## Chapter 9. 假设检验
 

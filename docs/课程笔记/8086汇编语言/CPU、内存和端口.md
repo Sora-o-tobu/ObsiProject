@@ -274,6 +274,29 @@ end main
 - 若执行减法指令时第 3 位向第 4 位产生借位则 AF 置 1
 - **注意：** AF（Auxiliary Flag） 并没有相关跳转指令，它跟 BCD 码调整指令有关，如 `AAA`,`AAS`,`DAA`,`DAS`
 
+??? example "遇到这种题好好算算二进制减法吧"
+	若以下指令序列的操作数均为符号数，请写出每个指令序列执行后标志位CF、ZF、SF、OF的值，并指出CMP指令的前后操作数的大小关系。
+	
+	(1) mov  al, 99h
+	
+	 cmp  al, 34h    ; CF=0, ZF=0, SF=0, OF=1, 99h < 34h
+	
+	(2) mov  ah, 81h
+	
+	cmp  ah, 0FFh   ; CF=1, ZF=0, SF=1, OF=0, 81h < 0FFh
+	
+	(3) mov  bx, 1234h
+	
+	cmp  bx, 8086h  ; CF=1, ZF=0, SF=1, OF=1, 1234h > 8086h
+	
+	(4) mov  cx, 0FFFFh
+	
+	cmp  cx, 0FFFEh ; CF=0, ZF=0, SF=0, OF=0, 0FFFFh > 0FFFEh
+	
+	(5) mov  dx, 3F7Dh
+	
+	cmp  dx, 1000h  ; CF=0, ZF=0, SF=0, OF=0, 3F7Dh > 1000h
+
 #### 控制标志
 
 <font style="font-weight: 1000;font-size: 24px" color="red">方向标志 DF</font>
