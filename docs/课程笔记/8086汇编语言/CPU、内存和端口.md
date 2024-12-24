@@ -11,7 +11,7 @@
 | **dq** | 64  | quadruple word | `__int64` , `long long` (十进制 `%lld` , 十六进制 `%llx`) 或 `double` |
 | **dt** | 80  | ten bytes      | `long double` （`%Lf`）                                         |
 
-!!! info "不同位数的系统重，1 word 的位数不同"
+!!! info "1 word 的位数表示一个系统单步能处理的最大位数"
 
 那么变量定义的格式如下：
 

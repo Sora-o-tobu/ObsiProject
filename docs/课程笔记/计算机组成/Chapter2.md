@@ -135,6 +135,7 @@ L3:
 	jalr x0, 0(x1)
 ```
 
+!!! note "与8086不同，RISC-V中跳转指令的立即数取值并不是目标地址减去下一条指令的地址"
 
 !!! success "几种寻址方式"
 	![[几种寻址方式.png]]
@@ -143,6 +144,9 @@ L3:
 	- **寄存器寻址**（从 Register 中取数据）
 	- **基址寻址**（从 Memory 中取数据）
 	- **PC相对寻址**（数据为相对PC的立即数）
+
+!!! example "More Example: String Copy"
+	![[stringcopyexample.png]]
 
 ## 杂项
 

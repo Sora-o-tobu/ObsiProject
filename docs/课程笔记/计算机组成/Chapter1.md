@@ -117,6 +117,11 @@ $$
 CPU\ Time = Instruction\ Count\times CPI\times Clock\ Cycle\ Time= \frac{Instruction\ Count\times CPI} {Clock\ Rate}
 $$
 
+!!! info "MIPS: 百万指令数每秒"
+	即 $\frac{Instruction\ Count}{Execution\ Time \times 10^6}$ ，但是 MIPS 只是描述同一个处理器或同一个指令集对于任务的优化，不是 MIPS 越高性能就越高。
+
+
+
 ## Eight Great Ideas
 
 - Design for Moore’s Law （设计紧跟摩尔定律）

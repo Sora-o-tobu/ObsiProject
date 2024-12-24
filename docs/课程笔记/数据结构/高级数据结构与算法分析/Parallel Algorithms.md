@@ -14,15 +14,15 @@
 
 为了解决处理器的 Access Conflict，可以使用以下三种策略:
 
-- Exclusive-Read Exclusive-Write(EREW) 独占读，独占写
-- Concurrent-Read Exclusive-Write(CREW) 并发读，独占写
-- Concurrent-Read Concurrent-Write(CRCW) 并发读，并发写
+- **Exclusive-Read Exclusive-Write(EREW)** 独占读，独占写
+- **Concurrent-Read Exclusive-Write(CREW)** 并发读，独占写
+- **Concurrent-Read Concurrent-Write(CRCW)** 并发读，并发写
 
 而读写共有三种不同的 Rule：
 
-- <1> Arbitrary Rule: 随机选择一个 processor 让它写
-- <2> Priority Rule: 优先级高的 processor 让它写
-- <3> Common Rule: 只允许在写相同值时并发写
+- <1> **Arbitrary Rule:** 随机选择一个 processor 让它写
+- <2> **Priority Rule:** 优先级高的 processor 让它写
+- <3> **Common Rule:** 只允许在写相同值时并发写
 
 以简单的求和为例，假设我们需要从内存中读取并求和数据 $A[0]+A[1]+...+ A[n]$。
 
@@ -71,8 +71,8 @@ for i = 1 pardo
 
 并行算法的性能度量要从时间复杂度和工作复杂度(work load)来考虑。
 
-- Work load - total number of operations: W(n)
-- Worst-case running time: T(n)
+- **Work load** - total number of operations: W(n)
+- **Worst-case running time** : T(n)
 
 对于 PRAM 模型，理论上需要时间复杂度 $T(n)$ 和工作复杂度 $W(n)$ 的算法：
 
@@ -222,7 +222,7 @@ $$
 W=n^{ 1 / 2} O(n^{1 /2}) =O(n)  \end{cases}
 $$
 
-得到 $n^{1 / 2}$ 个最大值。此时不需要再进行分块了，直接对者 $n^{1 / 2}$ 个数进行大功率跑车算法：
+得到 $n^{1 / 2}$ 个最大值。此时不需要再进行分块了，直接对这 $n^{1 / 2}$ 个数进行大功率跑车算法：
 
 $$
 \begin{cases} T=O(1)  \\

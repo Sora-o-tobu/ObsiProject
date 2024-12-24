@@ -256,6 +256,14 @@ while(result[23] == 0 && exp > 0)
 	- 类似十进制的四舍五入
 - <2> "恒置一法"
 	- 只要发生右移，就将尾数的末位更新为 1
+- <3> Rounding to nearest even
+	- 只有当 extra bits 为 `100` 时，舍成偶数(末位为0)，否则按照0舍1入法来
+	- guard bit：最低有效位
+	- round bit：最低有效位右边的第一位
+	- sticky bit：只要 round bit 右边出现过非零位，就将 sticky bit 置 1
+
+![[grsbit.png]]
+
 
 ![[浮点数加法硬件结构.png]]
 

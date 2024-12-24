@@ -19,7 +19,9 @@ AVL Tree 的名字由来于它的三个作者 Adelson , Velskii , Landis ，其�
 
 对于一个高度为 $h$ 的 AVL 树，其最少节点的情况可以看作是左子树为高度为 $h-1$ 最少节点的 AVL 树，右子树为高度为 $h-2$ 最少节点的 AVL 树。那么，它们的节点数量之间有递推关系：
 
- $$n_h= n_{h-1} +n_{h-2} +1$$
+$$
+n_h= n_{h-1} +n_{h-2} +1
+$$
 
 其中起始值 $n_{-1} = 0,n_0 =1$ ，那么递推可以得到 $n_6 =33$ 。
 
@@ -126,6 +128,7 @@ AvlTree Insert(ElementType X, AvlTree T) {
 旋转操作的实现（以Left为例）：
 
 ```c
+// L* Rotation, 即 右旋转
 static AvlTree SingleRotateWithLeft(AvlTree K2) {
 	AvlTree K1 = K2->Left;
 	K2->Left = K1->Right;
@@ -137,6 +140,7 @@ static AvlTree SingleRotateWithLeft(AvlTree K2) {
 	return K1;
 }
 
+// LR Rotation, 先对左节点作左旋，再对 Touble finder 作右旋转
 static AvlTree DoubleRotateWithLeft(AvlTree K3) {
 	K3->Left = SingleRotateWithRight(K3->Left);
 	return SingleRotateWithLeft(K3);
