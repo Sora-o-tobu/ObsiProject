@@ -142,16 +142,50 @@ $$
 $W_{i,p}$ 表示从物品 $\{1,...,i\}$ 中装下总价值 $p$ 所需要的最小重量。则动态规划的递归式为：
 
 $$
-W_{i,p} =\begin{cases}\infty, & i=0 \\
+W_{i,p} =\begin{cases}p==0?0:\infty, & i=0 \\
 W_{i-1,p}, & p_i >p \\
 \min (W_{i-1,p} , w_i + W_{i-1,p- p_i}), & \text{Otherwise} \end{cases}
 $$
 
 $i$ 的取值为 $1,2,...,n$，而 $p$ 的取值为 $1,..., np_{max}$，所以总时间复杂度为 $O(n^2 p_{max})$
 
+```c
+// assume n: 物品数量, pmax: 最大物品价值, dp[i][p]: 前 i 个物品中，总价值为 p 的最小重量
+int MaxValue = 0;
+for(int i = 0; i <= n ; i++ )
+    for(int j = 0; j <= n * pmax; j++)
+    {
+        if(i == 0)
+            dp[i][j] = j == 0 ? 0 : INF;
+        else if(p[i] <= j)
+            dp[i][j] = min(dp[i-1][j], dp[i-1][j - p[i]] + w[i]);
+        else    
+            dp[i][j] = dp[i-1][j];
+        if(j > MaxValue && dp[i][j] <= W)
+            MaxValue = j;
+    }
+```
+
 虽然看上去是多项式时间复杂度，但是由于 $p_{max}$ 的值往往远大于 $n$ ，可能会达到指数级别。这时，我们可以选择牺牲一些精度，将 $profit$ 做一些舍入(向上取整)从而得到更小的 $p_{max}$ ：
 
 ![[dproundup.png]]
+
+不过一般 0-1 背包问题采用如下动态规划求解：
+
+```c
+// assume n: 物品数量, m:背包容量, dp[i][j]: 前 i 个物品中，容量为 j 的最大价值
+for(int i = 0; i <= n ; i++ )
+    for(int j = 0; j <= m ; j++ )
+    {
+        if(i == 0 || j == 0) // initialize
+            dp[i][j] = 0;
+        else if(j < w[i]) // cannot put i-th item
+            dp[i][j] = dp[i-1][j];
+        else // can put i-th item
+            dp[i][j] = max(dp[i-1][j], dp[i-1][j-w[i]] + p[i]);
+    }
+int MaxValue = dp[n][m];
+```
 
 ## 经典案例：K-Center Problem
 
@@ -175,7 +209,7 @@ Centers  Greedy-2r ( Sites S[ ], int n, int K )
 
 !!! danger "该函数中，|C|相比准确情况偏小，所以只能保证结果的上界，下界则不准确"
 
-若求出来所需的中心数大于 $K$ ，说明需要更大的最小半径才能包围所有点。而如果所需中心数小于等于 $K$ ，则尝试缩小最小半径，知道恰好不能包围所有点为止。
+若求出来所需的中心数大于 $K$ ，说明需要更大的最小半径才能包围所有点。而如果所需中心数小于等于 $K$ ，则尝试缩小最小半径，直到恰好不能包围所有点为止。
 
 由于包围的圆采用两倍小圆的半径以包围小圆中的所有点，该近似算法的近似比为 $\rho =2$，即为 2-approximation，最终所求的结果也要乘以 2，即 $2r$。
 

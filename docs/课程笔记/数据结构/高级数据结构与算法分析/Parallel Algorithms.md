@@ -202,7 +202,7 @@ $$
 
 ![[doublelogp2.png]]
 
-!!! danger "怎么样时间和空间复杂度才会都为 $O(h)$ 呢？我不是很理解"
+!!! danger "这里小段时间复杂度和Workload均为 $O(h)$ 应该是用了暴力枚举，但是我感觉用二分法可以降低时间复杂度"
 
 **Solution 3:** Random Sampling
 
