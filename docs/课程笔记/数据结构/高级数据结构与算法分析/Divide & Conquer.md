@@ -22,11 +22,11 @@ $$
 
 ## 经典案例：Closest Points Problem
 
-Given $N$ points in a plane. Find the closest pair of points.
+在一个二维平面上给出 $N$ 个点，找出一对距离最短的点。
 
-If we use simple *Exhaustive Search*, there are $N(N-1) / 2$ pairs of answers to check, which means the time complexity can be $O(N^2)$
+如果我们使用*穷举搜索*，一共需要检查 $N(N-1) / 2$ 组点对，即时间复杂度达到 $O(N^2)$。
 
-Then we consider using *Divde and Conquer* to solve it. It's just similar to the maximum subsequence sum problem(最大子序列和问题).
+因此，我们考虑使用和最大子序列问题类似的分治法来解决该问题。
 
 选取一个平行于 y 轴的直线，将平面分成两个部分，分别看作一个子问题求内部点之间最短路径。在已知两部分平面内部点各自最短路径的情况下，还需要求两部分之间的点互相的最短距离，这部分算法的时间复杂度将决定整个递归算法的时间复杂度：
 
@@ -78,6 +78,42 @@ for(i = 0;i < NumPointsInStrip;i++)
 		else if(Dist(P_i, P_j) < Min_dist)
 			Min_dist = Dist(P_i, P_j);  
 ```
+
+??? success "拓展阅读: [最大子序列和问题](https://leetcode.cn/problems/maximum-subarray/description/)"
+	对于一个子序列区间 $[l,r]$，我们维护四个量：
+	
+	- `lSum` 表示以 l 为左端点的最大子序列和
+	- `rSum` 表示以 r 为右端点的最大子序列和
+	- `mSum` 表示 $[l,r]$ 内的最大子序列和
+	- `iSum` 表示 $[l,r]$ 的区间和
+	
+	```c
+	struct Status {
+	    int lSum, rSum, mSum, iSum;
+	};
+	
+	struct Status pushUp(struct Status l, struct Status r) {
+	    int iSum = l.iSum + r.iSum;
+	    int lSum = fmax(l.lSum, l.iSum + r.lSum);
+	    int rSum = fmax(r.rSum, r.iSum + l.rSum);
+	    int mSum = fmax(fmax(l.mSum, r.mSum), l.rSum + r.lSum);
+	    return (struct Status){lSum, rSum, mSum, iSum};
+	};
+	
+	struct Status get(int* a, int l, int r) {
+	    if (l == r) {
+	        return (struct Status){a[l], a[l], a[l], a[l]};
+	    }
+	    int m = (l + r) / 2;
+	    struct Status lSub = get(a, l, m);
+	    struct Status rSub = get(a, m + 1, r);
+	    return pushUp(lSub, rSub);
+	}
+	
+	int maxSubArray(int* nums, int numsSize) {
+	    return get(nums, 0, numsSize - 1).mSum;
+	}
+	```
 
 ## Solution Method
 

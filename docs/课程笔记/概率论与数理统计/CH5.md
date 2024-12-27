@@ -91,9 +91,10 @@ $$
 
 设 $n_A$ 为 $n$ 重伯努利试验中事件 $A$ 的发生次数，$p$ 为其每次试验中发生的概率，则对任意 $\varepsilon \gt 0$ 有：
 
-$$
-\lim _{n\rightarrow +\infty} P\{|\frac{n_A}{n}-p| \ge \varepsilon\} =0
-$$
+$$\begin{array}c
+\lim _{n\rightarrow +\infty} P\{|\frac{n_A}{n}-p| \ge \varepsilon\} =0 \\ 
+\Rightarrow \frac{n_A}{n} \xrightarrow P p
+\end{array}$$
 
 !!! note "$n_A/n$ 即事件A的频率"
 

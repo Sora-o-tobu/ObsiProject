@@ -1,6 +1,10 @@
 
 # Test-Oriented Review
 
+!!! quote
+	- Full Tree: 所有节点要么有两个孩子，要么没有孩子
+	- Complete Tree: 除最后一层外都被完全填充，并且最后一层向左对齐
+
 ## AVL Trees & Splay Tree
 
 - Finding the maximum key from a splay tree will result in a tree with its root having no right subtree.
@@ -145,4 +149,19 @@
 - 神秘题目。从势能函数上考虑，只有最小生成树问题的 cost 函数只有一个极小值的，所以不会陷入局部最优解
 	- ![[shenmitimutimian.png]]
 	- ![[shenmitimujiexi.png]]
-- 
+
+
+## External Sort
+
+- **(T)** If only one tape drive is available to perform the external sorting, then the tape access time for any algorithm will be $\Omega (N^2)$.
+	- 不是很理解
+- **(D)** Suppose we have the internal memory that ca### n handle 12 numbers at a time, and the following two runs on the tapes:
+	- **Run 1**: 1, 3, 5, 7, 8, 9, 10, 12
+	- **Run 2**: 2, 4, 6, 15, 20, 25, 30, 32
+	- Use 2-way merge with 4 input buffers and 2 output buffers for parallel operations. Which of the following three operations are NOT done in parallel?
+	- A. 1 and 2 are written onto the third tape; 3 and 4 are merged into an output buffer; 6 and 15 are read into an input buffer
+	- B. 3 and 4 are written onto the third tape; 5 and 6 are merged into an output buffer; 8 and 9 are read into an input buffer
+	- C. 5 and 6 are written onto the third tape; 7 and 8 are merged into an output buffer; 20 and 25 are read into an input buffer
+	- D. 7 and 8 are written onto the third tape; 9 and 15 are merged into an output buffer; 10 and 12 are read into an input buffer
+		- 这里应该是 9 和 10 在合并并输出到 buffer 上。10 和 12 正在读入 buffer 过程中，那么处理器就要等待读取这个过程完成才能进行下一步
+	- ![[externalsortbuffer1.png]]

@@ -5,7 +5,7 @@ Leftist Heap 和 Skew Heap 并不支持 Decrease-Key 操作（减少某个key值
 
 !!! quote "Decrease-Key是许多使用优先级队列的算法的重要组成部分"
 
-定义 Binomial Tree 为满足 Heap-ordered 的大小顺序，且结构类似于二进制性质的数，其合并方式为令其中一颗树直接成为另一颗树的子树。
+定义 Binomial Tree 为满足 Heap-ordered 的大小顺序，且结构类似于二进制性质的树，其合并方式为令其中一颗树直接成为另一颗树的子树。
 
 ![[binomialtree.png]]
 

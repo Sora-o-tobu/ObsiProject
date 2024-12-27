@@ -264,6 +264,7 @@ while(result[23] == 0 && exp > 0)
 
 ![[grsbit.png]]
 
+!!! note "不同教材似乎不一样，本课程 Guard bit 要从最低有效位的下一位开始计算"
 
 ![[浮点数加法硬件结构.png]]
 

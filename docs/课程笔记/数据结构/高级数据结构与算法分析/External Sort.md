@@ -23,7 +23,10 @@
 
 !!! example
 	- **Question:** Given 10,000,000 records of 128 bytes each, and the size of the internal memory is 4MB.  How many passes we have to do?
-	- **Answer:** 1+ log(320 runs) = 1 + 9
+	- **Answer:**
+		- $M= \frac{4MB}{128 bytes} =32768,\ N=10,000,000$
+		- 1+ log(320 runs) = 1 + 9
+		- (至少ppt上答案是这样写的，但是我感觉存疑)
 
 四个优化方法：
 
@@ -40,7 +43,7 @@
 
 ![[externalfibonaccimerge.png]]
 
-以第一次 Pass 为例子，$T_2$ 的前 13 个 Run 和 $T_3$ 的前十三个 Run 进行 Merge 并将新的十三个 Merge 存储到 $T_1$ 上，此时 $T_2$ 剩余 8 个 Run 不进行 Merge 操作，然后进入下一轮 Pass。
+以第一次 Pass 为例子，$T_2$ 的前 13 个 Run 和 $T_3$ 的前 13 个 Run 进行 Merge 并将新的 13 个 Merge 存储到 $T_1$ 上，此时 $T_2$ 剩余 8 个 Run 不进行 Merge 操作，然后进入下一轮 Pass。
 
 通过这种方式，我们只需要使用 $k+1$ 个 Tapes 就能满足 K-Way Merge 的需求，Pass 个数满足 $F_{\#pass}^{(k)} = \#Run$ 。
 
@@ -76,7 +79,12 @@
 
 ![[generatealongerrun1.png]]
 
+!!! tip "81, 94, 11, 96, 12, 35, 17, 99, 28, 58, 41, 75, 15"
+
 最终得到一个平均长度为原来两倍的 Run 序列。如果原来的数据本来已经近似排完序了，那么这个策略的优化效果会更加明显。
+
+!!! question "自己试一下这个序列，最终能得到两个 Initial Run"
+	25, 74, 56, 34, 21, 11, 29, 80, 38, 53
 
 ## 4. Minimize the Merge Time
 

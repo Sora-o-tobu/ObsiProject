@@ -151,7 +151,7 @@ static AvlTree DoubleRotateWithLeft(AvlTree K3) {
 
 ### 定义
 
-从一个空树开始，连续 M 个对该树的操作的时间复杂度不超过 $O(M\log N)$ 的二叉树，称为 Splay 树
+从一个空树开始，连续 M 个对该树的操作的时间复杂度总不超过 $O(M\log N)$ 的二叉树，称为 Splay 树
 
 根据定义，对该树的 M 次操作时间均摊下来，每个操作都需要 $O(\log N)$ 。Splay(伸展)的核心思想在于，每当某一个节点被访问(包括插入、查询、删除)，都要通过 AVL 树 Rotation 的方式将其移动至根节点
 

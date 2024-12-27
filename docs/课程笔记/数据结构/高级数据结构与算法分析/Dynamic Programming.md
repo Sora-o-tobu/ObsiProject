@@ -176,3 +176,4 @@ c_{ij} &=p_k +cost(L)+cost(R)+weight(L)+weight(R)
 
 最终可以得到 `break..void` 的 $cost$ 为 $2.15$ ，其以 `char` 为根节点；据此，还可以进行回溯，将该二叉搜索树构建出来。
 
+!!! danger "少个Product Assembly问题，我摆了"

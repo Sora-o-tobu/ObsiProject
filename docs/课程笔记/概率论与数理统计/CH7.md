@@ -191,6 +191,10 @@ $$
 
 设 $\hat{\theta}_1$ 和 $\hat{\theta}_2$ 都是 $\theta$ 的估计量，若对于任意 $\theta \in \Theta$，$Mse(\hat{\theta}_1) \le Mse(\hat{\theta}_2)$ ，且存在某个 $\theta$ 使不等号成立，则称在均方误差准则下 $\hat{\theta}_1$ 优于 $\hat{\theta}_2$ 。
 
+$$
+Mse(\hat{\theta}) =Var(\hat{\theta}) +[E(\hat{\theta}) - \theta]^2
+$$
+
 !!! info "无偏估计量的均方误差"
 	对于无偏估计量，$Mse(\hat{\theta})= Var(\hat{\theta})$。因此，对于两个无偏估计量来说，均方误差准则等价于有效性准则
 

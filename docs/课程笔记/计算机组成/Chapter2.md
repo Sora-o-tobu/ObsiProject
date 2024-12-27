@@ -251,6 +251,57 @@ done:
 	jalr x0, x1
 ```
 
+```asm
+main:
+    addi a0, x0, 6
+    jal ra, fib
+    add x0, x0, x0
+
+fib:
+    addi sp, sp, -16
+    sw s0, 8(sp)
+    sw ra, 0(sp)
+    add s0, a0, x0
+    beq s0, x0, done0
+    addi t0, x0, 1
+    beq s0, t0, done0
+    addi a0, s0, -1  # n-1
+    
+    addi sp, sp, -16
+    sw t0, 8(sp)
+    sw t1, 0(sp)
+    
+    jal ra, fib    # fib(n-1)
+    
+    lw t0, 8(sp)
+    lw t1, 0(sp)
+    addi sp, sp, 16
+    
+    add t0, a0, x0 # t0 = fib(n-1)
+    addi a0, s0, -2 # n-2
+    
+    addi sp, sp, -16
+    sw t0, 8(sp)
+    sw t1, 0(sp)
+    
+    jal ra, fib
+    
+    lw t0, 8(sp)
+    lw t1, 0(sp)
+    addi sp, sp, 16
+    
+    add t1, a0, x0 # t1 = fib(n-2)
+    add a0, t0, t1 # a0 = fib(n-1) + fib(n-2)
+    jal x0, done
+done0:
+    add a0, x0, s0  # a0 = n
+done:
+    lw s0, 8(sp)
+    lw ra, 0(sp)
+    addi sp, sp, 16
+    jalr x0, ra, 0
+```
+
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">阶乘：</font>
 

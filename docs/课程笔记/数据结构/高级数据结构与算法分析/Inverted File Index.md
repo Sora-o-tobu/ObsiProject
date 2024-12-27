@@ -7,7 +7,7 @@
 
 ![[IFIG.png]]
 
-它以文章中出现的 Term 作为键值，以链表(?)的形式连接各个保存该 Term 出现信息的节点。以单词 silver 为例，`<2;(1;2),(3;3,7)>` 最前面的 2 代表总共在两篇文章中出现过，括号 `(3;3,7)` 中，分号前的三是 Document 的标号，后面的 3 和 7 是该 Term 在文章中出现的位置。
+它以文章中出现的 Term 作为键值，以链表(?)的形式连接各个保存该 Term 出现信息的节点。以单词 silver 为例，`<2;(1;2),(3;3,7)>` 最前面的 2 代表总共在两篇文章中出现过，括号 `(3;3,7)` 中，分号前的 3 是 Document 的标号，后面的 3 和 7 是该 Term 在文章中出现的位置。
 
 其中，索引生成部分可以写成如下伪代码：
 
@@ -29,6 +29,16 @@
 
 存储 Term 的数据结构按照需求一般选用 Search Tree 或 Hashing
 
+- Hashing
+    - 理想情况下，hashing的单个查询更快
+    - Hashing的问题在于冲突以及不支持快速的范围查询。比如要查找一堆re开头的单词，会需要一个个算哈希值。
+- 字典树 Tries
+    - 每个叶节点都代表一个Term
+    - 若单词有相同前缀，则会经过相同父节点
+    - 复杂度就是单词的长度
+
+![[invertedindexfiletries.png]]
+
 当我们内存不足以放下所有索引时，可以采用如下几种方式解决：
 
 ### LRU
@@ -41,9 +51,15 @@
 
 ![[IFIDI.png]]
 
+- 第一种存储很复杂，但是检索方便
+- 第二种存储方便，但是检索很复杂
+	- 一般采取 Solution 2，当一个设备损坏时，不会导致某个字母段数据全部丢失
+
 ### Dynamic indexing
 
-（好像不怎么涉及？）
+将 index 分为 Main Index(快读慢写) 和 Auxiliary Index(慢读快写)。每当有新文档出现时先将其产生的 index 写入 Auxiliary Index 中。以一定周期(如一天)统一地将 Auxiliary Index 写入 Main Index 中。
+
+但是搜索 Index 的时候要同时搜索 Main Index 和 Auxiliary Index。
 
 ![[IFIDYI.png]]
 
