@@ -185,13 +185,13 @@ del cut_out(node):
 
 ## Summary: Heap
 
-| Heap               | Make Heap | Find-Min | Delete-Min                 | Merge                      | Insert                | Decrease-Key               |
-| ------------------ | --------- | -------- | -------------------------- | -------------------------- | --------------------- | -------------------------- |
-| **Leftist Heap**   | $O(1)$    | $O(1)$   | $O(\log N)$                | $O(\log N)$                | $O(\log N)$           | $O(\log N)$                |
-| **Skew Heap**      | $O(1)$    | $O(1)$   | $O(\log N)$<br>(amortized) | $O(\log N)$<br>(amortized) | $O(\log N)$           | $O(\log N)$<br>(amortized) |
-| **Binomial Heap**  | $O(1)$    | $O(1)$   | $O(\log N)$                | $O(\log N)$                | $O(1)$                | $O(\log N)$                |
-| **Fibonacci Heap** | $O(1)$    | $O(1)$   | $O(\log N)$<br>(amortized) | $O(\log N)$                | $O(1)$<br>(amortized) | $O(1)$<br>(amortized)      |
-| **Binary Heap**    | $O(n)$    | $O(1)$   | $O(\log N)$                | $O(n)$                     | $O(\log N)$           | $O(\log N)$                |
+| Heap               | Make Heap | Find-Min | Delete-Min                 | Merge                      | Insert                | Decrease-Key          |
+| ------------------ | --------- | -------- | -------------------------- | -------------------------- | --------------------- | --------------------- |
+| **Leftist Heap**   | $O(N)$    | $O(1)$   | $O(\log N)$                | $O(\log N)$                | $O(\log N)$           | Not Support           |
+| **Skew Heap**      | $O(N)$    | $O(1)$   | $O(\log N)$<br>(amortized) | $O(\log N)$<br>(amortized) | $O(\log N)$           | Not Support           |
+| **Binomial Heap**  | $O(N)$    | $O(1)$   | $O(\log N)$                | $O(\log N)$                | $O(1)$<br>(amortized) | $O(\log N)$           |
+| **Fibonacci Heap** | $O(N)$    | $O(1)$   | $O(\log N)$<br>(amortized) | $O(1)$<br>(amortized)      | $O(1)$<br>(amortized) | $O(1)$<br>(amortized) |
+| **Binary Heap**    | $O(N)$    | $O(1)$   | $O(\log N)$                | $O(N)$                     | $O(\log N)$           | $O(\log N)$           |
 
+!!! tip "Skew Heap 的建堆操作在均摊分析下是 $O(N\log N)$ ，可能需要注意"
 
-- 除了 `Binary Heap` 外，其他堆都是延迟建堆，所以时间复杂度为常数级

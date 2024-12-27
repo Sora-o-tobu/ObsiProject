@@ -34,13 +34,13 @@ SolutionType Gradient_descent()
 
 **Vertex Cover Problem(Opti.Ver)** Given an undirected graph $G(V,E)$. Find a minimum subset $S\in V$ such that for each edge $(u,v)$ in $E$, either $u$ or $v$ is in $S$.
 
-!!! note "这个版本的定点覆盖问题并不是给出参数K判断能否用K个顶点覆盖所有边，所以这是NPC问题"
+!!! note "这个版本的顶点覆盖问题并不是给出参数K判断能否用K个顶点覆盖所有边，所以这是NPC问题"
 
 对于 Local Search ，搜索的起点可以是任意的可行解。因此，定点覆盖问题的起点可以选择所有的点集（同时这也是最差的答案）。
 
 - $cost(S)= |S|$
 - $S\sim S'$：$S'$ can be obtained from $S$ by adding or deleting a single node
-	- 为什么有 adding 操作？这个操作是否让我们远离了局部最优解？
+	- **思考:** 为什么有 adding 操作？这个操作是否让我们远离了局部最优解？
 - **Search**：每次删除一个顶点，并判断此时的 $S'$ 是否是一个定点覆盖子集
 	- 每次局部搜索的范围是当前子集顶点的个数，因此该算法的运行是有限的
 
@@ -78,6 +78,8 @@ SolutionType Metropolis()
 所以我们需要一个合理的温度设计，理想情况下，在越接近全局最优解时温度 $T$ 应该越低。为了实现这个功能，提出一个新的算法 **Simulated Annealing(模拟退火)** 。
 
 模拟退火算法正如字面意思，是模仿现实中退火降温的温度变化，其思想在于给出一个温度下降表： $T=\{T_1, T_2,...\}$
+
+!!! danger "不是我戛然而止了，而是课件讲了这些就过了"
 
 ## 经典案例：Hopfield Neural Networks
 
@@ -140,7 +142,7 @@ $$
 如果我们为翻转设置一个阈值，即一个 Node 会被翻转当且仅当它会增加总 cut value 至少：
 
 $$
-\frac{\varepsilon}{|V|} w(A,B)
+\frac{2\varepsilon}{|V|} w(A,B)
 $$
 
 那么有以下两点性质（可能会考）：

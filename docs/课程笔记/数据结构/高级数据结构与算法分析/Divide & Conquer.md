@@ -153,9 +153,7 @@ $$
 
 **【Example】** $T(N)=2T(\sqrt{N})+\log N$
 
-**Proof：**
-
-一直递归到最后一层，有：
+**Proof：** 一直递归到最后一层，有：
 
 $$
 T(N)=2^k T(N^{1 / 2^k})+(k+1)\log N
@@ -164,8 +162,15 @@ $$
 令 $N^{1 / 2^k}=2$ ，可得 $k=\log \log N$，则：
 
 $$
-T(n)=O(\log N+(k+1)\log N) = O(\log N\log \log N)
+T(N)=O(\log N+(k+1)\log N) = O(\log N\log \log N)
 $$
+
+**【Example】** $T(N)=T(N^{1 / 3}) + T(N^{2 / 3}) + \log N$
+
+**Proof:** 递归最大层数仍然是 $\log \log N$ 数量级，并且每层都有 $c\log N$ ，那么写题的时候可以简单认为 $T(N)= O(\log N \log \log N)$ 。
+
+- 设 $t(k)= T(2^k)= T(N)$，那么 $t(k) =t( k / 3) + t(2k / 3)+ k =O(k\log k)$
+- 将 $k=\log N$ 代回去得到 $T(N)= t(k) =O(\log N \log \log N)$
 
 ### Master method
 

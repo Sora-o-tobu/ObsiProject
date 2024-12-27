@@ -23,7 +23,10 @@
 - In a red-black tree, the number of internal nodes in the subtree rooted at x is **no more than** 2​bh(x)​​−1 where bh(x) is the black-height of x.
 	- **False**
 	- **Lemma 1:** A red-black tree with n internal nodes has height **at most** $2\log (n+1)$
+		- $h\le 2\log (N+1)$
 	- **Lemma 2:** The subtree rooted at any node x contains **at least** $2^{bh(x)}-1$ internal nodes
+		- $sizeof(x) \ge 2^{bh(x})-1$ 全黑节点时取等
+	- **Lemma 3:** $bh(x) \ge \frac{1}{2}h(x)$
 - In a red-black tree, the number of rotations in the DELETE operation is O(1).
 	- **True**
 	- 详见红黑树章节某表格，除了AVL数的删除所需旋转数为 $O(\log N)$，其它均为 $O(1)$
@@ -56,6 +59,8 @@
 	- **True** 记答案吧
 - A leftist heap with the null path length of the root being $r$ must have at least $2^{r+1}-1$ nodes
 	- **True** NPL = r 对应着右路径上有 $r+1$ 个节点，所以正确。
+- **(F)** By definition, for a light node $p$ in a skew heap, the number of descendants of $p$'s right subtree is no more than 1/2 of the number of descendants of $p$.
+	- 刚好等于的情况属于重节点，因此这里要用 less than
 
 ## Binomial Queue
 
@@ -80,11 +85,13 @@
 
 ## Backtracing
 
-- In backtracking, if different solution spaces have different sizes, start testing from the partial solution with the smallest space size would have a better chance to reduce the time cost
-	- **True**
+- **(T)** In backtracking, if different solution spaces have different sizes, start testing from the partial solution with the smallest space size would have a better chance to reduce the time cost
+	- 从搜索空间小的部分开始计算
 - Given the following game tree, node _d_ will be pruned with _α_−_β_ pruning algorithm if and only if \_\_\_\_\_.
-- ![[backtracingex2.png]]
+	- ![[backtracingex2.png]]
 	- $65\le b \le 70$
+- **(T)** For the Turnpike reconstruction algorithm of $N$ points, assuming that the distance set $D$ is maintained as an AVL tree, the running time is $O(N^2log⁡n)$ if no backtracking happens.
+	- 不是很理解这个，还是记答案吧
 
 ## Divide & Conquer
 
@@ -111,14 +118,15 @@
 
 ## NP-Completion
 
-- Given that problem A is NP-complete. If problem B is in NP and can be polynomially reduced to problem A, then problem B is NP-complete.
-	- **False**
-- If $L_1 \le _p L_2$ and $L_2\in NP$ , then $L_1 \in NP$
-	- **True** $L_1$ 可以多项式归约至 $L_2$ ，也能够说明 $L_1$ 能够在非确定图灵机上以多项式时间解决
-- All the languages can be decided by a non-deterministic machine.
-	- **False** 还有不可判定问题，比如 Halting Problem
-- If a problem can be solved by dynamic programming, it must be solved in polynomial time.
-	- **True** 背包问题
+- **(F)** Given that problem A is NP-complete. If problem B is in NP and can be polynomially reduced to problem A, then problem B is NP-complete.
+- **(T)** If $L_1 \le _p L_2$ and $L_2\in NP$ , then $L_1 \in NP$
+	- $L_1$ 可以多项式归约至 $L_2$ ，也能够说明 $L_1$ 能够在非确定图灵机上以多项式时间解决。$L_1$ 可能是 $P$ 问题，但是 $P\in NP$
+- **(F)** All the languages can be decided by a non-deterministic machine.
+	- 还有不可判定问题，比如 Halting Problem
+- **(F)** If a problem can be solved by dynamic programming, it must be solved in polynomial time.
+	- 0-1背包问题不算 P 类
+- **(F)** As we know there is a 2-approximation algorithm for the Vertex Cover problem. Then we must be able to obtain a 2-approximation algortithm for the Clique problem, since the Clique problem can be polynomially reduced to the Vertex Cover problem.
+	- 就算这两个问题可以相互归约，在计算近似率时 Cost 的取值是不一样的，即评价准则不一样
 
 ## Approximation
 
@@ -150,11 +158,20 @@
 	- ![[shenmitimutimian.png]]
 	- ![[shenmitimujiexi.png]]
 
+## Parallel Algorithms
+
+- Consider two disjoint sorted arrays $A[1…n]$ and $B[1…m]$, we would like to compute the k-th smallest element in the union of the two arrays, where $k≤\min (⁡m,n)$. Please choose the smallest possible running time among the following options:
+	- A. $O(\log n)$
+	- B. $\min (O(\log m), O(\log n))$
+	- C. $O(\log m)$
+	- D. $O(\log k)$
+	- 答案选D，因为两个并查集都是有序的，所有最后搜索的时间复杂度应该与 $m,n$ 无关
+
 
 ## External Sort
 
 - **(T)** If only one tape drive is available to perform the external sorting, then the tape access time for any algorithm will be $\Omega (N^2)$.
-	- 不是很理解
+	- 说是寻道时间从 $O(1)$ 变成了 $O(n)$ 了，但我不是很理解
 - **(D)** Suppose we have the internal memory that ca### n handle 12 numbers at a time, and the following two runs on the tapes:
 	- **Run 1**: 1, 3, 5, 7, 8, 9, 10, 12
 	- **Run 2**: 2, 4, 6, 15, 20, 25, 30, 32

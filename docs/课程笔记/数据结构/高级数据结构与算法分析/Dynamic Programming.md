@@ -172,7 +172,7 @@ c_{ij} &=p_k +cost(L)+cost(R)+weight(L)+weight(R)
 ![[obstsolution.png]]
 
 !!! info "格子结构"
-	以第三排第一个格子为例，`break..char` 表示以 `break`,`case`,`char` 为节点构造的最优二叉搜索树，$1.02$ 表示该最优二叉搜索树的 $cost$ ，`case` 表示该最优二叉搜索树以节点 `case` 为根。
+	以第三排第一个格子为例，`break..char` 表示以 `break`,`case`,`char` 为节点构造的最优二叉搜索树，$1.02$ 表示该最优二叉搜索树的 $cost$ ($0.22*2+0.18+0.20*2$)，`case` 表示该最优二叉搜索树以节点 `case` 为根。
 
 最终可以得到 `break..void` 的 $cost$ 为 $2.15$ ，其以 `char` 为根节点；据此，还可以进行回溯，将该二叉搜索树构建出来。
 
