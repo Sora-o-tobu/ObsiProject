@@ -17,7 +17,7 @@ RISC-V 一共有 32 个寄存器，每个寄存器宽度均为 64 位，命名�
 - `x0` 保持常数 `0` ，常用于函数返回时作为无意义地址的接收方： `jalr x0, 0(x1)`
 	- `x0` 的读写是无效的，处理器并不会去读写它的值
 - `x1` 用来保存返回地址，即 `return address` 。
-	- 在调用函数前，使用 `jalr x1, FUNC_ADDR` 保存PC当前指令的下一条指令地址，即 `PC+4` 。
+	- 在调用函数前，使用 `jal x1, FUNC_ADDR` 保存PC当前指令的下一条指令地址，即 `PC+4` 。
 	- 调用的函数返回时，使用 `jalr x0, 0(x1)` 返回调用指令的下一条指令继续执行。
 - `x2` 即栈指针，始终指向栈顶元素。栈从高地址向低地址增长。
 - `x3` 指向全局变量和静态数据区的起始地址，称为 `global pointer` ，用于访问和管理全局变量。
@@ -25,7 +25,7 @@ RISC-V 一共有 32 个寄存器，每个寄存器宽度均为 64 位，命名�
 - `x5-x7` 以及 `x28-x31` 是临时寄存器，通常用于存储计算的中间结果或临时变量，它们是调用者保存的寄存器。
 - `x8-x9` 以及 `x18-x27` 也可以用来存储临时数据，不过它们是被调用者保存的寄存器，即被调用函数在开头和结尾分别需要入栈和出栈以恢复它们的值。
 	- `x8` 一般也用作帧指针 `frame pointer` ，指向栈的底端
-- `x10-x17` 是参数寄存器，函数调用的前八个参数会存储在这些寄存器中，但如果参数超过 8 个就需要放到栈中传递（如果参数为 8 bytes，`fp+8` 是第九个参数，`fp+16` 是第十个参数...）。同时，过程的结果也会放到这些寄存器上，对于C语言这种只有一个返回值的语言，可能只会用到 `x10` 。
+- `x10-x17` 是参数寄存器，函数调用的前八个参数会存储在这些寄存器中，但如果参数超过 8 个就需要放到栈中传递（如果参数为 8 bytes，`sp+8` 是第九个参数，`sp+16` 是第十个参数...）。同时，过程的结果也会放到这些寄存器上，对于C语言这种只有一个返回值的语言，可能只会用到 `x10` 。
 
 !!! warning "Preserved on call"
 	是否保证调用前后这些寄存器的值不变。如果为 `yes`，则被调用函数开头结尾分别要将这些寄存器入栈出栈以恢复它们的值；如果为 `no` ，则需要主函数上自行入栈出栈恢复值。
@@ -46,11 +46,11 @@ RISC-V 指令格式如下：
 
 ![[RISCVIGSG.png]]
 
-- `opcode`: 指 `operation` 的编码，大部分时候需要和 `funct3` 和 `funct7` 一起决定指令的种类。
-- `rd`: 即 `Destination Register` ，目标寄存器。
+- `opcode`: 指 **operation** 的编码，大部分时候需要和 `funct3` 和 `funct7` 一起决定指令的种类。
+- `rd`: 即 **Destination Register** ，目标寄存器。
 - `funct3`: 3 bit 的 function code，相当于 additional opcode。
-- `rs1`: 即 `First Source Register` ，第一个源寄存器。
-- `rs2`: 即 `Second Source Register` ，第二个源寄存器。
+- `rs1`: 即 **First Source Register** ，第一个源寄存器。
+- `rs2`: 即 **Second Source Register** ，第二个源寄存器。
 - `funct7`: 7 bit 的 function code，相当于 additional opcode。
 - `i`: 立即数，需要注意是有符号数，例如 `i[11:0]` 的范围是 $-2^{11}$ ~ $2^{11}-1$
 
@@ -226,6 +226,7 @@ int fib(int n) {
 }
 ```
 
+**完全优化版本：**
 
 ```asm
 fib:
@@ -251,55 +252,58 @@ done:
 	jalr x0, x1
 ```
 
+**无优化，但是易于理解的版本：**
+
 ```asm
 main:
     addi a0, x0, 6
-    jal ra, fib
-    add x0, x0, x0
+    jal ra, fib    # call fib(6)
+    add x0, x0, x0 # NOP
 
 fib:
     addi sp, sp, -16
     sw s0, 8(sp)
     sw ra, 0(sp)
+    
     add s0, a0, x0
-    beq s0, x0, done0
+    beq s0, x0, done0 # if(n==0) return 0
     addi t0, x0, 1
-    beq s0, t0, done0
+    beq s0, t0, done0 # if(n==1) return 1
     addi a0, s0, -1  # n-1
     
-    addi sp, sp, -16
+    addi sp, sp, -16 # 调用者保存
     sw t0, 8(sp)
     sw t1, 0(sp)
     
-    jal ra, fib    # fib(n-1)
+    jal ra, fib      # call fib(n-1)
     
-    lw t0, 8(sp)
+    lw t0, 8(sp)     # 调用者恢复
     lw t1, 0(sp)
     addi sp, sp, 16
     
-    add t0, a0, x0 # t0 = fib(n-1)
-    addi a0, s0, -2 # n-2
+    add t0, a0, x0   # t0 = fib(n-1)
+    addi a0, s0, -2  # n-2
     
-    addi sp, sp, -16
+    addi sp, sp, -16 # 调用者保存
     sw t0, 8(sp)
     sw t1, 0(sp)
     
-    jal ra, fib
+    jal ra, fib      # call fib(n-2)
     
-    lw t0, 8(sp)
+    lw t0, 8(sp)     # 调用者恢复
     lw t1, 0(sp)
     addi sp, sp, 16
     
-    add t1, a0, x0 # t1 = fib(n-2)
-    add a0, t0, t1 # a0 = fib(n-1) + fib(n-2)
+    add t1, a0, x0   # t1 = fib(n-2)
+    add a0, t0, t1   # a0 = fib(n-1) + fib(n-2)
     jal x0, done
 done0:
-    add a0, x0, s0  # a0 = n
+    add a0, x0, s0   # a0 = n
 done:
     lw s0, 8(sp)
     lw ra, 0(sp)
     addi sp, sp, 16
-    jalr x0, ra, 0
+    jalr x0, ra, 0   # return a0
 ```
 
 
@@ -354,15 +358,14 @@ int bar(a, b) {
 }
 ```
 
-
 ```asm
 foo:
 	addi sp, sp, -24  # 开辟栈空间，将函数返回地址 ra 以及
 	sd s0, 0(sp)      # 可能用到的临时栈寄存器都压入栈中，
 	sd s1, 8(sp)      # 在函数返回前，恢复它们的值
-	sd ra, 16(sp)     #
-	add s0, x0, a0    # 参数转移到当前占用的寄存器中
-	add s1, x0, a1    # 同上， s1 = b
+	sd ra, 16(sp)     # 通常开辟 n+1 个位置
+	add s0, x0, a0    # s0 = a
+	add s1, x0, a1    # s1 = b
 	
 	add a0, x0, s0    # 准备调用 bar，传入参数 a
 	add a1, x0, s1    # 同上，传入参数 b
@@ -378,7 +381,6 @@ foo:
 	
 	jalr x0, 0(ra)    # 回到主函数
 ```
-
 
 ```asm
 bar:
@@ -412,3 +414,9 @@ bar:
 	- Argument Registers: `x10-x17` (**a0,a1,...**)
 	- Temporary Registers: `x5-x7`,`x28-x31` (**t0,t1,...**)
 	- Stack Below: `sp` 之下的数据
+
+### 有用资源
+
+- [RISC-V 指令译码/解码](https://luplab.gitlab.io/rvcodecjs/)
+- [Venus](https://venus.cs61c.org/)
+- [Rimulator](https://hggshiwo.github.io/rimulator/index.html)

@@ -67,6 +67,10 @@ for i = 1 pardo
 ```
 
 
+$$
+T(n)=\log n +2 =O(\log n), W(n) =2n =O(n)
+$$
+
 ### Measuring Performance
 
 并行算法的性能度量要从时间复杂度和工作复杂度(work load)来考虑。

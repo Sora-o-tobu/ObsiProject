@@ -27,8 +27,6 @@
 
 上图展示了一个实现了与，或以及加减法功能的 1bit ALU，使能信号 `operation` 用来控制多路选择器输出哪个结果。当需要进行减法时，将 `Binvert` 以及 `CarryIn` 均置 1 ，实现补码的运算。
 
-!!! note "实际上将 `Binvert` 和 `CaryyIn` 连接到同一个输入上就可以了"
-
 ### 64 bit ALU
 
 将上述 1bit ALU 通过 `CarryIn` 和 `CarryOut` 的前后连接，即可组装成一个 64 bit ALU
