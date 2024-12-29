@@ -9,7 +9,7 @@ Cache的出现解决了主存速度不够快的问题，也是这门课程讨论
 !!! quote "Memory Hierarchy"
 	![[memoryhierarchy1.png]]
 
-- **hit** The CPU accesses the upper level and succeeds
+- **Hit** The CPU accesses the upper level and succeeds
 - **Miss** The CPU accesses the upper level and fails
 - **Hit time** 访问上层存储的时间，包括决定该次访问是否命中所需的时间
 - **Miss penalty** 将上层存储的 Block 替换为下层 Block 所需的时间，包括将这个 Block 传递给处理器所需的时间

@@ -7,11 +7,11 @@
 
 在处理器中，一条指令的执行通常分为四到五个阶段，分别是取指、译码、执行、访存、写回。其中，对于任何指令，前两个步骤都是完全相同的，而后几步则取决于该指令的类别。
 
-- **取指令IF**：根据程序计数器PC中的指令地址，从存储器中取出一条指令；同时，PC根据指令字长度自动递增产生下一条指令所需要的指令地址（PC+4），但遇到*地址转移*指令时，则控制器把转移地址送入PC
+- **取指令IF**：根据程序计数器PC中的指令地址，从存储器中取出一条指令；同时，PC根据指令字长度自动递增产生下一条指令所需要的指令地址（PC+4），但遇到地址转移指令时，控制器可能会将转移地址送入PC
 - **指令译码ID**：对取指令操作中得到的指令进行分析并译码，确定指令要完成的操作并产生相应的控制信号
 - **指令执行EXE**：根据操作控制信号执行指令动作，然后转移到结果写回状态
 - **存储器访问MEM**：所有需要访问存储器的操作都在这一步骤执行，包括 `load` 和 `store`
-	- `beq` 是为什么？
+	- `beq` 指令地址写回 PC 步骤也在这个阶段，尽管它并没有访问存储器
 - **结果写回WB**：将执行的结果或访问存储器得到的数据写回相应寄存器中
 
 !!! info "不同指令的不同阶段"
@@ -36,7 +36,7 @@
 |                          | 10：寄存器堆的 Write data 为 PC + 4(Only for `jal,jalr`) | 11：寄存器堆的 Write data 为 imme（Only for `lui`） |
 
 !!! note
-	其实控制信号 `Jump` 也是 2bit 的，因为指令 `jalr` 的跳转目标地址为 `rs1+imm`
+	其实控制信号 `Jump` 也是 2bit 的，因为还需要支持指令 `jalr` 的跳转目标地址 `rs1+imm`
 
 
 注意到上面示意中控制单元的输出还有一个 2bit 的 `ALUop` ，这其实是控制单元的一个中间输出，第一层对 `opcode` 进行译码，可以得到该指令对应的 `type` 及大部分控制信号；第二层再联合 `Funct3,Funct7,ALUop`，译码得出对应的 `ALU operation` 信号，以控制 ALU 进行何种计算。
@@ -90,7 +90,7 @@
 		![[loaddatapath.png]]
 	=== "store"
 		![[storedatapath.png]]
-	=== "bea"
+	=== "beq"
 		![[beqdatapath.png]]
 	=== "jal"
 		![[jaldatapath.png]]
@@ -181,7 +181,7 @@ Hazards(冒险)是阻止指令进入下一阶段的情况，可分为：
 	![[loadmem.png]]
 === "WB"
 	![[loadwb.png]]
-	Tips: 这里对 Datapath 修正在于 `WriteRegister` 要从 `MEM/WB` 流水线寄存器中读取 
+	!!! tip "这里对 Datapath 修正在于 `WriteRegister` 要从 `MEM/WB` 流水线寄存器中读取 "
 
 
 最终得到的简化的 Pipeline with control 的 Datapath 如图：
@@ -208,6 +208,8 @@ sub x2, x19, x3
 
 ![[datahazedexample.png]]
 
+!!! note "另一种情况是下一条指令执行完 IF 阶段后被迫 Stall 了两个周期，流水线图与上图略有差别"
+
 当然，如果 Datapath 有额外的数据通路，处理器也允许中间数据进入 **WB** 阶段之前，直接传输到下一条指令的 **EX** 阶段，这种优化名为 **Forwarding** (or **Bypassing**)：
 
 ![[datahazardsexample2.png]]
@@ -216,7 +218,7 @@ sub x2, x19, x3
 	![[congmemroyduqudeshuju.png]]
 	load 型指令即便使用 Forwarding 也要插入一个 Bubble。
 	
-	幸亏的是，下一条指令在 Stall 前并没有对寄存器堆或 MEM 作出任何操作，因此可以直接将 NOP 指令取代它后面的阶段。
+	幸运的是，下一条指令在 Stall 前并没有对寄存器堆或 MEM 作出任何操作，因此可以直接用 NOP 指令取代它后面的阶段。
 
 对于使用 Forwarding 优化的处理器，执行下列指令过程中会发生两个数据冒险，导致总运行时间会增加两个时钟周期：
 
@@ -277,14 +279,14 @@ if(EX/MEM.RegWrite
 ```c
 if(MEM/WB.RegWrite
   and (MEM/WB.RegisterRd != 0)
-  and not(EX/MEM.RegWrite and EX/MEM.RegisterRd != 0)
-  and (EX/MEM.RegisterRd == ID/EX.RegisterRs1)
+  and not(EX/MEM.RegWrite and (EX/MEM.RegisterRd != 0)
+      and (EX/MEM.RegisterRd == ID/EX.RegisterRs1)) // 没发生 EX Hazard
   and (MEM/WB.RegisterRd == ID/EX.RegisterRs1))
   ForwardA = 01;
 if(MEM/WB.RegWrite
   and (MEM/WB.RegisterRd != 0)
-  and not(EX/MEM.RegWrite and EX/MEM.RegisterRd != 0)
-  and (EX/MEM.RegisterRd == ID/EX.RegisterRs2)
+  and not(EX/MEM.RegWrite and (EX/MEM.RegisterRd != 0)
+      and (EX/MEM.RegisterRd == ID/EX.RegisterRs2)) // 没发生 EX Hazard
   and (MEM/WB.RegisterRd == ID/EX.RegisterRs2))
   ForwardB = 01;
 ```
@@ -335,12 +337,12 @@ ID/EX.MemRead and
 
 更多时候，我们使用预测来解决控制冒险：
 
-- Static Branch Prediction 
+- **Static Branch Prediction** 
 	- 为特定指令设置默认预测命中
 	- 例如，对于 loop 和 if-statement
 		- 向回跳转默认命中
 		- 向下跳转默认不命中
-- Dynamic Branch Prediction
+- **Dynamic Branch Prediction**
 	- 基于运行历史来预测是否命中
 
 即便预测没有命中，最早的指令也才进行三个阶段到 EXE，并没有对整体状态进行更新（写回寄存器或写入内存等），恢复状态是较为方便的。
@@ -382,8 +384,8 @@ CPU 遇到异常时，需要进行异常处理，机器模式下的一般步骤�
 +----------------------+----+
 ```
 
-- `MODE=0`，异常相应时，跳转到 `BASE`
-- `MODE=1`，异常相应时，跳转到 `BASE`
+- `MODE=0`，异常响应时，跳转到 `BASE`
+- `MODE=1`，异常响应时，跳转到 `BASE`
 - `MODE=1`，中断响应时，跳转到 `BASE+4*Cause`
 	- 其中 `CASUE` 为中断对应的异常编号
 
