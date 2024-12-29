@@ -40,21 +40,21 @@ Cache的出现解决了主存速度不够快的问题，也是这门课程讨论
 - 全相联 Fully associated
 
 !!! exmaple "A Simple Example"
-	对于 32bit 主存地址、4-Block Cache、1-word Block，则一共需要 2bit 作为索引index。在 0+2 bit 用作 Offset，剩余 28bit 用作 TAG。在我们之前已访问过主存 `0x04` 的情况下，执行 `load r1, 0x04` ：
+	对于 32bit 主存地址、4-Block Cache、1-word Block，则一共需要 2bit 作为索引index，2 bit 用作 Offset，剩余 28bit 用作 TAG。在我们之前已访问过主存 `0x04` 的情况下，执行 `load r1, 0x04` ：
 	
 	![[cachesimpleex1.png]]
 
 ```
 Cache 地址映射：
-+-------+--------+------+
++-------+--------+-------+
 |标签TAG|索引INDEX|块偏移量|
-+-------+--------+------+
++-------+--------+-------+
 
 Cache 结构：
-+----------------+----------+------+------+
-|    标签TAG      | 数据DATA |Valid |Dirty |
-+----------------+----------+------+------+
- 64-(n+m+2) bit   2^m*32 bit  1bit  (1bit)
++----------------+----------+-------+-------+
+|    标签TAG      | 数据DATA | Valid | Dirty |
++----------------+----------+-------+-------+
+ 64-(n+m+2) bit   2^m*32 bit   1bit   (1bit)
 
 - Valid(1 bit) 表示 Cache 中数据是否有效
 - Dirty(1 bit) 表示 Cache 中数据是否是最新且还没写回主存
@@ -100,7 +100,7 @@ $$
             - 暂停 CPU 运行，从 memory 里把对应的 block 拿到 cache，从第一个 step 开始重新运行当前这条指令。
 - **Write**
     - **Hit** 有两种可以选的方式：
-        - **write-through**，即每次写数据时，同时更新 Cache 和主存。这样的好处是 cache 和 main memory 总是一致的，但是这样总时间相等于直接写主存，速度很慢。
+        - **write-through**，即每次写数据时，同时更新 Cache 和主存。这样的好处是 cache 和 main memory 总是一致的，但是这样相当于直接写主存，速度很慢。
             - 一个改进是引入一个 **write buffer**，即当需要写 main memory 的时候不是立即去写，而是先写入 Buffer 中，找机会再写进主存；此时 CPU 就可以继续运行了。当然，当 write buffer 满了的时候，也需要暂停处理器来做写入 main memory 的工作，直到 buffer 中有空闲的 entry。因此，如果 main memory 的写入速率低于 CPU 产生写操作的速率，多大的缓冲都无济于事。
         - **write-back**，只将修改的内容写在 cache 里，等到这个 block 要被覆盖掉的时候将其写回内存。这种情况需要一个额外的 **dirty bit** 来记录这个 cache block 是否被更改过，从而知道被覆盖前是否需要被写回内存。由于对同一个 block 通常会有多次写入，因此这种方式消耗的总带宽是更小的。
     - **Miss** 同样有两种方式：
@@ -111,7 +111,7 @@ $$
 !!! quote
 	![[cache读写操作总结.png]]
 	
-	`Sace dirty block first` 指的是，如果要读/写的Block的dirty位为1，则这个Block还在主存中更新。所以要先 Write Memory 更新主存，在继续后面的操作。
+	`Sace dirty block first` 指的是，如果要读/写的Block的dirty位为1，则这个Block还未在主存中更新。所以要先 Write Memory 更新主存，在继续后面的操作。
 
 
 !!! warning "在做Cache计算时间类题目中，注意每步操作的时间要是时钟频率的整数倍（结果可以不是）"
@@ -233,7 +233,7 @@ Physical Address:
 
 但是上述方法存在效率问题，当进程希望访问内存中的数据时，都需要先访问内存中的 Page Table 以获取数据的物理地址，这意味着对内存访问时间会加倍。
 
-一种解决方法时使用 **TLB**，其作用相当于 Page Table 的高速缓存，位于进程和内存中间。其基本的 Entry 结构为：
+一种解决方法是使用 **TLB**，其作用相当于 Page Table 的高速缓存，位于进程和内存中间。其基本的 Entry 结构为：
 
 ```
 +-----+-----+---+---------------+-------------------------+
