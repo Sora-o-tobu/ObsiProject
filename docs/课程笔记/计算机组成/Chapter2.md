@@ -148,6 +148,13 @@ L3:
 !!! example "More Example: String Copy"
 	![[stringcopyexample.png]]
 
+!!! example "(21-22 Final) 如何在不适用额外寄存器的情况下交换 `x10` 和 `x11` 的值"
+	```asm
+	xor x10, x10, x11
+	xor x11, x10, x11
+	xor x10, x10, x11
+	```
+
 ## 杂项
 
 ### 大数加载
@@ -202,6 +209,15 @@ int main(void) {
  sw a5,-20(s0)
 ```
 
+!!! example "(23-24 Final) 将 `0x12345678ABCDEF` 加载到寄存器 `x10` 中"
+	```asm
+	lui x10, 0x12345
+	addi x10, x10, 0x678  # x10 = 0x12345678
+	lui x11, 0xABD        # 0xABC + 1
+	addi x11, x11, 0xDEF  # x11 = 0xABCDEF, also `addi x11, x11, -529`
+	slli x10, x10, 24
+	add x10, x10, x11 # or x10, x10, x11
+	```
 
 ### 寻址
 
@@ -414,6 +430,42 @@ bar:
 	- Argument Registers: `x10-x17` (**a0,a1,...**)
 	- Temporary Registers: `x5-x7`,`x28-x31` (**t0,t1,...**)
 	- Stack Below: `sp` 之下的数据
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">(23-24 Final) 使用了没教过的 rem 和 div 指令???</font>
+
+```asm
+/*
+int sum(int num) {
+    if(num < 10) return num;
+    return num % 10 + sum(num / 10);
+}
+*/
+
+sum:
+    addi sp, sp, -16
+    sd ra, 0(sp)
+    sd s0, 8(sp)
+
+    add s0, a0, x0    # s0 = a0
+    addi t0, x0, 10   # t0 = 10
+    blt s0, t0, done0 # if(s0 < 10) goto done0
+
+    div a0, s0, t0    # a0 = num / 10
+    rem s0, s0, t0    # s0 = num % 10
+    jal ra, sum       # sum(num / 10)
+
+    add a0, a0, s0    # a0 = num / 10 + sum(num % 10)
+    beq x0, x0, done  # goto done
+
+done0:
+    add a0, s0, x0    # a0 = num
+done:
+    ld ra, 0(sp)
+    ld s0, 8(sp)
+    addi sp, sp, 16
+    jalr x0, 0(ra)
+```
+
 
 ### 有用资源
 

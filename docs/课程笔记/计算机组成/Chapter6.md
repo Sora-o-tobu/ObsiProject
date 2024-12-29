@@ -30,6 +30,11 @@ IO设备的性能指标：
 
 ## Disk Storage
 
+!!! quote "再放送"
+	![[memoryhierarchy1.png]]
+
+!!! warning "相比于 SRAM，DRAM 速度更慢，并且需要定时刷新避免漏电损失数据"
+
 磁盘主要分为两大类：
 
 - **Floppy Disks** 软盘
@@ -91,7 +96,7 @@ Flash 属于非易失性半导体存储器(Nonvolatile semiconductor storage):
 - **Availability** 可用性
 	- $= \frac{MTTF}{MTTF+MTTR}= \frac{MTTF}{MTBF}$
 
-如果提高 Availability ？？？可以尝试使用磁盘阵列，利用冗余来增加磁盘存储的可用性，例如 Redundant Arrays of Inexpensive Disks(**RAID**):
+如何提高 Availability ？？？可以尝试使用磁盘阵列，利用冗余来增加磁盘存储的可用性，例如 Redundant Arrays of Inexpensive Disks(**RAID**):
 
 | RAID Level                                    | 允许几个盘损坏 | 数据盘个数 | 校验盘个数 | 注释                       |
 | --------------------------------------------- | ------- | ----- | ----- | ------------------------ |

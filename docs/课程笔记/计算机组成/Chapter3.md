@@ -33,7 +33,7 @@
 
 ![[64bitALU.png]]
 
-!!! danger "在数逻中已学过，Overflow 等于最后一个 ALU 的 CarryIn 和 CarryOut 异或"
+!!! danger "OF = $C_{n} \oplus C_{n-1}$, $CF= C_{in} \oplus C_{out}$ "
 
 由于硬件需要判断最终的结果是否为 0，最简便的方法就是将所有 1bit Result 连接到或非门上，作为标志 Zero 输出。最终得到 ALU 及其符号如下：
 
@@ -298,3 +298,10 @@ $$\begin{array}l
 - 将两个 (1+Fraction) 相乘，并将其规格化
 - 根据两个操作数的符号决定结果的符号
 
+!!! example "(23-24 Final) 下列运算结果，哪个不是 NaN ?"
+	- A. 0 \* inf
+	- B. +inf - (-inf)
+		- 无穷大之间的加减乘除都是 NaN
+	- **C. 8/0**
+		- 结果是 inf
+	- D. Any arithmetic operation with NaN

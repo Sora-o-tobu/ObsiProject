@@ -141,6 +141,24 @@ n-way 组相联将每 n 个 Block 分为一组，找对应 Block 时先确定组
 ??? quote "The implement of Four-way Set-associative Cache"
 	![[四路组相联cache示例.png]]
 
+考试常考三种 Miss (3C)：
+
+- 冷启动 Miss **(Compulsory Miss)**
+	- 缓存刚上电为空，此时访问什么都是 Miss
+- 容量 Miss **(Capacity Miss)**
+	- 指**全相联**缓存中，内存中的块由于容量不够而被替换，再次访问该块时发生 Miss
+- 冲突 Miss **(Conflict Miss)**
+	- 指**组相联**缓存中，某个组内的块被替换，然后再次访问该块时发生 Miss
+	- 如果是**全相联**则不会发生 Conflict Miss，因为还有别的空位（如果没有空位的话就该计入 Capacity Miss 了）
+
+!!! example "提高 Cache 的组相联度可以优化？"
+	- A. Capacity Miss
+	- B. Hit time
+		- 一组内块变多了，因此判断 hit 时要比较的 Tag 也变多了
+	- C. Conflict Miss
+		- 选 C
+	- D. Compolsory Miss
+
 ### Performance
 
 $$\begin{array}l
