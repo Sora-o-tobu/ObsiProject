@@ -29,11 +29,11 @@ Note:
 	 
 	$P(S)=\{\emptyset , \{\emptyset \} , \{\{\emptyset\}\} , \{\emptyset ,\{\emptyset\}\}\}\ \ \ \ |P(S)|=4$
 
-例题：
+**例题：**
 
 一. Show that $P(A)\in P(B)\ implies\ A\in B$
 
-证明:
+**证明:**
 $$\begin{gather}
 P(A)\in P(B) \Rightarrow P(A)\subseteq B \newline \begin{cases} P(A)\subseteq B \newline A\in P(A) \end{cases} \Rightarrow A\in B \end{gather}
 $$
@@ -98,9 +98,11 @@ A is called ==domain== ,B is called ==codomain==
 	- $f(A\cap B)\subseteq f(A)\cap f(B)$
 
 **The graphs of functions:**
-$\{(a,b)|a\in A \land f(a)=b\}$
+
+$$\{(a,b)|a\in A \land f(a)=b\}$$
 
 ### 几种函数类型
+
 - **One-to-one** / injection / 单射
 	- $\forall a\forall b(f(a)=f(b)\to a=b)$
 - **Onto** / surjection / 满射
@@ -124,9 +126,10 @@ $\{(a,b)|a\in A \land f(a)=b\}$
 
 Function f is invertible iff f is a ==bijection==.
 
-$f^{-1}(y)=x\ iff\ f(x)=y$
+$$f^{-1}(y)=x\ iff\ f(x)=y$$
 
 ### Some important functions
+
 - **Floor function**
 	- $\lfloor x\rfloor$
 - **Ceiling function**
@@ -142,12 +145,14 @@ $f^{-1}(y)=x\ iff\ f(x)=y$
 ## 2.4 Sequence and Summations 数列与求和
 
 ### Definition
+
 A ==sequence== is a function from a subset of the set of integers (usually either the set {0, 1, 2, …} or the set {1, 2, 3, …}) to a set S. We use the notation $a_n$ to denote the image of the integer n. We call $a_n$ a term of the sequence. ($\{a_n\}$)
 
 !!! example "Some Useful Summation Formulae"
 	![[数列和.png]]
 
 ## Cardinality of Sets
+
 - The cardinality of a set A is equal to the cardinality of a set B, denoted | A | = | B |, iff there exists a bijection from A to B.
 	- 从A到B有双射，则A和B等势
 - If there is an injection from A to B, the cardinality of A is less than or the same as the cardinality of B and we write  |A| ≤ |B|. 
@@ -161,8 +166,9 @@ A ==sequence== is a function from a subset of the set of integers (usually eithe
 	- When an infinite set S is countable, we denote the cardinality of S by $\aleph _0$ ( aleph null ).
 	- If $|A|=|Z^+|$ , the set A is countable infinite.
 
-[Example:](#)
-	Show the set of positive rational numbers $|Q^+|=|Z^+|$
+**Example:**
+
+Show the set of positive rational numbers $|Q^+|=|Z^+|$
 
 $$
 \begin{gather}

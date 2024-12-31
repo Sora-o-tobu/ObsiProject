@@ -7,7 +7,6 @@
 A ==binary relation==(二元关系) R from set $A$ to set $B$ is a subset of $A\times B$
 
 !!! note
-	
 	**A binary relation R is a set**
 	
 	$R\subseteq A\times B$
@@ -28,14 +27,17 @@ A relation of set A is a relation from A to A.
 - Digraph
 
 #### 2D Table
+
 ![[二维表表示relation.png]]
 
 #### Connection Matrices
+
 ![[矩阵表示Relation.png]]
 
 因此，binary relations on a set A with n elements 共有$2^{n^2}$个
 
 #### Digraph
+
 ![[有向图表示Relation.png]]
 
 !!! example
@@ -60,7 +62,7 @@ $$
 
 因此，若用矩阵表示，矩阵正对角线应当全部为1；若用有向图表示，每个vertex都应该有个loop指向自己
 
-自反关系个数为$2^{n ^2-n}$
+自反关系个数为 $2^{n ^2-n}$
 
 --- 
 [Definition](#) A relation R on a set A is ==irreflexive== if
@@ -108,7 +110,7 @@ $$
 
 ![[Antisymmetric的矩阵表示.png]]
 
-反对称关系的个数为$2^ n\cdot 3^{\frac{ n^2-n}{2}}$
+反对称关系的个数为 $2^ n\cdot 3^{\frac{ n^2-n}{2}}$
 
 ---
 [Definition](#) A relation R on a set A is ==transitive== if
@@ -132,18 +134,22 @@ $$
 - Inverse relation
 
 #### Set operation
+
 ![[setoperation1.png]]
 
 #### Composition
+
 ![[Composition1.png]]
 
 !!! note "注意，R是前面那个"
 	![[compositon例子.png]]
 
 利用矩阵乘法可以求Composition
+
 ![[矩阵求Composition.png]]
 
 利用有向图求Composition
+
 ![[利用有向图求Compositon.png]]
 
 [Definition](#)
@@ -162,6 +168,7 @@ The relation R on a set A is ==transitive== if and only if $R^n\subseteq R,for \
 	![[对称关系的n次方也是对称的.png]]
 
 #### Inverse relation
+
 ![[关系转置1.png]]
 
 !!! note ""
@@ -444,8 +451,3 @@ A poset(A,R) is ==well-ordered set== if every nonempty subset of A has a least e
 !!! info
 	![[Lattices相关知识.png]]
 
-
-
-### Topological Sorting
-
-（还没搞懂，以后再来看）

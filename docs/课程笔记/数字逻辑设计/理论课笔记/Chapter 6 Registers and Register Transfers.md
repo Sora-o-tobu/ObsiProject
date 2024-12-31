@@ -14,7 +14,7 @@
 !!! warning "Clock Skew"
 	然而这个方案存在缺陷，在同步时序电路中，由于clock信号由整个电路共用，如果直接把load与clock以某种方式相连的话，clock到达该电路(或者其它电路)就会有不可避免的传播延迟，即**时钟偏移**(clock skew)。
 
-- 理解Clock Skew后，我们可以转而采取另一种方案：通过load来选择触发器的输入是当前的input还是当前的output
+理解Clock Skew后，我们可以转而采取另一种方案：通过load来选择触发器的输入是当前的input还是当前的output
 
 ![[方案Bphoto.png]]
 
@@ -102,6 +102,7 @@ Wow，so simply!
 此外，通过在每个Flipflop前都加一个MUX，可以实现双向移位（简单易懂耶）
 
 ### Counter 计数器
+
 - Asynchronous Counter (Ripple Counter)
 	- Slower
 	- Simple

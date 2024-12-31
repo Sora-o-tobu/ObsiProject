@@ -221,7 +221,7 @@ int main(void) {
 
 ### 寻址
 
-采用小段寻址 **little endian** 。
+采用小端寻址 **little endian** 。
 
 ![[littleendianriscv.png]]
 

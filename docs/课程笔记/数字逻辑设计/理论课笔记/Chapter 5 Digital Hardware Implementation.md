@@ -50,6 +50,7 @@
 - 对于PLA：OR和AND都可以发生增减，灵活但有局限（缺陷）
 
 ### Logical Symbols 逻辑符号
+
 ![[LogicalSymbols.png]]
 
 ![[LogicalSymbol例子.png]]
@@ -73,7 +74,7 @@ Read Only Memory(**ROM**) or Programmable Read Only Memory(**PROM**)
 	1. 首先列出真值表
 	![[Truthtablerom.png]]
 	
-	2. 将能直接化简掉的直接化简，如上图$B_1=0,B_0=A_0$
+	2. 将能直接化简掉的直接化简，如上图 $B_1=0,B_0=A_0$
 	
 	3. 然后运用minterms直接得出ROM的结构图：
 	 ![[ROM2.png]]

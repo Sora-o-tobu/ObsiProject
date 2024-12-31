@@ -147,6 +147,19 @@ $$
 
 这里常数从 $c$ 变成 $c+1$ 了，但是这只是数学归纳法的一步。此题目向下迭代的次数为 $O(\log N)$ 次，每迭代一次，常数就加一，最终复杂度还是会变为 $O(N\log N)$
 
+**【Example】** $T(N) =\sqrt{N} T(\sqrt{N}) + N\log \sqrt{N}$
+
+**Guess：** 主定理不适用于该题，并且计算递归层数的方法较为复杂难理解，因此我们采用猜测验证。由于这个实际上是把一个 MergeSort 分为 $\sqrt{N}$ 个段分别 sort 再合并，因此我们猜测时间复杂度为 $O(N\log N)$
+
+$$\begin{array}l
+T(N) & = \sqrt{N}T(\sqrt{N}) + \frac{1}{2}N\log N
+\\ & = \sqrt{N} \times \sqrt{N} \log \sqrt{N} + \frac{1}{2}N\log N
+\\ & = \frac{1}{2}N \log N + \frac{1}{2}N \log N 
+\\ & = N\log N
+\end{array}$$
+
+非常完美的证明！
+
 ### Recursion-tree method
 
 感觉不是很重要？总之层数按最深的那个来。

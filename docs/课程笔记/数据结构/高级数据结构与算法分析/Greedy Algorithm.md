@@ -71,3 +71,9 @@ void Huffman(PriorityQueue heap[] = C)
 ```
 
 !!! danger "正确性证明怎么办呢🥺"
+
+根据上述构建过程，我们知道 Huffman Tree 中是不存在度为 1 的节点的。由于对于任何树，都存在 $n_2= n_0 -1$，哈夫曼树的总节点数量 $size$ 与其编码的字符数量 $n$ 有如下关系：
+
+$$
+\text{size} = 2n-1
+$$

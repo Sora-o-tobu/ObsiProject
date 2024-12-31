@@ -29,6 +29,9 @@
 	- 详见红黑树章节某表格，除了AVL数的删除所需旋转数为 $O(\log N)$，其它均为 $O(1)$
 - **(F)** In a Red-Black tree, the path from the root to the nearest leaf is no more than half as long as the path from the root to the farthest leaf.
 	- 没有这个说法
+- **(F)** 判断下面这个 BST 是否是红黑树
+	- ![[redblacktreepanduan.png]]
+	- 红黑树中度为 1 的节点只可能是黑色的！！！
 
 ## B+ Tree
 
@@ -36,6 +39,8 @@
 	- 答案大概是 0 个。一种典型错误思考是认为最少情况是有 $21/3=7$ 个叶节点，这样第二层分为 $3,2,2$ ，共两个度为2的节点。但是实际上叶节点数量可以大于 7，因此我们大手调控一下使其有 9 个叶节点，这样一个度为2的节点都不存在了
 - **(F)** For a B+ tree with order M and N keys, the time complexity of find operations is $O(\log_M N)$
 	- 不考虑 M 的话应该是 $O(\log N)$ ，考虑的话可能 $O(M\log_MN)$ ？搞不懂
+- **(T)** The time bound of the FIND operation in a B+ tree containing $N$ numbers is $O(\log N)$, no matter what the degree of the tree is
+	- 这个就是对的
 
 ## Leftist Heap & Skew Heap
 
@@ -56,6 +61,8 @@
 	- NPL = r 对应着右路径上有 $r+1$ 个节点，所以正确。
 - **(F)** By definition, for a light node $p$ in a skew heap, the number of descendants of $p$'s right subtree is no more than 1/2 of the number of descendants of $p$.
 	- 刚好等于的情况属于重节点，因此这里要用 less than
+- **(F)** After merging two leftist heaps H1 and H2, the NPL of the resulted heap will be no more than min(NPL of H1, NPL of H2)+1
+	- 实际上，合并后的 NPL 应该等于 $\max[NPL(H_1), NPL(H_2)] (+1)$
 
 ## Binomial Queue
 
@@ -72,6 +79,8 @@
 	- 消耗最大的操作显然就是 `pop` 时 `SB` 为空，此时将 `SA` 所有元素都 `pop,push` 了一遍。因此势能函数为 $2|SA|$。
 - **(F)** In amortized analysis, a good potential function should always assume its maximum at the start of the sequence.
 	- 应该是 Minimum，即 $\Phi(D_0)$ 为最小值，通常设为 $\Phi(D_0) =0$
+- **(T)** Amortized analysis is a technique to provide an upper bound on the actual cost of a sequence of operations
+	- 摊还复杂度应该是介于最坏时间和平均时间之间的，不过这题都说了是实际消耗的上界那就是吧
 
 ## Inverted File Index
 
@@ -125,6 +134,9 @@
 
 ## Approximation
 
+- **(F)** There exits an online algorithm for the bin packing problem that uses at most 3/2 the optimal number of bins for an instance
+	- 在线的装箱问题算法的上限基本也就 1.7 了...
+	- 理论证明，对于online算法，总能构造一组输入使得装箱数**至少**为最优解的 5/3 倍
 - **(F)** Suppose ALG is an $\alpha$-approximation algorithm for an optimization problem $\prod$ whose approximation ratio is tight. Then for every $\varepsilon \gt 0$ there is no $(\alpha-\varepsilon)$-approximation algorithm for $\prod$ unless P = NP. (T/F)
 	- 对于一种算法而言，近似比为 $\alpha$ ，那么 ∀$\beta \gt \alpha$ ，都可以说 $\beta$ 是其近似比。如果 $\alpha$ 是 tight 的，则 $\alpha$ 是一个下确界。
 	- 但这都只是对这一种算法的分析，一个 tight 的近似比只能说明你对这种算法的分析到位了，而不能说明这个问题没有更好的算法。这里完全是两码事。
@@ -151,6 +163,11 @@
 - 神秘题目。从势能函数上考虑，只有最小生成树问题的 cost 函数只有一个极小值的，所以不会陷入局部最优解
 	- ![[shenmitimutimian.png]]
 	- ![[shenmitimujiexi.png]]
+
+## Randomized Algorithms
+
+- **(F)** Considering the randomized quicksort, there exists some good inputs on which the expected running time of randomized quicksort is $O(n)$ where n is the input size. 
+	- Randomized Quicksort随机化的思想就是保证时间复杂度不受输入序列的影响，因此这虽然保证了上限不会达到 $O(n^2)$ ，也使得下限同样不会达到 $O(n)$
 
 ## Parallel Algorithms
 

@@ -129,8 +129,7 @@ A simply graph is called regular if every vertex of this graph has the same degr
 
 
 ### Hamilton path and circuit
-!!! info
-	如无特别说明，讨论哈密顿回路时皆为 **无向图**
+!!! note "如无特别说明，讨论哈密顿回路时皆为无向图"
 
 - Hamilton Path: 包含 **每个节点（仅一次）** 的 simple path
 - Hamilton Circuit: 除了起点和终点包含两次，其他每个节点包含一次的 simple circuit

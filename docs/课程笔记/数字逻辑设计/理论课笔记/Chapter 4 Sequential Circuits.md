@@ -2,6 +2,7 @@
 ## Part 1 Storage Elements and Sequential Circuit Analysis
 
 ### Introduction of Sequential Circuits 时序电路的介绍
+
 一个时序电路包含:
 
 - Storage Elements:
@@ -18,7 +19,6 @@
 	- 每当输入的状态改变，立刻更新输出的值 变化更快
 
 
-
 #### 锁存器
 
 Latch 的条件
@@ -28,10 +28,8 @@ Latch 的条件
 3. 在特定的情况下能够改变状态
 
 !!! note ""
-	
 	=== "S'R'锁存器"
 		![[S'R'锁存器.png]]
-	
 	=== "SR锁存器"
 		![[SR锁存器.png]]
 	二者的共同点是当S置1的时候，Q会变成1(注意S'R'锁存器 S置1的时候实际上输入了S'=0)
@@ -79,11 +77,9 @@ Latch 的条件
 为了避免1s-catching，可以使用边缘触发触发器，它只保存了电位变化瞬间的那个数据，大大减小了危害。
 
 !!! example ""
-
 	=== "Negative-Edge-Triggered D Flip-Flop"
 		![[边缘触发器.png]]
 		![[负边缘触发器器件图示.png]]
-	
 	=== "Positive-Edge-Triggered D Flip-Flop"
 		![[正边缘触发器原理图.png]]
 		![[正边缘触发器器件图示.png]]
@@ -120,6 +116,7 @@ Latch 的条件
 #### 分析功能
 
 - **Step 1** 列出 `input equations` , `next state equations` and `output equations`
+
 ![[列出状态关系1.png]]
 
 - **Step 2** 根据等式列出 `State Table`
@@ -167,6 +164,7 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 - 一般分析实例中 $t_h$ 小于 $t_{pd,FF}$ 
 
 ##### 分析实例
+
 === "External input to Output"
 	![[必须知道的话术1.png]]
 === "External input to Clock Edge"
@@ -177,7 +175,7 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 	![[必须知道的话术4.png]]
 	![[必须知道的话术5.png]]
 
----
+<font style="font-weight: 1000;font-size: 24px">课本例题：</font>
 
 === "题面"
 	![[题面.png]]
@@ -224,10 +222,8 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 ???+ info
 	=== "Counting Order Assignment"
 		![[CountingOrderAssignment.png]]
-	
 	=== "Grey Code Assignment"
 		![[GreyCodeAssignment.png]]
-	
 	=== "One-hot Assignment"
 		![[OnehotAssignment.png]]
 
@@ -237,10 +233,8 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 !!! info ""
 	=== "Counting Order Assignment"
 		![[CountingOrderAssignment优化.png]]
-	
 	=== "Grey Code Assignment"
 		![[GreyCodeAssignment优化.png]]
-	
 	=== "One-hot Assignment"
 		![[One-hotAssignment优化.png]]
 		可以看出`One-hot`编码的优化非常简单，我比较喜欢喵
@@ -265,7 +259,6 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 !!! danger ""
 	=== "Mealy Model"
 		![[余3累加器状态图.png]]
-	
 	=== "Moore Model"
 		![[余3累加器MooreModel.png]]
 
@@ -275,16 +268,15 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 	![[余3累加器table.png]]
 
 - **Find equation and optimize**
+
 ![[余3累加器卡诺图.png]]
 
 - **最终电路**
+
 ![[余3累加器最终电路.png]]
 
-### State Machine 状态机
 
-正体不明
-
-### 其它触发器(也有可能考的哦)
+### 其它触发器
 
 #### J-K Flip-flop
 

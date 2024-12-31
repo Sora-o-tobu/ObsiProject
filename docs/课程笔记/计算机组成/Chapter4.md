@@ -279,14 +279,14 @@ if(EX/MEM.RegWrite
 ```c
 if(MEM/WB.RegWrite
   and (MEM/WB.RegisterRd != 0)
-  and not(EX/MEM.RegWrite and (EX/MEM.RegisterRd != 0)
-      and (EX/MEM.RegisterRd == ID/EX.RegisterRs1)) // 没发生 EX Hazard
+  and not[EX/MEM.RegWrite and (EX/MEM.RegisterRd != 0)
+      and (EX/MEM.RegisterRd == ID/EX.RegisterRs1)] // 没发生 EX Hazard
   and (MEM/WB.RegisterRd == ID/EX.RegisterRs1))
   ForwardA = 01;
 if(MEM/WB.RegWrite
   and (MEM/WB.RegisterRd != 0)
-  and not(EX/MEM.RegWrite and (EX/MEM.RegisterRd != 0)
-      and (EX/MEM.RegisterRd == ID/EX.RegisterRs2)) // 没发生 EX Hazard
+  and not[EX/MEM.RegWrite and (EX/MEM.RegisterRd != 0)
+      and (EX/MEM.RegisterRd == ID/EX.RegisterRs2)] // 没发生 EX Hazard
   and (MEM/WB.RegisterRd == ID/EX.RegisterRs2))
   ForwardB = 01;
 ```
@@ -313,8 +313,8 @@ add x1, x1, x4 ; Instruction 3
 
 ```c
 ID/EX.MemRead and 
-((ID/EX.RegisterRd == IF/ID.RegisterRs1) or 
- (ID/EX.RegisterRd == IF/ID.RegisterRs2))
+[(ID/EX.RegisterRd == IF/ID.RegisterRs1) or 
+ (ID/EX.RegisterRd == IF/ID.RegisterRs2)]
 ```
 
 #### Control Hazards

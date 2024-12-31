@@ -42,7 +42,7 @@ $$
 	(3) $a_n = na_{n-1}+ n^2a_{n-2}+ a_{n-1} a_{n-2}$  **nonlinear**;**not constant**;homogeneous;degree 2.
 
 
-解法:==不动点法==，高中教过，相信都懂!
+解法: ==不动点法== ，高中教过，相信都懂!
 
 此处仅给出一例:
 ![[不动点法.png]]
@@ -100,7 +100,7 @@ $G(x)=(1+x+x^2 +x^3+... )^n= (\frac{1}{{1-x}})^n =\sum_{k=0}^\infty C_{n+k-1}^k 
 [Example](#)
 Find the number of solutions of $e_1+ e_2+ e_3 =17\ \ where\ 2\le e_1\le 5,3\le e_2\le 6,4\le e_3\le 7$
 
-$G(x)=(x^2+ x^3 +x^4+ x^5)( x^3 +x^4+ x^5+ x^6)( x^4+ x^5 +x^6+ x^7)$
+$$G(x)=(x^2+ x^3 +x^4+ x^5)( x^3 +x^4+ x^5+ x^6)( x^4+ x^5 +x^6+ x^7)$$
 
 答案就是$x^{17}$的系数。
 
@@ -120,6 +120,7 @@ $G(x)=(x^2+ x^3 +x^4+ x^5)( x^3 +x^4+ x^5+ x^6)( x^4+ x^5 +x^6+ x^7)$
 ## 8.5 Inclusion-Exclusion
 
 For the **Union** of n finite sets：
+
 $$
 |A_1 \cup A_2\cup ...\cup A_n|= \sum_{i=1}^{n} |A_i| -\sum_{1\le i\lt j\le n}|A_i\cap A_j|+ \sum_{1\le i\lt j\lt k\le n}| A_i \cap A_j\cap A_k|+...+(-1)^{n+1}|A_1 \cap A_2\cap ...\cap A_n|
 $$
@@ -142,11 +143,14 @@ N(P_1' P_2'... P_n')=N- |A_1 \cup A_2\cup ...\cup A_n|=N- \sum_{1\le i\le n} N(P
 $$
 
 [例题1](#) 将隔板原理题目化简
+
 ![[容斥原理例题1.png]]
 
 [例题2](#) onto functions的个数
+
 ![[容斥原理满射的个数.png]]
 
 [例题3](#) derangement 打乱次序，且每个元素不在原来位置
+
 ![[容斥原理打乱顺序.png]]
 

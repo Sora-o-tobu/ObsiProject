@@ -142,5 +142,5 @@ $$
 
 ![[randomquicksort.png]]
 
-!!! failure "优点在于不会陷入 worst case $O(N^2)$ ???"
+!!! failure "Worst Case 从原来的 $O(N^2)$ 、Best Case 从原来的 $O(N)$ 都变成了 $O(N\log N)$"
 

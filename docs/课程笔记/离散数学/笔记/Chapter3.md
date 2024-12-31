@@ -19,6 +19,7 @@
 ## 3.2 The growth of functions
 
 ### Factors to be considered for choosing an algorithm
+
 - **Simplicity** - Easy to implement and obviously correct
 - **Clarity** - Easy to read and to maintain
 - **Extensibility** - Can easily be extended to new tasks

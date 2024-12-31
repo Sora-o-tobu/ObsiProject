@@ -2,6 +2,7 @@
 ## 1.1 Propositional Logic （命题逻辑）
 
 ### Definition
+
 - A proposition is a declarative sentence that is either true or false, but not both.
 也就是说必须要有意义，比如：
 - `Where am I?`  不是
@@ -123,12 +124,15 @@ For example:
 $P\to Q \equiv \neg Q\to \neg P$
 
 ### Vacuous Proof
+
 If we know P is false then  $P\to Q$ is vacuously true.
 
 ### Trivial Proof
+
 If we know Q is true, then $P\to Q$ is true
 
 ### Proof p by Contradiction
+
 步骤：
 
 - 假设p是False

@@ -134,8 +134,6 @@ Example：
 - 逆变函数 Inverting $F = \overline{X}$
 - 使能函数 Enabling $F = X \cdot EN or F = X + \overline{EN}$
 
-![[Chapter 3 Combinational Logic Design 2024-04-04 15.38.39.excalidraw]]
-
 ### Functional Blocks
 
 - 译码器 Decoder
@@ -145,9 +143,7 @@ Example：
 
 #### 1. Decoder 译码器
 
-Decoding 
-
-- the conversion of an n-bit input code to an m-bit output code with ==n <= m <= 2n== such that each valid code word produces a unique output code
+Decoding ：the conversion of an n-bit input code to an m-bit output code with ==n <= m <= 2n== such that each valid code word produces a unique output code
 
 例如实验lab5的 3-8译码器 以及lab6的 BCD to 7-segment decoder
 
@@ -164,8 +160,6 @@ Decoding
 !!! danger "注意"
 	考试有可能会考译码器内与门的个数
 
----
-
 Decoder的另一个应用是，可以用Decoder加上OR门组成minterms
 
 ![[Decoder组成minterms.png]]
@@ -180,6 +174,7 @@ Decimal-to-BCD encoder:
 - Outputs:4 bits with BCD codes
 
 真值表我们很容易就能得到：
+
 ![[Decimal-to-BCDencoder.png]]
 
 Priority Encoder(优先级编码器):
@@ -196,8 +191,6 @@ Priority Encoder(优先级编码器):
 
 - 2-to-1-Line Multiplexer: 
 	- ![[2-to-1多路选择器.png]]
-
----
 
 In general , an 2<sup>n</sup>-to-1-line multiplexer is combined:
 
@@ -285,7 +278,8 @@ $$
 
 其中我们能发现可以复用的term，将$XY$称为carry generate，$X\oplus Y$称为carry propagate
 
-全加器可以由两个半加器组合而成。
+全加器可以由两个半加器组合而成：
+
 ![[数字逻辑全加器.png]]
 
 #### Ripple-Carry Binary Adder 行波加法器
@@ -300,6 +294,7 @@ $$
 
 为了探讨S、C的关系，我们可以令
 $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_i) C_i= G_i +P_i C_i$
+
 其中，$G_i$称为generate function，$P_i$称为propagate function。
 
 因此，我们可以通过将$C_i$用初始值表示进行超前进位来使得时间复杂度从 $O(n)$ 变为 $O(1)$
@@ -312,6 +307,7 @@ $S_i= A_i\oplus B_i\oplus C_i= P_i\oplus C_i$，$C_{i+1} =A_i B_i+( A_i\oplus B_
 	![[化简.png]]
 
 实际使用过程中， 由于门具有有限的fan-in，我们通常将好几个 CLA 进行连接来实现功能，称为 ==group carry lookahead== ，如
+
 ![[groupCLA.png]]
 
 ![[groupCLA2.png]]
