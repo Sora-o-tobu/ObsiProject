@@ -1,5 +1,5 @@
 
-# Backtracing
+# Backtracking
 
 回溯算法的思想就是从一个大的候选答案中剪去已经可以证明是不可能正确的分支，即 **Prunning**。
 

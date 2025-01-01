@@ -86,21 +86,28 @@
 	- 应该是 Minimum，即 $\Phi(D_0)$ 为最小值，通常设为 $\Phi(D_0) =0$
 - **(T)** Amortized analysis is a technique to provide an upper bound on the actual cost of a sequence of operations
 	- 摊还复杂度应该是介于最坏时间和平均时间之间的，不过这题都说了是实际消耗的上界那就是吧
+- **(T)** Recall that the worst-case time complexities of insertions and deletions in a heap of size N are both O(logN). Then, without changing the data structure, the amortized time complexity of insertions in a heap is also O(logN), and that of deletions is O(1).
+	- 删除摊还复杂度怎么会是 $O(1)$...
 
 ## Inverted File Index
 
 - **(T)** While accessing a term by hashing in an inverted file index, range searches are expensive
 	- 哈希表在范围查询时需要计算每个单词的哈希值，因此消耗较大
+- **(T)** Stemming increases recall while harming precision.
+	- 你说是就是吧，二者不可得兼
+- 
 
-## Backtracing
+## Backtracking
 
 - **(T)** In backtracking, if different solution spaces have different sizes, start testing from the partial solution with the smallest space size would have a better chance to reduce the time cost
 	- 从搜索空间小的部分开始计算，如果找到结果了则以最小的消耗完成
 - Given the following game tree, node _d_ will be pruned with _α_−_β_ pruning algorithm if and only if \_\_\_\_\_.
 	- ![[backtracingex2.png]]
-	- $65\le b \le 70$
+	- $65\le b \le 70$ (忘记从哪看来的了，我感觉 $65\le b$ 即可)
 - **(T)** For the Turnpike reconstruction algorithm of $N$ points, assuming that the distance set $D$ is maintained as an AVL tree, the running time is $O(N^2\log⁡ N)$ if no backtracking happens.
 	- 不是很理解这个，还是记答案吧
+- **(T)** There are many solutions to the 5-Queens Problem, and there are 8 solutions that at least one queen is placed in a corner of the chessboard.
+	- 还是记答案防止考到原题！
 
 ## Divide & Conquer
 
@@ -108,6 +115,8 @@
 	- ![[divideandconquerleftistheap.png]]
 	- 合并堆的时间复杂度为 $O(\log N)$，得到递推表达式 $T(N) = 2T\left(\frac{N}{2}\right)+O(\log N)$。根据主定理可以得出总时间复杂度为 $O(N)$
 	- 也可记住结论，所有堆的建堆操作都不会超过 $O(N)$
+- **(T)** The n-th Fibonacci number can be computed by divide and conquer method of computing $x^n$, where x is the matrix  $\left [\begin{matrix}0 & 1 \\ 1 & 1 \end{matrix}\right ]$ . Then the $n^3$-th Fibonacci number $F_{n^3}$​ can be computed in $O(\log n)$ time.
+	- 看不懂喵，记答案吧
 
 
 计算下面函数的时间复杂度，其中 `calc` 的时间复杂度为 $O(1)$ :
@@ -165,6 +174,7 @@ $$
 
 - **(T)** A decision problem in P is also in both NP and co-NP.
 	- $co-NP$ 表示其补集语言可在 NP 内验证
+- **(T)** The following problem is in co-NP: Given a positive integer k, is k a prime number?
 - **(F)** Given that problem A is NP-complete. If problem B is in NP and can be polynomially reduced to problem A, then problem B is NP-complete.
 	- 应该是 A 能归约到 B，才能说 B 是 NPC 问题
 - **(T)** If $L_1 \le _p L_2$ and $L_2\in NP$ , then $L_1 \in NP$
@@ -199,11 +209,18 @@ $$
 - **(F)** In the bin packing problem, we are asked to pack a list of items L to the minimum number of bins of capacity 1. For the instance L, let FF(L) denote the number of bins used by the algorithm First Fit. The instance L′is derived from L by deleting one item from L. Then FF(L′) is at most of FF(L).
 	- 说是可以举出反例，但我想不到
 	- 改成 NF 算法则是正确的
+- **(T)** For any undirected graph G, the weight of its maximum cut is at least half of the total edge weight.
+- **(T)** Consider the following variant of the knapsack problem. You are given k identical knapsacks and n items of different sizes. The profit of each item is equal to its size. Your goal is to select items and fill the knapsacks as much as possible subject to the capacity constraints. A greedy approach always packs the largest remaining item as long as there is enough room. As bin packing, if more than one knapsacks have room for the current item, one may use any packing rule (Next Fit, First Fit, and Best Fit). No matter what rule you apply, for any k≥1, the approximation ratio of the greedy algorithm is always 2.
+	- 近似比严格来讲都是小于 2 的，但是这是上限就可以了
+
 
 
 
 ## Local Search
 
+
+- **(F)** For an optimization problem, given a neighborhood, if its local optimum is also a global optimum, one can reach an optimal solution with just one step of local improvements.
+	- 神秘题目，不清楚错在哪里
 - 用 Local Search 求解 K-center 的近似比可以是 2 吗？？？并不能，可以举出反例。
 	- ![[localsearchkcenter.png]]
 - **(T)** Local search algorithm can be used to solve lots of classic problems, such as SAT and N-Queen problems. Define the configuration of SAT to be X = vector of assignments of N boolean variables, and that of N-Queen to be Y = positions of the N queens in each column. The sizes of the search spaces of SAT and N-Queen are $O(2^N)$ and $O(N^N)$, respectively.
@@ -211,7 +228,7 @@ $$
 - 神秘题目。从势能函数上考虑，只有最小生成树问题的 cost 函数只有一个极小值的，所以不会陷入局部最优解
 	- ![[shenmitimutimian.png]]
 	- ![[shenmitimujiexi.png]]
-- **(F)** A Las Vegas algorithm is a randomized algorithm that always gives the correct result, however the runtime of a Las Vegas algorithm differs depending on the input. A Monte Carlo algorithm is a randomized algorithm whose output may be incorrect with a certain (typically small) probability. The running time for the algorithm is fixed however. Then if a Monte Carlo algorithm runs in O(n^2) time, with the probability 50% of producing a correct solution, then there must be a Las Vegas algorithm that can get a solution in O(n&2) time in expectation.
+- **(F)** A Las Vegas algorithm is a randomized algorithm that always gives the correct result, however the runtime of a Las Vegas algorithm differs depending on the input. A Monte Carlo algorithm is a randomized algorithm whose output may be incorrect with a certain (typically small) probability. The running time for the algorithm is fixed however. Then if a Monte Carlo algorithm runs in O(n^2) time, with the probability 50% of producing a correct solution, then there must be a Las Vegas algorithm that can get a solution in O(n^2) time in expectation.
 
 ## Randomized Algorithms
 
@@ -228,13 +245,17 @@ $$
 	- 答案选D，因为两个并查集都是有序的，所有最后搜索的时间复杂度应该与 $m,n$ 无关
 	- https://leetcode.cn/problems/median-of-two-sorted-arrays/solutions/258842/xun-zhao-liang-ge-you-xu-shu-zu-de-zhong-wei-s-114/
 	- 实际上就是两个有序数组的二分查找，第一步若有： $A[k / 2] \le B[ k / 2]$ ，则第 k 小的元素一定落在 $A$ 数组 $k/2$ 之后或者 $B$ 数组 $k/2$ 之前。继续二分，在这个缩小的区间内查找： $A[3k / 4] , B[k / 4]$ ，以此类推
+- **(F)** If we translate a serial algorithm into a reasonably efficient parallel algorithm, the work load and the worst-case running time are usually reduced.
+- **(F)** When we solve the summation problem via designing the parallel algorithms, we shorten the asymptotic time complexity but take more asymptotic work loads comparing with the sequential algorithms.
+	- 似乎是 workload 的级别没有降低
+
 
 
 ## External Sort
 
 - **(T)** If only one tape drive is available to perform the external sorting, then the tape access time for any algorithm will be $\Omega (N^2)$.
 	- 说是寻道时间从 $O(1)$ 变成了 $O(n)$ 了，但我不是很理解
-- **(D)** Suppose we have the internal memory that ca### n handle 12 numbers at a time, and the following two runs on the tapes:
+- **(D)** Suppose we have the internal memory that can handle 12 numbers at a time, and the following two runs on the tapes:
 	- **Run 1**: 1, 3, 5, 7, 8, 9, 10, 12
 	- **Run 2**: 2, 4, 6, 15, 20, 25, 30, 32
 	- Use 2-way merge with 4 input buffers and 2 output buffers for parallel operations. Which of the following three operations are NOT done in parallel?

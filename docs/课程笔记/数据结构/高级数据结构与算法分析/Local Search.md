@@ -148,4 +148,4 @@ $$
 那么有以下两点性质（可能会考）：
 
 - 最终结果 $(2+\varepsilon) w(A,B)\ge w(A^*, B^*)$，即近似比为 $2+\varepsilon$
-- 算法会在 $O(n / \varepsilon \log N)$ 次翻转内结束
+- 算法会在 $O(\frac{n}{\varepsilon} \log N)$ 次翻转内结束
