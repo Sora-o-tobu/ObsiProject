@@ -162,7 +162,7 @@ n-way 组相联将每 n 个 Block 分为一组，找对应 Block 时先确定组
 ### Performance
 
 $$\begin{array}l
-\text{Average Memory Access time}& = \text{hit time} \times \text{miss time} \\ & = \text{hit time} + \text{miss rate} \times \text{memory time}
+\text{Average Memory Access time}& = \text{hit time} + \text{miss time} \\ & = \text{hit time} + \text{miss rate} \times \text{memory time}
 \end{array}
 $$
 

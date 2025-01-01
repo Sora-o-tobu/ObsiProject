@@ -72,6 +72,11 @@
 	- 9 = 1001; 15 = 1111. 看谁的 0 在前面
 - **(T)** Making $N$ insertions into an initially empty binomial queue take $O(N)$ time in worst case.
 	- 记答案吧，另外这也说明平均插入时间是常数级的
+- **[D]** In a binomial queue, we denote that the total numbers of the nodes at even depth and odd depth as $N_1$ and $N_2$(the root is at depth 0), then which of the following statement is FALSE?
+	- A. If $N_1 \gt N_2$, then $N_1 +N_2$ can be even
+	- B. If $N_1 +N_2$ is odd, then $N_1 \gt N_2$
+	- C. For all cases, $N_1 \ge N_2$
+	- D. For all cases, $N_1 \le N_2 +1$
 
 ## Amortized Analysis
 
@@ -99,10 +104,37 @@
 
 ## Divide & Conquer
 
-- We can perform BuildHeap for leftist heaps by considering each element as a one-node leftist heap, placing all these heaps on a queue, and performing the following step: Until only one heap is on the queue, dequeue two heaps, merge them, and enqueue the result. Which one of the following statements is FALSE?
+- **[D]** We can perform BuildHeap for leftist heaps by considering each element as a one-node leftist heap, placing all these heaps on a queue, and performing the following step: Until only one heap is on the queue, dequeue two heaps, merge them, and enqueue the result. Which one of the following statements is FALSE?
 	- ![[divideandconquerleftistheap.png]]
 	- 合并堆的时间复杂度为 $O(\log N)$，得到递推表达式 $T(N) = 2T\left(\frac{N}{2}\right)+O(\log N)$。根据主定理可以得出总时间复杂度为 $O(N)$
 	- 也可记住结论，所有堆的建堆操作都不会超过 $O(N)$
+
+
+计算下面函数的时间复杂度，其中 `calc` 的时间复杂度为 $O(1)$ :
+
+```c
+void fun(int l, int r) {
+    if(r-l+1<=1234) return;
+    int m=(l+r)/2;
+    int m1=(l+m)/2, m2=(m+1+r)/2;
+    fun(l, m);
+    fun(m1+1, m2);
+
+	for(int k=1;k<=r-l+1;k++)
+        for(int i=1;i<=r-l+1;i++)
+            for(int j=l;j<=r;j+=i)
+                calc(j, i);
+
+    fun(m+1, r);
+    fun(m1+1, m2);
+}
+```
+
+**解答：** 四个 `fun` 嵌套调用对应 $4T(N / 2)$ ，主要考虑中间的循环部分。外面两层循环都是 $N$ 次，最内侧循环 $N/ i$ 次，其中 $i$ 从 1 到 $N$ 。由于 $1+ \frac{1}{2}+ \frac{1}{3}+ ... + \frac{1}{N} = \ln N$ ，所以 combine 的时间复杂度为 $O(N^2 \log N)$
+
+$$
+T(N) = 4T\left(\frac{ N}{ 2} \right)+ O(N^2 \log N) = O(N^2 \log ^2 N)
+$$
 
 ## Dynamic Programming
 
@@ -118,19 +150,35 @@
 
 - **(F)** Let S be the set of activities in Activity Selection Problem. Then the earliest finish activity $a_m$ must be included in all the maximum-size subset of mutually compatible activities of S.
 	- 虽然算法的思想是局部选择结束最早的活动，但是如果有另一个活动稍晚一点结束，但是又没在下一个活动开始后才结束，那么选择这个活动作为替代也是最优解
+- **[C]** Which of the following is NOT an elment of greedy strategy?
+	- A. optimal substructure
+	- B. works only if the local optimum is equal to the global optimum
+		- 只有局部最优解导向全局最优解才有效
+	- C. overlapping sub-problems
+		- 重叠子问题是动态规划的特征
+	- D. make a choice before solving the remaining sub-problem
+		- 在求解之前作出选择
 
 
 ## NP-Completion
 
+
+- **(T)** A decision problem in P is also in both NP and co-NP.
+	- $co-NP$ 表示其补集语言可在 NP 内验证
 - **(F)** Given that problem A is NP-complete. If problem B is in NP and can be polynomially reduced to problem A, then problem B is NP-complete.
+	- 应该是 A 能归约到 B，才能说 B 是 NPC 问题
 - **(T)** If $L_1 \le _p L_2$ and $L_2\in NP$ , then $L_1 \in NP$
 	- $L_1$ 可以多项式归约至 $L_2$ ，也能够说明 $L_1$ 能够在非确定图灵机上以多项式时间解决。$L_1$ 可能是 $P$ 问题，但是 $P\in NP$
+- **(F)** If a decision problem A can be reduced to B, then it means that problem A is strictly easier than B in terms of computational complexity.
+	- 并非严格更简单，可能相等(比如都是 NPC 问题)
 - **(F)** All the languages can be decided by a non-deterministic machine.
 	- 还有不可判定问题，比如 Halting Problem
 - **(F)** If a problem can be solved by dynamic programming, it must be solved in polynomial time.
 	- 0-1 背包问题不算 P 类
 - **(F)** As we know there is a 2-approximation algorithm for the Vertex Cover problem. Then we must be able to obtain a 2-approximation algortithm for the Clique problem, since the Clique problem can be polynomially reduced to the Vertex Cover problem.
 	- 就算这两个问题可以相互归约，在计算近似率时 Cost 的取值是不一样的，即评价准则不一样
+- **(F)** Without any assumptions on the distances, if P != NP, there is no ρ-approximation for TSP (Travelling Salesman Problem) for any ρ≥1.
+	- 这题的关键其实再第一句话，对距离没有任何假设。对于 TSP 问题，可以分为满足三角不等式的 Metric TSP 和不满足三角不等式的 General TSP(非欧几里得空间、非对称、负边权、动态距离等)。对于 Metric TSP，的确存在最小生成树法得到近似比为2 的近似算法，但是 General TSP 的某些情况优化问题和验证问题难度相当，没有多项式时间算法能够保证近似比
 
 ## Approximation
 
@@ -163,6 +211,7 @@
 - 神秘题目。从势能函数上考虑，只有最小生成树问题的 cost 函数只有一个极小值的，所以不会陷入局部最优解
 	- ![[shenmitimutimian.png]]
 	- ![[shenmitimujiexi.png]]
+- **(F)** A Las Vegas algorithm is a randomized algorithm that always gives the correct result, however the runtime of a Las Vegas algorithm differs depending on the input. A Monte Carlo algorithm is a randomized algorithm whose output may be incorrect with a certain (typically small) probability. The running time for the algorithm is fixed however. Then if a Monte Carlo algorithm runs in O(n^2) time, with the probability 50% of producing a correct solution, then there must be a Las Vegas algorithm that can get a solution in O(n&2) time in expectation.
 
 ## Randomized Algorithms
 

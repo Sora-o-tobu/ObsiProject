@@ -173,3 +173,92 @@ int lengthOfLongestSubstring(char* s) {
 
 !!! warning "其实是性能杀手 `memset` 搞的鬼！ (985ms -> 12ms)"
 
+## 3.5 Manager of Tasks
+
+其实是 ADS 模拟卷里的一个题（）
+
+There are N tasks arranged in a sequence on a machine waiting to be executed, and their order cannot be changed. You need to divide these N tasks into several groups, each containing several consecutive tasks. Starting from time 0, the tasks are processed in groups, and the time required to execute the i-th task is Ti​. Additionally, the machine requires a startup time S before each group of tasks begins, so the time required for a group of tasks is the startup time S plus the sum of the time required for each task in this group.
+
+After a task is executed, it will wait briefly in the machine until all tasks in that group are completely executed. That is to say, the tasks in the same group will be completed at the same time. The cost of each task is its completion time multiplied by a cost coefficient Ci.
+
+Please plan a grouping scheme for the machine to minimize the total cost.
+
+For all testing data, 1≤N≤1000,0≤S≤50,1≤Ti​,Ci​≤100
+
+简单来讲就是有一个长度为 N 、先后关系要求不变的 Task 序列，要分配在一个处理器上执行。处理器可以将这些 Task 分成不同长度 group，同一 group 内的 Task 同时完成，且完成时间等于这些 Task 所需的时间和并加上一个 Setup Time(S)；而后面的组的时间计算要从前一个组的末尾开始。求这组任务最少的 Cost。
+
+```text
+Sample input:
+5
+1
+1 3
+3 2
+4 3
+2 3
+1 4
+
+Sample Output:
+153
+
+Sample Explanation:
+We have grouped the tasks into 3 groups, which are `{1, 2}, {3}, {4, 5}`. The completion time corresponding to each task, in the order of the task numbers, is `{5, 5, 10, 14, 14}`. Similarly, the cost corresponding to each task, again in the order of the task numbers, is `{15, 10, 30, 42, 56}`. The total cost of these tasks is 153.
+```
+
+```c
+#include <stdio.h>
+#include <limits.h>
+
+#define MAXN 1000
+
+long long min_cost(int N, int S, int T[], int C[]);
+
+int main() {
+    int N, S;
+    int T[MAXN], C[MAXN];
+    scanf("%d%d", &N, &S);
+    for (int i = 0;i < N; ++ i) {
+        scanf("%d%d", &T[i], &C[i]);
+    }
+    printf("%lld\n", min_cost(N, S, T, C));
+    return 0;
+}
+
+long long min_cost(int N, int S, int T[], int C[]) {
+    long long dp[MAXN + 1];
+    long long dptime[MAXN + 1] = {0};
+    long long sumT[MAXN + 1] = {0}; // 前缀和：任务执行时间
+    long long sumC[MAXN + 1] = {0}; // 前缀和：成本系数
+
+    // 计算前缀和
+    for (int i = 1; i <= N; i++) {
+        sumT[i] = sumT[i - 1] + T[i - 1];
+        sumC[i] = sumC[i - 1] + C[i - 1];
+    }
+
+    // 初始化 dp 数组
+    dp[0] = 0; // 0 个任务的成本为 0
+    for (int i = 1; i <= N; i++) {
+        dp[i] = LLONG_MAX;
+    }
+
+    // 动态规划求解
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= i; j++) {
+            // 以 j 为起点，i 为终点的任务组
+            long long group_time = S + (sumT[i] - sumT[j - 1]) + dptime[j - 1];
+            long long group_cost = (sumC[i] - sumC[j - 1]) * group_time;
+
+            // 更新 dp[i]
+            if( dp[i] + dptime[i] * (sumC[N] - sumC[i]) > dp[j - 1] + group_cost + group_time * (sumC[N] - sumC[i]))
+            {
+                dp[i] = dp[j - 1] + group_cost;
+                dptime[i] = group_time;
+            }
+        }
+    }
+
+    return dp[N];
+}
+```
+
+其实困住我的难点在于 `dp[i] + dptime[i] * (sumC[N] - sumC[i]) > dp[j - 1] + group_cost + group_time * (sumC[N] - sumC[i])` 这句判断条件的确定。一开始没能注意到，如果条件仅设为 `dp[i] > dp[j-1] + group_cost` 的话，该算法会将每一个 Task 都单独设置成一个 Group，从而陷入了局部最优解的陷阱！因此我们要高瞻远瞩，考虑多个 Group 带来的 Setup Time 对后面的组别的 Cost 的影响。
