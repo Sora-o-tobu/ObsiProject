@@ -63,6 +63,7 @@
 	- 刚好等于的情况属于重节点，因此这里要用 less than
 - **(F)** After merging two leftist heaps H1 and H2, the NPL of the resulted heap will be no more than min(NPL of H1, NPL of H2)+1
 	- 实际上，合并后的 NPL 应该等于 $\max[NPL(H_1), NPL(H_2)] (+1)$
+- **(T)** When a leftist heap can be implemented recursively, its counterpart skew heap may not be.
 
 ## Binomial Queue
 
@@ -108,6 +109,8 @@
 	- 不是很理解这个，还是记答案吧
 - **(T)** There are many solutions to the 5-Queens Problem, and there are 8 solutions that at least one queen is placed in a corner of the chessboard.
 	- 还是记答案防止考到原题！
+- **(F)** What makes the time complexity analysis of a backtracking algorithm very difficult is that the time taken to backtrack -- that is, to recover the previous state of a solution -- is hard to estimate.
+	- 恢复状态这一步骤并非最耗时的，应该是递归搜索或者剪枝
 
 ## Divide & Conquer
 

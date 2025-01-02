@@ -373,7 +373,7 @@ Well, the right answer is when DF = 1:
 - 我们通常使用的 `int 21h` 属于软件中断，是显式(Explicit)的
 - 硬件中断是指由硬件某个事件触发，并由CPU自动插入并调用一个隐式(implicit)的 `int n` 指令来调用中断服务子函数
 
-`int n` 函数的指针保存在 `0:0*4` 处，例如 `int 1h` 函数的首地址为 `1234h:5678h` ：
+`int n` 函数的指针保存在 `0:n*4` 处，例如 `int 1h` 函数的首地址为 `1234h:5678h` ：
 
 ```
 0:4 78h
@@ -398,7 +398,7 @@ pushf      ; push FL
 pop ax     ; AX = FL
 or ax, 100h; TF位于FL第八位，通过or指令置一
 push ax    ; 
-popf       ; pop FP 即 FL=AX,TF=1
+popf       ; pop FL 即 FL=AX,TF=1
 ```
 
 ## 端口

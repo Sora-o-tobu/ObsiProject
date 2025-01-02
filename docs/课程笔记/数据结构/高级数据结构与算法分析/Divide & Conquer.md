@@ -185,6 +185,24 @@ $$
 - 设 $t(k)= T(2^k)= T(N)$，那么 $t(k) =t( k / 3) + t(2k / 3)+ k =O(k\log k)$
 - 将 $k=\log N$ 代回去得到 $T(N)= t(k) =O(\log N \log \log N)$
 
+**【Example】** $T(N)= 3 T(\sqrt{N}) + \log N$
+
+**Proof:** 与第一例又有所不同了，还是一直递归到最后一层，有：
+
+$$
+T(N) = 3^k T(N^{1 / 2 ^k}) + \left[ 1+ \frac{3}{2} + (\frac{3}{2})^2 ... + (\frac{3}{2})^k \right]\log N
+$$
+
+其中 $k = \log_2 \log N$ ，代入：
+
+$$\begin{array}l
+T(N) & = 3^{\log_2 \log N} \cdot 1 + 2\left[  (\frac{3}{2})^{k+1} -1 \right]\log N \\
+ & = (\log N)^{\log_23} + O\left( \left(\frac{3}{2}\right)^{\log_2\log N} \cdot \log N\right) \\
+ & = (\log N)^{\log_23} + O\left((\log N)^{\log_2\frac{3}{2}+1}\right)\\
+ & = (\log N)^{\log_23} + O((\log N)^{\log_23}) \\
+ & = O((\log N)^{\log_23})
+\end{array}$$
+
 ### Master method
 
 $$\begin{gather}T(N)=aT(\frac{N }{b})+\Theta(N^k \log^pN),a\ge 1,b\gt 1 ,p\ge 0 \\
