@@ -96,7 +96,8 @@
 	- 哈希表在范围查询时需要计算每个单词的哈希值，因此消耗较大
 - **(T)** Stemming increases recall while harming precision.
 	- 你说是就是吧，二者不可得兼
-- 
+- **(F)** In a search engine, thresholding for document searches according to some percentage of the query terms.
+	- 背答案
 
 ## Backtracking
 
@@ -109,6 +110,8 @@
 	- 不是很理解这个，还是记答案吧
 - **(T)** There are many solutions to the 5-Queens Problem, and there are 8 solutions that at least one queen is placed in a corner of the chessboard.
 	- 还是记答案防止考到原题！
+- **(T)** The 4-queen problem has exactly 2 distinct solutions.
+	- 四皇后问题只有两个解！记住它
 - **(F)** What makes the time complexity analysis of a backtracking algorithm very difficult is that the time taken to backtrack -- that is, to recover the previous state of a solution -- is hard to estimate.
 	- 恢复状态这一步骤并非最耗时的，应该是递归搜索或者剪枝
 
@@ -170,6 +173,8 @@ $$
 		- 重叠子问题是动态规划的特征
 	- D. make a choice before solving the remaining sub-problem
 		- 在求解之前作出选择
+- **(F)** The Huffman code is one kind of optimal prefix codes. For a given alphabet and its characters' frequencies，the Huffman codes may not be unique, but the Huffman code **length** of each character is unique.
+	- 考虑特例，如果存在多个节点权重相同，那么它们的编码长度可能就不一样
 
 
 ## NP-Completion
@@ -192,6 +197,11 @@ $$
 	- 就算这两个问题可以相互归约，在计算近似率时 Cost 的取值是不一样的，即评价准则不一样
 - **(F)** Without any assumptions on the distances, if P != NP, there is no ρ-approximation for TSP (Travelling Salesman Problem) for any ρ≥1.
 	- 这题的关键其实再第一句话，对距离没有任何假设。对于 TSP 问题，可以分为满足三角不等式的 Metric TSP 和不满足三角不等式的 General TSP(非欧几里得空间、非对称、负边权、动态距离等)。对于 Metric TSP，的确存在最小生成树法得到近似比为2 的近似算法，但是 General TSP 的某些情况优化问题和验证问题难度相当，没有多项式时间算法能够保证近似比
+- Which one of the following statements is FALSE?
+	- **[F]** A. A language L1​ is polynomial time transformable to L2​ if there exists a polynomial time function f such that w∈L1​ if f(w)∈L2​.
+	- **[T]** B. If L1​∈P then L1​⊆NP∩ co-NP.
+	- **[T]** C. L1​≤p​L2​ and L2​≤p​L3​ then L1​≤p​L3​.
+	- **[T]** D. If language L1​ has a polynomial reduction to language L2​, then the complement of L1​ has a polynomial reduction to the complement of L2​.
 
 ## Approximation
 
@@ -221,7 +231,8 @@ $$
 
 ## Local Search
 
-
+- **(T)** Consider a state-flipping algorithm for the Maximum-Cut problem. We say that partitions (A,B) and (A′,B′) are neighbors under the k-flip rule if (A′,B′) can be obtained from (A,B) by moving at most k nodes from one side of the partition to the other. If (A,B) is a local optimum under the p-flip rule, it is also a local optimum under the k-flip rule for every k<p.
+	- 神秘题目，不清楚对在哪里
 - **(F)** For an optimization problem, given a neighborhood, if its local optimum is also a global optimum, one can reach an optimal solution with just one step of local improvements.
 	- 神秘题目，不清楚错在哪里
 - 用 Local Search 求解 K-center 的近似比可以是 2 吗？？？并不能，可以举出反例。

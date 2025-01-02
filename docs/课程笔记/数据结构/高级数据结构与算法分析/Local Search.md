@@ -36,7 +36,7 @@ SolutionType Gradient_descent()
 
 !!! note "这个版本的顶点覆盖问题并不是给出参数K判断能否用K个顶点覆盖所有边，所以这是NPC问题"
 
-对于 Local Search ，搜索的起点可以是任意的可行解。因此，定点覆盖问题的起点可以选择所有的点集（同时这也是最差的答案）。
+对于 Local Search ，搜索的起点可以是任意的可行解。因此，顶点覆盖问题的起点可以选择所有的点集（同时这也是最差的答案）。
 
 - $cost(S)= |S|$
 - $S\sim S'$：$S'$ can be obtained from $S$ by adding or deleting a single node
