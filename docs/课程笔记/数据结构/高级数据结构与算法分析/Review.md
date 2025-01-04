@@ -195,8 +195,8 @@ $$
 	- 0-1 背包问题不算 P 类
 - **(F)** As we know there is a 2-approximation algorithm for the Vertex Cover problem. Then we must be able to obtain a 2-approximation algortithm for the Clique problem, since the Clique problem can be polynomially reduced to the Vertex Cover problem.
 	- 就算这两个问题可以相互归约，在计算近似率时 Cost 的取值是不一样的，即评价准则不一样
-- **(F)** Without any assumptions on the distances, if P != NP, there is no ρ-approximation for TSP (Travelling Salesman Problem) for any ρ≥1.
-	- 这题的关键其实再第一句话，对距离没有任何假设。对于 TSP 问题，可以分为满足三角不等式的 Metric TSP 和不满足三角不等式的 General TSP(非欧几里得空间、非对称、负边权、动态距离等)。对于 Metric TSP，的确存在最小生成树法得到近似比为2 的近似算法，但是 General TSP 的某些情况优化问题和验证问题难度相当，没有多项式时间算法能够保证近似比
+- **(T)** Without any assumptions on the distances, if P != NP, there is no ρ-approximation for TSP (Travelling Salesman Problem) for any ρ≥1.
+	- 这题的关键其实在第一句话，对距离没有任何假设。对于 TSP 问题，可以分为满足三角不等式的 Metric TSP 和不满足三角不等式的 General TSP(非欧几里得空间、非对称、负边权、动态距离等)。对于 Metric TSP，的确存在最小生成树法得到近似比为2 的近似算法，但是 General TSP 的某些情况优化问题和验证问题难度相当，没有多项式时间算法能够保证近似比
 - Which one of the following statements is FALSE?
 	- **[F]** A. A language L1​ is polynomial time transformable to L2​ if there exists a polynomial time function f such that w∈L1​ if f(w)∈L2​.
 	- **[T]** B. If L1​∈P then L1​⊆NP∩ co-NP.
