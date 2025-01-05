@@ -305,3 +305,50 @@ $$\begin{array}l
 	- **C. 8/0**
 		- 结果是 inf
 	- D. Any arithmetic operation with NaN
+
+```c
+#include <stdio.h>
+
+typedef unsigned int word;
+
+union floatIntTag {
+    float f;
+    unsigned int d;
+} u;
+
+word floatToInt(word x) {
+    // 解析 IEEE 754 单精度浮点数格式
+    int sign = (x >> 31) & 1;       // 符号位
+    int exponent = ((x >> 23) & 0xFF) - 127; // 指数部分，减去偏置值 127
+    unsigned int mantissa = (x & 0x7FFFFF) | 0x800000; // 尾数部分，加隐含的 1
+
+    // 检查特殊情况
+    if (exponent >= 31) { 
+        // 超出 32 位整型范围，返回最大值或最小值
+        return sign ? 0x80000000 : 0x7FFFFFFF;
+    } else if (exponent < 0) {
+        // 小于 1 的浮点数，强制转换为 0
+        return 0;
+    }
+
+    // 根据指数计算整数值
+    if (exponent > 23) {
+        // 左移
+        mantissa <<= (exponent - 23);
+    } else {
+        // 右移
+        mantissa >>= (23 - exponent);
+    }
+
+    // 处理符号位
+    return sign ? -((int)mantissa) : (int)mantissa;
+}
+
+int main(int argc, char **argv) {
+    scanf("%f", &u.f);
+    int i = floatToInt(u.d); // i = (int) f
+    printf("Integer value: %d\n", i);
+    return 0;
+}
+
+```

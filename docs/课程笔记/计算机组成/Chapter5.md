@@ -178,7 +178,7 @@ $$
 
 $$\begin{array}l
 \text{Instruction miss cycles} =I\times 2\% \times 100 & = 2.00I\\
-\text{Data miss cycles} = I\times 36\% \times 2\times 4\% \times 100 & = 1.44I \\
+\text{Data miss cycles} = I\times 36\% \times 4\% \times 100 & = 1.44I \\
 \text{Total memory-stall cycles} =2.00 I +1.44I & =3.44I \\
 \text{CPI with stall} = 2 + 3.44 I / I & =5.44
 \end{array}

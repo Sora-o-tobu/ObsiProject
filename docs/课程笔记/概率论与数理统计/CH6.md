@@ -41,17 +41,17 @@ $$
 
 在统计学中，根据不同目的有以下重要统计量：
 
-- 样本均值
+- **样本均值**
 	- $\bar{X}=\frac{1}{n}\sum _{i=1}^n X_i$
 	- $E(\bar{X}) = E(X), \ \ D(\bar{X}) = \frac{1}{n}D(X)$
-- 样本方差
+- **样本方差**
 	- $S^2= \frac{1}{n-1}\sum_{i=1} ^n (X_i-\bar{X})^2 = \frac{1}{n-1}\left (\sum_{i=1} ^n X_i^2 -n\bar{X}^2 \right)$
 	- $E(S^2) = D(X)$
-- 样本标准差
+- **样本标准差**
 	- $S=\sqrt{S^2}$
-- 样本k阶(原点)矩
+- **样本k阶(原点)矩**
 	- $A_k =\frac{1}{n}\sum_{i=1} ^n X_i^k$
-- 样本k阶中心矩
+- **样本k阶中心矩**
 	- $B_k =\frac{1}{n} \sum_{i=1} ^n (X_i- \bar{X})^k$
 
 其中，总体方差的估计可以用 $S^2$ 或 $B_2$ ，区别在于以样本方差作为总体方差估计是**无偏估计**，但以2阶中心距作为总体方差估计是**有偏估计**。
@@ -130,7 +130,7 @@ $$
 
 - <1> $\bar{X}\sim N(\mu, \frac{\sigma^2}{n})$
 - <2> $\frac{\sum_{i=1}^n (X_i- \bar{X})^2}{\sigma ^2} =\frac{(n-1)S^2}{ \sigma^2}\sim \chi^2 (n-1)$ 
-	- $\frac{(n-1)^2 D(S^2)}{ \sigma^4} = 2(n-1)\Rightarrow D(S^2) =\frac{2\sigma^2}{n-1}$
+	- $\frac{(n-1)^2 D(S^2)}{ \sigma^4} = 2(n-1)\Rightarrow D(S^2) =\frac{2\sigma^4}{n-1}$
 	- $\frac{\sum_{i=1}^n (X_i- \mu)^2}{\sigma ^2} = \chi^2 (n)$
 - <3> $\bar{X}$ 和 $S^2$ 相互独立
 - <4> $\frac{\bar{X}-\mu}{ S / \sqrt{n}  } \sim t(n-1)$

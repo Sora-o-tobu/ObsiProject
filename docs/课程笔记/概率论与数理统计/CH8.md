@@ -170,7 +170,7 @@ $$
 在给定显著水平 $\alpha$ ，以及值 $p_0= P\{\chi^2(n-1) \le \chi_0^2\}$
 
 - **双边检验：**
-	- $W=\{\chi^2 \ge \chi^2 _{\alpha / 2}(n-1) \text{ or }\chi^2 \le  \chi^2\le \chi^2_{1- \alpha / 2} (n-1)\}$
+	- $W=\{\chi^2 \ge \chi^2 _{\alpha / 2}(n-1) \text{ or }\chi^2\le \chi^2_{1- \alpha / 2} (n-1)\}$
 	- $P值=2 \min (p_0, 1-p_0)$
 - **左侧检验：**
 	- $W=\{\chi^2\le \chi^2_{1- \alpha} (n-1)\}$

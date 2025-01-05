@@ -116,6 +116,8 @@ $$
 
 其中 $|\rho| \lt 1$ ，则称 $(X,Y)$ 服从参数为 $(\mu_1, \mu_2; \sigma_1, \sigma_2;\rho)$ 的二元正态分布，记为 $(X,Y) \sim N(\mu_1, \mu_2; \sigma_1, \sigma_2;\rho)$
 
+!!! info "这里的 $\rho$ 为 $X,Y$ 的相关性，具体在 Chapter 4 中涉及"
+
 ### 随机变量的独立性
 
 对任意两个实数集合 $D_1,D _2$ ，若
@@ -271,7 +273,7 @@ f_Z(z) = \left \{\begin{array}l
 \end{array} \right .
 \end{array}$$
 
-!!! note "对谁积分就写出谁的取值范围，如该题的 $dx$"
+!!! note "对谁积分就写出谁的取值范围，如该题的 $dx$，而上下限则是关于 $z$ 的函数"
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">例 4：</font>
 

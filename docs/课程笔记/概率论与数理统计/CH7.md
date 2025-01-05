@@ -224,7 +224,7 @@ c\sum_{i=1}^n X_i & = cn\hat{\theta} \\
 Mse(cn\hat{\theta}) & = E[(cn\hat{\theta} - \theta)^2] \\
  & = E^2 (cn\hat{\theta} -\theta) +D(cn\hat{\theta} -\theta) \\
  & = [cnE(\hat{\theta}) -\theta]^2 +c^2 n^2 D(\hat{\theta}) \\
- & = c^2 n^2 E^2(\hat{\theta}) - 2cn\theta E(\hat{\theta}) + c^2 n^2 \frac{1}{n} D(X) \\
+ & = c^2 n^2 E^2(\hat{\theta}) - 2cn\theta E(\hat{\theta}) + c^2 n^2 \frac{1}{n} D(X)+ \theta^2 \\
  & = \theta^2 [(n^2+n) c^2 -2cn +1]
 \end{array}$$
 

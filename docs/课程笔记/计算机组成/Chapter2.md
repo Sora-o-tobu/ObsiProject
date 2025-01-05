@@ -454,7 +454,7 @@ sum:
     rem s0, s0, t0    # s0 = num % 10
     jal ra, sum       # sum(num / 10)
 
-    add a0, a0, s0    # a0 = num / 10 + sum(num % 10)
+    add a0, a0, s0    # a0 = num % 10 + sum(num / 10)
     beq x0, x0, done  # goto done
 
 done0:
