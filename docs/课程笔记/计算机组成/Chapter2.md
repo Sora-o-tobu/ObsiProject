@@ -10,7 +10,7 @@
 
 RISC-V 一共有 32 个寄存器，每个寄存器宽度均为 64 位，命名从 `x0` 到 `x31` 
 
-!!! tip "不同于8086，RISC-V中 `1 word = 32 bit`，所以一个寄存器有 `doubleword`"
+!!! tip "不同于8086，RISC-V中 `1 word = 32 bit`，所以寄存器大小为 `doubleword`"
 
 ![[riscvreg.png]]
 
@@ -224,6 +224,8 @@ int main(void) {
 采用小端寻址 **little endian** 。
 
 ![[littleendianriscv.png]]
+
+!!! info "同时，RISC-V没有要求要字节对齐"
 
 ### 嵌套调用
 

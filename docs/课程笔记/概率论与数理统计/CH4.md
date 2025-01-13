@@ -111,6 +111,13 @@ Var(X+Y) =Var(X)+Var(Y) +2Cov(X,Y)
 \end{array}
 $$
 
+对于独立的 $X,Y$，求它们乘积的方差有另外的引理：
+
+$$\begin{array}l
+D(XY) & = E(X^2 Y^2) - E^2(XY) \\ &= E(X^2) E(Y^2) - E^2(X) E^2(Y)
+\\ & = D(X)D(Y) +D(X)E^2(Y) +D(Y)E^2(X)
+\end{array}$$
+
 ### 性质
 
 - <1> $Cov(X,Y)=Cov(Y,X)$

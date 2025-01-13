@@ -1,4 +1,6 @@
 
+!!! quote "虽然之前听说过bhh的汇编很难，但是这门通识汇编我感觉还是很简单的，选就对了！"
+
 **推荐看 TonyCrane 的汇编语言笔记**：https://note.tonycrane.cc/cs/pl/asm/
 
 中断指令大全： [Ralf Brown's Interrupt List](./interruptlist/rbrown.htm)
@@ -14,6 +16,7 @@ td test.asm      ;
 使用 `command` 打开 Dos，不过不用 Dos 也无所谓就是了。（神必windows更新还专门ban了16bit程序，搞毛呢）
 
 [MS-DOS Player for Win32-x64 謎WIPページ](http://takeda-toshiya.my.coocan.jp/msdos/)
+
 
 ## 杂项
 

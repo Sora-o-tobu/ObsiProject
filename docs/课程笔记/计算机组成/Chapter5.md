@@ -90,7 +90,7 @@ $$
 
 显然，读和写的时候发生 cache miss 的处理方式是不一样的；另外读也有读数据和读指令之分（指令 cache 和数据 cache 通常是分离的）。我们分别对其进行讨论：
 
-- **Read**
+=== "Read"
     - **Hit**
         - 直接从 cache 里读就好了
     - **Miss**
@@ -98,7 +98,7 @@ $$
             - 从 memory 里把对应的 block 拿到 cache，然后读取对应的内容。
         - **Instruction cache miss**
             - 暂停 CPU 运行，从 memory 里把对应的 block 拿到 cache，从第一个 step 开始重新运行当前这条指令。
-- **Write**
+=== "Write"
     - **Hit** 有两种可以选的方式：
         - **write-through**，即每次写数据时，同时更新 Cache 和主存。这样的好处是 cache 和 main memory 总是一致的，但是这样相当于直接写主存，速度很慢。
             - 一个改进是引入一个 **write buffer**，即当需要写 main memory 的时候不是立即去写，而是先写入 Buffer 中，找机会再写进主存；此时 CPU 就可以继续运行了。当然，当 write buffer 满了的时候，也需要暂停处理器来做写入 main memory 的工作，直到 buffer 中有空闲的 entry。因此，如果 main memory 的写入速率低于 CPU 产生写操作的速率，多大的缓冲都无济于事。
@@ -106,7 +106,8 @@ $$
     - **Miss** 同样有两种方式：
         - **write allocate**，即像 read miss 一样先把 block 拿到 cache 里再写入。
         - **write around** (or **no write allocate**)，考虑到既然本来就要去一次 main memory，不如直接在里面写了，就不再拿到 cache 里了。
-        - write-back 只能使用 write allocate；一般来说，write-through 使用 write around，其原因是明显的。
+
+!!! note "Write Back 搭配 Write Allocate，Write Through 搭配 Write Around"
 
 !!! quote
 	![[cache读写操作总结.png]]
@@ -258,7 +259,7 @@ Physical Address:
 |Valid|Dirty|Ref|      Tag      |  Physical Page Address  |
 +-----+-----+---+---------------+-------------------------+
 
-- Reference 位: 最近是否被访问过(lru ?)
+- Reference 位: 最近是否被访问过，操作系统会定期清零该位
 - TLB: 16-512 Entries
 - Miss Rate: 0.01% - 1%
 ```
