@@ -12,6 +12,7 @@ theme:
     - navigation.indexes
 
     name: 'material'
+    custom_dir: 'custom'
     font:
       code: Roboto Mono
 
@@ -123,7 +124,6 @@ plugins:
 extra_javascript:
   #- javascripts/mathjax.js 用这个的话还要换行，比较麻烦
   - javascripts/katex.js
-  # - javascripts/extra.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - https://unpkg.com/mermaid/dist/mermaid.min.js 
