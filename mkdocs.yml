@@ -269,6 +269,7 @@ nav:
     - LearnOpenGL:
       - 课外积累/LearnOpenGL/index.md
       - 1. 入门: 课外积累/LearnOpenGL/1.入门.md
+      - 2. 光照: 课外积累/LearnOpenGL/2.光照.md
     - CS106L:
       - 课外积累/CS106L/index.md
       - C++: 课外积累/CS106L/C++.md
