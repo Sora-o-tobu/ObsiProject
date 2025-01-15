@@ -26,6 +26,11 @@ buttons.forEach(function(button) {
 })
 </script>
 
+
+<div id="__comments">
+
+</div>
+
 <script src="https://giscus.app/client.js"
         data-repo="Sora-o-tobu/ObsiProject"
         data-repo-id="R_kgDOLs28Jg"
@@ -45,11 +50,6 @@ updateScheme();
 
 </script>
 
-<div id="__comments">
-
-</br>
-
-</div>
   <!-- Insert generated snippet here -->
 
   <!-- Synchronize Giscus theme with palette -->
@@ -76,6 +76,7 @@ updateScheme();
           var theme = palette.color.scheme === "slate"
             ? "transparent_dark"
             : "light"
+			localStorage.setItem("data-md-color-scheme", palette.color.scheme === "slate" ? "slate" : "default");
 
           // Instruct Giscus to change theme
           var frame = document.querySelector(".giscus-frame")
