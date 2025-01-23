@@ -270,9 +270,16 @@ nav:
       - 课外积累/LearnOpenGL/index.md
       - 1. 入门: 课外积累/LearnOpenGL/1.入门.md
       - 2. 光照: 课外积累/LearnOpenGL/2.光照.md
+      - 3. 模型加载: 课外积累/LearnOpenGL/3.模型加载.md
+      - 4. 高级OpenGL: 课外积累/LearnOpenGL/4.高级OpenGL.md
     - CS106L:
       - 课外积累/CS106L/index.md
       - C++: 课外积累/CS106L/C++.md
+    - CMU 15-445 Database Systems:
+      - 课外积累/CMU15-445/index.md
+      - 1. Course Overview: 课外积累/CMU15-445/Course Overview.md
+      - 2. Intermediate SQL: 课外积累/CMU15-445/Intermediate SQL.md
+      - 3. Database Storage: 课外积累/CMU15-445/Storage.md
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
