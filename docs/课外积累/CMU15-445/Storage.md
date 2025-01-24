@@ -19,7 +19,7 @@
 
 要对数据进行操作，DBMS 需要将数据从磁盘转入内存中，它通过一个缓冲池来管理磁盘和内存之间数据移动。上层的 Execution Engine 会根据具体操作向缓冲池请求特定 Page，缓冲池负责将该 Page 放入内存，并提供指向内存中该 Page 的一个指针。
 
-!!! info "常见 DBMS 中，除了 SQLite 是文件，其它均为多文件"
+!!! info "常见 DBMS 中，除了 SQLite 是单文件，其它均为多文件"
 
 ## Memory Mapped I/O
 
@@ -81,6 +81,21 @@ Page 中数据的布局有两种主要方式，分别为 slotted-pages 和 log-s
 
 ![[slottedpagesfigure.png]]
 
+**Log-Structure Storage: Instead of storing tuples, the DBMS only store log records**
+
+- 存储着数据库如何被修改（插入、删除等）的记录，保存为 log file
+- 为了实现读取，DBMS 会从后往前扫描 log file，找到最新的对某 tuple ID 操作的记录
+- **慢读快写**。
+- 在 append-only storage 中工作良好
+- 为了避免长时间的读取，DBMS 可以为其增加索引，以快速检索记录
+- 数据库记录会被定期压缩合并
+- 不再需要 temporal information，并且元组搜索操作非常快
+
+!!! failure "What is the downsides of this approach"
+	- Write-Amplification 写入放大
+		- 即实际写入的数据量是写入数据量多倍，
+	- Compaction is Expensive
+
 
 ### Tuple 结构
 
@@ -98,3 +113,19 @@ Page 中数据的布局有两种主要方式，分别为 slotted-pages 和 log-s
 
 !!! tip "Denormalized Tuple Data 非规范元组数据"
 	如果两个表是相关的，那么 DBMS 可以预先连接它们，即将它们表现在同一个 Page 中进行处理。这将使得读取速度非常快，但也会带来更高的更新成本。
+
+## Data Representation
+
+Tuples 中可以存储五种高级数据类型：
+
+- Integers 整数
+- Variable Precision Number 可变精度数字
+	- 但并非任意长度
+- Fixed-Point Precision Number 定点精度数
+	- 具有任意精度和位数，但需要 meta-data 告诉长度和小数点位置
+- Data & Time
+	- 表现形式因不同系统而异，但通常是 unix 时间
+- System Catalog 系统目录
+	- 维护了一个 internal catalog 用来存储数据库的元数据等
+	- `INFORMATION_SCHEMA`
+

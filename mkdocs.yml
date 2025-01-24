@@ -280,6 +280,7 @@ nav:
       - 1. Course Overview: 课外积累/CMU15-445/Course Overview.md
       - 2. Intermediate SQL: 课外积累/CMU15-445/Intermediate SQL.md
       - 3. Database Storage: 课外积累/CMU15-445/Storage.md
+      - 4. Storage Model & Compression: 课外积累/CMU15-445/Storage Model.md
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md

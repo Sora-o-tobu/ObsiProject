@@ -61,9 +61,9 @@ SELECT year FROM artists WHERE name=="GZA";
 
 因此，对于 Ralational Model 设计的三个重要概念在于：
 
-- 1. **Structure:** The defination of the dababase's relations and their contents
-- 2. **Intergrity:** Ensure the database's contents satisfy constraints
-- 3. **Manipulation:** Programming interface for accessing and modifying a database's contents
+- <1> **Structure:** The defination of the dababase's relations and their contents
+- <2> **Intergrity:** Ensure the database's contents satisfy constraints
+- <3> **Manipulation:** Programming interface for accessing and modifying a database's contents
 
 继续使用我们上一节中的数据，不过这次将其存储在一个 Table（Relation）中：
 
