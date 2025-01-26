@@ -74,11 +74,11 @@ The sequential scan operator will not store fetched pages in the buffer pool to 
 
 当 DBMS 需要释放一个 Frame 来为 Page 腾出空间，它必须决定从缓冲池中驱逐哪个 Page。
 
-- LRU
+- **LRU**
 	- 维护上一次访问的时间戳，驱逐时间戳最早的 Page
-- CLOCK
+- **CLOCK**
 	- LRU 的变种，不再需要维护时间戳，改为一个 Reference Bit。
 	- 访问时设置 Reference Bit 为 1。当需要驱逐 Page 时，循环访问 Buffer，如果当前游标指向的 Page 的 Ref 为 1，则将其设置为 0，游标移动；否则，驱逐它
-- Dirty Pages
+- **Dirty Pages**
 	- 处理带 Dirty Bit 的 Page 有两个方法，较快的方法是删除缓冲池中所有非脏页面，另一个是将脏页面写回磁盘，以确保更改持久化保存
 	- 避免不必要写回的一种方法是 background writing。DBMS 定期遍历 Page Table 并将脏页面写回磁盘
