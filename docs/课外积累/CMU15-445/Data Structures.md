@@ -113,4 +113,56 @@ B+ 树索引一般用于数据库的 Table Indices 部分，几乎所有支持 O
 
 ## Index Concurrency Control
 
-	
+到目前为止，我们假设讨论的 DBMS 都是单线程的。但是大多数 DBMS 需要允许多线程同时安全地访问数据结构。
+
+并发控制协议（Concurrency Control Protocol）是 DBMS 用来确保共享对象上的并发操作正确性的方法：
+
+- **Logical Correctness:** 线程能够读取到它想要的值
+- **Physical Correctness:** 对象的内部表示是合理的
+	- 例如，数据结构中没有会导致线程读取无效内存区域的指针
+
+
+!!! quote "Locks vs Latches"
+	![[locksvslatch.png]]
+	=== "Locks"
+		Locks 是一种相对高级的逻辑原语，它保护数据库的内容免受其它事务干扰。数据库系统可以向用户公开在运行查询时持有的 Locks，并且 Locks 需要能够回滚更改。
+	=== "Latches"
+		Latches 是从其它线程中底层地保护 DBMS 内部关键数据结构的原语。Latches 仅在执行操作时保持，且不需要回滚更改。锁存器有两种模式：
+		
+		- **READ:** 允许多个线程同时读取同一项。即便一个线程已经获取了 Read Latch，另一个线程也可以获得它
+		- **WRITE:** 只允许一个线程访问该项。如果一个线程已经获取了 Write Latch，那么其它线程不再能够获得它。持有 Write Latch 的线程还会组织其它线程获得 Read Latch。
+
+
+### Latch Implementations
+
+用于实现 Latch 的底层原语是通过现代 CPU 提供的 atomic compare-and-swap **(CAS)** 指令。通过 CAS，线程可以检查内存某位置的内容，以查看是否含有想要的值，如果存在，则将旧值替换为新值；否则，保持不变。
+
+DBMS 中实现 Latch 有多种方法，每种方法在工程复杂性和运行时性能方面有所权衡。
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Blocking OS Mutex</font>
+
+Latch 的一种实现方式是通过 OS 内置的 Mutex。Linux 系统提供了 Futex(Fast User-space Mutex)，它由用户空间的 spin latch 和操作系统级别的 Mutex 组成。
+
+如果 DBMS 可以获取用户空间锁存器，则设置它。如果 DBMS 不能获取用户空间锁存器，它会进入内核尝试获取开销更大的 Mutex。如果上述两个操作均失败，线程将会通知 OS 并取消调度。
+
+在 DBMS 中，OS Mutex 通常是个坏主意，因为它由 OS 进行管理，并且开销很大，不过优点在于其使用简单，不需要在 DBMS 中额外编码。
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Test-and-Set Spin Latch, TAS</font>
+
+相较于 OS Mutex，由 DBMS 控制的 Spin Latch 是更有效的方案。
+
+一个 Spin Latch 实质上是内存中的一个位置，它可以被线程修改值（通常是布尔值）。DBMS 可以控制在无法获取 Latch 时会发生什么，它可以选择循环重试或者允许 OS 取消它。
+
+因此，这种方案为 DBMS 提供了更多控制权，对 Latch 的控制也更高效。缺点是不可拓展以及对缓存不友好。
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Reader-Writer Latch</font>
+
+Mutex 和 Spin Latch 不区分读写，而 Reader-Writer Latch 允许将 Latch 保持在读/写模式。它跟踪两种模式下有多少线程持有 Latch 以及正在等在获取 Latch。
+
+Reader-Writer Latch 使用前面两种 Latch 实现之一作为基础，并具有额外逻辑来处理 Reader-Writer Queues。不同的 DBMS 有不同的策略来处理该队列。优点在于允许并发读取，缺点是需要额外的开销管理 Reader-Writer Queue 以及元数据。
+
+### Hash Table Latching
+
+### B+ Tree Latching
+
+https://15445.courses.cs.cmu.edu/fall2022/notes/09-indexconcurrency.pd
