@@ -121,3 +121,33 @@ Project (R.id, S.cdate)
 
 ### Access Methods
 
+访问方法是 DBMS 访问存储在 Table 中数据的方式，通常有 **Sequential Scan** 和 **Index Scan** 两种。
+
+- **Sequential Scan**
+	- 维护一个内部游标，并且跟踪它访问的上一个 Page/Slot
+	- 顺序扫描一般是 DBMS 查询效率最低的操作，可以使用 Prefetching, Buffer Pool Bypass, Parallelization, Late Materialization, Heap Clustering, Approximate Queries, Zone Map 等策略进行优化
+- **Index Scan**
+	- 例如，在对下面一个具有两个索引的表进行索引扫描，最好在扫描中选用 `dept`，因为选 `age` 的话还要扫描一遍 `age` 索引，不比顺序扫描快多少。
+	- ![[indexscanexample.png]]
+	- 当然，上图其实采用了**多索引扫描**，先将两个索引取出相应的 ID 集，然后取交集继续操作
+
+### Modification Queries & Expression Evalution
+
+摆了，请看 Lecture 12: Query Execution I
+
+## Query Plan Optimization
+
+对于同一个 SQL 查询语句，可以转换为具有不同性能的 Query Plan，为此人们设计了 Query Optimizer 选择最佳的查询计划。
+
+!!! info "查询优化器的第一个实现是 IBM System R，其许多概念和决策至今仍在使用"
+
+查询优化有两种高级策略：
+
+- **Static Rules, or Heuristics**
+	- 将 Query Plan 和已知部分匹配，根据静态规则转换查询以保证起码不会低效。
+	- 这些静态规则可能需要查阅 index 并了解数据结构，但是不需要检查数据本身
+- **Cost-Based Search**
+	- 使用成本模型来估计查询计划的成本，选择成本最低的 Query Plan
+
+具体请看 https://15445.courses.cs.cmu.edu/fall2022/notes/14-optimization.pdf
+

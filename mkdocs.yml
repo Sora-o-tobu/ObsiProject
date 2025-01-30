@@ -283,6 +283,8 @@ nav:
       - 4. Storage Model & Compression: 课外积累/CMU15-445/Storage Model.md
       - 5. Memory Management: 课外积累/CMU15-445/Memory Management.md
       - 6. Data Structures: 课外积累/CMU15-445/Data Structures.md
+      - 7. Query Execution: 课外积累/CMU15-445/Query Execution.md
+      - 8. Concurrency Control: 课外积累/CMU15-445/Concurrency Control.md
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
