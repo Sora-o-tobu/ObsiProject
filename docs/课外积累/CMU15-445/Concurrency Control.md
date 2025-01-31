@@ -50,3 +50,29 @@ Locks 有两种基本类型：
 	- **READ:** 允许多个线程同时读取同一项。即便一个线程已经获取了 Read Latch，另一个线程也可以获得它
 	- **WRITE:** 只允许一个线程访问该项。如果一个线程已经获取了 Write Latch，那么其它线程不再能够获得它。持有 Write Latch 的线程还会阻止其它线程获得 Read Latch。
 
+事务向 Lock Manager 请求 Lock，而 Lock Manager 根据其它事务当前持有的锁来决定同意或阻止请求。Lock Manager 内部维护一个 Lock-Table，存放哪些事务持有锁以及哪些事务在等待获取锁。
+
+!!! tip "Lock-Table 不需要是 Durable 的，因为当 DBMS 崩溃时，所有仍在运行的事务都会自动中止"
+
+Two-Phase Locking 属于 Pessimistic 并发控制协议，并且该协议不需要提前知道事务将执行的所有查询操作。
+
+- **Phase 1 - Growing:** 在 Growing 阶段，每个事务都从 DBMS 的 Lock Manager 请求它需要的锁，Lock Manager 授权/拒绝这些请求
+- **Phase 2- Shrinking:** 事务在释放它们的第一个 Lock 时进入 Shrinking 阶段，在此阶段只允许事务释放 Lock，并且不能获取新的锁
+
+!!! info "Two-Phase Locking 缩写为 2PL"
+
+2PL 仍然可能有 Dirty Reads、Deadlock 等问题，具体解决方法请看 [Lecture 16](https://15445.courses.cs.cmu.edu/fall2022/schedule.html)
+
+## Timestamp Ordering Concurrency Control
+
+时间戳排序属于 Optimistic 并发控制协议。相比事务在被允许读写前需要获取锁，时间戳排序使用时间戳来确定事务的可序列化顺序。
+
+每个事务 $T_i$ 都被分配了一个独特的固定时间戳 $TS(T_i)$，不同的具体方案分配时间戳的方式不同，一些高级方案甚至为每个事务分配多个时间戳。
+
+如果 $TS(T_i) <TS(T_j)$，那么 DBMS 必须保证 Execution Schedule 中 $T_i$ 在序列化顺序早于 $T_j$。
+
+!!! info "时间戳分配策略"
+	DBMS 可以使用系统时钟作为时间戳，但是这在夏令等极端时段会出现问题；另一种选择是使用 Logical Counter，但是这存在溢出和在分布式系统中难以维护的问题。一些混合方法结合使用这两种方案。
+
+
+
