@@ -42,7 +42,7 @@ DBMS 使用 Locks 为事务动态生成可序列化的 Execution Schedule，并�
 Locks 有两种基本类型：
 
 - **Shared Lock (S-LOCK):** 允许多个事务同时读取同一个对象。如果一个事务持有 Shared Lock，另一个事务也可以获取相同的 Shared Lock
-- **Exclusive Lock (X-LOCK):** 排它锁允许一个事务修改对象，但会组织其它事务获取这个对象上的任何锁
+- **Exclusive Lock (X-LOCK):** 排它锁只允许一个事务修改对象，并且会阻止其它事务获取这个对象上的任何锁
 
 !!! warning "对比 Latch"
 	Latches 是从其它线程中底层地保护 DBMS 内部关键数据结构的原语。Latches 仅在执行操作时保持，且不需要回滚更改。锁存器有两种模式：
@@ -54,7 +54,7 @@ Locks 有两种基本类型：
 
 !!! tip "Lock-Table 不需要是 Durable 的，因为当 DBMS 崩溃时，所有仍在运行的事务都会自动中止"
 
-Two-Phase Locking 属于 Pessimistic 并发控制协议，并且该协议不需要提前知道事务将执行的所有查询操作。
+Two-Phase Locking 属于 **Pessimistic** 并发控制协议，并且该协议不需要提前知道事务将执行的所有查询操作。
 
 - **Phase 1 - Growing:** 在 Growing 阶段，每个事务都从 DBMS 的 Lock Manager 请求它需要的锁，Lock Manager 授权/拒绝这些请求
 - **Phase 2- Shrinking:** 事务在释放它们的第一个 Lock 时进入 Shrinking 阶段，在此阶段只允许事务释放 Lock，并且不能获取新的锁
@@ -65,7 +65,7 @@ Two-Phase Locking 属于 Pessimistic 并发控制协议，并且该协议不需�
 
 ## Timestamp Ordering Concurrency Control
 
-时间戳排序属于 Optimistic 并发控制协议。相比事务在被允许读写前需要获取锁，时间戳排序使用时间戳来确定事务的可序列化顺序。
+时间戳排序属于 **Optimistic** 并发控制协议。相比事务在被允许读写前需要获取锁，时间戳排序使用时间戳来确定事务的可序列化顺序。
 
 每个事务 $T_i$ 都被分配了一个独特的固定时间戳 $TS(T_i)$，不同的具体方案分配时间戳的方式不同，一些高级方案甚至为每个事务分配多个时间戳。
 
@@ -75,4 +75,7 @@ Two-Phase Locking 属于 Pessimistic 并发控制协议，并且该协议不需�
 	DBMS 可以使用系统时钟作为时间戳，但是这在夏令等极端时段会出现问题；另一种选择是使用 Logical Counter，但是这存在溢出和在分布式系统中难以维护的问题。一些混合方法结合使用这两种方案。
 
 
+Basic Timestamp Ordering Protocol(BASIC T/O) 允许在不适用 Lock 的情况下对数据库对象进行读写操作。作为替代，对于任意数据库对象 $X$，它都会被标记上最后成功执行读操作的时间戳 $R-TS(X)$ 或写操作的时间戳 $W-TS(X)$。
+
+对于任意操作，数据库会检查其作用对象的时间戳，如果事务试图以违反时间戳排序的方式访问对象，则该事务会被中止并重新启动。由于时间戳排序假设违反规则的情况很少出现，因此这些重启也很少发生。
 
