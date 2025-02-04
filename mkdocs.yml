@@ -285,6 +285,8 @@ nav:
       - 6. Data Structures: 课外积累/CMU15-445/Data Structures.md
       - 7. Query Execution: 课外积累/CMU15-445/Query Execution.md
       - 8. Concurrency Control: 课外积累/CMU15-445/Concurrency Control.md
+      - 9. Database Crash: 课外积累/CMU15-445/Database Crash.md
+      - 10. Distributed Database: 课外积累/CMU15-445/Distributed Database.md
     - Java: 课外积累/JAVA.md
     - Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md

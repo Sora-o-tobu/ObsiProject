@@ -79,3 +79,69 @@ Basic Timestamp Ordering Protocol(BASIC T/O) 允许在不适用 Lock 的情况�
 
 对于任意操作，数据库会检查其作用对象的时间戳，如果事务试图以违反时间戳排序的方式访问对象，则该事务会被中止并重新启动。由于时间戳排序假设违反规则的情况很少出现，因此这些重启也很少发生。
 
+## Multi-Version Concurrency Control
+
+MVCC 不仅是一个并发控制协议，它涉及到数据库管理系统设计和实现的各个方面。
+
+!!! info "MVCC 是 DBMS 中最广泛使用的方案"
+
+在 MVCC 下，DBMS 为每个逻辑对象维护多个物理版本，当事务写入对象时，DBMS 创建一个该对象的新版本；当事务读取对象时，它读取对象的最新版本。
+
+MVCC 的一个基本优点是 Writer 不会阻塞 Writer，Reader 不会阻塞 Reader。这也意味着一个事务修改对象的同时，其它事务可以读取该对象的旧版本。
+
+此外，多版本数据库还可以轻松支持 time-travel queries，例如对 3 小时前的数据库进行查询。
+
+MVCC 有四个重要设计决策：
+
+1. Concurrency Control Protocol
+2. Version Storage
+3. Garbage Collection
+4. Index Management
+
+其中 Concurrency Control Protocol 可以选用前几节的 Two-Phase Locking、Timestamp-Ordering 等。
+
+### Version Storage
+
+Version Storage 有关数据库管理系统如何存储逻辑对象的物理版本以及事务如何找到对它们可见的最新版本。
+
+DBMS 在元组中添加一个指针字段，为每个逻辑元组创建一个版本链，其本质是一个按照时间戳排序的版本链表。索引始终为链表的“头部”，即取决于设计，要么指向最新版本，要么指向最旧版本，线程遍历链表知道找到正确的版本。
+
+- **方案一: Append-Only Storage**
+	- 逻辑元组的所有物理版本都存储在同一表空间中，每次更新只需要将新版本追加到表中并更新版本链
+	- 如果版本链按最新到最老(N2O)排序，则每次添加新版本都要更新索引
+- **方案二: Time-Travel Storage**
+	- DBMS 维护一个独立的 time-travel table，该表存储元组的旧版本。每次更新时，DBMS 将元组的旧版本复制到 time-travel table 中，并用新数据覆盖主表中的元组。主表中的元组指针指向 time-travel table 中的过去版本
+- **方案三: Delta Storage**
+	- 与方案二类似，但是 DBMS 只存储 Deltas。所谓 Deltas 即新旧版本之间元组的变化，事务通过遍历 Deltas 来重新创建旧版本
+	- 比 Time-Travel Storage 写入更快，但是读取更慢
+
+### Garbage Collection
+
+数据库系统需要随着时间推移从数据库中移除可回收的物理版本。如果一个版本不可被任何活动事务访问，或者它是由一个被中止的事务创建的，那么这个版本就是可回收的。
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">Approach 1: Tuple-level GC</font>
+
+在元组级别的垃圾回收，DBMS 通过直接检查元组来找到旧版本，实现这一目标有两种策略：
+
+- **Background Vacuuming:** 有一单独线程定期扫描表并查找可回收的版本。
+	- 适用于任意版本存储方案，一个简单优化是维护一个 Dirty Page Bitmap，跟踪自上次扫描以来哪些页面被修改
+- **Cooperative Cleaning:** 工作线程在遍历版本链时识别可回收版本
+	- 这只适用于 O2N 链
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">Approach 2: Transaction-level GC</font>
+
+在事务级别的垃圾回收中，每个事务负责跟踪自己的旧版本，DBMS 不必扫描元组。当一个事务完成，Garbage Collector 使用事务维护的读写集来识别哪些元组可以回收。
+
+### Index Management
+
+所有 Primary Key(pkey) indexes 都指向版本链头部。DBMS 更新 pkey 的频率取决于元组更新时是否有新版本被创建。
+
+!!! info "事务更新 pkey，这一操作被视为 `DELETE` => `INSERT`"
+
+管理 Secondary Indexes 情况更加复杂，通常有如下两种办法处理：
+
+- **Logical Pointers**
+	- 数据库管理系统为每个元组设置一个固定标识符，使用一个额外的间接层来讲逻辑 ID 转换到元组的物理位置，而元组的更新只需要更改间接层中的映射
+- **Physical Pointers**
+	- DBMS 使用版本链头部的物理地址。但是这种策略要求头部更新时每个 index 都要相应更改
+
