@@ -108,7 +108,6 @@ plugins:
       shadow: true
       manual: false
   #- projects
-  - optimize
 
 extra_javascript:
   #- javascripts/mathjax.js 用这个的话还要换行，比较麻烦
