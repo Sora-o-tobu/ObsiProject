@@ -91,17 +91,6 @@ plugins:
   #- git-revision-date-localized:
   #    locale: zh
   - roamlinks
-  - blog:
-      post_date_format: full #时间
-      post_readtime: true
-      post_readtime_words_per_minute: 265  #计算帖子的阅读时间时读者每分钟预计阅读的字数
-  - rss:
-      match_path: blog/posts/.* 
-      date_from_meta:
-        as_creation: date
-      categories:
-        - categories
-        - tags
   - glightbox:
       touchNavigation: true
       loop: false
@@ -119,7 +108,7 @@ plugins:
       shadow: true
       manual: false
   #- projects
-  #- optimize
+  - optimize
 
 extra_javascript:
   #- javascripts/mathjax.js 用这个的话还要换行，比较麻烦
