@@ -165,10 +165,12 @@ nav:
       - CH 9. Relations: 课程笔记/离散数学/笔记/Chapter9.md
       - CH 10. Graphs: 课程笔记/离散数学/笔记/Chapter10.md
       - CH 11. Trees: 课程笔记/离散数学/笔记/Chapter11.md
+    - 密码学:
+      - 课程笔记/密码学/index.md
     - 数字逻辑设计:
       - 课程笔记/数字逻辑设计/index.md
       - 理论课笔记:
-        - CH 1&2 P1.Digital System & Boolean Equation: 课程笔记/数字逻辑设计/理论课笔记/Chapter 1 & 2 Part 1 Digital System & Boolean Equation.md
+        - CH 1 &2 P1.Digital System & Boolean Equation: 课程笔记/数字逻辑设计/理论课笔记/Chapter 1 & 2 Part 1 Digital System & Boolean Equation.md
         - CH 2 P2. Circuit Optimization: 课程笔记/数字逻辑设计/理论课笔记/Chapter 2 P2 Circuit Optimization.md
         - CH 3. Combinational Logic Design: 课程笔记/数字逻辑设计/理论课笔记/Chapter 3 Combinational Logic Design.md
         - CH 4. Sequential Circuits: 课程笔记/数字逻辑设计/理论课笔记/Chapter 4 Sequential Circuits.md
@@ -180,12 +182,14 @@ nav:
         - Verilog补充: 课程笔记/数字逻辑设计/Verilog/Verilog补充.md
     - 计算机组成:
       - 课程笔记/计算机组成/index.md
-      - Chapter 1. 计算机概念与技术: 课程笔记/计算机组成/Chapter1.md
-      - Chapter 2. RISC-V: 课程笔记/计算机组成/Chapter2.md
-      - Chapter 3. 算术单元: 课程笔记/计算机组成/Chapter3.md
-      - Chapter 4. 处理器: 课程笔记/计算机组成/Chapter4.md
-      - Chapter 5. 存储器分级体系: 课程笔记/计算机组成/Chapter5.md
-      - Chapter 6. IO 接口: 课程笔记/计算机组成/Chapter6.md
+      - CH 1. 计算机概念与技术: 课程笔记/计算机组成/Chapter1.md
+      - CH 2. RISC-V: 课程笔记/计算机组成/Chapter2.md
+      - CH 3. 算术单元: 课程笔记/计算机组成/Chapter3.md
+      - CH 4. 处理器: 课程笔记/计算机组成/Chapter4.md
+      - CH 5. 存储器分级体系: 课程笔记/计算机组成/Chapter5.md
+      - CH 6. IO 接口: 课程笔记/计算机组成/Chapter6.md
+    - 计算机体系结构:
+      - 课程笔记/计算机体系结构/index.md
     - 数据结构:
       - 数据结构基础:
         - 课程笔记/数据结构/数据结构基础/index.md 
@@ -198,7 +202,7 @@ nav:
       - 高级数据结构与算法分析:
         - 课程笔记/数据结构/高级数据结构与算法分析/index.md 
         - Review: 课程笔记/数据结构/高级数据结构与算法分析/Review.md
-        - AVL Trees,Splay Tree & Amortized Analysis: 课程笔记/数据结构/高级数据结构与算法分析/AVL Trees,Splay Tree & Amortized Analysis.md
+        - AVL Trees, Splay Tree & Amortized Analysis: 课程笔记/数据结构/高级数据结构与算法分析/AVL Trees,Splay Tree & Amortized Analysis.md
         - Red-Black Trees & B+ Trees: 课程笔记/数据结构/高级数据结构与算法分析/Red-Black Trees & B+ Trees.md
         - Inverted File Index: 课程笔记/数据结构/高级数据结构与算法分析/Inverted File Index.md
         - Leftist Heap & Skew Heap: 课程笔记/数据结构/高级数据结构与算法分析/Leftist Heap & Skew Heap.md
@@ -213,12 +217,16 @@ nav:
         - Randomized Algorithms: 课程笔记/数据结构/高级数据结构与算法分析/Randomized Algorithms.md
         - Parallel Algorithms: 课程笔记/数据结构/高级数据结构与算法分析/Parallel Algorithms.md
         - External Sort: 课程笔记/数据结构/高级数据结构与算法分析/External Sort.md
+    - 数据库系统:
+      - 课程笔记/DB/index.md
     - 8086 汇编语言: 
       - 课程笔记/8086汇编语言/index.md
       - 指令速查: 课程笔记/8086汇编语言/指令速查.md
       - 什么是汇编语言: 课程笔记/8086汇编语言/什么是汇编语言.md
       - CPU、内存和端口: 课程笔记/8086汇编语言/CPU、内存和端口.md
       - 汇编语言源程序格式: 课程笔记/8086汇编语言/汇编语言源程序格式.md
+    - 面向对象编程:
+      - 课程笔记/OOP/index.md
     - 无线网络应用 通识课:
       - 课程笔记/无线网络应用/index.md
       - 当今网络: 课程笔记/无线网络应用/当今网络.md
@@ -236,15 +244,15 @@ nav:
   - 课外积累:
     - 课外积累/index.md
     - CSAPP:
-      - Chapter 1. 计算机系统漫游: 课外积累/CSAPP/Chapter1.md
-      - Chapter 2. 信息的表示与处理: 课外积累/CSAPP/Chapter2.md
-      - Chapter 3. 程序的机器级表示: 课外积累/CSAPP/Chapter3.md
-      - Chapter 4. 处理器体系结构: 课外积累/CSAPP/Chapter4.md
-      - Chapter 5. 优化程序性能: 课外积累/CSAPP/Chapter5.md
-      - Chapter 6. 存储器层次结构: 课外积累/CSAPP/Chapter6.md
-      - Chapter 7. 链接: 课外积累/CSAPP/Chapter7.md
-      - Chapter 8. 异常控制流: 课外积累/CSAPP/Chapter8.md
-      - Chapter 9. 虚拟内存: 课外积累/CSAPP/Chapter9.md
+      - CH 1. 计算机系统漫游: 课外积累/CSAPP/Chapter1.md
+      - CH 2. 信息的表示与处理: 课外积累/CSAPP/Chapter2.md
+      - CH 3. 程序的机器级表示: 课外积累/CSAPP/Chapter3.md
+      - CH 4. 处理器体系结构: 课外积累/CSAPP/Chapter4.md
+      - CH 5. 优化程序性能: 课外积累/CSAPP/Chapter5.md
+      - CH 6. 存储器层次结构: 课外积累/CSAPP/Chapter6.md
+      - CH 7. 链接: 课外积累/CSAPP/Chapter7.md
+      - CH 8. 异常控制流: 课外积累/CSAPP/Chapter8.md
+      - CH 9. 虚拟内存: 课外积累/CSAPP/Chapter9.md
     - Games101:
         - 课外积累/Games101/index.md
         - 作业框架: 课外积累/Games101/作业框架.md
