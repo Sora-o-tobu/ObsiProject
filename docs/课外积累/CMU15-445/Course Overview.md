@@ -1,7 +1,7 @@
 
 # 1. Course Overview
 
-## Defination
+## Definition
 
 根据一般定义，数据库指的是一组以某种关系相互关联的数据。我们常说的 MySQL、Oracle、MongoDB、Snowflake 等实际上属于数据库管理系统(Database Management Systems, **DBMS**)，是用来管理数据库的软件。
 
