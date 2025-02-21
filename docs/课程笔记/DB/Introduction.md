@@ -12,17 +12,17 @@
 传统 OS 提供的 File-Processing System 不能很好地维护 data files 的格式，并且 data files 之间的关联性很低。
 
 ??? quote "具体而言存在以下问题"
-	- Data redundancy and inconsistency
+	- (1) Data redundancy and inconsistency
 		- Multiple file formats, duplication of information in different files
-	- Difficulty in accessing data
+	- (2) Difficulty in accessing data
 		- Need to write a new program to carry out each new task
-	- Data isolation — multiple files and multiple formats
+	- (3) Data isolation — multiple files and multiple formats
 		- Difficult to retrieve, difficult to share
-	- Integrity problems
+	- (4)Integrity problems
 		- Integrity constraints  (e.g. account balance > 0) become part of program code, so that it's hard to add new constraints or change existing ones
-	- No atomicity of updates
-	- Difficult to concurrent access by multiple users
-	- Security problems (i.e., Right person uses right data)
+	- (5) No atomicity of updates
+	- (6) Difficult to concurrent access by multiple users
+	- (7) Security problems (i.e., Right person uses right data)
 
 因此我们需要一个不同于操作系统的 Datebase Management System 来解决以上问题。
 
