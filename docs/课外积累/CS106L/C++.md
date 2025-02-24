@@ -65,7 +65,7 @@ double half(double x)
 	cout << "2" << endl;
 	return x/2;
 }
-int hald(int x, ind divisor) // default parameter values
+int hald(int x, int divisor) // default parameter values
 {
 	cout << "3" << endl
 	return x/divisor;
@@ -271,6 +271,10 @@ void shift(std::vector<std::pair<int, int>> &nums)
 }
 ```
 
+值得注意的是，如果不适用引用时，对于一个对象（在本例中为一个STL容器 pair），这种遍历方式实际上是在进行不断拷贝遍历，这将带来很大的额外开销。而使用引用则减少了不必要的开销。
+
+!!! tip "如果循环中不需要对元素进行修改，请尽可能加上 `const`"
+
 ## Const
 
 `const` is a qualifier for objects that declares they cannot be modified.
@@ -285,6 +289,7 @@ void shift(std::vector<std::pair<int, int>> &nums)
 const std::vector<int> const_vec{1, 2, 3}; // a const vector
 std::vector<int>& bad_ref{ cont_vec };  // bad reference
 ```
+
 
 ## Streams
 

@@ -275,6 +275,7 @@ nav:
     - CS106L:
       - 课外积累/CS106L/index.md
       - C++: 课外积累/CS106L/C++.md
+      - 补充: 课外积累/CS106L/Addition.md
     - CMU 15-445 Database Systems:
       - 课外积累/CMU15-445/index.md
       - 1. Course Overview: 课外积累/CMU15-445/Course Overview.md
