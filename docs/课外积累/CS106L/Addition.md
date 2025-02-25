@@ -55,7 +55,16 @@ Foo::elem z;    // OK, z has type int
 
 ### friend
 
-友元函数能够访问类的私有成员：
+在对一个矩阵类进行乘法运算符重载时，我们可以很轻松的构造出 `Matrix * int` 的情况，只需要在类中写入：
+
+```c++
+	Matrix operator*(int x)
+	{
+		...
+	}
+```
+
+但是 `int * Matrix` 又如何实现呢？该语句被解释为 `int::operator*(Matrix)` ，但是 `int` 类中又没有对应重载，我们只能将运算符重载放在全局作用范围内，并使用友元函数使其能够访问类的私有成员：
 
 ```c++
 const int M = 100;
@@ -75,6 +84,8 @@ Matrix operator*(int x, Matrix mat) {
     return tmp;
 }
 ```
+
+!!! note "`x * y` 会被重载解析解释为 `x.operator*(y)` 或者 `operator*(x, y)`"
 
 当然，更好的方式是：
 
@@ -98,7 +109,7 @@ Matrix operator*(int x, Matrix mat) {
 Matrix m = m1 - m2;
 ```
 
-根据我们之前所说，`m1 - m2` 得到一个临时对象，这个临时对象会在所在表达式结束时被销毁。而在这个语句中，我们又用这个临时对象构造了一个新的 `Matrix` 对象 `m`。这有些浪费——我们析构了一个对象，同时构造了一个跟它一模一样的对象；如果我们能够延长这个临时对象的生命周期，就可以节约一次构造和一次析构的开销[9](https://xuan-insr.github.io/cpp/cpp_restart/5_class_2/#fn:rvo)。
+根据我们之前所说，`m1 - m2` 是通过运算符重载 return 得到的一个临时对象，这个临时对象会在所在表达式结束时被销毁。而在这个语句中，我们又用这个临时对象构造了一个新的 `Matrix` 对象 `m`。这有些浪费——我们析构了一个对象，同时构造了一个跟它一模一样的对象；如果我们能够延长这个临时对象的生命周期，就可以节约一次构造和一次析构的开销。
 
 因此，C++ 规定：可以将一个临时对象绑定给一个 `const` 引用，这个临时对象的生命周期被延长以匹配这个 `const` 引用的生命周期[class.temporary#6](https://timsong-cpp.github.io/cppwp/n4868/class.temporary#6)。例如：
 
@@ -118,11 +129,13 @@ int function()
 在类中的 static 成员变量 **只是声明** [class.static.data#3](https://timsong-cpp.github.io/cppwp/n4868/class.static.data#3)。也就是说，我们必须在类外给出其定义，才能让编译器知道在哪里构造这些成员：
 
 ```c++
+// in .hpp
 class Foo {
     static int a;
     static int b;
 };
 
+// in .cpp
 int Foo::a = 1;
 int Foo::b; // 初始化为 0
 ```
@@ -149,3 +162,117 @@ struct Foo {
 }
 ```
 
+## Template
+
+下面是一个使用模板定义的类，当需要实例化时，需要给出对应的模板参数：
+
+```c++
+template<typename T>
+class Container {
+    T* data;
+    unsigned size, capa;
+public:
+    Container(unsigned capa = 512) : data(new T[capa]) {}
+    ~Container() { delete[] data; }
+    T& operator[](unsigned index) { return data[index]; }
+    // ...
+};
+
+Container<int> ci;
+Container<double> cd;
+```
+
+虽然模板实例化必须知道每个模板参数，但是在调用者没有指定的情况下编译器会从函数参数中推断出没有给出的模板参数，这一机制叫做**模板参数推导 (template argument deduction)**：
+
+```c++
+// template definition: abs is a function template
+template<typename T> T abs(T x) { return x > 0 ? x : -x; }
+
+int main() {
+    // instantiates and calls abs<int>(int)
+    int x = abs<int>(-1);
+    // instantiates and calls abs<double>(double), template argument deduced
+    double y = abs<>(-1.0);
+    // instantiates and calls abs<float>(float), template argument deduced
+    float z = abs(-2.0f);
+}
+```
+
+对于多个模板参数，也可以只给出前几个参数，后面的由编译器推导：
+
+```c++
+template<typename To, typename From>
+To convert(From f);
+
+void g(double d) 
+{
+    int i = convert<int>(d);    // calls convert<int, double>(double)
+    char c = convert<char>(d);  // calls convert<char, double>(double)
+    int(*ptr)(float) = convert; // instantiates convert<int, float>(float) 
+                                // and stores its address in ptr
+}
+```
+
+### lambda 表达式
+
+`std::sort` 函数可选的第三个参数可以传入我们自定义的比较函数，例如：
+
+```c++
+using std::vector
+using std::sort
+using std::endl
+
+bool cmp(const int& a, const int& b) { return a > b; }
+vector<int> v = {3, 1, 4, -2, 5, 3};
+sort(v.begin(), v.end(), cmp);
+```
+
+使用 lambda 表达式，则可以在不引入额外的比较函数的情况下传入比较函数：
+
+```c++
+vector<int> v = {3, 1, 4, -2, 5, 3};
+sort(v.begin(), v.end(), [](const int& a, const int& b) { return a > b; });
+```
+
+lambda 表达式形如 `[](){}`，其中 `()` 中是参数列表，`{}` 中是函数体，返回值类型由编译器根据 `return` 语句推断。
+
+```c++
+// std::count(first, last, p)
+// 在 [first, last) 范围内查找满足谓词 p 的个数
+int n = std::count_if(v.begin, v.end(), [](int i) { return i % 4 == 0; });
+
+// std::for_each(first, last, f)
+// 在 [first, last) 范围内依次执行函数 f，本例让 v 所有元素变为两倍
+std::for_each(v.begin(), v.end(), [](int &n){ n *= 2; });
+```
+
+```c++
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> v = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::cout << "Original vector: ";
+    for (int elem : v)
+        std::cout << elem << ' ';
+
+    auto it = std::partition(v.begin(), v.end(), [](int i){
+        return i % 2 == 0;
+    });
+
+    std::cout << "\nPartitioned vector: ";
+    auto print = [](int x){ std::cout << x << ' '; };
+    std::for_each(v.begin(), it, print);
+    std::cout << "* ";
+    std::for_each(it, v.end(), print);
+}
+
+/* Output:
+Original vector: 0 1 2 3 4 5 6 7 8 9 
+Partitioned vector: 0 8 2 6 4 * 5 3 7 1 9
+*/
+```
+
+2/15 进度：
+https://xuan-insr.github.io/cpp/cpp_restart/8_stl/#83-%E8%BF%AD%E4%BB%A3%E5%99%A8%E4%BD%95%E5%BF%85%E6%98%AF%E8%BF%AD%E4%BB%A3%E5%99%A8
