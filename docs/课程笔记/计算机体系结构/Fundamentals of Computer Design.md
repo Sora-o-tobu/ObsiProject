@@ -24,3 +24,24 @@ Class of ISA:
 - Register-Memory ISA: 80x86, 许多指令可以直接访问内存
 - Load-Store ISA: RISC-V, ARMv8, 只有 load, store 能够访问内存
 
+
+
+## Trends
+
+Performance-Driven: Quantatives
+
+**Technology Trends:**
+
+- 芯片工艺 Integrated Circuit Logic Technology
+	- 摩尔定律逐渐失效
+- Memory 工艺 Semiconductor DRAM
+	- 容量、延迟、带宽
+- SSD 工艺 Semiconductor Flash
+- 磁盘工艺 Magnetic Disk Technology
+- 网络工艺 Network Technology
+	- 延迟、带宽
+
+传输线上消耗的功耗比 IC 还多
+
+**Power and Energy in IC Trends:**
+
