@@ -220,6 +220,8 @@ nav:
     - 数据库系统:
       - 课程笔记/DB/index.md
       - Introduction: 课程笔记/DB/Introduction.md
+      - Relational Model: 课程笔记/DB/Relational Model.md
+      - SQL: 课程笔记/DB/SQL.md
     - 8086 汇编语言: 
       - 课程笔记/8086汇编语言/index.md
       - 指令速查: 课程笔记/8086汇编语言/指令速查.md
