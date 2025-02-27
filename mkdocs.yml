@@ -165,8 +165,8 @@ nav:
       - CH 9. Relations: 课程笔记/离散数学/笔记/Chapter9.md
       - CH 10. Graphs: 课程笔记/离散数学/笔记/Chapter10.md
       - CH 11. Trees: 课程笔记/离散数学/笔记/Chapter11.md
-    - 密码学:
-      - 课程笔记/密码学/index.md
+    #- 密码学:
+    #  - 课程笔记/密码学/index.md
     - 数字逻辑设计:
       - 课程笔记/数字逻辑设计/index.md
       - 理论课笔记:
@@ -190,6 +190,7 @@ nav:
       - CH 6. IO 接口: 课程笔记/计算机组成/Chapter6.md
     - 计算机体系结构:
       - 课程笔记/计算机体系结构/index.md
+      - Fundamentals of Computer Design: 课程笔记/计算机体系结构/Fundamentals of Computer Design.md
     - 数据结构:
       - 数据结构基础:
         - 课程笔记/数据结构/数据结构基础/index.md 
