@@ -121,12 +121,12 @@ $$
 Power_{Dynamic} \propto \frac{1}{2}\times Capacity\ Load \times Voltage^2 \times Frequency\ Switched
 $$
 
-对于一项 *Fixed Task* ，降低时钟频率可以降低 $Power$，但不一定能降低 $Energy$。
+对于一项 *Fixed Task* ，降低时钟频率可以降低 $Power$，但不一定能降低 $Energy$。(课本原话)
 
 !!! note "个人认为，降频可以降压，此时 $Energy$ 减少。但是降频意味着性能降低，工作时间也会增加"
 	$$Energy =power \times execution\ time$$
 
-配电、散热和防热点的难度日益增加，能耗是现在晶体管的主要限制因素。因此，现代微处理器提供了许多技术，试图提高能效：
+配电、散热和防热点的难度日益增加，能耗是现在晶体管的主要限制因素。因此，现代微处理器提供了许多技术，试图提高能效（**Energy-Effiency**）：
 
 - **<1> Do nothing well:** 关闭 inactive modules 的时钟，例如当前没有执行浮点指令，则浮点单元的时钟将被禁用
 - **<2> Dynamic Voltage-Frequency Scaling, DVFS:** 在一些活跃程度较低的时段，不以最高频率和电压运转
@@ -146,3 +146,53 @@ $$
 尽管成本在一些计算机设计（特别是超级计算机）中不是特别重要，但对成本敏感的设计却越来越重要。
 
 Cost Trend 的影响因素主要有三点：Time（时间）、Volumn（产量）、Commoditization（大众化，商品化）
+
+!!! danger "Cost 部分偏商业，不讲"
+
+## Dependability
+
+系统在 SLA(Service Level Agreement) 规定的两种服务状态中转换：
+
+- <1> Service Accomplishment，即提供了指定服务
+- <2> Service Interruption，即所提供的服务与 SLA 不符
+
+!!! info "服务等级协议 SLA 是基础设施供应商为客户提供的保证，当不满足 SLA 时可能需要向客户作补偿"
+
+两种 SLA 状态通过 *failures*(from state 1 to 2) 或者 *restorations*(from state 2 to 1) 进行转换。对这两种转换进行量化，得到 dependability 的两种度量：
+
+- **MTTF** mean time to failure 平均无故障时间
+- **MTTR** mean time to repair 平均修复时间
+- **MTBF** mean time between failures
+	- = MTTF + MTTR
+- **Module Reliability** 可靠性
+	- 从参照点至出现故障经过时间的量度，即通常通过 MTTF 作为量度
+	- 在计算机组成中该处为 Dependability，均翻译为可靠性
+- **Module Availability** 可用性
+	- $= \frac{MTTF}{MTTF+MTTR}= \frac{MTTF}{MTBF}$
+
+通过冗余提高 Dependability，RAID。见计组部分。
+
+## Performance
+
+对计算机性能的直观估计就是执行时间的倒数：
+
+$$
+Peformance = \frac{1}{Execution\ time}
+$$
+
+根据测量方式，Execution Time 也会有不同的定义方式：
+
+- **wall-clock time/response time/elapsed time** 完成一项任务的 latency，包括 storage accesses、memory accesses、I/O activities、OS overheading 等所有相关时间
+- **CPU Time** 只指 CPU 执行计算的时间
+
+此外，用户计算他们的计算机相对性能的方式使用 Benchmark Program
+
+## Quantitative Principles
+
+以下几点为计算机设计与分析中非常有用的指导原则：
+
+- **Take advantage of Parallelism**
+- **Principle of Locality**
+- **Focus on Common Case**
+- **Amdahl's Law**
+

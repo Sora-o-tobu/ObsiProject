@@ -1,6 +1,9 @@
 
 # SQL
 
+!!! quote "一定要记住查询语句的执行顺序，才能理清逻辑"
+	$$from\rightarrow where \rightarrow group(aggregate)\rightarrow having \rightarrow select \rightarrow order\ by$$
+
 ## Overview
 
 SQL(Sequel)是一个语言规范，最初由 IBM 设计。不过很多 DBMS 并不会完全按照规范设计它们的语言，每个人都想要将它们的 feature 加入 SQL 后续的更新中。
@@ -73,6 +76,7 @@ SQL 的 Domain Type 大体有以下几类：
 - `Primary Key(A1, A2,...)`: 括号内不能为空、不能有重复 Keys
 - `Foreign Key(A1, A2,...) references r`: 引用对应表的主键
 
+
 ```sql
 DROP TABLE branch; # 完全删除 Relation branch
 
@@ -87,3 +91,115 @@ ALTER TABLE branch MODIFY(branch_name char(30), assets not null)
 ```
 
 !!! warning "不要轻易使用 DROP 指令，DELETE 起码还会把 SCHEMA 留下来，DROP 了什么都没了"
+
+```sql
+CREATE INDEX index_user_id ON user_t (user_id)
+```
+
+在不读取整个表的情况下，索引使得数据库应用程序可以更快查找数据，并且是*用户不可见的*。
+
+由于索引本身也需要更新，更新一个带索引的表要比没有索引的同一表消耗更多时间，因此，理想的做法是只在常常被搜索的 Column 上建立索引。
+
+!!! info "To Drop an index"
+	```sql
+	DROP INDEX index_user_id ON user_t
+	```
+
+## Basic Structure
+
+```sql
+SELECT A1, A2, ..., An
+FROM r1, r2, ..., rm
+WHERE P
+```
+
+等价于逻辑代数：
+
+$$
+\Pi_{ A_1, A_2,..., A_n}( \sigma_{ P} (r_1 \times r_2 \times ... \times r_n))
+$$
+
+!!! note "SQL 允许 Relation 中出现重复元组，使用 `distinct` 关键字来强制筛选"
+	```sql
+	SELECT DISTINCT branch_name FROM loan;
+	SELECT ALL branch_name FROM loan; -- 默认不加就是 all
+	```
+
+```sql
+SELECT customer_name, borrower.loan_number as loan_id
+FROM borrowerm, loan
+WHERE borrower.loan_number = loan.loan_number;
+```
+
+在 SQL Server 中，可以使用等于号来代替上式的 `as`
+
+SQL 还提供 String-Matching Operator，通常在 `where` 语句中使用 `LIKE` 运算符：
+
+- `%` : 匹配任意字串
+- `_` : 匹配任意单字符
+
+## Set Operations
+
+在 SQL 中，集合操作有 `UNION`, `INTERSECT`, `EXCEPT`，分别对应着并集 $\cup$，交集 $\cap$，以及差集 $-$。与其他操作不同的是，set operations 会自动隐去重复的元素，如果我们想保留重复元组，则需使用 `UNION ALL` 等关键字。
+
+!!! question "Suppose a tuple occurs m times in r and n times in s, then it occurs:"
+	- $m+n$ times in `r UNION ALL s`
+	- $\min (m,n)$ times in `r INTERSECT ALL s`
+	- $\max (0, m-n)$ times in `r EXCEPT ALL s`
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Example. Find all customers who have an account but no loan.</font>
+
+```sql
+(SELECT customer_name FROM depositor)
+EXCEPT
+(SELECT customer_name FROM borrower)
+```
+
+!!! note "注意不同 DBMS 之间差别，例如 Oracle 使用 `MINUS` 代替 `EXCEPT`，SQL Server 2000 只支持 `UNION` 和 `UNION ALL` 等"
+
+
+## Aggregate Functions
+
+带聚合函数的 `SELECT` 之后只能跟着 `GROUP BY` 子句中的属性或者聚合函数。
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Example. Find the average account balance for each branch</font>
+
+```sql
+SELECT branch_name, avg(balance) AS avg_bal
+FROM account
+GROUP BY branch_name
+```
+
+由于 `WHERE` 的计算顺序比聚合函数前，所有当执行 `WHERE` 判断时聚合函数还没有得到结果，因此我们不能在 `WHERE` 中加入聚合函数。相对的，我们使用 `HAVING` 关键字来作为代替：
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Example. Find the names of all branches located in city Brooklyn where the average account balance is more than $1,200</font>
+
+```sql
+SELECT A.branch_name, avg(balance)
+FROM account AS A, branch AS B
+WHERE A.branch_name = B.branch_name AND
+	branch_city = 'Brooklyn'
+GROUP BY A.branch_name
+HAVING avg(balance) > 1200;
+```
+
+除了 `COUNT` 的聚合函数默认忽略 Null Values，除非该值全部为 `null`，此时也会返回 `null`。
+
+!!! note "Null Values"
+	任意带 `null` 的算术计算结果都是 `null`，任意带 `null` 的逻辑比较结果都是 `unknown`。此外，三种带 `unknown` 的逻辑计算结果为：
+	![[unknownoperations.png]]
+	
+	同时，作为 `WHERE` 子句中的谓词，需要使用 `WHERE amount is not null` 的形式来判断 null values，而不能直接用等于号
+
+
+## Nested Query
+
+我们知道 `FROM` 甚至 `WHERE` 子句中都可以以一张表作为对象，而我们 `SELECT` 语句得到的结果就是一张表，因此我们完全可以进行嵌套查询，下面是一个简单例子：
+
+```sql
+SELECT distinct customer_name
+FROM borrower
+WHERE customer_name not in (SELECT customer_name
+							FROM depositor);
+```
+

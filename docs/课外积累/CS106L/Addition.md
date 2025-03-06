@@ -274,5 +274,119 @@ Partitioned vector: 0 8 2 6 4 * 5 3 7 1 9
 */
 ```
 
-2/25 进度：
-https://xuan-insr.github.io/cpp/cpp_restart/8_stl/#83-%E8%BF%AD%E4%BB%A3%E5%99%A8%E4%BD%95%E5%BF%85%E6%98%AF%E8%BF%AD%E4%BB%A3%E5%99%A8
+
+## 一些 STL 用法
+
+### STACK
+
+基本操作：使用 stack 来匹配括号
+
+```c++
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+bool is_balance(string s)
+{
+    stack<char> st;
+
+    for (char c : s)
+    {
+        if (c == '(' || c == '[' || c == '{')
+            st.push(c);
+        else if (c == ')' || c == ']' || c == '}')
+        {
+            if (st.empty())
+                return false;
+            char top = st.top();
+            st.pop(); // pop 是 void，不返回 pop 出的元素
+            if ((c == ')' && top != '(') ||
+                (c == ']' && top != '[') ||
+                (c == '}' && top != '{'))
+                return false;
+        }
+    }
+    return st.empty();
+}
+
+int main()
+{
+    string a = "a{b(c[d]e)f}";
+    string b = "a{b(c[d]e)f";
+
+    cout << "a: " << (is_balance(a) ? "Balanced" : "Not Balanced") << endl;
+    cout << "b: " << (is_balance(b) ? "Balanced" : "Not Balanced") << endl;
+}
+```
+
+实际上，在已有其他容器（比如 `vector`，`deque`）等容器的前提下，我们很容易就能写出自己的一个 `stack`：
+
+```c++
+template <typename T>
+class Stack
+{
+public:
+    virtual T& top() = 0;
+    virtual bool empty() = 0;
+    virtual size_t size() = 0;
+    virtual void push(T) = 0;
+    virtual void pop() = 0;
+};
+
+template <typename T>
+class VectorStack : public Stack<T>
+{
+public:
+    T& top() override { return c.back(); }
+    bool empty() override { return c.empty(); }
+    size_t size() override { return c.size(); }
+    void push(T t) override { c.push_back(t); }
+    void pop() override { c.pop_back(); }
+private:
+    vector<T> c;
+};
+```
+
+其中，上面的 `Stack` 类仅充当 adapter 作用，你也可以在下面写入基于其它结构实现的 stack 类。
+
+### MAP
+
+`map` 的下标引用会自动创建一个键值对，因此要防止乱用
+
+```c++
+#include <iostream>
+#include <map>
+#include <string>
+
+int main()
+{
+    std::map <std::string, int> price;
+
+    // 插入元素
+    price["apple"] = 1;
+    price["banana"] = 2;
+    price["orange"] = 3;
+
+    // 迭代遍历访问
+    for (const auto& item : price) {
+        std::cout << item.first << ": $" << item.second << std::endl;
+    }
+
+    std::string item;
+    int total = 0;
+    while(std::cin >> item) {
+        if (item == "quit")
+            break;
+        // 如果 item 不在 map 中，price[item] 会插入一个默认值，造成污染
+        if (price.find(item) != price.end())
+            total += price[item]; 
+        else
+            std::cout << "Item not found." << std::endl;
+    }
+
+    std::cout << "Total price: $" << total << std::endl;
+}
+```
+

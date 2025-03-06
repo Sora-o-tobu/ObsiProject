@@ -546,6 +546,8 @@ STL 中包含许多类型的容器：
 
 `map` 系列虽然由 `mutable` 迭代器，但是只能用来修改 value，并不能修改 key
 
+!!! quote "所谓 Random Access Iterator，指的就是能够在常数时间内移动到任一元素（指针形式）"
+
 此处只先列出关于 `<vector>` 的基本用法，其它的用到再说。
 
 ```c++
@@ -612,6 +614,8 @@ int main(void) {
 }
 ```
 
+
+
 ## Iterators
 
 In STL, each container has its own iterator, which can have different behavior.
@@ -629,6 +633,7 @@ In STL, each container has its own iterator, which can have different behavior.
 - **bidirection:** 可以递增，也可以递减 `iter--`
 - **random-access:** 可以手动设置改变的值 `iter += 5`
 
+!!! note "迭代器使算法更加通用，例如 `sort` 函数支持对数组、vector等容器进行排序"
 
 | Container      | Type of iterator |
 | -------------- | ---------------- |
@@ -1083,7 +1088,7 @@ Wiget& operator= (const Widget& w) = delete;
 
 `copy constructor` 的行为逻辑是将内部成员值一个一个复制过去，运行速度较慢；而 `mov constructor` 的行为逻辑是将目的对象指向原先的内容，运行速度较快。
 
-定义 `lvalue` 为既可以在等号左边，又可以在等号右边的对象；定义 `lvalue` 为只能出现在等号右边的对象，其不能被 `&` 引用，但是我们可以使用 `&&` 来将其作为临时对象引用它：
+定义 `lvalue` 为既可以在等号左边，又可以在等号右边的对象；定义 `rvalue` 为只能出现在等号右边的对象，其不能被 `&` 引用，但是我们可以使用 `&&` 来将其作为临时对象引用它：
 
 ```c++
 // lvalue reference:
@@ -1103,3 +1108,6 @@ int main() {
 ```
 
 值得注意的是，当使用 `&&` 引用 `rvalue` 时，并不保证其最终处于合法的状态。
+
+同时，也不一定所有左值都可以出现在等号左边，例如对于 `const char name[] = "Sora";`，`name[0] = "Sana";` 是非法的。尽管 `name[0]` 是个左值，但它的 type 是 `const char`，这样的左值被称为 **non-modifiable lvalues**。
+
