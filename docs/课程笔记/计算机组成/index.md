@@ -31,3 +31,7 @@
 顺便分享一下当时做的 A4 纸吧，抄了一些案例和题目上去，但是我这次考试基本没考到我抄的这些：
 
 ![[计组A4.jpeg]]
+
+## Reference
+
+- [咸鱼喧的代码空间](https://xuan-insr.github.io/computer_organization/)

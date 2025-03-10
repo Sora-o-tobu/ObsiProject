@@ -14,3 +14,8 @@
 !!! info "與 FDS 相同，期末可以覆蓋期中"
 
 我们这届考的似乎比较简单，满了。
+
+## Reference
+
+- [Isshiki修's Notebook](https://note.isshikih.top/cour_note/D2CX_AdvancedDataStructure/)
+- **Carton** 的手写算法笔记

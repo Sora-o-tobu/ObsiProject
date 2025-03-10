@@ -13,3 +13,7 @@
 - 期末考试 **50%**
 
 !!! info "期末成绩可以覆盖期中成绩"
+
+## Reference
+
+- [Oneko Zone](https://oneko.zone/zju/dm)

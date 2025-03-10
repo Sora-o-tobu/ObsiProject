@@ -6,8 +6,8 @@ theme:
     - navigation.path
     - navigation.top
     - navigation.tabs
-    - search.highlight # 搜索出的文章关键词加入高亮
-    - content.code.copy #代码复制
+    - search.highlight  # 搜索出的文章关键词加入高亮
+    - content.code.copy # 代码复制
     - content.tabs.link
     - navigation.indexes
 
@@ -110,7 +110,7 @@ plugins:
   #- projects
 
 extra_javascript:
-  #- javascripts/mathjax.js 用这个的话还要换行，比较麻烦
+  #- javascripts/mathjax.js
   - javascripts/katex.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
@@ -259,14 +259,17 @@ nav:
       - CH 8. 异常控制流: 课外积累/CSAPP/Chapter8.md
       - CH 9. 虚拟内存: 课外积累/CSAPP/Chapter9.md
     - Games101:
-        - 课外积累/Games101/index.md
-        - 作业框架: 课外积累/Games101/作业框架.md
-        - Transformation: 课外积累/Games101/Transformation.md
-        - Rasterization: 课外积累/Games101/Rasterization.md
-        - Shading: 课外积累/Games101/Shading.md
-        - Geometry: 课外积累/Games101/Geometry.md
-        - Ray Tracing: 课外积累/Games101/Ray Tracing.md
-        - Materials and Appearances: 课外积累/Games101/Materials and Appearances.md
+      - 课外积累/Games101/index.md
+      - 作业框架: 课外积累/Games101/作业框架.md
+      - Transformation: 课外积累/Games101/Transformation.md
+      - Rasterization: 课外积累/Games101/Rasterization.md
+      - Shading: 课外积累/Games101/Shading.md
+      - Geometry: 课外积累/Games101/Geometry.md
+      - Ray Tracing: 课外积累/Games101/Ray Tracing.md
+      - Materials and Appearances: 课外积累/Games101/Materials and Appearances.md
+    - Games103:
+      - 课外积累/Games103/index.md
+      - Rigid Body: 课外积累/Games103/Rigid Body.md
     - LearnOpenGL:
       - 课外积累/LearnOpenGL/index.md
       - 1. 入门: 课外积累/LearnOpenGL/1.入门.md
@@ -290,7 +293,7 @@ nav:
       - 9. Database Crash: 课外积累/CMU15-445/Database Crash.md
       - 10. Distributed Database: 课外积累/CMU15-445/Distributed Database.md
     - Java: 课外积累/JAVA.md
-    - Java反序列化: 课外积累/Java序列化.md
+    #- Java反序列化: 课外积累/Java序列化.md
     - SQL: 课外积累/SQL.md
     - LeetCode: 课外积累/Leetcode刷题.md
   - 技术积累:

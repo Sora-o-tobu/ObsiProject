@@ -262,6 +262,8 @@ $$
 \sum_{i=1}^n \hat{c_i}= \sum_{i=1}^n O(1) = O(n)\ge \sum_{i=1}^n c_i
 $$
 
+> FROM: [鱼肆周报 002 - 势能分析法](https://www.yuque.com/xianyuxuan/saltfish_shop/weekly002_amortized_analysis#kS44H)
+
 #### Splay Tree
 
 对 Splay 树的调整操作中，zig 包含一次旋转，zig-zag 和 zig-zig 都包含两次旋转，成本为 2。如果势能函数的构造不能把调整操作的常数 1 或 2 抵消掉，最终的均摊时间将会是 worst-case $O(n)$

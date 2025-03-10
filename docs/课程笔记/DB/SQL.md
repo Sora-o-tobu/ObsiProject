@@ -21,17 +21,17 @@ SQL(Sequel)是一个语言规范，最初由 IBM 设计。不过很多 DBMS 并�
 
 作为一个关系型语言，SQL 主要由以下三个方面组合而成：
 
-- Data Manipulation Language (DML)
+- **Data Manipulation Language** (DML)
 	- 数据操作语言，即检索数据或修改数据的命令
 	- `select ... from ...`
 	- `insert`, `delete`, `update`
-- Data Defination Language (DDL)
+- **Data Defination Language** (DDL)
 	- 数据定义语言，可涉及到索引、命名空间、触发器、函数等，通常为数据库声明元数据
 	- `create table`, `alter table`, `drop table`
 	- `create index`, `drop index`
 	- `create view`, `drop view`
 	- `create trigger`, `drop trigger`
-- Data Control Language (DCL)
+- **Data Control Language** (DCL)
 	- 数据控制语言，关于安全和类似内容的规范
 	- `grant`, `revoke`
 
@@ -65,6 +65,9 @@ SQL 的 Domain Type 大体有以下几类：
 	- E.g. `11:18:16` or `11:18:16.28`
 - `timestamp`: 时间戳，通常是 Data + Time
 	- E.g. `2007-2-27 11:18:16.28`
+- Large Object Types，用来存储大文件，如 `blob(20MB)`
+	- `blob`: Binary Large Object
+	- `clob`: Character Large Object
 
 !!! info "SQL 有许多函数用来处理各种类型的数据及其类型转换，但各数据库系统中函数的标准化程度不高"
 
@@ -76,6 +79,36 @@ SQL 的 Domain Type 大体有以下几类：
 - `Primary Key(A1, A2,...)`: 括号内不能为空、不能有重复 Keys
 - `Foreign Key(A1, A2,...) references r`: 引用对应表的主键
 
+```sql
+CREATE table account(
+	...
+	FOREIGN KEY(branch_name) REFERENCES branch(branch_name)
+		-- 在违反 referential integrity 的情况下：
+		[on delete cascade] -- branch删了，则同时删掉account
+		[on update cascade] -- branch更新，则同时更新account
+)
+```
+
+!!! warning "Referential Integrity 的检测只在一个事务结束时进行，因此事务中间可以暂时违反"
+
+SQL 还支持用户自定义 Types 或 Domain：
+
+```sql
+-- CREATE NEW TYPE
+CREATE type person_name AS varchar(20)
+CREATE table student(sno char(10) PRIMARY KEY,
+					 sname person_name
+);
+DROP type person_name
+
+-- CREATE NEW DOMAIN
+CREATE domain Dollars AS numeric(12, 2) NOT NULL
+CREATE table employee(eno char(10) PRIMARY KEY,
+					  salary Dollars
+)
+```
+
+!!! info "区别在于，`DOMAIN` 允许添加约束"
 
 ```sql
 DROP TABLE branch; # 完全删除 Relation branch
@@ -203,3 +236,99 @@ WHERE customer_name not in (SELECT customer_name
 							FROM depositor);
 ```
 
+那么，如果我们想查找各个 branch 中 balance 最大的账户，该如何构造嵌套查询？
+
+```sql
+SELECT account_number AS AN, balance
+FROM account AS A
+WHERE balance >= (SELECT max(balance)
+				 FROM account AS B
+				 WHERE A.branch_name = B.branch_name)
+ORDER BY balance
+```
+
+分析语序，此处相当于一个两层嵌套循环，先从外层 `A` 取出一个 `branch_name`，然后找出内层所有相同 `branch_name` 的元组，计算最大值，再回到外层进行比较。这样唯一符合的结果就是该 `branch_name` 中 balance 最大的账户了。
+
+除此之外，SQL 还有一种 set comparison，分别是 `SOME` 和 `ALL` 关键词：
+
+=== "SOME"
+	![[setsome.png]]
+=== "ALL"
+	![[setall.png]]
+
+## VIEW
+
+VIEW 并不占用实际空间，是一张更方便查看的逻辑表，同时也可以被当作正常表来访问（以及嵌套查询）。
+
+下面的 SQL Server 语句创建了一个用于统计各个用户的贴数的 VIEW：
+
+```sql
+CREATE VIEW post_number AS
+(SELECT user_id, COUNT(post_id) AS post_count
+FROM posts GROUP BY user_id);
+```
+
+!!! info "使用 `DROP VIEW <V_NAME>` 来删除 VIEW"
+
+我们甚至可以对 VIEW 进行 Modification，DBMS 会尽可能将其“翻译”为对基表的操作。但我们尽量不要这么做。只有行列视图可以更新数据。
+
+!!! question "行列视图"
+	建立在单个基本表上的视图，且视图的列对应表的列，称为行列视图。
+
+通过 `WITH` 关键字，我们可以建立一个 LOCAL VIEW，使得嵌套查询变得更加美观：
+
+```sql
+-- Find all account with maximum balance
+WITH max_balance(value) AS
+	SELECT max(balance)
+	FROM account
+SELECT account_number
+FROM account, max_balance  -- USE LOCAL VIEW
+WHERE account.balance = max_balance.value
+```
+
+## Modification
+
+Modification 即我们熟识的增删改 `INSERT`, `DELETE`, `UPDATE`:
+
+```sql
+# 插入
+insert into table_name values();
+# 删除
+delete from table_name where P;
+# 修改
+update r
+set attribute = ...
+where P
+# 修改(case)
+update r
+set attribute = case
+    when ... then ...
+    when ... then ...
+    ...
+    else ...
+end
+```
+
+## Join Operation
+
+连接操作是一个二元运算符，并且拥有不同的 Types：Inner Join、left outer join、right outer join、full outer join。
+
+其中外连接如果找不到对应的连接对应关系，也要加入到结果中，内连接功能上类似自然连接，区别是非自然连接之后可以接 `ON`, `USING` 等关键字进行自定义设置条件
+
+```sql
+SELECT customer_name
+FROM (depositor natural full outer join borrower)
+WHERE account_number is NULL or loan_number is NULL;
+```
+
+## Assertions & Triggers
+
+assertion 也是确保数据库 integrity 的方式。当我们设置一个 assertion 后，DBMS 会在每一次更新后检测：
+
+```sql
+CREATE ASSERTION <assertion_name>
+	CHECK <predicate>
+```
+
+Triggers 是 DBMS 在某些特定的 Modification 后自动执行的一串语句
