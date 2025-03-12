@@ -1,22 +1,25 @@
 # Chapter 2 P2 Circuit Optimization
 
 ## Canonical Forms 规范型
+
 **Two common Canonical Forms:**
 
 - Sum of Minterms (SOM)
 - Product of Maxterms (POM)
 
-==不化简哦~==
+!!! note "SOM 和 POM 是不化简的，注意和标准型的区别"
 
-[Example](#):
+**【Example】：**
 
 - $F =\overline{X}\overline{Y} +X\overline{Y} = \sum_{m}(0,2)$     SOM
 - $F =(X+\overline{Y})(\overline{X}+\overline{Y}) = \prod_{m}(1,3)$    POM
 
 ![[转换成SOM的方法.png]]![[转换成POM的方法.png]]
-==特别重要公式：x+yz = (x+y)(x+z)==
+
+!!! warning "特别重要公式： $x+yz = (x+y)(x+z)$"
 
 ## Standard Forms 标准型
+
 将规范型化至最简便是标准型
 
 - Standard Sum-of-Products (SOP) form: 
@@ -24,19 +27,18 @@
 - Standard Product-of-Sums (POS) form:
 	- $(A+B)(A+\overline{B}+\overline{C})C$
 
-
-
 !!! note "注意！"
 	$(AB+C)(A+C)、AB\overline{C}+AC(A+B)$ 都不是标准型！！
-
 
 !!! danger "思考"
 	Relation between SOM and POM？ SOM and SOP?
 
 ## Cost Criteria
+
 - Literal cost（L）
 - Gate input cost（G）
-- Gate input cost with NOTs（GN）==数非门的时候同一个字母不用数两次,例如下图第三个例子,$\overline{B}$ 只数了一次，所以GN=G+3==
+- Gate input cost with NOTs（GN
+	- 数非门的时候同一个字母不用数两次,例如下图第三个例子,$\overline{B}$ 只数了一次，所以GN=G+3
 
 ![[门消耗数数案例.png]]
 
@@ -66,14 +68,14 @@
     - 但是单独的 X 不会被认为是主蕴含项；
 - 基本主蕴含项 ==(Essential Prime Implicant)== 是包含只被它覆盖的 1 的主蕴含项；
 
-!!! info
-	对于任意函数，主蕴含项一定存在，但是基本主蕴含项不一定存在。
+!!! info "对于任意函数，主蕴含项一定存在，但是基本主蕴含项不一定存在"
 
 ![[蕴含项.png]]
 
 > 上图中，共有三个主蕴含项，其中两个为基本主蕴含项，一个为冗余(Redundant)主蕴含项
 
 ## BUFFER 缓冲器
+
 功能函数： F = X
 
 An electronic amplifier used to improve circuit voltage levels and speed.
@@ -102,7 +104,7 @@ An electronic amplifier used to improve circuit voltage levels and speed.
 - O - OR
 - I - Inverter
 
-eg:
+**【Example】：**
 
 - `2 - 2 AOI` -> $F=\overline{WX+YZ}$
 - `2 - 2 - 1 AO` -> $F= WX+YZ+V$

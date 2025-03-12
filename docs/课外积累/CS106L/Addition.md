@@ -126,6 +126,9 @@ int function()
 
 ### static 成员变量
 
+!!! info "static function"
+	在多文件编程中，`static` 属性一般用来声明该函数的作用域，表示该函数只能在该文件中使用
+
 在类中的 static 成员变量 **只是声明** [class.static.data#3](https://timsong-cpp.github.io/cppwp/n4868/class.static.data#3)。也就是说，我们必须在类外给出其定义，才能让编译器知道在哪里构造这些成员：
 
 ```c++
@@ -273,6 +276,18 @@ Original vector: 0 1 2 3 4 5 6 7 8 9
 Partitioned vector: 0 8 2 6 4 * 5 3 7 1 9
 */
 ```
+
+
+## NEW 和 MALLOC 的区别
+
+- `new`, `delete` 是C++的关键字；`malloc`, `free` 是库函数，需要引入相应头文件才可使用
+- `new` 分配的空间在自由存储区；`malloc` 分配的空间在堆空间
+	- 自由存储区可以是堆、全局/静态存储区等
+- `new` 操作符返回类型与对象严格匹配；`malloc` 返回 `void*` ，需要手动强制转换
+- `new` 分配失败返回异常；`malloc` 分配失败返回 `NULL`
+
+
+!!! info "`new` 操作符的底层通常也是用 `malloc` 实现的"
 
 
 ## 一些 STL 用法

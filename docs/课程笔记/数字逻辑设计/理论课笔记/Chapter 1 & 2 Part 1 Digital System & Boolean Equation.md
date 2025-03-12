@@ -63,7 +63,7 @@
 	- 可以用偶函数来生成 ==奇校验码==
 		- 注意，偶函数是奇函数非一下哦，不是用异或非连起来
 
-[关于异或，还有如下要点](#)
+**【关于异或，还有如下要点】：**
 
 -  $X\oplus 1=\overline{X}$
 	- $(\overline{X\oplus Y})=(X\oplus Y)\oplus 1 =\overline{X}\oplus Y=X\oplus \overline{Y}$  ==交换定律==
@@ -81,15 +81,13 @@
 - A gate type that can implement all possible Boolean functions
 	- 目前只指 NOR 以及 NAND
 
-
 ## Duality Rule & Complement 对偶规则 与 互补
 
 - 原函数 $F=\overline{A}{B}+C\overline{D} +0$
 - 对偶函数 $F=(\overline{A}+B)(C+\overline{D})\cdot 1$  ==(如果出现 0 或 1，还要额外把它们互换)==
 - 互补函数 $\overline{F}=(A+\overline{B})(\overline{C}+D)\cdot 1$
 
-!!! info
-	Complement 考试可能会出题，注意是仅仅比 Dual 多一个 $X$ 与 $\overline{X}$ 互相转换
+!!! info "Complement 考试可能会出题，注意是仅仅比 Dual 多一个 $X$ 与 $\overline{X}$ 互相转换"
 
 !!! example ""
 	![[Complement考题.png]]
@@ -97,5 +95,4 @@
 ## Boolean Algebra 布尔代数
 ![[常用化简理论.png]]
 
-!!! info
-	其中尤其需要记住 Simplification 和 Consensus
+!!! note "其中尤其需要记住 Simplification 和 Consensus"

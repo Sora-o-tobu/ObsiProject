@@ -88,14 +88,14 @@ The PAL is the opposite of the ROM , having ==programmable set of ANDs== combine
 	![[PAL基础结构.png]]
 
 
-由于与门的 fan-in 有限，所以 ==不可能将所有minterm表示== ，这就导致有些function可能做不到，这个缺点可以由回手掏解决：
+由于与门的 fan-in 有限，所以 ==不可能将所有minterm表示== ，这就导致有些function可能做不到，这个缺点可以由将输出接回输入的方式解决：
 
 ![[PAL.png]]
 
 ## Programmable Logic Array 可编程逻辑阵列
 
 - 优点:
-	- 灵活，能完成对ROM和PAL来说impractical的函数
+	- 灵活，能完成对 ROM 和 PAL 来说 impractical 的函数
 - 缺点:
 	- 与门的数量限制了应用
 	- 需要多余的外部连接来进行多层次的电路设计，且优化变得复杂
@@ -106,6 +106,7 @@ The PAL is the opposite of the ROM , having ==programmable set of ANDs== combine
 因此通常会在后面加一个异或门（决定是否要对结果取非）来增加与门表示的product的种类
 
 ## Field-Programmable Gate Arrays （FPGA）
+
 ### Lookup Table（LUT）
 
 通过组合多路选择器来选择要输出的真值表的值：

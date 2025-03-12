@@ -35,6 +35,7 @@ Latch 的条件
 	二者的共同点是当S置1的时候，Q会变成1(注意S'R'锁存器 S置1的时候实际上输入了S'=0)
 
 通过加上时钟信号作为使能，可以组成Synchronous的门控锁存器 **Clocked S-R Latch**
+
 ![[门控时序电路.png]]
 
 以上两种锁存器都存在一个问题，就是对于S/R某种输入存在不确定状态，并有可能产生介稳态(metastable state)
@@ -42,7 +43,7 @@ Latch 的条件
 ??? info "metastable state"
 	![[metastablestate的产生.png]]
 
-为了消除这种不确定，一种解决方法是限定锁存器的输入状态，由此构成了**D-Latch**
+为了消除这种不确定，一种解决方法是限定锁存器的输入状态，由此构成了 **D-Latch**
 
 ![[D锁存器原理图.png]]
 
@@ -53,7 +54,7 @@ Latch 的条件
 | 1   | 0   | 0: Clear Q |
 | 1   | 1   | 1: Set Q   |
 
-只有当C为1时，D锁存器才能写入数据；而当C为0时，D锁存器的数据不会变化
+只有当 C 为1时，D锁存器才能写入数据；而当 C 为0时，D锁存器的数据不会变化
 
 !!! danger "Transparennt"
 	在实际使用过程中，可能会遇到一个storage element连接到另一个storage element，然后另一个storage element又重新连接回原来的storage element，即在combinational logic中一个storage element的输入输出可能会相连。
@@ -163,8 +164,6 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 - For whole circuit , $t_p' \ge max\{t_p\}$
 - 一般分析实例中 $t_h$ 小于 $t_{pd,FF}$ 
 
-##### 分析实例
-
 === "External input to Output"
 	![[必须知道的话术1.png]]
 === "External input to Clock Edge"
@@ -175,11 +174,10 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 	![[必须知道的话术4.png]]
 	![[必须知道的话术5.png]]
 
-<font style="font-weight: 1000;font-size: 24px">课本例题：</font>
 
-=== "题面"
+=== "课本例题题面"
 	![[题面.png]]
-=== "答案"
+=== "课本例题答案"
 	![[分析实例答案.png]]
 
 
@@ -201,11 +199,12 @@ The ultimate goal of ==timing analysis== is to determine the ==maximum clock fre
 
 ### 设计实例 1 Sequence Recognizer
 
-检测序列中的1101串
+检测序列中的 1101 串
 
 ![[检测序列中的1101串.png]]
 
 - 由此得到Mealy Model：
+
 ![[SequenceRecognizerMealyModel.png]]
 
 - 再根据图得到State Table

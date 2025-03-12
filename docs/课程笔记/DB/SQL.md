@@ -312,14 +312,30 @@ end
 
 ## Join Operation
 
-连接操作是一个二元运算符，并且拥有不同的 Types：Inner Join、left outer join、right outer join、full outer join。
+连接操作是一个二元运算符，可以分为自然连接和非自然连接两类，区别在于 Natural 自动以同名属性相等作为连接条件，而非自然连接可以使用 `ON`或`USING` 关键字自定义条件：
 
-其中外连接如果找不到对应的连接对应关系，也要加入到结果中，内连接功能上类似自然连接，区别是非自然连接之后可以接 `ON`, `USING` 等关键字进行自定义设置条件
+```sql
+-- 自然连接
+R NATURAL {INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN} S
+
+-- 非自然连接
+R {INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN} ON <condition>
+												 USING <columns>
+```
+
+外连接（非 `INNER JOIN`）如果找不到对应的连接对应关系，也要加入到结果中：
+
+![[outerjoinex1.png]]
+
+!!! warning "使用 `ON` 的非自然连接允许不同名属性的比较，同时结果不消去同名属性"
+	![[outerjoinwithon.png]]
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Example. Find all customers who have either an account or a loan (but not both) at the bank</font>
 
 ```sql
 SELECT customer_name
 FROM (depositor natural full outer join borrower)
-WHERE account_number is NULL or loan_number is NULL;
+WHERE account_number is NULL OR loan_number is NULL;
 ```
 
 ## Assertions & Triggers
@@ -331,4 +347,26 @@ CREATE ASSERTION <assertion_name>
 	CHECK <predicate>
 ```
 
-Triggers 是 DBMS 在某些特定的 Modification 后自动执行的一串语句
+如果 `CHECK` 不满足，则会拒绝这次更改。
+
+Triggers 则是 DBMS 在某些特定的 Modification 后自动执行的一串语句。下面是一个简单的 Trigger 例子，其在检测到 balance 为负数时触发：
+
+```sql
+CREATE TRIGGER overdraft_trigger AFTER update ON account
+referencing new row AS nrow for each row
+WHEN nrow.balance < 0
+BEGIN ATOMIC
+	INSERT INTO borrower
+	(SELECT customer_name, account_number FROM depositor
+	WHERE nrow.account_number = depositor.account_number)
+	INSERT INTO loan VALUES
+	(nrow.account_number, nrow.branch_name, -nrow.balacne)
+	UPDATE account SET balance = 0
+	WHERE account.account_number = nrow.account_number
+END
+```
+
+相当于自动将这个 account 转换为 loan 贷款。
+
+上述例子中，`AFTER update`, `new row`, `for each row` 等都是 Trigger 相关的关键字，除此之外还有 `BEFORE delete`, `old row`, `for each statement` 等。
+

@@ -116,6 +116,8 @@ $$
 
 ![[impulsestateupdate.png]]
 
+!!! info "在实际应用中，我们认为 $Rr_i$ 是一个四元矩阵，类似于四元数的形式"
+
 为了简化这一式子，我们讲 cross product 转换成矩阵形式，定义：
 
 $$
