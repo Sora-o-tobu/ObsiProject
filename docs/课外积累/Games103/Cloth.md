@@ -25,6 +25,8 @@
 
 ### Explicit Integration
 
+!!! quote "对于时间步 $t_0 \rightarrow t_1$，显式积分以 $t_0$ 时刻速度乘上 $\Delta t$ 来估计位移"
+
 首先决定一个粒子状态的更新，将弹簧系统插入到力的计算过程中：
 
 ![[particlesystemupdate.png]]
@@ -36,6 +38,8 @@
 !!! warning "在 $\Delta t$ 或者弹簧系数 $k$ 过大的情况下，显式积分做法很可能会产生 overshooting"
 
 ### Implicit Integration
+
+!!! quote "对于时间步 $t_0 \rightarrow t_1$，隐式积分以 $t_1$ 时刻速度乘上 $\Delta t$ 来估计位移"
 
 另一种模拟方式称为隐式积分，认为速度的更新依赖于下一状态的力，位置的更新依赖于下一状态的速度，因此隐式积分法在数值上会更加稳定。
 
@@ -69,6 +73,51 @@ x^{[1]} = x^(k+1)
 其中 $H(x)$ 代表 Spring Hessian，它是弹簧切线刚度 Tangent stiffness 的量化，也对应着 $k$：
 
 ![[springhession1.png]]
+
+??? quote "Lab2 中计算的步骤"
+	![[lab2calculatestep.png]]
+
+在实验2中，计算导数及位置更新部分采用这种方式完成：
+
+```csharp
+// in update()
+for (int k = 0; k < 32; k++)
+{
+	Get_Gradient(X, X_hat, t, G);
+	
+	//Update X by gradient.
+	for (int i = 0; i < X.Length; i++)
+    {
+        if (i == 0 || i == 20) continue;
+        last_X[i] = X[i];
+        X[i] = X[i] - G[i] / (mass / (t * t) + 4 * spring_k);
+    }
+}
+
+// Get_Gradient
+void Get_Gradient(Vector3[] X, Vector3[] X_hat, float t, Vector3[] G)
+{
+	//Momentum and Gravity.
+	for (int i = 0; i < X.Length; i++)
+	{
+		G[i] = mass * (X[i] - X_hat[i]) / (t * t);
+		G[i][1] += 9.8f * mass; // 重力
+        // G[i] -= f(x);
+    }
+	
+	//Spring Force.
+	for (int i = 0; i < E.Length; i+=2)
+	{
+        int v0 = E[i + 0];
+        int v1 = E[i + 1];
+        Vector3 d = X[v0] - X[v1];
+        float l = d.magnitude;
+        Vector3 f = spring_k * (l - L[i / 2]) * d / l;
+        G[v0] += f;
+        G[v1] -= f;
+    }
+}
+```
 
 ## Dihedral Angle Model
 
@@ -189,4 +238,35 @@ Strain Limiting 可以认为是对 PBD 的一个改进（尽管它的出现比 P
 除此之外，还可以对三角形的面积等进行约束。
 
 很多物体的力与形变量之间存在非线性关系，当形变量较小时，可以采用正常的物理模拟，此时弹簧弹性系数较小，Locking Issue 不明显；当形变量较大时，改用 Strain Limiting。
+
+## Projective Dynamics
+
+Projective Dynamics 根据弹簧系统的能量进行投影约束，即：
+
+$$
+E(x) = \sum_{e=\{i,j\}} \frac{k}{2} \left(||x_i -x_j|| -L_e\right)^2
+$$
+
+但是这样和正常物理模拟弹簧系统有什么区别？使 Projective Dynamic 特殊的其实是 Hessian，计算后可以发现它是一个常数的矩阵：
+
+![[PDHession.png]]
+
+!!! info "根据图转换 Hession"
+	- 对角线上为 $E(x)$ 的对应变量二阶偏导，可以在图上数该点的 degree
+	- 非对角线上为不同变量的二阶偏导，可以在图上数对应两个顶点之间是否存在边，有则为 -1，无则为 0
+
+有了一个常数 Hessian 矩阵后，剩下部分和正常隐式积分步骤相同：
+
+![[PDNewtonMethod.png]]
+
+!!! info "有一个常数 $H$ 矩阵的最大好处就是线性系统只用求解一次"
+
+- **Advantage：**
+	- 相对于 PBD，在物理上有意义
+	- 只需要一次 LU 分解，在 CPU 上效率高
+	- 在前几次迭代中收敛效率较高（迭代次数越少精度越低）
+- **Disadvantage：**
+	- 在 GPU 上慢，因为 GPU 不支持直接法求解线性系统
+	- 迭代后期的收敛速度不如牛顿法
+	- 不能简单处理约束改变的情况
 

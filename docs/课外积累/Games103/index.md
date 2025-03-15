@@ -1,4 +1,8 @@
 
+# Games103
+
+## Course Overview
+
 !!! quote "Unity 使用的是左手系统"
 	![[mathlefthandsystem.png]]
 
@@ -14,3 +18,8 @@ Games103 讲授的是**基于物理的计算机动画入门**，包含刚体、�
 
 !!! info "Grid 是把空间划分为一个个小格子的网格，定义在整个3D场景上（而Mesh只定义在物体上）"
 
+## Reference
+
+- https://games103.games-cn.org/
+- https://games-cn.org/games103-slides/
+- https://moeleaf.github.io/GAMES103/GAMES103-Index/
