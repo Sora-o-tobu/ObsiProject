@@ -88,7 +88,7 @@ for (int k = 0; k < 32; k++)
 	//Update X by gradient.
 	for (int i = 0; i < X.Length; i++)
     {
-        if (i == 0 || i == 20) continue;
+        if (i == 0 || i == 20) continue; // 定点位置不变
         last_X[i] = X[i];
         X[i] = X[i] - G[i] / (mass / (t * t) + 4 * spring_k);
     }
