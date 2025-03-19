@@ -21,7 +21,7 @@ $$
 
 有了形变矩阵后，我们希望得到三角形某一形变状态下的能量，定义三角形 Reference 状态下的能量密度为 $W(G)$，总能量为面积乘以能量密度 $E=A^{ref}W(G)$
 
-!!！info "Saint Venant-Kirchhoff Model, StVK 能量密度模型"
+!!! info "Saint Venant-Kirchhoff Model, StVK 能量密度模型"
 	$$\begin{array}lW(G)=W(\varepsilon_{uu}, \varepsilon_{vv}, \varepsilon_{uv})=\frac{\lambda}{2}(\varepsilon_{uu} + \varepsilon_{vv})^2 + \mu(\varepsilon_{uu}^2 +\varepsilon_{vv}^2 + 2\varepsilon_{uv}^2)\\ S=\frac{\partial W(G)}{\partial G} = 2\mu G+ \lambda trace(G)I\end{array}$$
 
 定义了能量之后，我们就能计算形变时作用的力了:
@@ -58,9 +58,28 @@ $$
 
 !!! info "$F$ 指的是上一节定义过的 Deformation Gradient 形变梯度"
 
+其中 $D_m$ 在初始化中进行设置，表示四面体原本的形状。$F$ 在每一帧的更新中计算，表示四边形的形变梯度。
+
 ![[FVMSummary.png]]
 
-得到形变后四面体四个顶点受到的力后，再用积分法更新速度和位置完成模拟即可。
+得到形变后四面体四个顶点受到的力后，再用积分法更新速度和位置完成模拟即可：
+
+```csharp
+for(int i=0; i<number; i++)
+{
+    //Update X and V here
+    V[i] += Force[i] * dt / mass;
+    V[i] *= damp;
+
+    // Laplacian smoothing
+    V[i] = (V_num[i] * V[i] + V_sum[i]) / (2 * V_num[i]);
+
+    X[i] += V[i] * dt;
+
+    //Some Collision Handling here
+    [...]
+}
+```
 
 !!! tip "当划分的单元为三角形或四面体时，FEM 和 FVM 等效"
 

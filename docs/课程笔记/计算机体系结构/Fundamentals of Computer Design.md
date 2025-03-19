@@ -22,18 +22,18 @@
 
 多种级别的并行已成为计算机设计的主要驱动力，能耗和成本是其主要约束。Application 中有以下两种基本并行：
 
-- **Data-Level Parallelism(DLP):** 同时操作多个数据项
-- **Task-Level Parallelism(TLP):** 并行地单独执行多个工作任务
+- **<1> Data-Level Parallelism(DLP):** 同时操作多个数据项
+- **<2> Task-Level Parallelism(TLP):** 并行地单独执行多个工作任务
 
-计算机硬件又以如下四种主要方式来利用这两种类型的应用并行：
+在计算机硬件中，以如下四种主要方式来利用、实现这两种类型的应用并行：
 
-- **Instruction-Level Parallelism(ILP):** 在流水线、推测执行(Speculative Execution)两个层面上对 DLP 进行利用
+- **<1> Instruction-Level Parallelism(ILP):** 在流水线、推测执行(Speculative Execution)两个层面上对 DLP 进行利用
 	- Chapter 3
-- **Vector architectures, graphic processor unit(GPUs), and multimedia instruction sets:** 将单条指令并行应用于一组数据，以利用数据级并行 DLP
+- **<2> Vector architectures, graphic processor unit(GPUs), and multimedia instruction sets:** 将单条指令并行应用于一组数据，以利用数据级并行 DLP
 	- Chapter 4
-- **Thread-Level Parallelism:** 在 Tightly Coupled Hardware 中利用 DLP 或 TLP 。这种模型允许并行线程之间进行交互 
+- **<3> Thread-Level Parallelism:** 在 Tightly Coupled Hardware 中利用 DLP 或 TLP 。这种模型允许并行线程之间进行交互 
 	- Chapter 5
-- **Request-Level Parallelism(RLP):** 利用程序员或操作系统指定的大量解耦任务之间的并行性
+- **<4> Request-Level Parallelism(RLP):** 利用程序员或操作系统指定的大量解耦任务之间的并行性
 	- Chapter 6
 
 **Flynn** 在研究并行计算工作量时，提出了一种简单的分类方式：
@@ -53,9 +53,9 @@
 
 ### CA Definition
 
-Computer Architecture 定义：Instruction Design & Implementation 指令集及其实现
-
 CA must design the organization and hardware to meet functional requirements as well as price, power, performance, and availability goals
+
+!!! quote "Definition: Instruction Design & Implementation 指令集及其实现"
 
 ISA 相当于软硬件之间的界线，下面将从七个方面来简要介绍以下 ISA：
 
@@ -107,7 +107,7 @@ Bandwidth 或 Throughput 指给定时间完成的总工作量，比如磁盘读�
 
 在技术的发展过程中，Bandwidth 的发展速度超过了 Latency，并且这一趋势很可能会继续持续下去。
 
-对于 CMOS 芯片来说，传统的主要能耗是开关晶体管，也成为动态能耗(**Dynamic Energy**)。每个晶体管的能耗跟该晶体管驱动的容性负载与电压平方的乘积平方成正比：
+对于 CMOS 芯片来说，传统的主要能耗是开关晶体管，即动态能耗(**Dynamic Energy**)。每个晶体管的能耗跟该晶体管驱动的容性负载与电压平方的乘积平方成正比：
 
 $$
 Energy_{Dynamic} \propto Capacity\ Load \times Voltage^2 

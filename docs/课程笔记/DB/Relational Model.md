@@ -65,22 +65,22 @@ Relation 有两个相关概念：
 接下来以一个 Bank 的 Example 来演示各个关系代数操作的运用。
 
 ```sql
-# 分支名, 分支所在城市, 总财产
+-- 分支名, 分支所在城市, 总财产
 branch(branch-name, branch-city, assets)
 
-# 客户名, 客户住址, 客户所在城市
+-- 客户名, 客户住址, 客户所在城市
 customer(customer-name, customer-street, customer-city)
 
-# 存款ID, 分支名, 存款金额
+-- 存款ID, 分支名, 存款金额
 account(account-number, branch-name, balance)
 
-# 贷款ID, 分支名, 贷款金额
+-- 贷款ID, 分支名, 贷款金额
 loan(loan-number, branch-name, amount)
 
-# 客户名, 存款ID
+-- 客户名, 存款ID
 depositor(customer-name, account-number)
 
-# 客户名, 贷款ID
+-- 客户名, 贷款ID
 borrower(customer-name, loan-number)
 ```
 

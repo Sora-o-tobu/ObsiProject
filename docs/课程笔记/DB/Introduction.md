@@ -57,17 +57,14 @@ Independence 指的是修改某一层的 Schema 定义，而不影响高层的 S
 
 不同 level 的 data abstraction 可能需要不同的 data model 去描述，常见的 data model 有：
 
-- **Relational**
-- Key/Value
-- Graph
-- Document/Object
-- Wide-Column/Column-family
-- Array/Matrix/Vectors
-- Hierarchical
-- Network
-- Multi-Value
-
-!!! warning "最后三种几乎没有人再使用"
+- **Entity-Relationship Model**
+	- 通常用于数据库的 Conceptual Design
+- **Relational Model**
+	- 通常用于数据库的 Logical Design
+- Other Models
+	- Object-Oriented Model
+	- Semi-structured Data Model
+	- Older Models such as network model, hierarchy model, etc
 
 本课程主要涉及的数据库建立在关系型模型的基础上，它有如下三点关键：
 
@@ -100,7 +97,7 @@ Independence 指的是修改某一层的 Schema 定义，而不影响高层的 S
 
 ![[UsersandAdmin1.png]]
 
-Database Administrator(DMA) 是一个特殊的用户，他拥有数据库的所有权限，包括组成 DBMS 的 Programs。DMA 要做定义模式，数据库调谐，故障时恢复（备份）等工作。
+Database Administrator(DBA) 是一个特殊的用户，他拥有数据库的所有权限，包括组成 DBMS 的 Programs。DBA 要做定义模式，数据库调谐，故障时恢复（备份）等工作。
 
 ## Database Architecture
 

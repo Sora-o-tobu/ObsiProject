@@ -111,16 +111,19 @@ CREATE table employee(eno char(10) PRIMARY KEY,
 !!! info "区别在于，`DOMAIN` 允许添加约束"
 
 ```sql
-DROP TABLE branch; # 完全删除 Relation branch
+-- 完全删除 Relation branch
+DROP TABLE branch;
 
-ALTER TABLE loan ADD loan_date date; # 为 loan 添加新属性 loan_date
-# 所有新增属性的初始值均为 null
+-- 为 loan 添加新属性 loan_date
+-- 所有新增属性的初始值均为 null
+ALTER TABLE loan ADD loan_date date;
 
-ALTER TABLE loan DROP loan_date # 删除 loan_date 属性
-# 很多 DBMS 不支持这一功能
+-- 删除 loan_date 属性
+-- 很多 DBMS 不支持这一功能
+ALTER TABLE loan DROP loan_date
 
+-- 调整属性的 domain
 ALTER TABLE branch MODIFY(branch_name char(30), assets not null)
-# 调整属性的 domain
 ```
 
 !!! warning "不要轻易使用 DROP 指令，DELETE 起码还会把 SCHEMA 留下来，DROP 了什么都没了"
@@ -292,15 +295,18 @@ WHERE account.balance = max_balance.value
 Modification 即我们熟识的增删改 `INSERT`, `DELETE`, `UPDATE`:
 
 ```sql
-# 插入
+-- 插入
 insert into table_name values();
-# 删除
+
+-- 删除
 delete from table_name where P;
-# 修改
+
+-- 修改
 update r
 set attribute = ...
 where P
-# 修改(case)
+
+-- 修改(case)
 update r
 set attribute = case
     when ... then ...
@@ -331,6 +337,8 @@ R {INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN} ON <condition>
 	![[outerjoinwithon.png]]
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Example. Find all customers who have either an account or a loan (but not both) at the bank</font>
+
+找到只拥有 account 或 loan 的 customers。
 
 ```sql
 SELECT customer_name
@@ -370,3 +378,58 @@ END
 
 上述例子中，`AFTER update`, `new row`, `for each row` 等都是 Trigger 相关的关键字，除此之外还有 `BEFORE delete`, `old row`, `for each statement` 等。
 
+## Authorization
+
+- Read authorization - allows reading, but not modification of data.
+- Insert authorization - allows insertion of new data, but not modification of existing data.
+- Update authorization - allows modification, but not deletion of data.
+- Delete authorization - allows deletion of data.
+
+!!! info "对于数据库 Schema 的更改，有四个相关权限"
+	- Index authorization - allows creation and deletion of indices.
+	- Resources authorization - allows creation of new relations.
+	- Alteration authorization - allows addition or modifying of attributes in a relation.
+	- Drop authorization - allows deletion of relations.
+
+`VIEW` 是提高数据库安全性的一种策略，它可以只提供给用户他们需要的数据，例如我们想要对用户隐藏 `loan_number`：
+
+```sql
+CREATE VIEW cust_loan AS
+SELECT branch_name, customer_name
+FROM borrower, loan
+WHERE borrower.loan_number = loan.loan_number;
+```
+
+```sql
+GRANT <privilige list> ON <table|view>
+TO <user list> [WITH GRANT OPTION]
+```
+
+
+```sql
+REVOKE <privilege list> ON <TABLE | VIEW>
+FROM <user list> [RESTRICT | CASCADE]
+```
+默认 `CASCADE`，
+
+!!! note "`WITH GRANT OPTION` 控制了这个权限是否能被传递给别人"
+
+```sql
+-- 用户审计
+AUDIT <st-opt> [BY <users>] [BY SESSION | ACCESS]
+[WHENEVER SUCESSFULL | WHENEVER NOT SUCESSFULL];
+-- BY users 缺省，则默认对所有用户审计
+-- BY SESSION(默认值) 表示每次会话期间，相同类型的 SQL 语句只记录一次
+-- <st-opt>: TABLE, VIEW, ROLE, INDEX...
+-- 默认都是 WHENEVER SUCESSFULL
+
+-- 实体审计
+AUDIT <obj-opt> ON <obj>|DEFAULT [BY SESSION | BY ACCESS]
+[WHENEVER SUCCESSFUL | WHENEVER NOT SUCCESSFUL]
+-- 实体审计对所有用户起作用
+-- ON <obj> 指出审计对象表、视图名；ON DEFAULT 表示对其之后创建的所有对象起作用
+```
+
+!!! info "取消审计用 `NOAUDIT` 语句"
+
+审计结果一般记录在数据字典表 `sys.aud$` 中，也可以从 `dba_audit_trail`、`dba_audit_statement`、`dba_audit_object` 等表中获得有关情况。上述表仅有 DBA 可见。
