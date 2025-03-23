@@ -22,10 +22,16 @@ statistics: true
 !!! danger ""
 	<img src="image/OneLastSora.png" id="sora"/>
 
-!!! quote "这是一个试验功能"
-	- [ ]  C++ 实践
-	- [ ]  Vue + Node.js (+ Spring)
 
 !!! question "一个神奇的 Counter"
 	<img src="https://count.getloli.com/@nimisora" alt="nimisora"> 
 
+<div class="card__box">
+	<div class="card__title">有兴趣但还没学的东西！</div>
+	<div class="card__content">
+	<p>- Vue.js, Node.js, Spring</p>
+	<p>- Javascript</p>
+	<p>- 机器学习</p>
+	</div>
+	<div class="card__footer"><a>www.nimisora.top</a>&nbsp;&nbsp;&nbsp;<progress id="progress-bar" aria-label="Content loading…"></progress></div>
+</div>

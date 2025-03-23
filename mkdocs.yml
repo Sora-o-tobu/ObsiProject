@@ -92,8 +92,6 @@ plugins:
   - roamlinks
   - minify:
       minify_html: true
-      cache: true          # 启用缓存
-      cache_dir: .cache    # 缓存目录
   - glightbox:
       touchNavigation: true
       loop: false
@@ -126,6 +124,7 @@ extra_javascript:
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/card.css
   - https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css
   - https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css
 
