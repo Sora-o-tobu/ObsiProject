@@ -464,6 +464,8 @@ FROM <user list> [RESTRICT | CASCADE]
 	GRANT UPDATE(branch_name) ON branch TO MANAGER;
 	GRANT ALL ON account TO MANAGER;
 	GRANT MANAGER TO <user list>;
+	-- In SQL Server:
+	-- ALTER ROLE MANAGER ADD MEMBER <user list>;
 	```
 
 由于在数据库层面（tuple level）实现 Authorization 控制开销过大，因此我们在应用层上实现。

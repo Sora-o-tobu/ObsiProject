@@ -61,11 +61,7 @@ h2::before, h3::before, h4::before, h5::before {
   font-weight: bold;
 }
 
-:root {
-    --md-primary-fg-color:        #F06292;
-    --md-primary-fg-color--light: #F06292;
-    --md-primary-fg-color--dark:  #F06292;
-}
+
 
 [data-md-color-scheme=default] {
     --md-default-bg-color: rgba(254,245,246,1); /*淡粉色背景，可爱好耶*/

@@ -25,7 +25,7 @@ theme:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: custom
-      accent: indigo
+      accent: pink
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
@@ -34,7 +34,7 @@ theme:
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: custom
-      accent: blue
+      accent: pink
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
@@ -314,4 +314,4 @@ nav:
     - 番剧:
       - 番剧: blog/番剧/番剧.md
       - 异世界推荐: blog/番剧/异世界推荐.md
-  - 友情链接: 友情链接.md
+  - 友情链接: friend.md
