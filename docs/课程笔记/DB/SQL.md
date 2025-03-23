@@ -380,16 +380,19 @@ END
 
 ## Authorization
 
-- Read authorization - allows reading, but not modification of data.
-- Insert authorization - allows insertion of new data, but not modification of existing data.
-- Update authorization - allows modification, but not deletion of data.
-- Delete authorization - allows deletion of data.
+- <1> **Read Authorization** - allows reading, but not modification of data.
+- <2> **Insert Authorization** - allows insertion of new data, but not modification of existing data.
+- <3> **Update Authorization** - allows modification, but not deletion of data.
+- <4> **Delete Authorization** - allows deletion of data.
+
+四种权限按顺序由浅入深。
 
 !!! info "对于数据库 Schema 的更改，有四个相关权限"
-	- Index authorization - allows creation and deletion of indices.
-	- Resources authorization - allows creation of new relations.
-	- Alteration authorization - allows addition or modifying of attributes in a relation.
-	- Drop authorization - allows deletion of relations.
+	- Index Authorization - allows creation and deletion of indices.
+	- Resources Authorization - allows creation of new relations.
+		- 创建 `VIEW` 并不需要 Resources Authorization
+	- Alteration Authorization - allows addition or modifying of attributes in a relation.
+	- Drop Authorization - allows deletion of relations.
 
 `VIEW` 是提高数据库安全性的一种策略，它可以只提供给用户他们需要的数据，例如我们想要对用户隐藏 `loan_number`：
 
@@ -400,25 +403,80 @@ FROM borrower, loan
 WHERE borrower.loan_number = loan.loan_number;
 ```
 
+`VIEW` 的建立者对该 `VIEW` 的权限也仅限于他本身有的权限。例如，他对 `borrower`, `loan` 两个表都只有 Read Authorization ，那么他对 `cust_loan` 也只有 Read Authorization。
+
+!!! info "Authorization 检测一定要在 Query Processor 将 VIEW 替换为实际的表前进行"
+
+Authorization 可以通过 `GRANT` 指令传递，一个典型的 Authorization Graph 如下：
+
+```mermaid
+graph TD;
+    DBA[DBA] -->|grants| User1[User 1]
+    DBA -->|grants| User2[User 2]
+	DBA -->|grants| User3[User 3]
+
+	User1 -->|grants| User4[User 4]
+	User1 -->|grants| User5[User 5]
+
+	User2 -->|grants| User5
+```
+
+Authorization Graph 一定满足任何节点都可以追溯到 DBA，否则将该 Edge 删除。例如，如果 DBA Revoke User 1，那么 User 4 此时也失去权限；而 User 5 则还有 User 2 赋予的权限。
+
+!!! tip "父节点的权限一定大于等于子节点"
+
+SQL 中 `GRANT` 和 `REVOKE` 语句一般格式如下：
+
 ```sql
 GRANT <privilige list> ON <table|view>
 TO <user list> [WITH GRANT OPTION]
-```
+-- WITH GRANT OPTION 指允许该 user 传递该 privilege
 
 
-```sql
 REVOKE <privilege list> ON <TABLE | VIEW>
 FROM <user list> [RESTRICT | CASCADE]
+-- 默认 CASCADE，即递归消除权限
+-- 在 RESTRICT 情况下，如果有 cascade revoke，则该 REVOKE 语句 fail
 ```
-默认 `CASCADE`，
 
-!!! note "`WITH GRANT OPTION` 控制了这个权限是否能被传递给别人"
+其中 `<privilige list>` 可选的选项为：
+
+- <1> insert
+- <2> update
+- <3> delete
+- <4> references
+	- 创建 Relation 时声明 Foreign Keys 的权限
+- <5> all priviliges/all
+	- 所有权限
+
+`<user list>` 可选的选项为：
+
+- <1> user-ids
+- <2> public
+	- 表示允许所有 Valid Users
+- <3> Role
+
+!!! quote "ROLE"
+	Role 为一组 User 提供他们共有的 Privilege
+	
+	```sql
+	CREATE ROLE MANAGER;
+	GRANT UPDATE(branch_name) ON branch TO MANAGER;
+	GRANT ALL ON account TO MANAGER;
+	GRANT MANAGER TO <user list>;
+	```
+
+由于在数据库层面（tuple level）实现 Authorization 控制开销过大，因此我们在应用层上实现。
+
+!!! info "Tuple Level 指只允许访问某几行"
+
+Audit Trail 是记录了所有更改的 Log，其包含哪个用户在哪个时间进行了什么更改等信息。具体可以用 `TRIGGER` 实现，但是很多 DBMS 也直接支持这一特性：
 
 ```sql
 -- 用户审计
 AUDIT <st-opt> [BY <users>] [BY SESSION | ACCESS]
 [WHENEVER SUCESSFULL | WHENEVER NOT SUCESSFULL];
--- BY users 缺省，则默认对所有用户审计
+-- BY <users> 缺省，则默认对所有用户审计
 -- BY SESSION(默认值) 表示每次会话期间，相同类型的 SQL 语句只记录一次
 -- <st-opt>: TABLE, VIEW, ROLE, INDEX...
 -- 默认都是 WHENEVER SUCESSFULL
@@ -433,3 +491,4 @@ AUDIT <obj-opt> ON <obj>|DEFAULT [BY SESSION | BY ACCESS]
 !!! info "取消审计用 `NOAUDIT` 语句"
 
 审计结果一般记录在数据字典表 `sys.aud$` 中，也可以从 `dba_audit_trail`、`dba_audit_statement`、`dba_audit_object` 等表中获得有关情况。上述表仅有 DBA 可见。
+
