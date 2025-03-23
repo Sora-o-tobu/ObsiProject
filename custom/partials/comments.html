@@ -18,32 +18,10 @@
     <button data-md-color-primary="grey" style="background-color:grey; color:white; padding: 1px 4px; border-radius: 4px; width: 80px;">grey</button>
     <button data-md-color-primary="black" style="background-color:black; color:white; padding: 1px 4px; border-radius: 4px; width: 80px;">black</button>
     <button data-md-color-primary="white" style="background-color:white; color:black; padding: 1px 4px; border-radius: 4px; width: 80px;">white</button>
-    <button data-md-color-primary="custom" style="background-color:pink; color:black; padding: 1px 4px; border-radius: 4px; width: 80px;">custom</button>
+    <button data-md-color-primary="custom" style="background-color:rgb(221, 166, 175); color:black; padding: 1px 4px; border-radius: 4px; width: 80px;">custom</button>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    let storedColor = localStorage.getItem("data-md-color-primary") || "custom";
-    document.body.setAttribute("data-md-color-primary", storedColor);
 
-    let buttons = document.querySelectorAll("button[data-md-color-primary]");
-    buttons.forEach(button => {
-        button.addEventListener("click", function() {
-            let attr = this.getAttribute("data-md-color-primary");
-            if (storedColor !== attr) {
-                document.body.setAttribute("data-md-color-primary", attr);
-                localStorage.setItem("data-md-color-primary", attr);
-                storedColor = attr; // 缓存变量，避免重复存储
-            }
-        });
-    });
-});
-</script>
-
-
-
-
-<div id="__comments"></div>
 
 <script src="https://giscus.app/client.js"
         data-repo="Sora-o-tobu/ObsiProject"

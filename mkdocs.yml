@@ -1,5 +1,5 @@
 site_name: Nimisora's Notes
-site_url: 'http://www.nimisora.top'
+site_url: 'https://www.nimisora.top/'
 
 theme:
     features:
@@ -79,6 +79,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - toc:
       permalink: true
+      toc_depth: 3
 
 plugins:
   - mkdocs-video:
@@ -89,6 +90,10 @@ plugins:
   #- git-revision-date-localized:
   #    locale: zh
   - roamlinks
+  - minify:
+      minify_html: true
+      cache: true          # 启用缓存
+      cache_dir: .cache    # 缓存目录
   - glightbox:
       touchNavigation: true
       loop: false
@@ -110,6 +115,7 @@ plugins:
 extra_javascript:
   #- javascripts/mathjax.js
   - javascripts/katex.js
+  - javascripts/theme.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - https://unpkg.com/mermaid/dist/mermaid.min.js 
