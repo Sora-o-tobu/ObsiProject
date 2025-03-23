@@ -1,4 +1,6 @@
+
 # CH 2 : Basic Structure
+
 ## 2.1 Sets
 A set is an unordered collection of objects.
 

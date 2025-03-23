@@ -145,89 +145,87 @@ nav:
       - 参数估计: Courses/概率论与数理统计/CH7.md
       - 假设检验: Courses/概率论与数理统计/CH8.md
     - 大学物理 乙:
-      - 大物 乙 I: Courses/大学物理/零碎知识点.md
+      - 大物 乙 I: Courses/Physics/PhysicsI.md
       - 大物 乙 II:
-        - 电学部分: Courses/大学物理/大学物理II/电学部分.md
-        - 电磁学部分: Courses/大学物理/大学物理II/电磁学部分.md
-        - 光学部分: Courses/大学物理/大学物理II/光学部分.md
-        - 量子部分: Courses/大学物理/大学物理II/量子部分.md
+        - 电学部分: Courses/Physics/PhysicsII/电学部分.md
+        - 电磁学部分: Courses/Physics/PhysicsII/电磁学部分.md
+        - 光学部分: Courses/Physics/PhysicsII/光学部分.md
+        - 量子部分: Courses/Physics/PhysicsII/量子部分.md
     - 离散数学:
-      - Courses/离散数学/index.md
-      - CH 1. Logic and Proofs: Courses/离散数学/笔记/Chapter1.md
-      - CH 2. Basic Structure: Courses/离散数学/笔记/Chapter2.md
-      - CH 3. Algorithms: Courses/离散数学/笔记/Chapter3.md
-      - CH 4. Number Theory and Cryptography: Courses/离散数学/笔记/Chapter4.md
-      - CH 5. Induction and Recursion: Courses/离散数学/笔记/Chapter5.md
-      - CH 6. Counting: Courses/离散数学/笔记/Chapter6.md
-      - CH 8. Advanced Counting Techniques: Courses/离散数学/笔记/Chapter8.md
-      - CH 9. Relations: Courses/离散数学/笔记/Chapter9.md
-      - CH 10. Graphs: Courses/离散数学/笔记/Chapter10.md
-      - CH 11. Trees: Courses/离散数学/笔记/Chapter11.md
-    #- 密码学:
-    #  - Courses/密码学/index.md
+      - Courses/DiscreteMathematics/index.md
+      - CH 1. Logic and Proofs: Courses/DiscreteMathematics/note/Chapter1.md
+      - CH 2. Basic Structure: Courses/DiscreteMathematics/note/Chapter2.md
+      - CH 3. Algorithms: Courses/DiscreteMathematics/note/Chapter3.md
+      - CH 4. Number Theory and Cryptography: Courses/DiscreteMathematics/note/Chapter4.md
+      - CH 5. Induction and Recursion: Courses/DiscreteMathematics/note/Chapter5.md
+      - CH 6. Counting: Courses/DiscreteMathematics/note/Chapter6.md
+      - CH 8. Advanced Counting Techniques: Courses/DiscreteMathematics/note/Chapter8.md
+      - CH 9. Relations: Courses/DiscreteMathematics/note/Chapter9.md
+      - CH 10. Graphs: Courses/DiscreteMathematics/note/Chapter10.md
+      - CH 11. Trees: Courses/DiscreteMathematics/note/Chapter11.md
     - 数字逻辑设计:
-      - Courses/数字逻辑设计/index.md
+      - Courses/DD/index.md
       - 理论课笔记:
-        - CH 1 &2 P1.Digital System & Boolean Equation: Courses/数字逻辑设计/理论课笔记/Chapter 1 & 2 Part 1 Digital System & Boolean Equation.md
-        - CH 2 P2. Circuit Optimization: Courses/数字逻辑设计/理论课笔记/Chapter 2 P2 Circuit Optimization.md
-        - CH 3. Combinational Logic Design: Courses/数字逻辑设计/理论课笔记/Chapter 3 Combinational Logic Design.md
-        - CH 4. Sequential Circuits: Courses/数字逻辑设计/理论课笔记/Chapter 4 Sequential Circuits.md
-        - CH 5. Digital Hardware Implementation: Courses/数字逻辑设计/理论课笔记/Chapter 5 Digital Hardware Implementation.md
-        - CH 6. Registers and Register Transfers: Courses/数字逻辑设计/理论课笔记/Chapter 6 Registers and Register Transfers.md
-        - CH 7. Memory Basics: Courses/数字逻辑设计/理论课笔记/Chapter 7 Memory Basics.md
+        - CH 1 &2 P1.Digital System & Boolean Equation: Courses/DD/note/Chapter 1 & 2 Part 1 Digital System & Boolean Equation.md
+        - CH 2 P2. Circuit Optimization: Courses/DD/note/Chapter 2 P2 Circuit Optimization.md
+        - CH 3. Combinational Logic Design: Courses/DD/note/Chapter 3 Combinational Logic Design.md
+        - CH 4. Sequential Circuits: Courses/DD/note/Chapter 4 Sequential Circuits.md
+        - CH 5. Digital Hardware Implementation: Courses/DD/note/Chapter 5 Digital Hardware Implementation.md
+        - CH 6. Registers and Register Transfers: Courses/DD/note/Chapter 6 Registers and Register Transfers.md
+        - CH 7. Memory Basics: Courses/DD/note/Chapter 7 Memory Basics.md
       - Verilog:
-        - Verilog基础: Courses/数字逻辑设计/Verilog/Verilog基础.md
-        - Verilog补充: Courses/数字逻辑设计/Verilog/Verilog补充.md
+        - Verilog基础: Courses/DD/Verilog/Verilog基础.md
+        - Verilog补充: Courses/DD/Verilog/Verilog补充.md
     - 计算机组成:
-      - Courses/计算机组成/index.md
-      - CH 1. 计算机概念与技术: Courses/计算机组成/Chapter1.md
-      - CH 2. RISC-V: Courses/计算机组成/Chapter2.md
-      - CH 3. 算术单元: Courses/计算机组成/Chapter3.md
-      - CH 4. 处理器: Courses/计算机组成/Chapter4.md
-      - CH 5. 存储器分级体系: Courses/计算机组成/Chapter5.md
-      - CH 6. IO 接口: Courses/计算机组成/Chapter6.md
+      - Courses/CO/index.md
+      - CH 1. 计算机概念与技术: Courses/CO/Chapter1.md
+      - CH 2. RISC-V: Courses/CO/Chapter2.md
+      - CH 3. 算术单元: Courses/CO/Chapter3.md
+      - CH 4. 处理器: Courses/CO/Chapter4.md
+      - CH 5. 存储器分级体系: Courses/CO/Chapter5.md
+      - CH 6. IO 接口: Courses/CO/Chapter6.md
     - 计算机体系结构:
-      - Courses/计算机体系结构/index.md
-      - Fundamentals of Computer Design: Courses/计算机体系结构/Fundamentals of Computer Design.md
-      - Memory Hierarchy Design: Courses/计算机体系结构/Memory Hierarchy Design.md
+      - Courses/CA/index.md
+      - Fundamentals of Computer Design: Courses/CA/Fundamentals of Computer Design.md
+      - Memory Hierarchy Design: Courses/CA/Memory Hierarchy Design.md
     - 数据结构:
       - 数据结构基础:
-        - Courses/数据结构/数据结构基础/index.md 
-        - 线性表: Courses/数据结构/数据结构基础/线性表.md
-        - 树: Courses/数据结构/数据结构基础/树.md
-        - 并查集: Courses/数据结构/数据结构基础/并查集.md
-        - 图: Courses/数据结构/数据结构基础/图.md
-        - 排序 & 哈希表: Courses/数据结构/数据结构基础/排序.md
-        - 题目: Courses/数据结构/数据结构基础/一些经典题目.md
+        - Courses/DS/FDS/index.md 
+        - 线性表: Courses/DS/FDS/线性表.md
+        - 树: Courses/DS/FDS/树.md
+        - 并查集: Courses/DS/FDS/并查集.md
+        - 图: Courses/DS/FDS/图.md
+        - 排序 & 哈希表: Courses/DS/FDS/排序.md
+        - 题目: Courses/DS/FDS/一些经典题目.md
       - 高级数据结构与算法分析:
-        - Courses/数据结构/高级数据结构与算法分析/index.md 
-        - Review: Courses/数据结构/高级数据结构与算法分析/Review.md
-        - AVL Trees, Splay Tree & Amortized Analysis: Courses/数据结构/高级数据结构与算法分析/AVL Trees,Splay Tree & Amortized Analysis.md
-        - Red-Black Trees & B+ Trees: Courses/数据结构/高级数据结构与算法分析/Red-Black Trees & B+ Trees.md
-        - Inverted File Index: Courses/数据结构/高级数据结构与算法分析/Inverted File Index.md
-        - Leftist Heap & Skew Heap: Courses/数据结构/高级数据结构与算法分析/Leftist Heap & Skew Heap.md
-        - Binomial Queue: Courses/数据结构/高级数据结构与算法分析/Binomial Queue.md
-        - Backtracking: Courses/数据结构/高级数据结构与算法分析/Backtracking.md
-        - Divide & Conquer: Courses/数据结构/高级数据结构与算法分析/Divide & Conquer.md
-        - Dynamic Programming: Courses/数据结构/高级数据结构与算法分析/Dynamic Programming.md
-        - Greedy Algorithm: Courses/数据结构/高级数据结构与算法分析/Greedy Algorithm.md
-        - NP-Completeness: Courses/数据结构/高级数据结构与算法分析/NP-Completeness.md
-        - Approximation: Courses/数据结构/高级数据结构与算法分析/Approximation.md
-        - Local Search: Courses/数据结构/高级数据结构与算法分析/Local Search.md
-        - Randomized Algorithms: Courses/数据结构/高级数据结构与算法分析/Randomized Algorithms.md
-        - Parallel Algorithms: Courses/数据结构/高级数据结构与算法分析/Parallel Algorithms.md
-        - External Sort: Courses/数据结构/高级数据结构与算法分析/External Sort.md
+        - Courses/DS/ADS/index.md 
+        - Review: Courses/DS/ADS/Review.md
+        - AVL Trees, Splay Tree & Amortized Analysis: Courses/DS/ADS/AVL Trees,Splay Tree & Amortized Analysis.md
+        - Red-Black Trees & B+ Trees: Courses/DS/ADS/Red-Black Trees & B+ Trees.md
+        - Inverted File Index: Courses/DS/ADS/Inverted File Index.md
+        - Leftist Heap & Skew Heap: Courses/DS/ADS/Leftist Heap & Skew Heap.md
+        - Binomial Queue: Courses/DS/ADS/Binomial Queue.md
+        - Backtracking: Courses/DS/ADS/Backtracking.md
+        - Divide & Conquer: Courses/DS/ADS/Divide & Conquer.md
+        - Dynamic Programming: Courses/DS/ADS/Dynamic Programming.md
+        - Greedy Algorithm: Courses/DS/ADS/Greedy Algorithm.md
+        - NP-Completeness: Courses/DS/ADS/NP-Completeness.md
+        - Approximation: Courses/DS/ADS/Approximation.md
+        - Local Search: Courses/DS/ADS/Local Search.md
+        - Randomized Algorithms: Courses/DS/ADS/Randomized Algorithms.md
+        - Parallel Algorithms: Courses/DS/ADS/Parallel Algorithms.md
+        - External Sort: Courses/DS/ADS/External Sort.md
     - 数据库系统:
       - Courses/DB/index.md
       - Introduction: Courses/DB/Introduction.md
       - Relational Model: Courses/DB/Relational Model.md
       - SQL: Courses/DB/SQL.md
     - 8086 汇编语言: 
-      - Courses/8086汇编语言/index.md
-      - 指令速查: Courses/8086汇编语言/指令速查.md
-      - 什么是汇编语言: Courses/8086汇编语言/什么是汇编语言.md
-      - CPU、内存和端口: Courses/8086汇编语言/CPU、内存和端口.md
-      - 汇编语言源程序格式: Courses/8086汇编语言/汇编语言源程序格式.md
+      - Courses/8086asm/index.md
+      - 指令速查: Courses/8086asm/指令速查.md
+      - 什么是汇编语言: Courses/8086asm/什么是汇编语言.md
+      - CPU、内存和端口: Courses/8086asm/CPU、内存和端口.md
+      - 汇编语言源程序格式: Courses/8086asm/汇编语言源程序格式.md
     - 网络相关:
       - 数据通信与计算机网络 跨专业:
         - Courses/数据通信与计算机网络/index.md
@@ -237,14 +235,14 @@ nav:
         - 协议与模型: Courses/无线网络应用/协议与模型.md
         - 网络寻址: Courses/无线网络应用/网络寻址.md
     - 网络攻防实践基础 短学期:
-      - Courses/网络攻防实践基础短学期/index.md
-      - Web 基础: Courses/网络攻防实践基础短学期/Web基础.md
-      - Misc 基础: Courses/网络攻防实践基础短学期/Misc基础.md
-      - Reverse 基础: Courses/网络攻防实践基础短学期/Reverse基础.md
-      - Pwn 基础: Courses/网络攻防实践基础短学期/Pwn基础.md
-      - Crypto 基础: Courses/网络攻防实践基础短学期/Crypto基础.md
-      - Web 专题: Courses/网络攻防实践基础短学期/Web专题.md
-      - Misc 专题: Courses/网络攻防实践基础短学期/Misc专题.md
+      - Courses/ctf/index.md
+      - Web 基础: Courses/ctf/Web基础.md
+      - Misc 基础: Courses/ctf/Misc基础.md
+      - Reverse 基础: Courses/ctf/Reverse基础.md
+      - Pwn 基础: Courses/ctf/Pwn基础.md
+      - Crypto 基础: Courses/ctf/Crypto基础.md
+      - Web 专题: Courses/ctf/Web专题.md
+      - Misc 专题: Courses/ctf/Misc专题.md
   - 课外积累:
     - Accumulation/index.md
     - CSAPP:
