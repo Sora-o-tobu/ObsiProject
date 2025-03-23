@@ -23,7 +23,7 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    let storedColor = localStorage.getItem("data-md-color-primary") || "default";
+    let storedColor = localStorage.getItem("data-md-color-primary") || "custom";
     document.body.setAttribute("data-md-color-primary", storedColor);
 
     let buttons = document.querySelectorAll("button[data-md-color-primary]");
