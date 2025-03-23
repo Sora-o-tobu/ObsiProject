@@ -25,7 +25,6 @@ theme:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: custom
-      accent: pink
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
@@ -33,8 +32,7 @@ theme:
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: custom
-      accent: pink
+      primary: black
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
@@ -46,13 +44,13 @@ extra:
 markdown_extensions:
   - footnotes
   - md_in_html
-  - attr_list # 矩形按钮/按键
+  - attr_list                   # 矩形按钮/按键
   - pymdownx.arithmatex:
       generic: true
-  - pymdownx.highlight: # 代码块高亮
+  - pymdownx.highlight:         # 代码块高亮
       anchor_linenums: true
-      linenums: true # 显示行号
-      #auto_title: true # 显示编程语言名称
+      linenums: true            # 显示行号
+      #auto_title: true         # 显示编程语言名称
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -128,190 +126,190 @@ extra_css:
 nav:
   - Home: index.md
   - 课程笔记:
-    - 课程笔记/index.md
+    - Courses/index.md
     - 微积分甲 II:
-      - 课程笔记/微积分甲II/index.md
-      - 级数: 课程笔记/微积分甲II/级数.md
-      - 直线与平面: 课程笔记/微积分甲II/直线与平面.md
-      - 多元函数微分: 课程笔记/微积分甲II/多元函数微分.md
-      - 多元函数积分: 课程笔记/微积分甲II/积分.md
+      - Courses/微积分甲II/index.md
+      - 级数: Courses/微积分甲II/级数.md
+      - 直线与平面: Courses/微积分甲II/直线与平面.md
+      - 多元函数微分: Courses/微积分甲II/多元函数微分.md
+      - 多元函数积分: Courses/微积分甲II/积分.md
     - 概率论与数理统计:
-      - 课程笔记/概率论与数理统计/index.md
-      - 错题本: 课程笔记/概率论与数理统计/review.md
-      - 概率论的基本概念: 课程笔记/概率论与数理统计/CH1.md
-      - 随机变量及其分布: 课程笔记/概率论与数理统计/CH2.md
-      - 多维随机变量及其分布: 课程笔记/概率论与数理统计/CH3.md
-      - 随机变量的数字特征: 课程笔记/概率论与数理统计/CH4.md
-      - 大数定律与中心极限定理: 课程笔记/概率论与数理统计/CH5.md
-      - 数理统计的基本概念: 课程笔记/概率论与数理统计/CH6.md
-      - 参数估计: 课程笔记/概率论与数理统计/CH7.md
-      - 假设检验: 课程笔记/概率论与数理统计/CH8.md
+      - Courses/概率论与数理统计/index.md
+      - 错题本: Courses/概率论与数理统计/review.md
+      - 概率论的基本概念: Courses/概率论与数理统计/CH1.md
+      - 随机变量及其分布: Courses/概率论与数理统计/CH2.md
+      - 多维随机变量及其分布: Courses/概率论与数理统计/CH3.md
+      - 随机变量的数字特征: Courses/概率论与数理统计/CH4.md
+      - 大数定律与中心极限定理: Courses/概率论与数理统计/CH5.md
+      - 数理统计的基本概念: Courses/概率论与数理统计/CH6.md
+      - 参数估计: Courses/概率论与数理统计/CH7.md
+      - 假设检验: Courses/概率论与数理统计/CH8.md
     - 大学物理 乙:
-      - 大物 乙 I: 课程笔记/大学物理/零碎知识点.md
+      - 大物 乙 I: Courses/大学物理/零碎知识点.md
       - 大物 乙 II:
-        - 电学部分: 课程笔记/大学物理/大学物理II/电学部分.md
-        - 电磁学部分: 课程笔记/大学物理/大学物理II/电磁学部分.md
-        - 光学部分: 课程笔记/大学物理/大学物理II/光学部分.md
-        - 量子部分: 课程笔记/大学物理/大学物理II/量子部分.md
+        - 电学部分: Courses/大学物理/大学物理II/电学部分.md
+        - 电磁学部分: Courses/大学物理/大学物理II/电磁学部分.md
+        - 光学部分: Courses/大学物理/大学物理II/光学部分.md
+        - 量子部分: Courses/大学物理/大学物理II/量子部分.md
     - 离散数学:
-      - 课程笔记/离散数学/index.md
-      - CH 1. Logic and Proofs: 课程笔记/离散数学/笔记/Chapter1.md
-      - CH 2. Basic Structure: 课程笔记/离散数学/笔记/Chapter2.md
-      - CH 3. Algorithms: 课程笔记/离散数学/笔记/Chapter3.md
-      - CH 4. Number Theory and Cryptography: 课程笔记/离散数学/笔记/Chapter4.md
-      - CH 5. Induction and Recursion: 课程笔记/离散数学/笔记/Chapter5.md
-      - CH 6. Counting: 课程笔记/离散数学/笔记/Chapter6.md
-      - CH 8. Advanced Counting Techniques: 课程笔记/离散数学/笔记/Chapter8.md
-      - CH 9. Relations: 课程笔记/离散数学/笔记/Chapter9.md
-      - CH 10. Graphs: 课程笔记/离散数学/笔记/Chapter10.md
-      - CH 11. Trees: 课程笔记/离散数学/笔记/Chapter11.md
+      - Courses/离散数学/index.md
+      - CH 1. Logic and Proofs: Courses/离散数学/笔记/Chapter1.md
+      - CH 2. Basic Structure: Courses/离散数学/笔记/Chapter2.md
+      - CH 3. Algorithms: Courses/离散数学/笔记/Chapter3.md
+      - CH 4. Number Theory and Cryptography: Courses/离散数学/笔记/Chapter4.md
+      - CH 5. Induction and Recursion: Courses/离散数学/笔记/Chapter5.md
+      - CH 6. Counting: Courses/离散数学/笔记/Chapter6.md
+      - CH 8. Advanced Counting Techniques: Courses/离散数学/笔记/Chapter8.md
+      - CH 9. Relations: Courses/离散数学/笔记/Chapter9.md
+      - CH 10. Graphs: Courses/离散数学/笔记/Chapter10.md
+      - CH 11. Trees: Courses/离散数学/笔记/Chapter11.md
     #- 密码学:
-    #  - 课程笔记/密码学/index.md
+    #  - Courses/密码学/index.md
     - 数字逻辑设计:
-      - 课程笔记/数字逻辑设计/index.md
+      - Courses/数字逻辑设计/index.md
       - 理论课笔记:
-        - CH 1 &2 P1.Digital System & Boolean Equation: 课程笔记/数字逻辑设计/理论课笔记/Chapter 1 & 2 Part 1 Digital System & Boolean Equation.md
-        - CH 2 P2. Circuit Optimization: 课程笔记/数字逻辑设计/理论课笔记/Chapter 2 P2 Circuit Optimization.md
-        - CH 3. Combinational Logic Design: 课程笔记/数字逻辑设计/理论课笔记/Chapter 3 Combinational Logic Design.md
-        - CH 4. Sequential Circuits: 课程笔记/数字逻辑设计/理论课笔记/Chapter 4 Sequential Circuits.md
-        - CH 5. Digital Hardware Implementation: 课程笔记/数字逻辑设计/理论课笔记/Chapter 5 Digital Hardware Implementation.md
-        - CH 6. Registers and Register Transfers: 课程笔记/数字逻辑设计/理论课笔记/Chapter 6 Registers and Register Transfers.md
-        - CH 7. Memory Basics: 课程笔记/数字逻辑设计/理论课笔记/Chapter 7 Memory Basics.md
+        - CH 1 &2 P1.Digital System & Boolean Equation: Courses/数字逻辑设计/理论课笔记/Chapter 1 & 2 Part 1 Digital System & Boolean Equation.md
+        - CH 2 P2. Circuit Optimization: Courses/数字逻辑设计/理论课笔记/Chapter 2 P2 Circuit Optimization.md
+        - CH 3. Combinational Logic Design: Courses/数字逻辑设计/理论课笔记/Chapter 3 Combinational Logic Design.md
+        - CH 4. Sequential Circuits: Courses/数字逻辑设计/理论课笔记/Chapter 4 Sequential Circuits.md
+        - CH 5. Digital Hardware Implementation: Courses/数字逻辑设计/理论课笔记/Chapter 5 Digital Hardware Implementation.md
+        - CH 6. Registers and Register Transfers: Courses/数字逻辑设计/理论课笔记/Chapter 6 Registers and Register Transfers.md
+        - CH 7. Memory Basics: Courses/数字逻辑设计/理论课笔记/Chapter 7 Memory Basics.md
       - Verilog:
-        - Verilog基础: 课程笔记/数字逻辑设计/Verilog/Verilog基础.md
-        - Verilog补充: 课程笔记/数字逻辑设计/Verilog/Verilog补充.md
+        - Verilog基础: Courses/数字逻辑设计/Verilog/Verilog基础.md
+        - Verilog补充: Courses/数字逻辑设计/Verilog/Verilog补充.md
     - 计算机组成:
-      - 课程笔记/计算机组成/index.md
-      - CH 1. 计算机概念与技术: 课程笔记/计算机组成/Chapter1.md
-      - CH 2. RISC-V: 课程笔记/计算机组成/Chapter2.md
-      - CH 3. 算术单元: 课程笔记/计算机组成/Chapter3.md
-      - CH 4. 处理器: 课程笔记/计算机组成/Chapter4.md
-      - CH 5. 存储器分级体系: 课程笔记/计算机组成/Chapter5.md
-      - CH 6. IO 接口: 课程笔记/计算机组成/Chapter6.md
+      - Courses/计算机组成/index.md
+      - CH 1. 计算机概念与技术: Courses/计算机组成/Chapter1.md
+      - CH 2. RISC-V: Courses/计算机组成/Chapter2.md
+      - CH 3. 算术单元: Courses/计算机组成/Chapter3.md
+      - CH 4. 处理器: Courses/计算机组成/Chapter4.md
+      - CH 5. 存储器分级体系: Courses/计算机组成/Chapter5.md
+      - CH 6. IO 接口: Courses/计算机组成/Chapter6.md
     - 计算机体系结构:
-      - 课程笔记/计算机体系结构/index.md
-      - Fundamentals of Computer Design: 课程笔记/计算机体系结构/Fundamentals of Computer Design.md
-      - Memory Hierarchy Design: 课程笔记/计算机体系结构/Memory Hierarchy Design.md
+      - Courses/计算机体系结构/index.md
+      - Fundamentals of Computer Design: Courses/计算机体系结构/Fundamentals of Computer Design.md
+      - Memory Hierarchy Design: Courses/计算机体系结构/Memory Hierarchy Design.md
     - 数据结构:
       - 数据结构基础:
-        - 课程笔记/数据结构/数据结构基础/index.md 
-        - 线性表: 课程笔记/数据结构/数据结构基础/线性表.md
-        - 树: 课程笔记/数据结构/数据结构基础/树.md
-        - 并查集: 课程笔记/数据结构/数据结构基础/并查集.md
-        - 图: 课程笔记/数据结构/数据结构基础/图.md
-        - 排序 & 哈希表: 课程笔记/数据结构/数据结构基础/排序.md
-        - 题目: 课程笔记/数据结构/数据结构基础/一些经典题目.md
+        - Courses/数据结构/数据结构基础/index.md 
+        - 线性表: Courses/数据结构/数据结构基础/线性表.md
+        - 树: Courses/数据结构/数据结构基础/树.md
+        - 并查集: Courses/数据结构/数据结构基础/并查集.md
+        - 图: Courses/数据结构/数据结构基础/图.md
+        - 排序 & 哈希表: Courses/数据结构/数据结构基础/排序.md
+        - 题目: Courses/数据结构/数据结构基础/一些经典题目.md
       - 高级数据结构与算法分析:
-        - 课程笔记/数据结构/高级数据结构与算法分析/index.md 
-        - Review: 课程笔记/数据结构/高级数据结构与算法分析/Review.md
-        - AVL Trees, Splay Tree & Amortized Analysis: 课程笔记/数据结构/高级数据结构与算法分析/AVL Trees,Splay Tree & Amortized Analysis.md
-        - Red-Black Trees & B+ Trees: 课程笔记/数据结构/高级数据结构与算法分析/Red-Black Trees & B+ Trees.md
-        - Inverted File Index: 课程笔记/数据结构/高级数据结构与算法分析/Inverted File Index.md
-        - Leftist Heap & Skew Heap: 课程笔记/数据结构/高级数据结构与算法分析/Leftist Heap & Skew Heap.md
-        - Binomial Queue: 课程笔记/数据结构/高级数据结构与算法分析/Binomial Queue.md
-        - Backtracking: 课程笔记/数据结构/高级数据结构与算法分析/Backtracking.md
-        - Divide & Conquer: 课程笔记/数据结构/高级数据结构与算法分析/Divide & Conquer.md
-        - Dynamic Programming: 课程笔记/数据结构/高级数据结构与算法分析/Dynamic Programming.md
-        - Greedy Algorithm: 课程笔记/数据结构/高级数据结构与算法分析/Greedy Algorithm.md
-        - NP-Completeness: 课程笔记/数据结构/高级数据结构与算法分析/NP-Completeness.md
-        - Approximation: 课程笔记/数据结构/高级数据结构与算法分析/Approximation.md
-        - Local Search: 课程笔记/数据结构/高级数据结构与算法分析/Local Search.md
-        - Randomized Algorithms: 课程笔记/数据结构/高级数据结构与算法分析/Randomized Algorithms.md
-        - Parallel Algorithms: 课程笔记/数据结构/高级数据结构与算法分析/Parallel Algorithms.md
-        - External Sort: 课程笔记/数据结构/高级数据结构与算法分析/External Sort.md
+        - Courses/数据结构/高级数据结构与算法分析/index.md 
+        - Review: Courses/数据结构/高级数据结构与算法分析/Review.md
+        - AVL Trees, Splay Tree & Amortized Analysis: Courses/数据结构/高级数据结构与算法分析/AVL Trees,Splay Tree & Amortized Analysis.md
+        - Red-Black Trees & B+ Trees: Courses/数据结构/高级数据结构与算法分析/Red-Black Trees & B+ Trees.md
+        - Inverted File Index: Courses/数据结构/高级数据结构与算法分析/Inverted File Index.md
+        - Leftist Heap & Skew Heap: Courses/数据结构/高级数据结构与算法分析/Leftist Heap & Skew Heap.md
+        - Binomial Queue: Courses/数据结构/高级数据结构与算法分析/Binomial Queue.md
+        - Backtracking: Courses/数据结构/高级数据结构与算法分析/Backtracking.md
+        - Divide & Conquer: Courses/数据结构/高级数据结构与算法分析/Divide & Conquer.md
+        - Dynamic Programming: Courses/数据结构/高级数据结构与算法分析/Dynamic Programming.md
+        - Greedy Algorithm: Courses/数据结构/高级数据结构与算法分析/Greedy Algorithm.md
+        - NP-Completeness: Courses/数据结构/高级数据结构与算法分析/NP-Completeness.md
+        - Approximation: Courses/数据结构/高级数据结构与算法分析/Approximation.md
+        - Local Search: Courses/数据结构/高级数据结构与算法分析/Local Search.md
+        - Randomized Algorithms: Courses/数据结构/高级数据结构与算法分析/Randomized Algorithms.md
+        - Parallel Algorithms: Courses/数据结构/高级数据结构与算法分析/Parallel Algorithms.md
+        - External Sort: Courses/数据结构/高级数据结构与算法分析/External Sort.md
     - 数据库系统:
-      - 课程笔记/DB/index.md
-      - Introduction: 课程笔记/DB/Introduction.md
-      - Relational Model: 课程笔记/DB/Relational Model.md
-      - SQL: 课程笔记/DB/SQL.md
+      - Courses/DB/index.md
+      - Introduction: Courses/DB/Introduction.md
+      - Relational Model: Courses/DB/Relational Model.md
+      - SQL: Courses/DB/SQL.md
     - 8086 汇编语言: 
-      - 课程笔记/8086汇编语言/index.md
-      - 指令速查: 课程笔记/8086汇编语言/指令速查.md
-      - 什么是汇编语言: 课程笔记/8086汇编语言/什么是汇编语言.md
-      - CPU、内存和端口: 课程笔记/8086汇编语言/CPU、内存和端口.md
-      - 汇编语言源程序格式: 课程笔记/8086汇编语言/汇编语言源程序格式.md
+      - Courses/8086汇编语言/index.md
+      - 指令速查: Courses/8086汇编语言/指令速查.md
+      - 什么是汇编语言: Courses/8086汇编语言/什么是汇编语言.md
+      - CPU、内存和端口: Courses/8086汇编语言/CPU、内存和端口.md
+      - 汇编语言源程序格式: Courses/8086汇编语言/汇编语言源程序格式.md
     - 网络相关:
       - 数据通信与计算机网络 跨专业:
-        - 课程笔记/数据通信与计算机网络/index.md
+        - Courses/数据通信与计算机网络/index.md
       - 无线网络应用 通识课:
-        - 课程笔记/无线网络应用/index.md
-        - 当今网络: 课程笔记/无线网络应用/当今网络.md
-        - 协议与模型: 课程笔记/无线网络应用/协议与模型.md
-        - 网络寻址: 课程笔记/无线网络应用/网络寻址.md
+        - Courses/无线网络应用/index.md
+        - 当今网络: Courses/无线网络应用/当今网络.md
+        - 协议与模型: Courses/无线网络应用/协议与模型.md
+        - 网络寻址: Courses/无线网络应用/网络寻址.md
     - 网络攻防实践基础 短学期:
-      - 课程笔记/网络攻防实践基础短学期/index.md
-      - Web 基础: 课程笔记/网络攻防实践基础短学期/Web基础.md
-      - Misc 基础: 课程笔记/网络攻防实践基础短学期/Misc基础.md
-      - Reverse 基础: 课程笔记/网络攻防实践基础短学期/Reverse基础.md
-      - Pwn 基础: 课程笔记/网络攻防实践基础短学期/Pwn基础.md
-      - Crypto 基础: 课程笔记/网络攻防实践基础短学期/Crypto基础.md
-      - Web 专题: 课程笔记/网络攻防实践基础短学期/Web专题.md
-      - Misc 专题: 课程笔记/网络攻防实践基础短学期/Misc专题.md
+      - Courses/网络攻防实践基础短学期/index.md
+      - Web 基础: Courses/网络攻防实践基础短学期/Web基础.md
+      - Misc 基础: Courses/网络攻防实践基础短学期/Misc基础.md
+      - Reverse 基础: Courses/网络攻防实践基础短学期/Reverse基础.md
+      - Pwn 基础: Courses/网络攻防实践基础短学期/Pwn基础.md
+      - Crypto 基础: Courses/网络攻防实践基础短学期/Crypto基础.md
+      - Web 专题: Courses/网络攻防实践基础短学期/Web专题.md
+      - Misc 专题: Courses/网络攻防实践基础短学期/Misc专题.md
   - 课外积累:
-    - 课外积累/index.md
+    - Accumulation/index.md
     - CSAPP:
-      - CH 1. 计算机系统漫游: 课外积累/CSAPP/Chapter1.md
-      - CH 2. 信息的表示与处理: 课外积累/CSAPP/Chapter2.md
-      - CH 3. 程序的机器级表示: 课外积累/CSAPP/Chapter3.md
-      - CH 4. 处理器体系结构: 课外积累/CSAPP/Chapter4.md
-      - CH 5. 优化程序性能: 课外积累/CSAPP/Chapter5.md
-      - CH 6. 存储器层次结构: 课外积累/CSAPP/Chapter6.md
-      - CH 7. 链接: 课外积累/CSAPP/Chapter7.md
-      - CH 8. 异常控制流: 课外积累/CSAPP/Chapter8.md
-      - CH 9. 虚拟内存: 课外积累/CSAPP/Chapter9.md
+      - CH 1. 计算机系统漫游: Accumulation/CSAPP/Chapter1.md
+      - CH 2. 信息的表示与处理: Accumulation/CSAPP/Chapter2.md
+      - CH 3. 程序的机器级表示: Accumulation/CSAPP/Chapter3.md
+      - CH 4. 处理器体系结构: Accumulation/CSAPP/Chapter4.md
+      - CH 5. 优化程序性能: Accumulation/CSAPP/Chapter5.md
+      - CH 6. 存储器层次结构: Accumulation/CSAPP/Chapter6.md
+      - CH 7. 链接: Accumulation/CSAPP/Chapter7.md
+      - CH 8. 异常控制流: Accumulation/CSAPP/Chapter8.md
+      - CH 9. 虚拟内存: Accumulation/CSAPP/Chapter9.md
     - Games101:
-      - 课外积累/Games101/index.md
-      - 作业框架: 课外积累/Games101/作业框架.md
-      - Transformation: 课外积累/Games101/Transformation.md
-      - Rasterization: 课外积累/Games101/Rasterization.md
-      - Shading: 课外积累/Games101/Shading.md
-      - Geometry: 课外积累/Games101/Geometry.md
-      - Ray Tracing: 课外积累/Games101/Ray Tracing.md
-      - Materials and Appearances: 课外积累/Games101/Materials and Appearances.md
+      - Accumulation/Games101/index.md
+      - 作业框架: Accumulation/Games101/作业框架.md
+      - Transformation: Accumulation/Games101/Transformation.md
+      - Rasterization: Accumulation/Games101/Rasterization.md
+      - Shading: Accumulation/Games101/Shading.md
+      - Geometry: Accumulation/Games101/Geometry.md
+      - Ray Tracing: Accumulation/Games101/Ray Tracing.md
+      - Materials and Appearances: Accumulation/Games101/Materials and Appearances.md
     - Games103:
-      - 课外积累/Games103/index.md
-      - Rigid Body: 课外积累/Games103/Rigid Body.md
-      - Cloth: 课外积累/Games103/Cloth.md
-      - Soft Body: 课外积累/Games103/Soft Body.md
-      - Fluid: 课外积累/Games103/Fluid.md
+      - Accumulation/Games103/index.md
+      - Rigid Body: Accumulation/Games103/Rigid Body.md
+      - Cloth: Accumulation/Games103/Cloth.md
+      - Soft Body: Accumulation/Games103/Soft Body.md
+      - Fluid: Accumulation/Games103/Fluid.md
     - LearnOpenGL:
-      - 课外积累/LearnOpenGL/index.md
-      - 1. 入门: 课外积累/LearnOpenGL/1.入门.md
-      - 2. 光照: 课外积累/LearnOpenGL/2.光照.md
-      - 3. 模型加载: 课外积累/LearnOpenGL/3.模型加载.md
-      - 4. 高级OpenGL: 课外积累/LearnOpenGL/4.高级OpenGL.md
+      - Accumulation/LearnOpenGL/index.md
+      - 1. 入门: Accumulation/LearnOpenGL/1.入门.md
+      - 2. 光照: Accumulation/LearnOpenGL/2.光照.md
+      - 3. 模型加载: Accumulation/LearnOpenGL/3.模型加载.md
+      - 4. 高级OpenGL: Accumulation/LearnOpenGL/4.高级OpenGL.md
     - CS106L:
-      - 课外积累/CS106L/index.md
-      - C++: 课外积累/CS106L/C++.md
-      - 补充: 课外积累/CS106L/Addition.md
+      - Accumulation/CS106L/index.md
+      - C++: Accumulation/CS106L/C++.md
+      - 补充: Accumulation/CS106L/Addition.md
     - CMU 15-445 Database Systems:
-      - 课外积累/CMU15-445/index.md
-      - 1. Course Overview: 课外积累/CMU15-445/Course Overview.md
-      - 2. Intermediate SQL: 课外积累/CMU15-445/Intermediate SQL.md
-      - 3. Database Storage: 课外积累/CMU15-445/Storage.md
-      - 4. Storage Model & Compression: 课外积累/CMU15-445/Storage Model.md
-      - 5. Memory Management: 课外积累/CMU15-445/Memory Management.md
-      - 6. Data Structures: 课外积累/CMU15-445/Data Structures.md
-      - 7. Query Execution: 课外积累/CMU15-445/Query Execution.md
-      - 8. Concurrency Control: 课外积累/CMU15-445/Concurrency Control.md
-      - 9. Database Crash: 课外积累/CMU15-445/Database Crash.md
-      - 10. Distributed Database: 课外积累/CMU15-445/Distributed Database.md
-    - Java: 课外积累/JAVA.md
-    #- Java反序列化: 课外积累/Java序列化.md
-    - SQL: 课外积累/SQL.md
-    - LeetCode: 课外积累/Leetcode刷题.md
+      - Accumulation/CMU15-445/index.md
+      - 1. Course Overview: Accumulation/CMU15-445/Course Overview.md
+      - 2. Intermediate SQL: Accumulation/CMU15-445/Intermediate SQL.md
+      - 3. Database Storage: Accumulation/CMU15-445/Storage.md
+      - 4. Storage Model & Compression: Accumulation/CMU15-445/Storage Model.md
+      - 5. Memory Management: Accumulation/CMU15-445/Memory Management.md
+      - 6. Data Structures: Accumulation/CMU15-445/Data Structures.md
+      - 7. Query Execution: Accumulation/CMU15-445/Query Execution.md
+      - 8. Concurrency Control: Accumulation/CMU15-445/Concurrency Control.md
+      - 9. Database Crash: Accumulation/CMU15-445/Database Crash.md
+      - 10. Distributed Database: Accumulation/CMU15-445/Distributed Database.md
+    - Java: Accumulation/JAVA.md
+    #- Java反序列化: Accumulation/Java序列化.md
+    - SQL: Accumulation/SQL.md
+    - LeetCode: Accumulation/Leetcode刷题.md
   - 技术积累:
-    - 技术积累/index.md
-    - 建立在线笔记: 技术积累/建立在线笔记.md
-    - 正则表达式: 技术积累/正则表达式.md
-    - 虚拟机: 技术积累/虚拟机.md
-    - Reveal-md: 技术积累/Reveal-md.md
-    - 杂项: 技术积累/杂项.md
+    - Techniques/index.md
+    - 建立在线笔记: Techniques/建立在线笔记.md
+    - 正则表达式: Techniques/正则表达式.md
+    - 虚拟机: Techniques/虚拟机.md
+    - Reveal-md: Techniques/Reveal-md.md
+    - 杂项: Techniques/杂项.md
   - 兴趣:
     - Galgame: 
       - 个人评价: blog/Galgame/个人评价.md
       - 汉化: blog/Galgame/汉化.md
     - 番剧:
-      - 番剧: blog/番剧/番剧.md
-      - 异世界推荐: blog/番剧/异世界推荐.md
+      - 番剧: blog/Anime/番剧.md
+      - 异世界推荐: blog/Anime/异世界推荐.md
   - 友情链接: friend.md

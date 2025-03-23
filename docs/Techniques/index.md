@@ -4,7 +4,7 @@
 
 
 
-- 编解码 [CyberChef](./CyberChef/CyberChef.html)
+- 编解码 [CyberChef](CyberChef.html)
 - 在线编译器 [Compiler Explorer](https://godbolt.org/)
 - 识别 Latex 符号 [Detexify](http://detexify.kirelabs.org/classify.html)
 - 数据结构、算法模拟 [Data Structure Visualization](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)

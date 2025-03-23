@@ -6,7 +6,7 @@
 !!! quote "虽然之前听说过bhh的汇编很难，但是这门通识汇编我感觉还是很简单的，选就对了！"
 
 
-中断指令大全： [Ralf Brown's Interrupt List](./interruptlist/rbrown.htm)
+中断指令大全： [Ralf Brown's Interrupt List](interruptlist/rbrown.htm)
 
 ```
 tasm test.asm    ; masm test;

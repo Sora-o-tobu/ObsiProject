@@ -105,7 +105,7 @@ $$
 - Phong shading - shade each pixel
 	- 对每一个像素进行着色
 
-![[differenteffectofshadingmodel.png]]
+![[ObsiProject/docs/Accumulation/Games101/image/differenteffectofshadingmodel.png]]
 
 可以看到，当我们的几何划分的较细时，可以使用相对简单的 Flat shading 得到类似的效果。
 
