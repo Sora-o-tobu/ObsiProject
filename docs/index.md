@@ -31,6 +31,7 @@ statistics: true
 	<div class="card__content">
 	<p>- Vue.js, Node.js, Spring</p>
 	<p>- Javascript</p>
+	<p>- OS</p>
 	<p>- 机器学习</p>
 	</div>
 	<div class="card__footer"><a>www.nimisora.top</a>&nbsp;&nbsp;&nbsp;<progress id="progress-bar" aria-label="Content loading…"></progress></div>

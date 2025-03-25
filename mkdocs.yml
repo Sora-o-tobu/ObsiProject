@@ -297,6 +297,7 @@ nav:
       - 8. Concurrency Control: Accumulation/CMU15-445/Concurrency Control.md
       - 9. Database Crash: Accumulation/CMU15-445/Database Crash.md
       - 10. Distributed Database: Accumulation/CMU15-445/Distributed Database.md
+    - Vue.js: Accumulation/Vue.js.md
     - Java: Accumulation/JAVA.md
     #- Java反序列化: Accumulation/Java序列化.md
     - SQL: Accumulation/SQL.md
