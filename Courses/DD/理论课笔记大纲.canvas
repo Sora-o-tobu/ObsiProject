@@ -1,0 +1,39 @@
+{
+	"nodes":[
+		{"id":"290126fbf314e614","type":"file","file":"docs/数字逻辑设计/image/常用的四种编码方式.png","x":-1200,"y":-760,"width":540,"height":298},
+		{"id":"90db0f11c8f2544d","type":"text","text":"8,4,2,1 又称BCD码(Binary Code Decimal)","x":-1117,"y":-420,"width":375,"height":50},
+		{"id":"8802ea2faf0108af","type":"text","text":"BCD码的加法，请看Chapter 1 的 Page 44","x":-1054,"y":-340,"width":250,"height":60},
+		{"id":"57dcabb65fc7ebf7","type":"text","text":"Binary Code 和 Binary Number 的区别：\n0111 0101         1001011\n编码要补满四位！\n","x":-1106,"y":-240,"width":355,"height":81},
+		{"id":"4344f458b5a23cf0","type":"text","text":"Chapter 1(内容过杂，请直接浏览课件，此处仅略摘录易错点)","x":-1177,"y":-880,"width":495,"height":56},
+		{"id":"0d6d7295fbdcd19f","type":"text","text":"Even Parity 指 使1的数量为偶数，eg:\n0111_0101 -> 0111_0101_1","x":-1083,"y":-100,"width":309,"height":80},
+		{"id":"d3403ae552f64771","type":"text","text":"Chapter 2 P1 Boolean Equation","x":-400,"y":-880,"width":250,"height":56},
+		{"id":"7da974c25b508993","type":"file","file":"docs/数字逻辑设计/image/常用逻辑门.png","x":-475,"y":-760,"width":400,"height":303},
+		{"id":"b8195951b49dbb7d","type":"text","text":"异或：F = X~Y + ~XY\n异或非：F = XY + ~X~Y","x":-400,"y":-419,"width":250,"height":60},
+		{"id":"a033a89c26227a83","type":"text","text":"Universal Gate：\nA gate type that can implement all possible Boolean functions\neg: NOR & NAND","x":-419,"y":-329,"width":289,"height":130},
+		{"id":"5a9882e386d03706","type":"text","text":"Duality rule","x":-399,"y":-160,"width":250,"height":60},
+		{"id":"9d32be240e7e5401","type":"file","file":"docs/数字逻辑设计/image/对偶规则.png","x":-474,"y":-60,"width":400,"height":83},
+		{"id":"2d8e4c6cce0b1700","type":"file","file":"docs/数字逻辑设计/image/常用化简理论.png","x":60,"y":-722,"width":400,"height":228},
+		{"id":"c329d1ce582a325d","type":"file","file":"docs/数字逻辑设计/理论课笔记/Chapter 2 P2 Circuit Optimization.md","x":60,"y":-907,"width":375,"height":111},
+		{"id":"fd4d883a3bc5d1ea","type":"text","text":"异或可以用作奇函数（或者非一下作为偶函数）","x":6,"y":-420,"width":274,"height":61},
+		{"id":"bd26d6d8319c29cd","type":"text","text":"Odd Function 有奇数个1则输出1，可用来生成==偶校验码==（Even Parity）\n也可以用来检验==偶校验码==（输出1代表ERROR）","x":12,"y":-300,"width":262,"height":170},
+		{"id":"e4313b6c02d126d4","type":"file","file":"docs/数字逻辑设计/理论课笔记/Chapter 3 Combinational Logic Design.md","x":700,"y":-925,"width":382,"height":147}
+	],
+	"edges":[
+		{"id":"fe6473dd7aee2f47","fromNode":"290126fbf314e614","fromSide":"bottom","toNode":"90db0f11c8f2544d","toSide":"top"},
+		{"id":"0b5cabbe30625aca","fromNode":"90db0f11c8f2544d","fromSide":"bottom","toNode":"8802ea2faf0108af","toSide":"top"},
+		{"id":"f26b68a231b246d3","fromNode":"8802ea2faf0108af","fromSide":"bottom","toNode":"57dcabb65fc7ebf7","toSide":"top"},
+		{"id":"23fe92df42fe3b50","fromNode":"4344f458b5a23cf0","fromSide":"bottom","toNode":"290126fbf314e614","toSide":"top"},
+		{"id":"57bb28753a2b34b5","fromNode":"57dcabb65fc7ebf7","fromSide":"bottom","toNode":"0d6d7295fbdcd19f","toSide":"top"},
+		{"id":"bcf96ec736c09f51","fromNode":"d3403ae552f64771","fromSide":"bottom","toNode":"7da974c25b508993","toSide":"top"},
+		{"id":"5189bca62da0b633","fromNode":"7da974c25b508993","fromSide":"bottom","toNode":"b8195951b49dbb7d","toSide":"top"},
+		{"id":"156bfbfd58ce3366","fromNode":"b8195951b49dbb7d","fromSide":"bottom","toNode":"a033a89c26227a83","toSide":"top"},
+		{"id":"f024c21e39b5be40","fromNode":"a033a89c26227a83","fromSide":"bottom","toNode":"5a9882e386d03706","toSide":"top"},
+		{"id":"895bf2d3694acddc","fromNode":"5a9882e386d03706","fromSide":"bottom","toNode":"9d32be240e7e5401","toSide":"top"},
+		{"id":"8ac1c0b581424f46","fromNode":"4344f458b5a23cf0","fromSide":"right","toNode":"d3403ae552f64771","toSide":"left"},
+		{"id":"7f7e9d59e64fd1cd","fromNode":"7da974c25b508993","fromSide":"right","toNode":"2d8e4c6cce0b1700","toSide":"left"},
+		{"id":"6dc49097f3dba61a","fromNode":"d3403ae552f64771","fromSide":"right","toNode":"c329d1ce582a325d","toSide":"left"},
+		{"id":"c58b7335797e12cd","fromNode":"b8195951b49dbb7d","fromSide":"right","toNode":"fd4d883a3bc5d1ea","toSide":"left"},
+		{"id":"0bc0f562e8513abd","fromNode":"fd4d883a3bc5d1ea","fromSide":"bottom","toNode":"bd26d6d8319c29cd","toSide":"top"},
+		{"id":"987e58f29047bcc4","fromNode":"c329d1ce582a325d","fromSide":"right","toNode":"e4313b6c02d126d4","toSide":"left"}
+	]
+}
