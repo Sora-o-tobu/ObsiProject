@@ -740,3 +740,4 @@ export default {
 </table>
 ```
 
+https://cn.vuejs.org/guide/components/registration.html
