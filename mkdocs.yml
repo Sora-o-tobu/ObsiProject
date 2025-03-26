@@ -225,6 +225,7 @@ nav:
       - Introduction: Courses/DB/Introduction.md
       - Relational Model: Courses/DB/Relational Model.md
       - SQL: Courses/DB/SQL.md
+      - Entity-Relationship Model: Courses/DB/Entity-Relationship Model.md
     - 8086 汇编语言: 
       - Courses/8086asm/index.md
       - 指令速查: Courses/8086asm/指令速查.md
