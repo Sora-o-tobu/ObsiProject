@@ -1,6 +1,8 @@
 
 # C++ 补充
 
+> From [咸鱼暄的代码空间](https://xuan-insr.github.io/cpp/cpp_restart/)
+
 ## Class
 
 ### Forward Declaration
@@ -103,7 +105,116 @@ Matrix operator*(int x, Matrix mat) {
 }
 ```
 
-### 运算符重载 return 的临时变量声明周期
+### Virtual
+
+Virtual 一般为衍生类提供了实现的接口。其底层实现方式是一个 8 字节的地址，可以用如下一个简单程序进行验证：
+
+```c++
+class base {
+public:
+    base() : data (10) {}
+    void foo() { std::cout << "base::foo()" << std::endl; }
+    virtual void bar() { std::cout << "base::bar()" << std::endl; }
+private:
+    int data;
+};
+
+int main()
+{
+    base b;
+    b.foo(); // Calls base::foo()
+    b.bar(); // Calls base::bar()
+
+    std::cout << "Size of b is: " << sizeof(b) << std::endl;
+    /* @output:
+    * Size of b is: 16
+    * The size of the private member 'data' is 4 bytes.
+    * The size of the address of the virtual function table (vptr) is 8 bytes on a 64-bit system.
+    * And the remaining 4 bytes are for the padding to align the size of the class to 8 bytes.
+    * So the total size is 4 + 8 + 4 = 16 bytes.
+    */
+
+    int * p = (int*)(&b);
+    std::cout << *p << std::endl; // 4206736
+    p++;
+    std::cout << *p << std::endl; // 1
+    p++;
+    std::cout << *p << std::endl; // 10
+
+    return 0;
+}
+```
+
+!!! note "这也能说明 `private` 成员从外部可以通过指针访问，需要我们摸清内部内存结构"
+
+### 生命周期
+
+对于一个类对象，它的生命周期(lifetime)从它的构造函数完成开始，到它的析构函数被调用时结束。
+
+任何一个对象都会占用存储，这部分存储的最小生命周期称为这个对象的 **storage duration**。对象的 lifetime 小于等于 storage duration。
+
+!!! note "最小生命周期"
+	最小指的是，对象被析构后，对应的存储不一定被立刻回收
+
+在 C++11 前，任何对象的 storage duration 的分类有：
+
+- <1> **automatic storage duration：** 非 `static` 的局部对象
+- <2> **static storage duration：** non-local 对象、`static` 局部对象、`static` 类成员对象
+- <3> **dynamic storage duration：** `new` 出来的对象
+
+!!! tip "程序退出时，析构函数的调用顺序与构造函数相反，除了 dynamic 的对象，它们只有 `delete` 时才会析构"
+
+成员变量的构造函数会比自己的构造函数更先调用。对于带有基类的对象，则首先会先调用基类的构造函数：
+
+```c++
+#include <iostream>
+
+struct X {
+    X() {
+        std::cout << "X::X()" << std::endl;
+    }
+    ~X() {
+        std::cout << "X::~X()" << std::endl;
+    }
+};
+
+struct Y {
+    Y() {
+        std::cout << "Y::Y()" << std::endl;
+    }
+    ~Y() {
+        std::cout << "Y::~Y()" << std::endl;
+    }
+};
+
+struct Parent {
+    Parent() {
+        std::cout << "Parent::Parent()" << std::endl;
+    }
+    ~Parent() {
+        std::cout << "Parent::~Parent()" << std::endl;
+    }
+    X x;
+};
+
+struct Child : public Parent {
+    Child() {
+        std::cout << "Child::Child()" << std::endl;
+    }
+    ~Child() {
+        std::cout << "Child::~Child()" << std::endl;
+    }
+    Y y;
+};
+
+int main() {
+    Child c;
+}
+```
+
+尝试思考一下输出结果是什么吧。
+
+#### 运算符重载 return 的临时变量声明周期
 
 ```c++
 Matrix m = m1 - m2;

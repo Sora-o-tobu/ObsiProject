@@ -202,6 +202,8 @@ for k = 0,...,K # 迭代 K 轮
 
 ### Position Based Dynamics
 
+!!! quote "即系统外力正常考虑，系统内部不进行力的考虑(弹簧)，只进行约束的构建"
+
 PBD 处理的流程与刚体 Shape Matching 类似：
 
 ```c
@@ -224,6 +226,8 @@ x = x_new;
 - **Disadvantage：**
 	- 物理上可能不正确，弹性表现受网格、迭代次数影响
 	- 高分辨率上运行很慢
+
+> [推荐阅读](https://zhuanlan.zhihu.com/p/419708582)
 
 ### Strain Limiting
 

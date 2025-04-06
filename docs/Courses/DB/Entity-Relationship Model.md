@@ -6,6 +6,8 @@
 !!! quote ""
 	![[ERModelEx.png]]
 
+> https://www.drawio.com/
+
 在 E-R 图中：
 
 - **Rectangles**：方形框表示 Entities Set，框内内容即为其 attributes。.
@@ -43,7 +45,6 @@
 		![[M2OR.png]]
 	=== "Many-to-Many Relationship"
 		![[M2MR.png]]
-
 
 全参与和部分参与约束反映了一个实体参与关联的数目下限是 1 次还是 0 次，在 E-R 图中分别用 Double Line 和 Line 表示：
 

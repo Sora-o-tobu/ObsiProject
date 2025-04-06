@@ -227,6 +227,27 @@ HAVING avg(balance) > 1200;
 	
 	同时，作为 `WHERE` 子句中的谓词，需要使用 `WHERE amount is not null` 的形式来判断 null values，而不能直接用等于号
 
+!!! question "关键字 `rollup`"
+	`group by rollup(A,B,C)` 能够自动生成多级别的汇总数据：
+	
+	- **按 (A, B, C) 分组**，计算最详细的分组统计。
+	- **按 (A, B) 分组**，忽略 C，计算 B 级别的汇总。
+	- **按 (A) 分组**，忽略 B 和 C，计算 A 级别的汇总。
+	- **整体汇总**，不按任何列分组，计算全局统计。
+	
+	??? example "对以下表执行以下 SQL 语句"
+		![[rollupexample.png]]
+		
+		```sql
+		SELECT building, room_number, time_slot_id, COUNT(*)
+		FROM r
+		GROUP BY ROLLUP (building, room_number, time_slot_id);
+		```
+		
+		得到结果：
+		
+		![[rollupexample2.png]]
+
 
 ## Nested Query
 
