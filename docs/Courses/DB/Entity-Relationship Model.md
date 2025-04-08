@@ -94,6 +94,7 @@ Specialization 和 Generalization 只是普通的倒置，因此在 E-R 图上�
 - **Many-to-One/One-to-Many** 可以选择将“关系”对应的 Table 合并到 Many 端实体集对应的 Table 中
 	- 例如，我们有三个 Table：`account(account_number, balance)`, `branch(branch_name, assets)`, `account_branch(account_number, branch_name)`。其中 account 和 branch 属于 Many-to-One Relation
 	- 可以合并为：`account(account_number, branch_name, balance)`
+	- 多对一关系中，关系对应的 Table 的 Primary Key 一般只为“多”的一方的 Primary Key，这也是它们可以合并的基础
 - 对于 **One-to-One**，则可以任意选取一边合并
 - **Many-to-Many** 不能将关系对应的 Table 合并，或者说合并了也没有意义
 

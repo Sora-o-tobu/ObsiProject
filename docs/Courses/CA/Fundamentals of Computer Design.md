@@ -4,6 +4,8 @@
 !!! quote
 	![[CAquote.png]]
 
+!!! warning "第一章第二章和计组重合度有点高，且书上讲的比较杂，最好还是看看期末会考什么"
+
 ## Introduction
 
 ### Class of Computer
@@ -57,7 +59,7 @@ CA must design the organization and hardware to meet functional requirements as 
 
 !!! quote "Definition: Instruction Design & Implementation 指令集及其实现"
 
-ISA 相当于软硬件之间的界线，下面将从七个方面来简要介绍以下 ISA：
+ISA 相当于软硬件之间的界限，下面将从七个方面来简要介绍以下 ISA：
 
 - **<1> Class of ISA:** 几乎所有 ISA 都是通用寄存器体系结构，操作数要么是寄存器，要么是存储地址。这一类别又可分为两种主流版本
 	- **Register-Memory ISA:** 80x86, 许多指令可以直接访问内存
@@ -73,6 +75,16 @@ ISA 相当于软硬件之间的界线，下面将从七个方面来简要介绍�
 	- ARMv8 和 RISC-V 都是固定 32-bit 长度指令
 	- 80x86 的编码是可变长度，变化范围是 1-18 Bytes
 
+??? info "Class of ISA (据说出过一道题)"
+	- **<1> Register Machine** 拥有显式的操作数
+		- Register-Memory ISA，如 x86
+		- Load-Store ISA(Register-Register ISA)，如 RISC-V
+	- **<2> Stack Machine** 隐式操作数，操作数位于栈顶
+		- 操作数从栈顶弹出，计算结果压回栈顶
+	- **<3> Accumulator Machine**
+		- 有一个临时的累加器，操作数放在累加器内计算
+	
+	![[classofisa.png]]
 
 ## Trends
 
@@ -172,6 +184,30 @@ Cost Trend 的影响因素主要有三点：Time（时间）、Volumn（产量�
 
 通过冗余提高 Dependability，RAID。见计组部分。
 
+!!! example "MTTF 例题"
+	=== "题面"
+		A system consists of the following components, calculate the MTTF of the system:
+		
+		- 10 disks, 1000000 hour MTTF
+		- 1 SCSI Controller, 500000 hour MTTF
+		- 1 power supply, 1 fan, both 200000 hour MTTF
+		- 1 SCSI cable, 1000000 hour MTTF
+	=== "答案"
+		可以简单认为一个系统的故障率是所有组件的故障率之和，故障率即为 MTTF 的倒数，那么：
+		
+		$$\frac{1}{MTTF}= 10\times \frac{1}{1000000} + \frac{1}{500000} + 2\times \frac{1}{200000} + \frac{1}{1000000}$$
+		
+		计算得到 $MTTF=43500 hour$
+
+!!! example "历年曾考过的原题"
+	=== "题面"
+		If a company has 10,000 computers, each with a MTTF of 30 days, and it experences catastrophic failure only if 1/3 of the computers fail. What is the MTTF of the system?
+	=== "答案"
+		- 电脑每天故障的概率 $\frac{1}{30}$
+		- 每天故障的电脑数量 $10000\times \frac{1}{30}$
+		- 当有 $10000 \times \frac{1}{3}$ 电脑发生故障时，系统发生故障
+		- 崩溃天数为 $\frac{10000\times \frac{1}{3} }{10000\times \frac{1}{30}} = 10$ 天
+
 ## Performance
 
 对计算机性能的直观估计就是执行时间的倒数：
@@ -186,6 +222,22 @@ $$
 - **CPU Time** 只指 CPU 执行计算的时间
 
 此外，用户计算他们的计算机相对性能的方式使用 Benchmark Program
+
+!!! example "24 秋冬期末"
+	Which one of the following performances generates consistent result, no matter which machine is the reference?
+	
+	- A. arithmetic mean
+		- $AM= \frac{1}{n} \sum_{i=1}^n Time_i$
+	- B. weighted arithmetic mean
+		- $WAM=\sum_{i=1}^n Weight_i \times Time_i$
+		- 也可以缩写为 *WEM* (Weighted Execution Time)
+	- **C. normalized geometric mean**
+		- 几何平均值 $GM$ 具有统一的结果，无论参考机器是什么
+		- $GM=\sqrt[n]{\Pi_{i=1}^n Relative\_Rate_i}$
+		- $\frac{GM(X)}{GM(Y)}=GM(\frac{X}{Y})$
+	- D. harmonic mean
+		- 本质和 arithmetic mean 相同
+		- $HM=\frac{n}{\sum_{i=1}^n \frac{1}{Rate_i}}$
 
 ## Quantitative Principles
 

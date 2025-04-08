@@ -4,6 +4,9 @@
 !!! quote ""
 	![[MemoryHierarchyQuote.png]]
 
+!!! quote "第二章的重点是 Cache，并且在考试中基本以选择题形式出现"
+
+
 ## Memory Technology & Optimization
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">SRAM</font>
@@ -66,25 +69,210 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 
 现代 PMD 和笔记本电脑多使用固态硬盘，基于 Flash 的存储常用在台式机或大型服务器上。
 
+## Cache 相关概念补充
+
+### Write Buffer
+
+即便用了 Cache，程序运行过程中不可避免的会访问内存。此时就会发生 *Write Stall*，程序必须等待 CPU 写回内存结束。
+
+为了减少 Write Stall，我们引入 Write Buffer 作为缓冲区。它可以临时保存需要写回主存的 Cache 数据，等到 CPU 空闲时再进行写回操作。
+
+由于 Buffer 大小有限，因此也不能完全避免 Write Stall 发生。
+
+对于多级缓存，Write Buffer 一般位于 L1 Cache 和 L2 Cache 之间。
+
+### 统一缓存和分离缓存
+
+=== "Unified Cache"
+	- 指令和数据共用一个 cache
+	- 更少的硬件，更低的命中率
+	
+	![[unifiedcache.png]]
+=== "Split Cache"
+	- 指令和数据分开存储
+	- 一般是 L1 Cache 分开，L2 Cache 统一
+	
+	![[splitcache.png]]
+
 
 ## Optimization of Cache
 
 将缓存优化的十种高级方法分为以下五类：
 
-- <1> **Reducing Hit Time：** Small, Simple L1 Cache & Way Prediction
+- <1> **Reducing Hit Time（2+2）**
+	- Small, Simple L1 Cache & Way Prediction
+	- Avoiding Address Translation & Trace Cache
 	- 这两种技术通常还能降低功耗
-- <2> **Increasing Cache Bandwidth：** Pipelined Cache & Multibanked Caches & Non-Blocking Caches(非阻塞缓存)
-- <3> **Reducing Missing Penalty：** Critical Word First(关键字优先) & Merging Write Buffer(合并写缓冲)
+- <2> **Increasing Cache Bandwidth（3）**
+	- Pipelined Cache & Multibanked Caches & Non-Blocking Caches(非阻塞缓存)
+- <3> **Reducing Missing Penalty（3+2）**
+	- Critical Word First(关键字优先) & Merging Write Buffer(合并写缓冲) & Victim Caches
+	- Multi-Level Cache & Read miss prior to writes
 	- 这两种技术对功耗影响很小
-- <4> **Reducing Miss Rate：** Compiler Optimizations(编译器优化)
+- <4> **Reducing Miss Rate（1 + 3）**
+	- Compiler Optimizations(编译器优化)
+	- Larger Block Size & Larger Cache Size & Higher Associativity
 	- 在编译时进行优化显然能够降低功耗
-- <5> **Parallelism：** Hardware Prefetching & Compiler Prefetching
+- <5> **Parallelism（2）**
+	- Hardware Prefetching & Compiler Prefetching
 	- 通过并行减小 Miss Penalty 或 Miss Rate
 	- 由于提前取出了未使用的数据，这两种技术通常会增加功耗
 
+!!! danger "建议直接抄 A4 上，很有可能出选择题，具体的内容最好简单了解一下"
+
+### Reducing Hit Time
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Small and Simple Caches</font>
+
+小而简单的缓存。
+
+- 硬件小，访问速度自然快。
+- 直接映射的 Hit Time 比组相联更快
+- 减少芯片和 Cache 的物理距离也是更好的选择
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Way Prediction</font>
+
+- 组相连时，采用预测器来预测数据所在路
+- 如果预测错误，反而会增加 Hit Time
+- 关于预测正确率：
+	- > 90% for two-way, > 80% for four-way
+	- I-Cache > D-Cache
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Avoiding Address Translation</font>
+
+- 虚拟内存使用 TLB
+- Cache 的三种地址转换方式
+	- **PIPT:** Physically Indexed, Physically Tagged
+		- 即我们之前所讲的 Cache，缺点是不管 Cache 是否命中，都要先经过 TLB 或 PTE 转换地址
+	- **VIVT:** Virtually Indexed, Virtually Tagged，可以称为 Virtual Cache
+		- 歧义 Ambiguity：两个不同的进程的相同虚拟地址，在 Virtual Cache 中对应了同一块（实际应该为不同物理地址）
+		- 重名 Aliasing：一个物理地址对应了多个进程不同的虚拟地址，导致 Cache 的命中率较低以及可能存在的 Dirty 问题
+		- 以上两个问题维护成本极高，因此基本没有硬件还在用 VIVT Cache 了。
+	- **VIPT:** Virtually Indexed, Physically Tagged
+		- 使用虚拟地址的一部分作为 Cache 的 Index；使用物理地址的一部分作为 Cache 的 Tag
+		- 此时 VIPT 既有 PIPT 的正确性，又有 VIVT 的速度
+
+!!! warning "VIPT 什么条件下不会重名还存疑，没搞明白"
+
+> Reference: [关于Cache的歧义/别名问题和VIVT/VIPT/PIPT架构](https://zhuanlan.zhihu.com/p/577138649)
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Trace Cache</font>
+
+- 根据程序执行情况动态设计 Cache
+- 由于局部性原理，大部分分支预测都是正确的
+
+### Increase Cache Bandwidth
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Pipelined Caches</font>
+
+- 把缓存访问的过程流水线化，提高吞吐量
+- 但是会增加分支预测错误的 Penalty
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Multi-Banked Caches</font>
+
+- 把缓存划分为多个独立的 bank，以支持**顺序访问**
+	- 类似于 DRAM 的设计
+- 当访问序列恰好按照 bank 数量展开时，可以提高带宽
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Nonblocking Caches</font>
+
+- 如果 CPU 支持乱序执行，可以实现 Hit Under Miss，即 Cache Miss 后可以继续执行
+- 一个 Cache Line 可以同时处理多个请求
+
+```asm
+1: Reg1:=LoadMem(A);
+2: Reg2:=LoadMem(B);
+3: Reg3:=Reg1 + Reg2;
+```
+
+执行 1 时，发生了 Cache Miss，CPU 需要从主存中取数据；但读主存时间很长，这段时间 CPU 继续执行 2。
+
+如果 2 也发生了 Cache Miss，那么，多余 Nonblocking Cache，它会同时去主存中读 B，最终 A 和 B 一起进入 Cache。
+
+### Reducing Missing Penalty
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Multi-Level Caches</font>
+
+- 一级缓存可以减少 hit time，二级缓存可以减少 miss penalty
+- 一级缓存的 miss penalty 就是二级缓存的 AMAT
+- 区分两个概念
+	- **Local Miss Rate:** 本级缓存的 Miss Rate
+	- **Global Miss Rate:** 本级的 Miss 量除以 CPU 的总访问量
+	- Global Miss Rate < Local Miss Rate
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Giving Priority to Read Misses over Writes</font>
+
+- 如果有 Write Buffer，可以暂缓处理写缺失，优先处理读缺失
+- 但是处理独缺失时要检查写缓冲区，确保数据的一致性
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Critical Word First & Early Restart</font>
+
+- 不需要等到一个 Block 都从 Cache 中取出来之后再执行，可以优先取出我们需要的 Word
+- 取出关键 Word 后，CPU 即可重启继续执行了
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Merging Write Buffer</font>
+
+- 发生 Write Miss 时，如果要写的地址恰好在 Write Buffer 内，则直接在 Write Buffer 内写
+- 一定程度缓解了 Write Buffer 装满时造成的 Stall
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Victim Caches</font>
+
+- 相当于多加一个 Level 的小容量全相联缓存
+- Cache 中 Block 被替换时，会把该块放入 Victim Cache 中
+- 如果下次要访问的时候发现在 Victim Cache 中，就可以减少 Miss Penalty
+
+### Reducing Miss Rate
+
+回顾一下我们的 Miss Rate 分类，在体系中我们会设计如下四种：
+
+- **Compulsory Misses:** 冷启动 Miss，第一次访问数据时发生的缺失
+- **Capacity Misses:** 容量 Miss，缓存容量不足导致的缺失
+- **Conflict Misses:** 冲突 Miss，多个数据映射到同一个 Cache Block 导致的缺失
+- **Coherence Misses:** 一致性 Miss，多个 Cache 的一致性问题导致的缺失
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Block Size & Cache Size & Associativity</font>
+
+- **Larger Block Size**
+	- 利用空间局部性，减少了 Compulsory Misses
+	- 但是会增加 Miss Penalty
+	- (在 Cache 总大小不变的情况下)还会增加 Conflict Misses 甚至 Capacity Misses
+- **Larger Cache Size**
+	- 减少 Capacity Misses
+	- 代价是更高的 Hit Time、更高的 Cost
+- **Higher Associativity**
+	- 减少 Conflict Misses
+	- 经验法则：大小为 N 的直接映射 Cache 的 Miss Rate 约等于大小为 N/2 的二路组相联 Cache 的 Miss Rate
+	- 不同的组相联度可能会影响 Clock Cycle Time，从而影响整体性能
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Compiler Optimization</font>
+
+不做硬件优化，只通过编译器优化来降低 Miss Rate
+
+- 指令级别
+	- 指令重排、冲突分析
+- 数据级别
+	- Merging Arrays 数组合并
+	- Loop Interchange 循环交换
+	- Loop Fusion 循环融合
+	- Blocking 数据块化
+
+### Parallelism
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Hardware Prefetching</font>
+
+- 提前把数据和指令放入 Cache 中
+- 能够减少 Compulsory Misses
+- 由于可能把有用的 Block 的挤出 Cache，也许会增加其它 Miss
+
+<font style="font-weight: 1000;font-size: 20px" color="red">Compiler-controlled Prefetch</font>
+
+- 由编译器控制的 Prefetch，它会插入预取指令
+- 需要在预取的开销与其获得的性能之间取得平衡
+
+
 ## Virtual Memory & Virtual Machine
 
-虚拟内存部分见[计组笔记](https://www.nimisora.top/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/Chapter5/)
+!!! quote "虚拟内存部分在体系结构中涉及较少，可见[计组笔记](https://www.nimisora.top/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/Chapter5/)"
 
 虚拟机最早在 20 世纪 60 年代后期提出，多年以来一直是大型计算机的重要组成部分，并基于以下原因在近年来得到广泛关注：
 

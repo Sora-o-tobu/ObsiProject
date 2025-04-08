@@ -7,3 +7,7 @@
 - Final Examination **50%**
 
 !!! info "期末半开卷，可带一张 A4 纸"
+
+## Reference
+
+- [Min-Babel Library](https://ruoxining.github.io/notebook/docs/1-cs/database/)

@@ -5,6 +5,7 @@
 
 用 $R$ 表示一个 Relational Schema，$\alpha \subseteq R$ 和 $\beta \subseteq R$ 分别为 $R$ 的一组属性。
 
+**【Definition】** 
 仿照数学上的函数概念，我们定义 $R$ 上的一个 Functional Dependency $\alpha \rightarrow \beta$ 当且仅当对于任意合法关系 $r(R)$ 的两个 Tuples $t_1, t_2$ ，其满足：
 
 $$
@@ -25,11 +26,11 @@ $$
 
 定义能用 $F$ 逻辑推理出来的最大 Functional Dependencies 集合为 $F$ 的 Closure，用 $F^+$ 表示。在这里给出用于计算函数依赖的 Armstrong's Axioms 及其补充定律：
 
-- <1> 自反律：if $\beta \subseteq \alpha$, then $\alpha \rightarrow \beta$
-- <2> 增补律：if $\alpha \rightarrow \beta$, then $\gamma \alpha \rightarrow \gamma \beta$
-- <3> 传递律：if $\alpha \rightarrow \beta$ and $\beta \rightarrow \gamma$, then $\alpha \rightarrow \gamma$
-- <4> 合并律：if $\alpha \rightarrow \beta$ and $\alpha \rightarrow \gamma$, then $\alpha \rightarrow \beta \gamma$
-- <5> 分解律：if $\alpha \rightarrow \beta\gamma$, then $\alpha \rightarrow \beta$ and $\alpha \rightarrow \gamma$
+- **<1> 自反律：** if $\beta \subseteq \alpha$, then $\alpha \rightarrow \beta$
+- **<2> 增补律：** if $\alpha \rightarrow \beta$, then $\gamma \alpha \rightarrow \gamma \beta$
+- **<3> 传递律：** if $\alpha \rightarrow \beta$ and $\beta \rightarrow \gamma$, then $\alpha \rightarrow \gamma$
+- **<4> 合并律：** if $\alpha \rightarrow \beta$ and $\alpha \rightarrow \gamma$, then $\alpha \rightarrow \beta \gamma$
+- **<5> 分解律：** if $\alpha \rightarrow \beta\gamma$, then $\alpha \rightarrow \beta$ and $\alpha \rightarrow \gamma$
 
 一种根据 $F$ 计算 $F^+$ 的思想是不断重复遍历 $F$ 内的 FDs(Functional Dependency)，为其应用自反律、增补律、传递律，直到 $F$ 的内容不再改变为止。对于一个 n attribute 的 Schema，其最大可能 FDs 可达 $2^n \times 2^n$ 个。
 
@@ -54,7 +55,7 @@ for γ in R:
 result := α
 while (changes to result):
 	for each β -> γ in F:
-		if β in result: result += β
+		if β in result: result += γ
 α+ := result
 ```
 
@@ -63,6 +64,11 @@ while (changes to result):
 定义 $\alpha^+$ 后，就可以用其来进行 Super Key 和 Candidate Key 的判断。如果 Relational Schema $R$ 属于 $\alpha^+$ ，则属性集合 $\alpha$ 为 $R$ 的一个 Super Key。
 
 ![[candidatekeyCOASEx1.png]]
+
+??? quote "通过画图判断 Candidate Key"
+	通过将依赖关系绘制成 Graph，那么没有被任何箭头指向的 Attribute 一定是 Candidate 的一部分（只有它自己决定自己），例如，下例中 $A$ 和 $G$ 都没有被指向，则 $AG \in Candidate\ Key$（实际上 $AG$ 就是）
+	
+	![[CandidateKeyByGraph.png]]
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Canonical Cover</font>
 
@@ -76,9 +82,9 @@ DBMS 需要保持对数据库进行关于 $F$ 的检查，以确保数据库的�
 
 !!! example "$F=\{A\rightarrow B, B\rightarrow C, AC\rightarrow D\}$, Calculate $F_c$"
 	```python
-	B->C  => AB->AC
+	B ->C => AB->AC
 	AC->D => AB->D
-	A->B  => A ->AB
+	A ->B => A ->AB
 	AB->D => A ->D
 	So AC->D is extraneous => A->D
 	F_c = {A->B, B->C, A->D}
@@ -105,6 +111,9 @@ DBMS 需要保持对数据库进行关于 $F$ 的检查，以确保数据库的�
 - <2> The decomposition is dependency preservation 依赖保持
 - <3> Each relation $R_i$ is in good form
 	- such as **BCNF** or **Third Normal Form(3NF)**
+
+!!! tip "Design Method"
+	Universal Relation(泛关系) -> Decomposition -> Good Database Schema
 
 将 $R$ 分解为 $R_1$ 和 $R_2$ 是**无损连接**的充要条件是，至少有以下一个依赖关系在 $F^+$ 中满足：
 
@@ -153,7 +162,7 @@ $R=(A,B,C), F=\{A\rightarrow B, B\rightarrow C\}$，我们将其分解为 $R_1 =
 - <2> $\alpha$ 是 $R$ 的 superkey
 	- 即 $R\subseteq \alpha^+$ or $\alpha \rightarrow R$
 
-!!! note "Trivial Dependency"
+!!! info "Trivial Dependency"
 	对于函数依赖 $\alpha \rightarrow \beta$ ，如果 $\beta \subseteq \alpha$ ，则称其为 Trivial Functional Dependency。例如 $A\rightarrow A, \ AB\rightarrow A$
 
 !!! note "任何只有两个 Attribute 的 Schema 都属于 BCNF"
@@ -170,8 +179,8 @@ $R=(J,K,L)$，$J$ 是学生，$K$ 是课程，$L$ 是老师；其函数依赖为
 - <2> $\alpha$ 是 $R$ 的 superkey
 	- 即 $R\subseteq \alpha^+$ or $\alpha \rightarrow R$
 - <3> 对于每个 Attribute $A\in \beta -\alpha$，$A$ 都被 $R$ 某个 Candidate Key 包含
-	- 当 $\beta$ 不是 Candidate Key 时，$\alpha$ 必须是 superkey
-	- 当 $\beta$ 是 Candidate Key 时，$\alpha$ 无限制
+	- 当 $\beta$ 不属于所有 Candidate Key 时，$\alpha$ 必须是 superkey
+	- 当 $\beta$ 属于任意 Candidate Key 时，$\alpha$ 无限制
 
 根据定义看出，BCNF 包含在 3NF 内，也可以说 3NF 是 Minimum relaxation of BCNF to ensure dependency preservation。
 
@@ -188,7 +197,7 @@ $R=(J,K,L)$，$J$ 是学生，$K$ 是课程，$L$ 是老师；其函数依赖为
 - <2> Lossless Join
 - <3> Dependency Preservation
 
-如果我们不能同时满足以上三点，则我们接收如下其中一个缺点：
+如果我们不能同时满足以上三点，则我们接受以下其中一个缺点：
 
 - <1> Lack of Dependency Preservation
 - <2> 3NF instead of BCNF

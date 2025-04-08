@@ -44,7 +44,8 @@ CREATE TABLE branch
 			(branch_name char(15) not null,
 			branch_city  varchar(30),
 			assets       numeric(8,2),
-			primary key(branch_name))
+			primary key(branch_name),
+			foreign key(...) references ...(...))
 ```
 
 SQL 的 Domain Type 大体有以下几类：
@@ -409,11 +410,11 @@ END
 四种权限按顺序由浅入深。
 
 !!! info "对于数据库 Schema 的更改，有四个相关权限"
-	- Index Authorization - allows creation and deletion of indices.
-	- Resources Authorization - allows creation of new relations.
+	- **Index Authorization** - allows creation and deletion of indices.
+	- **Resources Authorization** - allows creation of new relations.
 		- 创建 `VIEW` 并不需要 Resources Authorization
-	- Alteration Authorization - allows addition or modifying of attributes in a relation.
-	- Drop Authorization - allows deletion of relations.
+	- **Alteration Authorization** - allows addition or modifying of attributes in a relation.
+	- **Drop Authorization** - allows deletion of relations.
 
 `VIEW` 是提高数据库安全性的一种策略，它可以只提供给用户他们需要的数据，例如我们想要对用户隐藏 `loan_number`：
 
