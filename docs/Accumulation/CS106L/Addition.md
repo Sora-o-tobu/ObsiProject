@@ -1,7 +1,7 @@
 
 # C++ 补充
 
-> From [咸鱼暄的代码空间](https://xuan-insr.github.io/cpp/cpp_restart/)
+> From [咸鱼暄的代码空间](https://xuan-insr.github.io/cpp/cpp_restart/) & ZJU OOP
 
 ## Class
 

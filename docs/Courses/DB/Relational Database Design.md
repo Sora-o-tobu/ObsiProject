@@ -204,3 +204,45 @@ $R=(J,K,L)$，$J$ 是学生，$K$ 是课程，$L$ 是老师；其函数依赖为
 	- 通常会带来一点 Redundancy
 
 ### Fourth Normal Form
+
+4NF 是 BCNF 的一个缩紧。在介绍 4NF 之前，我们需要引入 **Multivalued Dependencies** 的概念。
+
+假定我们有表 classes(course, teacher, book)，其中 course:teacher，course:book 都是一对多的关系，即一门课有多个老师上，一门课有多个课本。
+
+在这个关系中，三个 Attribute 都是 Independent 的，即它们的 $F$ 中只包含 *Trival* Functional Dependencies。根据定义，该表属于 BCNF。
+
+但是，在实际上看到该表时，我们能够看到其重复信息的冗余：
+
+![[4NFclasses.png]]
+
+!!! info "如果想要为一门课添加一门课本，则需要插入这门课老师数量的 Tuples"
+
+**【Definition】** 对于 Schema $R$，$\alpha \subseteq R$，$\beta \subseteq R$，定义一个 Multivalued Dependency $\alpha \rightarrow \rightarrow \beta$ 当且仅当对于任意合法关系 $r(R)$ 的四个 Tuple $t_1, t_2, t_3, t_4$，其满足：
+
+$$
+\begin{cases}t_1[\alpha]= t_2[\alpha] = t_3[\alpha] = t_4[\alpha] \\ 
+t_1[\beta] = t_3[\beta] \\
+t_2[\beta] = t_4[\beta] \end{cases} \Rightarrow \begin{cases} t_2[R-\alpha -\beta] = t_3[R-\alpha-\beta] \\
+t_1[R-\alpha-\beta] = t_4[R-\alpha-\beta]  \end{cases}
+$$
+
+![[TabulerRepresent.png]]
+
+??? abstract "Another Definition in 3 tuples"
+	![[AnotherDefiMVD.png]]
+
+!!! note "If $\alpha \rightarrow \beta$, then $\alpha \rightarrow \rightarrow \beta$"
+	**Every functional dependency is also a multivalued dependency**
+
+**【Definition】** 一个属于 4NF 的 Relation Schema $R$ ，对于其函数依赖和多值依赖 $D^+$，任意 $\alpha \rightarrow \rightarrow \beta$ 都满足至少下面一条：
+
+- <1> $\alpha \rightarrow \rightarrow \beta$ is trivial
+- <2> $\alpha$ 是 $R$ 的 superkey
+	- 即 $R\subseteq \alpha^+$ or $\alpha \rightarrow R$
+
+现在我们想要将 $R$ 以 4NF 的形式 Decomposition，$D$ 对 $R_i$ 有如下约束：
+
+- <1> $D^+$ 中的任意 Functional Dependency 只包含某个 $R_i$ 的 Attribute
+- <2> 对于所有形式为 $\alpha \rightarrow \rightarrow (\beta \cap R_i)$ 的 Multivalued Dependency，如果 $\alpha \subseteq R_i$，则 $\alpha \rightarrow \rightarrow \beta$ 一定位于 $D^+$ 中
+
+

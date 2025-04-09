@@ -262,6 +262,10 @@ nav:
       - CH 7. 链接: Accumulation/CSAPP/Chapter7.md
       - CH 8. 异常控制流: Accumulation/CSAPP/Chapter8.md
       - CH 9. 虚拟内存: Accumulation/CSAPP/Chapter9.md
+    - Physics-Based Simulation:
+      - Accumulation/Physics-Based Simulation/index.md
+      - Simulation with Optimization: Accumulation/Physics-Based Simulation/Simulation with Optimization.md
+      - Boundary Treatments: Accumulation/Physics-Based Simulation/Boundary Treatments.md
     - Games101:
       - Accumulation/Games101/index.md
       - 作业框架: Accumulation/Games101/作业框架.md
