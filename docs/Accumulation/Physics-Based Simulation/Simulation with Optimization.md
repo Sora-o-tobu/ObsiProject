@@ -9,11 +9,11 @@
 
 在现代固体模拟领域，连接定义的描述方法是至关重要的。
 
-- <1> Mesh of edges or triangles
+- **<1> Mesh of edges or triangles**
 	- 是有限元方法(FEM)模拟的基础
 	- FEM 在 Simulation Accuracy Control 方面表现出色， 它直接在网格上操作，无需信息传输，从而确保更高的精度
 	- 本书集中在基于网格的有限元结构
-- <2> Uniform grid to compute solid density
+- **<2> Uniform grid to compute solid density**
 	- 用于模拟 Material Point Method(MPM)
 	- MPM 在管理 Solid Topology 方面较为出色，例如模拟固体断裂等动态事件
 

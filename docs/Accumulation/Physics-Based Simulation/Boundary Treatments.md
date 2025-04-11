@@ -185,3 +185,108 @@ $$
 
 Contact Modeling 是确保固体不与障碍物或自身相交的关键。本节我们将深入探讨 IPC 框架中非穿透性具体细节。
 
+### Signed Distance
+
+符号距离拓展了无符号距离的概念，使其能够涵盖具有封闭边界的固体几何形状。IPC 通过非穿透性约束消除了固体内部出现负距离的可能性，因此，在符号距离保持非负的状态下，非穿透性成功实现。
+
+!!! info "Codimension"
+	余维数指，对于空间 $V$ 的线性子空间 $W$，$W$ 在 $V$ 中的余维数是它们维度的差：
+	
+	$$codim(W)=din(V)-dim(W)$$
+	
+	例如在三维空间中，一个平面的余维数为 1，一条直线的余维数为 2。在 CG 中，通常用余维数为 1、2 的几何模拟布料和头发。
+
+
+但是有符号距离常用于参数表示的几何以及 Grid 表示的几何中，此处我暂不深究。
+
+### Distance Barrier
+
+当符号距离在障碍物外部平滑时，我们可以引入非穿透约束来模拟接触。这些约束使用 $d(x)$ 进行公式化，旨在最小化系统的 Incremental Potential：
+
+$$\tag{7.2.1}
+\min_x E(x)\ \ s.t.\ d_{ij}\ge 0
+$$
+
+其中 $d_{ij}$ 表示任意节点 $i$ 与任意障碍物 $j$ 之间的符号距离。通过确保 $d_{ij}$ 非负，我们有效防止物体和障碍物的穿透。
+
+为了解决 (7.2.1) 的不等式约束优化问题，我们引入 Barrier Potential $P_b(x)$，来将其转换为下面的无约束优化问题：
+
+$$\tag{7.2.2}
+\min_x E(x)+h^2P_b(x)
+$$
+
+Barrier Potential 的定义如下：
+
+$$\tag{7.2.3}
+\begin{array}l
+P_b(x)= \sum_{i,j} A_i \hat{d}b( d_{ij}(x))\\ b(d_{ij}(x))=\begin{cases}\frac{k}{2}\left( \frac{d_{ij}}{d}-1\right)\ln \frac{d_{ij}}{d} & d_{ij}\lt \hat{d} \\ 0 & d_{ij}\ge \hat{d} \end{cases}
+\end{array}
+$$
+
+- $b()$ 为 Barrier Energy Density Function，当距离接近于 0 时，此函数趋于无穷大，提供强大的排斥力以防止穿透
+- $\hat{d}$ 为距离阈值
+- $k$ 为接触刚度（Contact Stiffness），控制接触力相对距离的变化率
+- $A_i$ 为节点 $i$ 的 Contact Area，是设置的关键参数
+	- 计算 $P_b(x)$ 使用 Volumn Element $\omega_i =A_i \hat{d}$ 加权求和
+
+应用链式法则，我们计算得到 Barrier Potential 的 Gradient 和 Hessian 如下：
+
+![[BarrierPotentialGradHessian.png]]
+
+## Filter Line Search
+
+在较大时间步长中，Incremental Potential 可能会有多个局部极小值，这种情况可能会导致 *Tunneling Issue*，即固体意外穿过障碍物。为了减轻这种风险，我们引入一种由 CCD 驱动的过滤线搜索策略。
+
+### Penetration-free Trajectory
+
+IPC 将优化路径视为运动轨迹的近似，具体来说，如果优化进行了 $l$ 次迭代，可以用如下简单折线表示优化路径：
+
+$$
+\{(1-\beta)x^i + \beta x^{i+1} | \beta \in [0,\alpha],\ i=0,1,2,...,l\}
+$$
+
+其中 $\alpha$ 即为线搜索中更新迭代变量的步长 $x^{i+1}  = x^i + \alpha p$。在给定一个初始无穿透的 $x^i$，我们想要保证 $x^i \rightarrow x^{i+1}$ 之间都是无穿透的，那么只需要在每次迭代中使用 CCD 计算 $\alpha$ 的上界。
+
+!!! abstract "Continuous Collision Detection"
+	![[CCDDefi.png]]
+
+现在我们有了 Filter Backtracing Line Search 算法，与从步长为 1 开始不同，它初始化 $\alpha$ 为 $\alpha^C$，这种修改虽然细微，但意义重大：
+
+![[FilterBacktracingLineSearch.png]]
+
+
+## Moving Boundary Conditions
+
+动态的 Collision Objects(CO) 和 Moving Boundary Conditions 在许多仿真场景中至关重要。CO 可被视为一组 BC 节点。
+
+在大时间步、高速度或显著变形的情况下，直接指定 BC 节点通常会导致穿透或伪影。为了解决这些挑战，我们引入 *Penalty Method*。此方法逐步调整模拟，使其朝着满足 CO 和 BC 约束且避免相互穿模的可行集发展。
+
+### Penalty Method
+
+在时间步 $n\rightarrow n+1$ 中，首先根据预设的运动规则或控制输入计算出每个 BC 节点的目标位置 $\hat{x}_{k}^{n+1}$ ，其中 $k$ 是边界节点的编号。
+
+在牛顿迭代中，我们定义 **Velocity Residual** 用来判断当前迭代 $x^i$ 与目标位置之间的距离：
+
+$$
+r_{BC,k}^i = \frac{1}{h} ||x_k^i - \hat{x}_k^{n+1}||.
+$$
+
+当 $r_{BC,k}^i$ 的值低于预设容差 $\epsilon$ 时，则将该节点固定在该位置 $x_k^i = \hat{x}_k^{n+1}$ ，然后再应用 DOF Elimination Method 移除该点的自由度。
+
+对于其它离目标位置较远的 BC 节点，为了推动其向目标位置移动，我们在 Incremental Potential 中为其添加 Penalty：
+
+$$\tag{11.1.1}
+\frac{k_M}{2} m_k ||x_k - \hat{x}_k^{n+1}|| ^2.
+$$
+
+- $m_k$ 为节点质量
+- $k_M$ 为 Penalty Stiffness，允许主观设置
+
+$k_M$ 的设置不当可能会带来问题：
+
+- $k_M$ 太小，节点受 Penalty 的吸引力不足，无法有效靠近目标
+- $k_M$ 太大，系统整体刚性过大，引起数值不稳定，甚至与碰撞或其它约束产生冲突
+
+一般设置其初值低于 $10^6$。在牛顿迭代中，当某些 BC 节点的 $r_{BC,k}^i$ 仍然较大时，会将其 $k_M$ 翻倍，然后继续求解，知道所有 BC 节点都接近其目标位置。
+
+一旦所有 BC 节点都降低到容差之下，就可以固定这些节点，在后续迭代中应用 DOF 消除法求解。
