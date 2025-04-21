@@ -1,0 +1,7 @@
+mkdocs-material
+mkdocs-roamlinks-plugin
+mkdocs-rss-plugin
+mkdocs-statistics-plugin
+mkdocs-video
+mkdocs-minify-plugin
+mkdocs-glightbox
