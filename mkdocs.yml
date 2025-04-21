@@ -22,14 +22,6 @@ theme:
 
     palette:
 
-    # Light mode
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: custom
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to dark mode
-
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
@@ -37,6 +29,14 @@ theme:
       toggle:
         icon: material/weather-night
         name: Switch to light mode
+
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
 
 extra:
   generator: false 
