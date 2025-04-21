@@ -220,7 +220,7 @@ $$
 
 - <1> 先对 Hession 矩阵做特征值分解 $\nabla^2 E(x^i)= Q\Lambda Q^{-1}$
 	- 其中 $Q$ 的列向量是归一化的特征向量，$\Lambda$ 是特征对角矩阵
-- <2> 对于 $\Lambda$ 中每个特征值，如果该特征值为负，则置零，得到新的对焦矩阵 $\hat{\Lambda}$
+- <2> 对于 $\Lambda$ 中每个特征值，如果该特征值为负，则置零，得到新的对角矩阵 $\hat{\Lambda}$
 	- $\hat{\Lambda}_{ii} =\Lambda_{ii} >0?\Lambda_{ii}:0$
 - <3> 用更新后的特征值重构代理矩阵
 	- $P=Q\hat{\Lambda} Q^{-1}$
@@ -230,8 +230,4 @@ $$
 
 ![[ProjectedNewtonBackwardInt.png]]
 
-!!! warning "停止条件的选取还不是很理解，TBD"
-
-## Case Study: 2D Mass Spring *
-
-TBD...
+!!! warning "$||p||_{\infty}$ 即为 $\max \{|x_i|\}$，在 python 可以用 `np.linalg.norm(x, np.inf)` 计算"

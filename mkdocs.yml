@@ -19,6 +19,7 @@ theme:
     icon: 
       logo: material/lumx
     favicon: image/sugar.png
+
     palette:
 
     # Light mode
@@ -26,7 +27,7 @@ theme:
       scheme: default
       primary: custom
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/weather-sunny
         name: Switch to dark mode
 
     # Dark mode
@@ -34,7 +35,7 @@ theme:
       scheme: slate
       primary: black
       toggle:
-        icon: material/toggle-switch
+        icon: material/weather-night
         name: Switch to light mode
 
 extra:

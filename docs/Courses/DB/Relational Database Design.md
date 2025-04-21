@@ -171,6 +171,16 @@ $R=(A,B,C), F=\{A\rightarrow B, B\rightarrow C\}$，我们将其分解为 $R_1 =
 
 $R=(J,K,L)$，$J$ 是学生，$K$ 是课程，$L$ 是老师；其函数依赖为 $F=\{JK\rightarrow L, L\rightarrow  K\}$ (一个老师只教一门课)。那么对于此例，任何分解都不能保持 $JK\rightarrow L$，例如 $R_1=(L,K)$, $R_2=(J,L)$，它们都属于 BCNF，但不满足 Dependency Preservation。
 
+**【Solution】** 事实上，针对 BCNF 的分解有如下计算方法：
+
+- <1> 找出结果集合中还没能满足 BCNF 定义的 Schema $R_i$
+	- 它一定存在一个非 Trivial 函数 $\alpha \rightarrow \beta$，并且 $\alpha$ 不是 $R_i$ 的 superkey
+- <2> 依据该函数，将 $R_i$ 分解为 $R_{i1}$ 和 $R_{i2}$
+	- $R_{i1} = (\alpha, \beta)$, $R_{i2}= R_i - \beta$
+- <3> 回到 <1>
+
+!!! warning "不能保证一定满足 Dependency Preserving，只能确保所有子 Schema 都是 BCNF"
+
 ### Third Normal Form
 
 为了解决 BCNF 有时不能满足函数依赖保持的问题，我们定义了一个更 Weak 的 Normal Form，称为 3NF，即对于任意 $\alpha \rightarrow \beta$ in $F^+$，至少满足以下一条：
@@ -202,6 +212,13 @@ $R=(J,K,L)$，$J$ 是学生，$K$ 是课程，$L$ 是老师；其函数依赖为
 - <1> Lack of Dependency Preservation
 - <2> 3NF instead of BCNF
 	- 通常会带来一点 Redundancy
+
+**【Solution】** 针对 3NF 的分解有如下计算方法：
+
+- <1> 计算 $F_c$，将 $F_c$ 中每一个 $\alpha \rightarrow \beta$ 都分解为 Schema $R_i:= (\alpha, \beta)$
+- <2> 检查是否存在 $R_i \rightarrow R$，即保证 Lossless-join
+	- 如果不存在，则添加 Schema $R_i:= \text{any candidate key of}\ R$
+- <3> 返回结果
 
 ### Fourth Normal Form
 
