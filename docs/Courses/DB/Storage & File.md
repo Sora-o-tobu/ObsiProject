@@ -200,12 +200,59 @@ $$
 
 B+ Tree Indices 是 Indexed-Sequential Files 的一个替代方案。
 
-- **Advantage**
-- **Disadvantage**
+对于 Indexed-Sequential Files，当文件大小增长，会产生很多 overflow blocks，使得性能下降；这也要求我们阶段性地对整个文件进行重排。
+
+与之相比，B+-Tree Index Files 的优点在于：
+
+- <1> 插入、删除等操作会自动重排
+- <2> 不需要重排整个 File
 
 !!! abstract "A simple review of B+ Tree of order M"
-	- 根节点要么是叶节点，要么有 2 到 M 个子节点
-	- 所有除了根节点的非叶节点都有 ⌈M2⌉ 到 M 个子节点
+	- 根节点要么是叶节点，要么有 2 到 $M$ 个子节点
+	- 所有除了根节点的非叶节点都有 $\lceil \frac{M}{2}\rceil$ 到 $M$ 个子节点
 	- 所有叶节点深度相同
 
+![[B+TreeEx1.png]]
+
+与我们数据结构中的 B+ Tree 略有不同的是，此处叶节点跟内节点一样，都只能有 $M-1$ 个 Key。这是因为我们需要最后一个指针位置指向下一个叶节点，
+
+!!! info "所有 Internal Nodes 都有 $\lceil \frac{M}{2}\rceil$ 到 $M$ 个指针；指针数量称为该节点的 Fanout"
+	叶节点的 Values 数量在 $\lceil \frac{M-1}{2}\rceil$ 到 $M-1$ 之间，这又与上面的表述有所不同，记得注意。
+
+对于一个 Order $n$，有 $K$ 个 Search Key 的 File，其 B+ Tree Indices 的高度**小于等于** $\lceil \log_{\lceil \frac{n}{2}\rceil} K\rceil$。
+
+通常，我们希望 B+ Tree 的一个 Node 的大小刚好是一个 Block，一个 Block 一般为 4KB。一种实践是设置 $n=100$，则一个 index entry 大小为 40B。
+
+!!! example "考虑 1 million Search Key，n = 100"
+	最多搜索 $\log_{50} (1,000,000)=4$ 个 Nodes。
+
+插入、删除的例子，请去 PPT 上看。
+
+提高空间利用率，B+ Tree File Organization：
+
+- 叶节点不再存放 pointer，而是直接存整个 record
+	- 这里其实相当于把叶子节点对应的 Block 直接看作 Data File，内节点和根节点仍然为 Index File
+- 调整节点“半满”的要求，例如要求每个 node 至少有 $\lfloor 2n / 3 \rfloor$ entries
+
 ### Hash Indices *
+
+- Static Hashing
+- Dynamic Hashing
+
+### LSM Tree
+
+Log-Structured Merge Tree 设计的初衷是优化**写入性能**，它将随机小写操作转化为顺序大块写入，从而提升磁盘吞吐。
+
+LSM Tree 的核心思想是不直接修改磁盘上的 Index File，而是先将写操作缓存在内存中，称为 Level 0。
+
+![[LSMTree1.png]]
+
+当 Level 0 的数据打到阈值时，则中序遍历 Level 0 树，将数据写入 Level 1 的新 Block 中。然后进行递归 Merge。
+
+- Benefits of LSM approach
+    - Inserts are done using only **sequential I/O** operations
+    - **Leaves are full**, avoiding space wastage
+    - Reduced number of I/O operations per record inserted as compared to normal B+-tree (up to some size)
+- Drawback of LSM approach
+    - Queries have to search multiple trees
+    - Entire content of each level copied multiple times

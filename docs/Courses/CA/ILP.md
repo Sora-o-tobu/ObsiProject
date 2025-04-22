@@ -154,3 +154,9 @@ loop:
 
 ### Advanced Branch Prediction
 
+1 bit 预测器
+
+2 bit 预测器
+
+Two Level 预测器
+

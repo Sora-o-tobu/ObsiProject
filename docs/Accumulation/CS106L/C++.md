@@ -1111,3 +1111,44 @@ int main() {
 
 同时，也不一定所有左值都可以出现在等号左边，例如对于 `const char name[] = "Sora";`，`name[0] = "Sana";` 是非法的。尽管 `name[0]` 是个左值，但它的 type 是 `const char`，这样的左值被称为 **non-modifiable lvalues**。
 
+**【Example】**
+
+```c++
+class A
+{
+public:
+  A(int i) : mi(i) {}
+  A(const A& rhs) : mi(rhs.mi)
+  {
+    cout << "A::A(&)" << endl;
+  }
+  A& operator=(const A&rhs)
+  {
+    mi = rhs.mi;
+    cout << "A::operator=()" << endl;
+    return *this;
+  }
+protected:
+  int mi;
+};
+
+class B : public A
+{
+	...
+}
+
+int main()
+{
+	B b(3, 4);
+
+	// 这里只是一个引用操作，并不是复制，所以不会触发 operator=
+	// 所以无输出
+	A& ra = b;
+
+	// operator= 运算符只有在对象已经存在时才会被调用
+	// 这里触发的是拷贝构造器
+	A a = b;
+}
+```
+
+最后只会输出 `A::A(&)`
