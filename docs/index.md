@@ -27,7 +27,7 @@ statistics: true
 	<img src="https://count.getloli.com/@nimisora" alt="nimisora"> 
 
 !!! warning ""
-	<figure><embed src="https://wakatime.com/share/@e51cbcc2-c243-4f7d-948c-dae75fd77ccf/076cd946-35dd-4217-baeb-d70b4819f7f9.svg"></embed></figure>
+	<figure><embed src="https://wakatime.com/share/@e51cbcc2-c243-4f7d-948c-dae75fd77ccf/3d0be124-c704-45e0-8657-8a01af93116e.svg"></embed></figure>
 
 <div class="card__box">
 	<div class="card__title">有兴趣但还没学的东西！</div>
