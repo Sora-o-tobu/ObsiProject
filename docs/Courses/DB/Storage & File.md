@@ -154,6 +154,12 @@ Index File 中索引记录如何组织，取决于索引的类型：
 - **<1> Ordered Indices:** Search Key 按照某种排序顺序排列
 - **<2> Hash Indices:** Seach Key 在哈希函数下均匀的分布
 
+??? abstract "总共可以按照四个角度来分类索引"
+	- 按「数据结构」分类：**B+tree索引、Hash索引、Full-text索引**。
+	- 按「物理存储」分类：**聚簇索引（主键索引）、二级索引（辅助索引）**。
+	- 按「字段特性」分类：**主键索引、唯一索引、普通索引、前缀索引**。
+	- 按「字段个数」分类：**单列索引、联合索引**。
+
 ### Ordered Indices
 
 在 Sequential Order File 中，与对应的数据文件本身排列顺序相同的的索引称为 **Primary Index**(also clustering index)。除了主索引外的索引都称为辅助索引 **Secondary Index**。
@@ -198,7 +204,12 @@ $$
 
 ### B+ Tree Indices
 
-B+ Tree Indices 是 Indexed-Sequential Files 的一个替代方案。
+B+ Tree Indices 是 Indexed-Sequential Files 的一个替代方案，也是数据库存储引擎采用最多的索引类型。
+
+!!! info "InnoDB 在 MySQL 5.5 之后成为默认的存储引擎"
+	- 如果有主键，则默认使用主键作为 Primary Index
+	- 如果没有主键，则选择第一个不包含 `NULL` 值的唯一列作为 Primary Index
+	- 上面两个都没有，则 InnoDB 自动创建一个隐式自增 id 列作为 Primary Index
 
 对于 Indexed-Sequential Files，当文件大小增长，会产生很多 overflow blocks，使得性能下降；这也要求我们阶段性地对整个文件进行重排。
 
@@ -232,7 +243,18 @@ B+ Tree Indices 是 Indexed-Sequential Files 的一个替代方案。
 
 - 叶节点不再存放 pointer，而是直接存整个 record
 	- 这里其实相当于把叶子节点对应的 Block 直接看作 Data File，内节点和根节点仍然为 Index File
+	- 对于 Secondary Index，叶节点可以改为存储 Primary Index 的值，这样按照辅助索引进行查询时，再根据查询到的主键值查询主键 B+ Tree，这个过程称为*回表*，也就是至少需要查询两个 B+ Tree 才能查到数据
 - 调整节点“半满”的要求，例如要求每个 node 至少有 $\lfloor 2n / 3 \rfloor$ entries
+
+??? question "[Why B+ Tree?](https://xiaolincoding.com/mysql/index/index_interview.html#%E4%B8%BA%E4%BB%80%E4%B9%88-mysql-innodb-%E9%80%89%E6%8B%A9-b-tree-%E4%BD%9C%E4%B8%BA%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)"
+	- **<1> B+ Tree vs B Tree**
+		- B+ Tree 只在叶子节点存储数据，而 B 树的非叶子节点也要存储数据，所以 B+ Tree 的单个节点的数据量更小，在相同的磁盘 I/O 次数下，就能查询更多的节点。
+		- 另外，B+ Tree 叶子节点采用的是双链表连接，适合 MySQL 中常见的基于范围的顺序查找，而 B 树无法做到这一点。
+	- **<2> B+ Tree vs 二叉树**
+		- 对于有 N 个叶子节点的 B+ Tree，其搜索复杂度为 $O(\log (d*N))$，其中 d 表示节点允许的最大子节点个数为 d 个。在实际的应用当中， d 值是大于 100 的，这样就保证了，即使数据达到千万级别时，B+Tree 的高度依然维持在 3~4 层左右，也就是说一次数据查询操作只需要做 3~4 次的磁盘 I/O 操作就能查询到目标数据。
+		- 而二叉树的每个父节点的儿子节点个数只能是 2 个，意味着其搜索复杂度为 $O(\log N)$，这已经比 B+Tree 高出不少，因此二叉树检索到目标数据所经历的磁盘 I/O 次数要更多。
+	- **<3> B+ Tree vs Hash**
+		- Hash 在做等值查询时搜索复杂度为 $O(1)$。但是 Hash 表不适合做范围查询，它更适合做等值的查询，这也是 B+Tree 索引要比 Hash 表索引有着更广泛的适用场景的原因。
 
 ### Hash Indices *
 
