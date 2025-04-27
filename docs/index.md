@@ -27,7 +27,7 @@ statistics: true
 	<img src="https://count.getloli.com/@nimisora" alt="nimisora"> 
 
 !!! warning ""
-	<a href="https://wakatime.com"><img src="https://wakatime.com/share/@e51cbcc2-c243-4f7d-948c-dae75fd77ccf/32f8836d-e9a1-4bba-bc3d-17c14f590d9c.png" /></a>
+	<a href="https://wakatime.com"><img src="https://wakatime.com/share/@e51cbcc2-c243-4f7d-948c-dae75fd77ccf/06755630-49b6-4ff3-85d4-d21f562e0650.png" /></a>
 
 
 <div class="card__box">

@@ -233,8 +233,6 @@ nav:
       - CPU、内存和端口: Courses/8086asm/CPU、内存和端口.md
       - 汇编语言源程序格式: Courses/8086asm/汇编语言源程序格式.md
     - 网络相关:
-      #- 数据通信与计算机网络 跨专业:
-      #  - Courses/数据通信与计算机网络/index.md
       - 无线网络应用 通识课:
         - Courses/无线网络应用/index.md
         - 当今网络: Courses/无线网络应用/当今网络.md
