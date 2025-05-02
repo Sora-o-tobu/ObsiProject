@@ -11,3 +11,4 @@
 ## Reference
 
 - [Min-Babel Library](https://ruoxining.github.io/notebook/docs/1-cs/database/)
+- [HobbitQia 的笔记本](https://note.hobbitqia.cc/DB/)

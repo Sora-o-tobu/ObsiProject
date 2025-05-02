@@ -30,7 +30,7 @@
 
 !!! info "Disk-arm-scheduling algorithms 其实就是电梯调度算法"
 
-**Block** 是磁盘和主存数据交互的最先单位，它是位于同一个 track 的连续扇区序列，大小通常为 512 Bytes - 16 KB。Block 小，则需要更多次 Transfers；Block 大，则取出一个小数据会浪费很多空间。
+**Block** 是磁盘和主存数据交互的最小单位，它是位于同一个 track 的连续扇区序列，大小通常为 512 Bytes - 16 KB。Block 小，则需要更多次 Transfers；Block 大，则取出一个小数据会浪费很多空间。
 
 ## Storage Access
 
@@ -165,6 +165,7 @@ Index File 中索引记录如何组织，取决于索引的类型：
 在 Sequential Order File 中，与对应的数据文件本身排列顺序相同的的索引称为 **Primary Index**(also clustering index)。除了主索引外的索引都称为辅助索引 **Secondary Index**。
 
 !!! warning "主索引的 Seach Key 通常但并非一定是 Primary Key"
+	非 Sequential File 没有 Primary Index，但是可以包含 Primary Key
 
 Ordered Indices 可以分为稠密索引和稀疏索引两类。
 
@@ -204,14 +205,16 @@ $$
 
 ### B+ Tree Indices
 
-B+ Tree Indices 是 Indexed-Sequential Files 的一个替代方案，也是数据库存储引擎采用最多的索引类型。
+B+ Tree Indices 是 Index-Sequential Files 的一个替代方案，也是数据库存储引擎采用最多的索引类型。
 
 !!! info "InnoDB 在 MySQL 5.5 之后成为默认的存储引擎"
 	- 如果有主键，则默认使用主键作为 Primary Index
 	- 如果没有主键，则选择第一个不包含 `NULL` 值的唯一列作为 Primary Index
 	- 上面两个都没有，则 InnoDB 自动创建一个隐式自增 id 列作为 Primary Index
 
-对于 Indexed-Sequential Files，当文件大小增长，会产生很多 overflow blocks，使得性能下降；这也要求我们阶段性地对整个文件进行重排。
+!!! abstract "*Index-Sequential Files*: Sequentially Ordered File with a Primary Index"
+
+对于 Index-Sequential Files，当文件大小增长，会产生很多 overflow blocks，使得性能下降；这也要求我们阶段性地对整个文件进行重排。
 
 与之相比，B+-Tree Index Files 的优点在于：
 
@@ -269,7 +272,7 @@ LSM Tree 的核心思想是不直接修改磁盘上的 Index File，而是先将
 
 ![[LSMTree1.png]]
 
-当 Level 0 的数据打到阈值时，则中序遍历 Level 0 树，将数据写入 Level 1 的新 Block 中。然后进行递归 Merge。
+当 Level 0 的数据达到阈值时，则中序遍历 Level 0 树，将数据写入 Level 1 的新 Block 中。然后进行递归 Merge。
 
 - Benefits of LSM approach
     - Inserts are done using only **sequential I/O** operations
