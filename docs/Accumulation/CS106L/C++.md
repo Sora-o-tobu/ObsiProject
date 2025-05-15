@@ -136,6 +136,31 @@ int main() {
 }
 ```
 
+!!! tip "`typename`"
+	关键字 `typename` 用于向编译器表明某个标识符是一个类型，而不是变量或其它实体，它主要应用在模板编程中。例如：
+	
+	```c++
+	template<class ForwardIt>
+	ForwardIt min_elem(ForwardIt first, ForwardIt last)
+	{
+	  return min_elem(first, last, std::less<typename  std::iterator_traits<ForwardIt>::value_type>());
+	}
+	
+	template<class ForwardIt, class Compare>
+	ForwardIt min_elem(ForwardIt first, ForwardIt last, Compare comp)
+	{
+	  if (first == last)
+	    return first;
+	
+	  ForwardIt smallest = first++;
+	  for (; first != last; ++first) {
+	    if (comp(*first, *smallest)) {
+	      smallest = first;
+	    }
+	  }
+	  return smallest;
+	}
+	```
 
 ## Structs
 

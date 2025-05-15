@@ -104,8 +104,7 @@ $\sigma_{A\le V} (r)$, $\sigma_{A\ge V}(r)$ 等比较 Selection，可以采用�
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Conjunction & Disjunction</font>
 
-!!! info "Conjunction"
-	$$\sigma_{\theta _1\land \theta_2 \land...\land \theta_n}(r)$$
+!!! info "Conjunction：$\sigma_{\theta _1\land \theta_2 \land...\land \theta_n}(r)$"
 
 !!! quote ""
 	<font style="font-weight: 1000;font-size: 24px">【Algorithm 8】 Conjunction & One Index</font>
@@ -125,8 +124,7 @@ $\sigma_{A\le V} (r)$, $\sigma_{A\ge V}(r)$ 等比较 Selection，可以采用�
 	- 要求 Index 中存放了指向对应 Records 的指针
 
 
-!!! info "Disjunction"
-	$$\sigma_{\theta _1\lor \theta_2 \lor...\lor \theta_n}(r)$$
+!!! info "Disjunction：$\sigma_{\theta _1\lor \theta_2 \lor...\lor \theta_n}(r)$"
 
 !!! quote ""
 	<font style="font-weight: 1000;font-size: 24px">【Algorithm 11】 Disjunction & Union</font>
@@ -249,7 +247,7 @@ $$
 !!! warning "根据以上步骤，可知每个 Partition $s_i$ 的大小都要小于 $M$，对于 $r_i$ 则无这个要求"
 	Partition 的个数 $n$ 通常设置为 $n=\lceil \frac{b_s}{M}\rceil* f$，$f$ 称为修正因子(Fudge Factor)，一般为 $1.2$
 	
-	如果内存放不下 $s_i$，则可以对超大分区再做多次哈希分区，知道每个子分区足够小，这种做法称为 Recursive Partition。（不做要求）
+	如果内存放不下 $s_i$，则可以对超大分区再做多次哈希分区，直到每个子分区足够小，这种做法称为 Recursive Partition。（不做要求）
 
 ![[HashJoinCost.png]]
 
@@ -347,11 +345,11 @@ Optimizer 做什么？
 !!! quote ""
 	<font style="font-weight: 1000;font-size: 24px">【Rule 11】 Selection Distributes Set Operation</font>
 	
-	- <a> $\sigma_\theta (E_1 \cup E_2) = \sigma_\theta (E_1) \cup \sigma_\theta (E_2)$
-	- <b> $\sigma_\theta (E_1 \cap E_2) = \sigma_\theta (E_1) \cap \sigma_\theta (E_2)$
-	- <c> $\sigma_\theta (E_1 - E_2) =\sigma_\theta (E_1)-\sigma _\theta (E_2)$
-	- <d> $\sigma_\theta (E_1 \cap E_2) = \sigma_\theta (E_1) \cap E_2$
-	- <e> $\sigma_\theta (E_1 - E_2) =\sigma_\theta (E_1)- E_2$
+	- <1> $\sigma_\theta (E_1 \cup E_2) = \sigma_\theta (E_1) \cup \sigma_\theta (E_2)$
+	- <2> $\sigma_\theta (E_1 \cap E_2) = \sigma_\theta (E_1) \cap \sigma_\theta (E_2)$
+	- <3> $\sigma_\theta (E_1 - E_2) =\sigma_\theta (E_1)-\sigma _\theta (E_2)$
+	- <4> $\sigma_\theta (E_1 \cap E_2) = \sigma_\theta (E_1) \cap E_2$
+	- <5> $\sigma_\theta (E_1 - E_2) =\sigma_\theta (E_1)- E_2$
 
 ### Statistics for Cost Estimation
 
@@ -396,5 +394,3 @@ Optimizer 做什么？
 	- size of $r\cap s$ = min (size of r + size of s)
 	- size of $r-s$ = size of r
 	- 上述三个都是按照上限估计
-
-
