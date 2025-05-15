@@ -228,6 +228,8 @@ nav:
       - Relational Database Design: Courses/DB/Relational Database Design.md
       - Storage & File: Courses/DB/Storage & File.md
       - Query Processing: Courses/DB/Query Processing.md
+      - Transaction & Concurrency: Courses/DB/Transaction & Concurrency.md
+      - Recovery: Courses/DB/Recovery.md
     - 8086 汇编语言: 
       - Courses/8086asm/index.md
       - 指令速查: Courses/8086asm/指令速查.md

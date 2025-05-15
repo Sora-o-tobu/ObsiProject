@@ -98,3 +98,76 @@ COMMIT;
 
 ### Recoverability
 
+Recoverability 用于评价一个调度对于并行事务失败的可恢复性。一个 **Recoverable Schedule** 要求：
+
+对于一个要读取数据项 $A$ 的事务 $T_j$，如果 $A$ 在读取之前被事务 $T_i$ 修改过，则事务 $T_i$ 的 `COMMIT` 操作要早于 $T_j$ 的 `COMMIT` 操作。
+
+如下是一个简单的 **NOT Recoverable** 的例子，如果事务 $T_8$ Abort 了的话，那么 `WRITE(A)` 的操作也被回滚，则已经提交了的事务 $T_9$ 的 `READ(A)` 读取到的值是错误的，数据库完整性受损：
+
+![[RecoverableScheduleEx1.png]]
+
+那么如果一个事务 Abort 了的话，其它相应的事务也要一起终止，这被称为 **Cascading Rollback**：
+
+![[RecoverableScheduleEx2.png]]
+
+!!! note "Cascading Rollbacks 可能导致巨大的开销，这也是我们不期望的"
+
+如果一个 Schedule 中，对于任意一组对同一个数据项先写后读的事务 $T_i, T_j$，如果 $T_i$ 的 `COMMIT` 操作在 $T_j$ 的读操作之前，即 $T_j$ 不需要跟着 $T_i$ 一起 `ROLLBACK`，则称该调度为 **Cascadeless Schedules**。
+
+## Lock-Based Protocols
+
+**Serializable Schedule** 是并行控制的基础，DBMS 使用 Locks 为事务动态生成可串行化的调度，这些锁在并发访问下保护数据对象：
+
+- **Shared Lock（S）:** 只允许该对象被其它事务读取。
+	- 如果一个事务持有 Shared Lock，另一个事务仍然可以获取相同的 Shared Lock
+- **Exclusive Lock（X）:** 排它锁只允许一个事务修改对象，并且会阻止其它事务获取这个对象上的任何锁
+
+那么一般来说，如果我们需要写一个数据，则申请一个 X 锁；如果只需要读一个数据，则申请一个 S 锁。如果申请被拒绝了，则我们需要一直等待到该对象先前的锁被释放，自己成功获得该锁时才能继续执行。
+
+!!! note "DeadLock"
+	**Deadlock（死锁）** 为当一组事务互相等待对方持有的资源（锁）释放，从而都无法继续执行的状态。
+	
+	死锁是并发控制中无法完全避免的现象，只能通过预防、避免、检测与恢复等手段来管理。
+
+Two-Phase Locking 属于 **Pessimistic** 并发控制协议，并且该协议不需要提前知道事务将执行的所有查询操作。
+
+- **Phase 1 - Growing:** 在 Growing 阶段，每个事务都从 DBMS 的 Lock Manager 请求它需要的锁，Lock Manager 授权/拒绝这些请求
+	- 允许将 S 锁升级为 X 锁
+- **Phase 2- Shrinking:** 事务在释放它们的第一个 Lock 时进入 Shrinking 阶段，在此阶段只允许事务释放 Lock，并且不能获取新的锁
+	- 允许将 X 锁降级为 S 锁
+
+该控制协议能够确保得到一个 **Conflict Serializable Schedule**，我们可以根据两个阶段的分界线 Lock Point 的时间顺序来得到可串行化的执行顺序。
+
+!!! warning
+	- Two-Phase Locking 不保证没有死锁的发生
+	- Two-Phase Locking 不保证没有 Cascading Rollback 的发生，但是可以通过加强版协议 Strict Two-Phase Locking 来解决
+		- 即一个事务的排他锁只有 `COMMIT` 或 `ABORT` 时才能释放
+	- Two-Phase Locking 是得到 Conflict Serializable Schedule 的充分条件，而不是必要条件，这也说明存在不能由该协议得到的 Conflict Serializable Schedule
+
+=== "`READ(D)`"
+	```python
+	if T_i has a lock on D:
+		read(D)
+	else:
+		if wait until no other txn has a lock-X on D:
+			lock-S(D)
+			read(D)
+	```
+=== "`WRITE(D)`"
+	```python
+	if T_i has a lock-X on D:
+		write(D)
+	else:
+		if wait until no other txt has any lock on D:
+			if T_i has lock-S on D:
+				upgrade lock-S to lock-X
+			else:
+				lock-X(D)
+			write(D)
+	```
+
+DBMS 中，通过一个单独的线程 Lock Manager 来处理事务的锁请求。在管理器内部维护了一个 Lock-Table 表，里面存储了哪些事务持有锁以及哪些食物正在等待锁的信息。
+
+!!! info "通常，Lock-Table 被实现为内存中根据数据项的名称来哈希的哈希表"
+
+!!! danger "TBD: Graph-Based Protocols"
