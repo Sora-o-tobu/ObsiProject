@@ -170,4 +170,75 @@ DBMS 中，通过一个单独的线程 Lock Manager 来处理事务的锁请求�
 
 !!! info "通常，Lock-Table 被实现为内存中根据数据项的名称来哈希的哈希表"
 
-!!! danger "TBD: Graph-Based Protocols"
+### Graph-Based Protocols
+
+Graph-Based Protocols 是 2PL 的一个替代，它用 $d_i\rightarrow d_j$ 表示数据项之间的先后关系，且任意同时访问了 $d_i, d_j$ 的事务都必须满足访问 $d_i$ 早于 $d_j$。
+
+通过这种方式绘制的 Directed Acyclic Graph 称为 **Database Graph**。我们以一种简单的 Graph-Based 协议 **Tree Protocol** 来简单讲解其基本逻辑。
+
+![[TreeProtocolEx1.png]]
+
+- <1> 只允许使用排他锁 Exclusive Lock
+- <2> 对于任意事务 $T_i$，其加锁的第一个事务可以是 Tree 中任意一个节点，但是后来加锁的数据项必须是*当前*已拥有锁的节点的子节点
+- <3> 数据项可以随时解锁，但是已经解锁的数据项后面不能再次上锁
+
+![[TreeProtocolEx2.png]]
+
+!!! quote ""
+	=== "Advantage"
+		- Tree Protocol 保证 **Conflict Serialzability** 和 **Freedom From Deadlock**
+			- Deadlock Free 也意味着不需要 Rollback
+		- 相比于 2PL，可以更早对数据项解锁
+			- 意味着更短的等待时间，以及并行性的增加
+	=== "Disadvantage"
+		- 不保证 **Recoverability** 和 **Freedom of Cascade**
+		- 事务可能需要对一些它们不访问的数据项上锁，才能上锁下层的子节点
+			- 增加了锁开销和等待时间，可能会降低并发度
+
+## Multiple Granularity
+
+为了更好的便利性，我们允许根据需要以不同大小来上锁数据项，即 **Multiple Granularity**。我们根据 Data Granularities 划分出层次，将其表示为 Tree 的形式：
+
+![[HierarchyOfDataGranEx1.png]]
+
+当一个事务显式地对一个节点上锁时，它还会隐式地对其所有后代都加上同样的锁。
+
+!!! info "Granularity of Locking"
+	- **Fine Granularity(细粒度，lower in the tree)**: high concurrency, high locking overhead
+		- 为什么细粒度带来更高锁开销？系统中存在大量锁对象，也需要更频繁的加锁/解锁操作，因此需要更多的锁管理、调度等资源
+	- **Coarse Granularity(粗粒度，higher in the tree):** low locking overhead, low concurrency
+
+如果事务 $T_1$ 对 $r_{a1}$ 施加排他锁后，事务 $T_2$ 想要对整个 DB 施加共享锁，那么它就需要扫描整棵树来确定节点 'DB' 的后代是否存在排他锁，这自然是我们不能接受的开销。因此我们提出意向锁 **Intention Lock** 作为一个状态。
+
+!!! note "在节点被显式上锁前，先对该节点的所有祖先都施加 Intention Locks"
+
+- **Intention-Shared(IS):** 表明其后代中存在 S 锁
+- **Intention-Exclusive(IX):** 表明其后代中存在 X 锁
+- **Shared and Intention-Exclusive(SIX):** 当前节点正处于共享锁状态，不过事务正在对其后代某个节点施加排他锁
+	- `S + IX` 相当于告诉其它事务，我的确在这个节点只读，但我马上会去下层做排他操作，请别与我冲突
+	- 一个事务想要读取整张表的一部分内容，同时它还打算对这张表中的某些行做更新（因此要对那些行获取 X 锁），这个时候就需要在“表级别”拿一个 SIX 锁
+
+|已有锁 \ 申请锁|IS|IX|S|SIX|X|
+|---|---|---|---|---|---|
+|**IS**|✅|✅|✅|✅|❌|
+|**IX**|✅|✅|❌|❌|❌|
+|**S**|✅|❌|✅|❌|❌|
+|**SIX**|✅|❌|❌|❌|❌|
+|**X**|❌|❌|❌|❌|❌|
+
+!!! warning
+	两个事务之间的 SIX 锁是不兼容的，从而保证事务可以安全读取并写入，其它事务要么在更低层级申请共享锁，要么等待前一个事务完成操作再加锁。
+
+在这种多粒度的层次下，Locking Scheme 可以概括如下：
+
+- <1> 必须满足锁兼容性表
+- <2> 必须先对一棵树的根节点添加锁，可以用任意锁模式(S,X,IS,IX,SIX)先行锁定
+	- 可以确保事务先占领整个锁层次结构的入口，然后逐层向下拓展锁
+- <3> 如果想对某个节点 $Q$ 施加 *S* 或 *IS* 锁，则该节点的父节点必须处于 *IS* 或 *IX* 状态
+- <4> 如果想对某个节点 $Q$ 施加 *X* 或 *IX* 或 *SIX* 锁，则该节点的父节点必须处于 *IX* 或 *SIX* 状态
+- <5> 满足 2PL 协议，如果事务先前对某个节点解锁，则该事务后续不能够再施加锁
+- <6> 只有当节点 $Q$ 的所有子节点都没有被 $T_i$ 持有锁时，事务 $T_i$ 才能解锁 $Q$
+	- 即加锁自顶向下，解锁自下而上
+
+!!! danger "TBD: Deadlock Handling & Insert, Delete Operations"
+
