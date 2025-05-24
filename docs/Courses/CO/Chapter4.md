@@ -409,6 +409,8 @@ CPU 遇到异常时，需要进行异常处理，机器模式下的一般步骤�
 
 ## Instruction-Level Parallelism
 
+> 详情请去看[计算机体系结构相关部分](../CA/ILP)
+
 ### Static Multiple Issue
 
 静态多发射，由编译器完成发射相关判断。编译器会将同时执行不会冲突的指令分成不同 **issue packets**，一起发射，从而增加流水线的效率。
