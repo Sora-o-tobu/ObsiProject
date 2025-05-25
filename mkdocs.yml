@@ -192,6 +192,9 @@ nav:
       - Courses/CA/index.md
       - Fundamentals of Computer Design: Courses/CA/Fundamentals of Computer Design.md
       - Memory Hierarchy Design: Courses/CA/Memory Hierarchy Design.md
+      - Instruction-Level Parallelism: Courses/CA/ILP.md
+      - Data-Level Parallelism: Courses/CA/DLP.md
+      - Thread-Level Parallelism: Courses/CA/TLP.md
     - 数据结构:
       - 数据结构基础:
         - Courses/DS/FDS/index.md 

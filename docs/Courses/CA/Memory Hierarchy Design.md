@@ -1,10 +1,10 @@
 
 # Memory Hierarchy Design Basics
 
+!!! quote "第二章的重点是 Cache，并且在考试中基本以选择题形式出现"
+
 !!! quote ""
 	![[MemoryHierarchyQuote.png]]
-
-!!! quote "第二章的重点是 Cache，并且在考试中基本以选择题形式出现"
 
 
 ## Memory Technology & Optimization
