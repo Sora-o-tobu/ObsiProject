@@ -56,6 +56,8 @@ Immediate Modification 允许事务在未提交之前就将更新写入 Buffer �
 
 ![[ImmeModiEx2.png]]
 
+!!! tip "先 REDO 再 UNDO"
+
 在数据库运行过程中，我们会设置 **CheckPoints**，以防止数据库恢复需要读取的 Log 太多。
 
 在执行 Checkpointing 时：
@@ -118,6 +120,7 @@ Database Buffer 可以在 Real Main Memory 或者 Virtual Memory 中执行，它
 	- 内存的划分不可改变，因此当 DB 的需求改变时难以更改 Buffer 大小
 === "Drawbacks of Virtual Memory"
 	- Page 的写回可能需要从磁盘的 Swap Space 中取出对应块，再写回，即造成额外 IO，这被称为 Dual Paging Problem
+		- Swap Space 是磁盘暂存“溢出”的内存的区域
 	- 理想情况下，当 OS 打算回收某个 Page 时，它应该先通知 DBMS，如果这个 Page 不是 Dirty 的，那么可以直接释放；如果是 Dirty 的，那么先写入相关日志，再把该数据页写入数据库文件，之后也可以直接释放，不需要放入临时的 Swap Space，从而避开 Dual Paging Problem
 		- 可惜一般 OS 不支持这个功能
 

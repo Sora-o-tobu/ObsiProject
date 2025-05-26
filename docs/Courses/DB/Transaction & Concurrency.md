@@ -33,8 +33,7 @@ COMMIT;
 !!! quote ""
 	<font style="font-weight: 1000;font-size: 24px">Consistency</font>
 	
-	- **Concept：** 数据库初始是一致的，且每个事务都是一致的，则要保证结束时数据库也是一致的。
-	- **Concept：** 一致性有两个概念
+	- **Concept：** 数据库初始是一致的，且每个事务都是一致的，则要保证结束时数据库也是一致的。一致性有两个概念：
 		- **Database Consistency:** 数据库准确表示它建模的真实世界实体，并遵循 Integrity 约束（如，一个人的年龄不会是负数）
 		- **Transaction Consistency:** 数据库在事务前是一致的，则事务后也是一致的。确保事务一致性是应用程序的责任。
 
@@ -89,9 +88,11 @@ COMMIT;
 
 对于两个事务 $T_i, T_j$ 中的两条对同一个数据项操作的指令 $I_i, I_j$，当且仅当它们均为读操作，即 `READ(Q)` 时，认为它们之间不会发生 Conflict。
 
+!!! info "对不同数据项操作的指令都不会有冲突"
+
 如果两个操作是有冲突的，则二者执行次序不能交换；若无冲突，则可以交换。那么如果一个 Schedule $S$ 可以通过交换一系列无冲突指令变为 $S'$，则称 $S$ 和 $S'$ 为 **Conflict Equivalent** 的。
 
-根据以上定义，我们可以声明如果一个并行调度 $S$ 与串行调度 **Conflict Equivalent**，则该调度是 **Conflict Serializable** 的。
+根据以上定义，我们如果可以声明一个并行调度 $S$ 与串行调度 **Conflict Equivalent**，则该调度是 **Conflict Serializable** 的。
 
 ![[ConflictSerialEx1.png]]
 
@@ -138,6 +139,8 @@ Two-Phase Locking 属于 **Pessimistic** 并发控制协议，并且该协议�
 
 该控制协议能够确保得到一个 **Conflict Serializable Schedule**，我们可以根据两个阶段的分界线 Lock Point 的时间顺序来得到可串行化的执行顺序。
 
+!!! info "如果 Precedence Graph 中存在边 $T_i \rightarrow T_j$，则这两个事务的 lock point 一定满足 $\alpha_i < \alpha_j$"
+
 !!! warning
 	- Two-Phase Locking 不保证没有死锁的发生
 	- Two-Phase Locking 不保证没有 Cascading Rollback 的发生，但是可以通过加强版协议 Strict Two-Phase Locking 来解决
@@ -166,7 +169,7 @@ Two-Phase Locking 属于 **Pessimistic** 并发控制协议，并且该协议�
 			write(D)
 	```
 
-DBMS 中，通过一个单独的线程 Lock Manager 来处理事务的锁请求。在管理器内部维护了一个 Lock-Table 表，里面存储了哪些事务持有锁以及哪些食物正在等待锁的信息。
+DBMS 中，通过一个单独的线程 Lock Manager 来处理事务的锁请求。在管理器内部维护了一个 Lock-Table 表，里面存储了哪些事务持有锁以及哪些事务正在等待锁的信息。
 
 !!! info "通常，Lock-Table 被实现为内存中根据数据项的名称来哈希的哈希表"
 
