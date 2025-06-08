@@ -51,6 +51,12 @@ COMMIT;
 	- **Concept：** 如果事务结果是 `COMMIT`，它对数据库的影响需要持续存在。
 	- **Approach：** DBMS 可以使用 *Logging* 或者 *Shadow Paging* 来确保更改是 Durable 的。
 
+!!! note "引擎通过什么技术保证事务的四个特性呢？"
+	- 持久性通过 redo log 保证
+	- 原子性通过 undo log 保证
+	- 隔离性通过 MVCC(多版本并发控制) 或者锁来保证
+	- 一致性通过持久性+原子性+隔离性保证
+
 一个事务共有五个状态：
 
 - **Active:** 初始状态，事务执行中一直处于 Active
@@ -65,6 +71,11 @@ COMMIT;
 ![[TransactionState.png]]
 
 ## Concurrent Executions & Schedules
+
+!!! info "并行事务可能引发的问题"
+	- **脏读 dirty read** 一个事务读取到了另一个尚未提交的事务修改过后的数据
+	- **不可重复读 non-repeatable read** 一个事务多次读取同一数据，但是前后两次读到的数据不一样
+	- **幻读 phantom read** 一个事务多次查询某个符合查询条件的「记录数量」，但是前后两次查询到的数量不一样
 
 !!! quote "并发执行的优点"
 	- 增加处理器和磁盘的利用率

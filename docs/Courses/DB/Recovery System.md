@@ -21,6 +21,8 @@
 	- 其中 `V_1`, `V_2` 分别是数据项 `X` 写入前后的值
 - 当事务 $T_i$ 结束时，写入记录 `<T_i, commit>`
 
+!!! info "这种记录前后值的方式称为物理日志，逻辑日志则记录值的变化，如 `+100`，其颗粒度更小"
+
 ### Deffered Database Modification
 
 Deffered Database Modification 将所有写操作都推迟到 **Partial Commit** 阶段，即事务执行过程中只记录 Log；事务 Commit 后再读 Log 并将需要写入的内容执行。

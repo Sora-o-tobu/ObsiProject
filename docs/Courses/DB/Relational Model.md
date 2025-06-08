@@ -3,13 +3,13 @@
 
 ## Structure of Relational Databases
 
-一个 Relational Databases 是基于 Relational Model 的，一个或多个 Relation 的集合。Relation 表示为拥有 Row 和 Column 的二维表。
+一个 Relational Database 是基于 Relational Model 的，一个或多个 Relation 的集合。Relation 表示为拥有 Row 和 Column 的二维表。
 
-在更正式的定义下，Relation 表示为一组 Domain 的笛卡尔积的子集 $r\subseteq D_1 \times D_2 \times ...\times D_n$：
+在更正式的定义下，Relation 表示为一组 Domain 的笛卡尔积的**子集**，即 $r\subseteq D_1 \times D_2 \times ...\times D_n$：
 
 ![[dikaerjiex.png]]
 
-二维表的 Column 被称为 **attribute**，每个 attribute 允许取值范围即为该 attribute 的 domain。
+二维表的 Column 被称为 **attribute**，每个 attribute 允许取值范围即为该 attribute 的 **domain**。
 
 !!! info "特殊值 `null` 是每个 domain 的元素"
 

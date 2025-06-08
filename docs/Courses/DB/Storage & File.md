@@ -167,6 +167,12 @@ Index File 中索引记录如何组织，取决于索引的类型：
 !!! warning "主索引的 Seach Key 通常但并非一定是 Primary Key"
 	非 Sequential File 没有 Primary Index，但是可以包含 Primary Key
 
+??? tip "物理存储角度来看主键索引和辅助索引"
+	- 主键索引的 B+ Tree 的叶子节点存放整个 Record 数据
+	- 辅助索引的 B+ Tree 的叶子节点存放主键值，而不是实际数据
+	
+	所以查询使用辅助索引时，如果查询的数据能在叶子节点中得到，就不需要回表，称为**覆盖索引**；如果查询的数据不在辅助索引中，则要根据查询得到的主键值再去检索主键索引，这个访问两次索引的步骤称为**回表**。
+
 Ordered Indices 可以分为稠密索引和稀疏索引两类。
 
 **Dense Index** 要求 File 中所有 Search Key 都在 Index Entry 中出现过。
@@ -251,8 +257,9 @@ B+ Tree Indices 是 Index-Sequential Files 的一个替代方案，也是数据�
 
 ??? question "[Why B+ Tree?](https://xiaolincoding.com/mysql/index/index_interview.html#%E4%B8%BA%E4%BB%80%E4%B9%88-mysql-innodb-%E9%80%89%E6%8B%A9-b-tree-%E4%BD%9C%E4%B8%BA%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)"
 	- **<1> B+ Tree vs B Tree**
-		- B+ Tree 只在叶子节点存储数据，而 B 树的非叶子节点也要存储数据，所以 B+ Tree 的单个节点的数据量更小，在相同的磁盘 I/O 次数下，就能查询更多的节点。
-		- 另外，B+ Tree 叶子节点采用的是双链表连接，适合 MySQL 中常见的基于范围的顺序查找，而 B 树无法做到这一点。
+		- B+ Tree 只在叶子节点存储数据，而 B 树的非叶子节点也要存储数据，所以在存储量相同的情况下，B+ Tree 的非叶子节点可以存放更多的索引，查询*底层*节点的磁盘I/O次数更少
+		- 另外，B+ Tree 叶子节点采用的是双链表连接，适合 SQL 中常见的基于范围的顺序查找，而 B 树范围查询只能遍历树
+		- B+ Tree 插入和删除操作效率更高
 	- **<2> B+ Tree vs 二叉树**
 		- 对于有 N 个叶子节点的 B+ Tree，其搜索复杂度为 $O(\log (d*N))$，其中 d 表示节点允许的最大子节点个数为 d 个。在实际的应用当中， d 值是大于 100 的，这样就保证了，即使数据达到千万级别时，B+Tree 的高度依然维持在 3~4 层左右，也就是说一次数据查询操作只需要做 3~4 次的磁盘 I/O 操作就能查询到目标数据。
 		- 而二叉树的每个父节点的儿子节点个数只能是 2 个，意味着其搜索复杂度为 $O(\log N)$，这已经比 B+Tree 高出不少，因此二叉树检索到目标数据所经历的磁盘 I/O 次数要更多。

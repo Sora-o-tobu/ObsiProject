@@ -164,7 +164,7 @@ $$
 
 ```sql
 SELECT customer_name, borrower.loan_number as loan_id
-FROM borrowerm, loan
+FROM borrower, loan
 WHERE borrower.loan_number = loan.loan_number;
 ```
 
@@ -197,7 +197,7 @@ EXCEPT
 
 ## Aggregate Functions
 
-带聚合函数的 `SELECT` 之后只能跟着 `GROUP BY` 子句中的属性或者聚合函数。
+!!! quote "带聚合函数的 `SELECT` 之后只能跟着 `GROUP BY` 子句中的属性或者聚合函数"
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Example. Find the average account balance for each branch</font>
 

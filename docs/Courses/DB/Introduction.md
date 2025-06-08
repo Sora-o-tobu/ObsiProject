@@ -74,7 +74,7 @@ Independence 指的是修改某一层的 Schema 定义，而不影响高层的 S
 
 因此，对于 Ralational Model 设计的三个重要概念在于：
 
-- <1> **Structure:** The defination of the dababase's relations and their contents
+- <1> **Structure:** The defination of the database's relations and their contents
 - <2> **Intergrity:** Ensure the database's contents satisfy constraints
 - <3> **Manipulation:** Programming interface for accessing and modifying a database's contents
 
@@ -114,4 +114,7 @@ Query Processor 包括 DDL interpreter，DML compiler 以及 query processing。
 
 Storage Manager 包括 Transaction Manager、Authorization and Integrity Manager、File Manager 以及 Buffer Manager，它是内存和磁盘之间的接口。
 
-具体实现以后应该会讲。
+具体实现以后应该会讲（或者你做了 `minisql` 应该知道）。
+
+!!! quote "[执行一条 SQL 语句的流程](https://xiaolincoding.com/)"
+	![[sqloverview.png]]

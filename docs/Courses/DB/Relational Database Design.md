@@ -189,7 +189,7 @@ $R=(J,K,L)$，$J$ 是学生，$K$ 是课程，$L$ 是老师；其函数依赖为
 - <2> $\alpha$ 是 $R$ 的 superkey
 	- 即 $R\subseteq \alpha^+$ or $\alpha \rightarrow R$
 - <3> 对于每个 Attribute $A\in \beta -\alpha$，$A$ 都被 $R$ 某个 Candidate Key 包含
-	- 当 $\beta$ 不属于所有 Candidate Key 时，$\alpha$ 必须是 superkey
+	- 当 $\beta$ 不属于所有 Candidate Key 时，$\alpha$ 必须是 superkey，即满足条件<2>
 	- 当 $\beta$ 属于任意 Candidate Key 时，$\alpha$ 无限制
 
 根据定义看出，BCNF 包含在 3NF 内，也可以说 3NF 是 Minimum relaxation of BCNF to ensure dependency preservation。
@@ -217,8 +217,35 @@ $R=(J,K,L)$，$J$ 是学生，$K$ 是课程，$L$ 是老师；其函数依赖为
 
 - <1> 计算 $F_c$，将 $F_c$ 中每一个 $\alpha \rightarrow \beta$ 都分解为 Schema $R_i:= (\alpha, \beta)$
 - <2> 检查是否存在 $R_i \rightarrow R$，即保证 Lossless-join
-	- 如果不存在，则添加 Schema $R_i:= \text{any candidate key of}\ R$
+	- 如果不存在，则添加新 Schema $R_i:= \text{any candidate key of}\ R$
 - <3> 返回结果
+
+**【Example】** 假设我们有关系 $R(A,B,C,D)$ 和其依赖集 $F= \{A \rightarrow B,\ B \rightarrow C,\ C \rightarrow D\}$。
+
+- **Step 1:** $F_c = F$，将每条依赖构造成对应 Schema：
+
+| 函数依赖         | 构造的模式 $R_i$     |
+|------------------|----------------------|
+| $A \to B$        | $R_1 = (A, B)$       |
+| $B \to C$        | $R_2 = (B, C)$       |
+| $C \to D$        | $R_3 = (C, D)$       |
+
+- **Step 2:** 先找出关系 $R$ 的 Candidate Key，本例中为 $A$；然后检查是否存在某个 $R_i$ 包含 $A$
+
+| 模式 $R_i$     | 包含候选键 $A$ 吗？ |
+|----------------|----------------------|
+| $R_1(A, B)$     | ✅ 是                |
+| $R_2(B, C)$     | ❌ 否                |
+| $R_3(C, D)$     | ❌ 否                |
+
+因为有 $R_1$ 包含，所以无需添加额外 Schema，最终结果为：
+
+```text
+R1(A, B)  
+R2(B, C)  
+R3(C, D)
+```
+
 
 ### Fourth Normal Form
 

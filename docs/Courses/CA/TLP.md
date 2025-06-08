@@ -3,13 +3,19 @@
 
 ## Multi-Processor
 
-单处理器性能优先，现代U基本都为多处理器，它属于 **MIMD** 架构。
+单处理器性能优先，现代U基本都为多处理器，它属于 **MIMD** 架构，每个处理器 Fetch 自己的指令，对自己的数据流进行操作。
 
 多处理器根据 Memory Model 的不同可分为 **UMA** 和 **NUMA** 两种：
 
 ![[MultiProcessorMemoryModel.png]]
 
-其最主要的区别在于 Processor 和 Memory 之间的位置关系。对于 UMA，一个处理器访问任何 Memory 都是等延迟的，但是随着系统的增大，其延迟显著增大；对于 NUMA，一个处理器访问离它最近的 Memory 最快，访问别的 Memory 需要经过 Interconnect 中转，这一架构更适用于 *Large Multiprocessor Systems*。
+其最主要的区别在于 Processor 和 Memory 之间的位置关系。对于 UMA，一个处理器访问任何 Memory 都是等延迟的，但是随着系统的增大，其延迟显著增大；对于 NUMA，一个处理器访问离它最近的 Memory 最快，访问别的 Memory 需要经过 Interconnect 中转，这一架构更适用于 *Large Multiprocessor Systems*，支持更多的 Cores。
+
+!!! danger "注意是到 Memory 的 Latency，不是到 Cache。因此上述两种模型对应下面两种多核架构"
+	=== "Symmetric Shared-Memory Multiprocessor, **SMP**"
+		![[SMPCA.png]]
+	=== "Distributed Shared-Memory Multiprocessor, **DMP**"
+		![[DMPCA.png]]
 
 多处理器核与核之间的编程模型可以分为四种：
 
@@ -20,14 +26,25 @@
 
 处理器之间的通信存在一定延迟，在硬件上，可以通过使用**缓存**共享数据，这需要解决缓存一致性的问题。而在软件上，则使用**同步 Synchronization**。
 
-!!! warning "缓存一致性是第五章最重要的内容"
+!!! example "High Communication Cost"
+	=== "题面"
+		How much faster if no communication vs if 0.2\% remote ref?
+		
+		- App running on a 32-processor MP;
+		- 100 ns for reference to a remote mem;
+		- clock rate 4.0 GHz;
+		- base CPI 0.5;
+	=== "解答"
+		$$\begin{array}l CPI &  = Base\ CPI + Remote\ Rate \times Remote\ Cost \\ & =  0.5 + 0.2\% \times \frac{100ns}{0.25ns} = 1.3 \\ Speedup & = \frac{1.3}{0.5} = 2.6 \end{array}$$
 
 ### Cache Coherence
 
+!!! warning "缓存一致性是第五章最重要的内容"
+
 在 Shared Memory 的情况下，对于同一块内存，可能有不同的处理器在进行读写操作。如果每个处理器都有自己的缓存，当一个处理器修改了内存中的数据，其它处理器的缓存中可能仍然保持着旧数据。我们需要一种方法能够“通知”其它处理器这一修改，主要有以下两种策略：
 
-- 监听策略 snooping
-- 目录策略 directory-based
+- 监听策略 snooping，**适用于 SMP**
+- 目录策略 directory-based，**适用于 DMP，但也可以用在组织成 Bank 的 SMP 中**
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Snooping 协议</font>
 
@@ -40,13 +57,13 @@ Snooping 协议允许处理器之间进行通信。当 P1 写入 X，需要通�
 !!! info "通过 BUS 实现"
 	即每块缓存都能接收来自自己的 Processor 的信号以及来自 BUS 的信号。
 
-在 **Simple Write-Invalidate Protocol** 中，每个缓存块设置了三种状态：
+在 **Simple Write-Invalidate Protocol(MSI Protocol)** 中，每个缓存块设置了三种状态：
 
 - **Invalid:** 无效状态
 	- 即 Valid 位为 0
 - **Shared:** 共享状态
 	- Valid = 1, Dirty = 0
-- **Exlusive:** 独占状态
+- **Modified(Exlusive):** 独占状态
 	- Valid = 1, Dirty = 1
 
 === "From CPU"
@@ -60,7 +77,7 @@ Snooping 协议允许处理器之间进行通信。当 P1 写入 X，需要通�
 
 ![[SnoopingProtocolEx1.png]]
 
-考试常考的则是其拓展协议 **MESI Protocol**，其增加一个状态 *Modified*：
+考试常考的则是其拓展协议 **MESI Protocol**，其增加一个状态 *Exclusive*：
 
 - **Invalid:** 无效状态
 	- Valid = 0
@@ -75,21 +92,35 @@ Snooping 协议允许处理器之间进行通信。当 P1 写入 X，需要通�
 
 ![[MESIProtocolOverview.png]]
 
+Coherent Miss 中，根据是否源于处理器之间的数据共享而划分为两种：
+
+- **True Sharing Miss** 不同处理器对同一个 Cache Block 的*同一个变量*访问造成的 miss
+	- Case 1：对一个 Shared Cache Block 进行初次写操作，此时其它缓存中该块被 Invalidate，算作一次 coherence miss
+	- Case 2：尝试读取另一个处理器的 Modified Word，由于该处理器本身 Cache 中该块肯定是 Invalid 的，因此也是 coherence miss 
+- **False Sharing Miss** 没有共享数据，但被缓存协议误判为共享
+	- 不同处理器访问了同一个 Cache Block 中的不同变量，但是这些变量共享了缓存块，导致写入一个变量使得整个 Block 被 Invalidate，从而干扰其它处理器访问其它变量，造成 miss
+
 <font style="font-weight: 1000;font-size: 20px" color="orange">目录协议</font>
+
+![[DirectoryProtocolOverview2.png]]
+
+每个处理器都有自己的 Cache，为了保证数据一致性，我们通过一个分布式目录结构 Directory 记录每个内存块当前的缓存状态以及被哪些处理器缓存了。
+
+!!! info "因此不需要像 Snooping 协议一样广播数据变更，从而节省带宽，更适合大规模系统"
 
 为每一块内存记录 **directory**，目录的内容为：
 
 - 该块的状态
-	- Shared
-	- Uncached
-	- Exclusive
+	- Shared：有节点缓存了该块，且值为最新
+	- Uncached：没有节点拥有该块的 Copy
+	- Modified(Exclusive)：有且只有一个节点拥有该块的 Copy，且已被 Write
 - 哪些处理器有这个块的副本
 	- 用 bit vector 表示
 - Dirty/Clean
 
-![[DirectoryProtocolOverview.png]]
+!!! note "注意 Directory 是对内存而不是对缓存的哦"
 
-!!! note "目录协议可以既可以在 Distributed Memory 中实现，也可以在组织成 banks 的 Centralized Memory 中实现"
+![[DirectoryProtocolOverview.png]]
 
 对一块内存操作，涉及三个处理器的概念：
 
@@ -98,6 +129,11 @@ Snooping 协议允许处理器之间进行通信。当 P1 写入 X，需要通�
 	- Home Node 负责维护该内存地址对应的数据项的状态，例如 `X:S, {P1,P2}` 表示数据项 X 为 Shared 状态，Remote Node 为 P1, P2
 - **Remote Node:** 拥有这个副本的处理器
 
-> 例子好复杂哦，去看 PPT 或者其它资料吧
+=== "From CPU"
+	![[DirectoryFromCPU.png]]
+=== "From Cache"
+	![[DirectoryFromDirectory.png]]
 
 ### Synchronization
+
+!!! bug "没有啦"

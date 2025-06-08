@@ -108,7 +108,9 @@ if p2
 
 这里先对我们计组中学过的 Pipeline 进行一个简单拓展。
 
-在计组中，我们认为流水线各个阶段的耗时均是相同的，都为一个时钟周期。而实际上，EX 阶段的各个操作可能相差巨大，我们有必要将其细分。
+在计组中，我们认为流水线各个阶段的耗时均是相同的，都为一个时钟周期。而实际上，在引入浮点计算操作后，EX 阶段的各个操作可能相差巨大，我们有必要将其细分。
+
+![[4LevelPipeline.png]]
 
 在 Lab5 中，我们可以看到流水线被划分为了 IF, ID, FU, WB 四级。由于 FU 阶段操作时间不同，我们引入两个概念：
 
@@ -118,7 +120,13 @@ if p2
 	- 如果 FU 完全流水化(Fully Pipelined)，那么 Initiation Interval = 1
 	- 如果 FU 非流水化(Non Pipelined)，那么 Initiaion Interval = latency + 1
 
-![[4LevelPipeline.png]]
+![[LatencyAndInterval.png]]
+
+!!! info ""
+	 === "Integer ALU"
+		 ![[IntegerALULatency.png]]
+	=== "Data Memory"
+		![[MemoryLatency.png]]
 
 这种流水线存在以下潜在问题：
 
@@ -131,7 +139,7 @@ if p2
 		- 设计一个移位寄存器，如果当前开始执行的指令在 N 个时钟周期后要写回，则预约寄存器第 N 个位置；每个时钟周期都向左移一位，从而判断什么时候有指令要写回
 	- 可能出现写寄存器顺序错乱问题，即 WAW 冲突
 		- 记录每个 FU 要写回什么位置，同时利用上述移位寄存器判断当前 FU 在多久后写回。如果有 WAW，则后一条指令需等待前一条指令写入
-- RAW 冲突造成的停顿更长
+- RAW 冲突更频繁，且造成的停顿更长
 - 乱序完成，难以中断
 
 !!! info "该流水线不会发生 WAR 冲突，前一条指令的读操作一定在后一条指令的写操作之前"
@@ -157,15 +165,14 @@ if p2
 - 简化编译器的实现，不同的架构可以对应同一种汇编的实现
 	- 即写汇编代码的人不需要知道 scoreboard 的具体设计
 
-此处，我们将流水线分为五个阶段：
+!!! info "Scoreboard 流水线的五个阶段"
+	- IF：取指令
+	- IS：Issue，负责解码指令以及监视结构冲突
+	- RO：Read Operands，监视数据冲突，读取操作数
+	- EX：送到不同 FU 执行，访存也在这一阶段
+	- WB：写回结果
 
-- IF：取指令
-- IS：Issue，负责解码指令以及监视结构冲突
-- RO：Read Operands，监视数据冲突，读取操作数
-- EX：送到不同 FU 执行，访存也在这一阶段
-- WB：写回结果
-
-其设计三张表：
+我们为 Scoreboard 维护三张表：
 
 - 指令状态表 **Instruction Status Table**
 	- 记录指令的状态，在哪个阶段
@@ -181,12 +188,12 @@ if p2
 
 具体例子，可以去网站、PPT、历年卷中查看。需要注意几个要点在于：
 
-- 【issue】什么时候一条指令允许发射？
+- **【issue】** 什么时候一条指令允许发射？
 	- 需要使用的 FU 是空闲的（避免结构冲突）
 	- 该指令的 Rd 和其它正在执行的指令的 Rd 没有重复（查寄存器状态表）
-- 【Read Operand】什么时候开始读数（读数完下一个时钟周期即为 EX）
+- **【Read Operand】** 什么时候开始读数（读数完下一个时钟周期即为 EX）
 	- 当且仅当两个源寄存器都准备好了才开始读数，即 `Rj`, `Rk` 均为 Yes
-- 【Write Back】
+- **【Write Back】**
 	- 写回时需要注意该目的寄存器是否在某个 FU 的 Ready List 中为 Yes
 	- 如果是 Yes，则等该指令读完再写回，避免 WAR 冲突
 
@@ -202,6 +209,9 @@ if p2
 	
 	对于此方法，我们需要维护一个 free list 表示是否有 free 的物理寄存器；还要维护一个物理寄存器到逻辑寄存器的映射表。
 
+> [Scoreboard 算法模拟网站](https://jasonren0403.github.io/scoreboard/)
+
+!!! danger "Scoreboard 似乎不是考试范围，请记住下面的 Tomasulo 算法"
 
 #### Tomasulo 算法
 
@@ -223,13 +233,14 @@ ADD R7, R8, R9
 	- `op`: FU 正在执行什么操作
 	- `Vj`, `Vk`: 两个源寄存器对应的值（注意是值）
 	- `Qj`, `Qk`: 如果源寄存器没准备好，则要从哪个 FU 读取
+	- `Address`: Load/Store 读写的地址
 	- 距离 FU 完成该条指令的剩余周期数
 - 内存也有自己的 reserved station，称为 **Load/Store Buffer**
 	- `busy`: 这个位置是否有内存读写请求
 	- `address`: 读写的地址
 - 表 Register Status Table，同 Scoreboard
 - 总线 Common Data Bus(CDB)，负责将结果广播到所有保留站和寄存器
-	- 可以相当于一种前递
+	- 也可以用于实现 Bypassing 功能
 
 ![[TomasuloOverview.png]]
 
@@ -247,7 +258,19 @@ ADD R7, R8, R9
 	- 需要解决同一时刻发射多个指令、同一时刻多个值写入 CDB 的问题(主要对于硬件)
 	- 和 scoreboard 一样为乱序执行，无法实现精确中断
 
+!!! quote "寄存器重命名"
+	- WAR：重命名后一个（W）
+	- WAW：重命名前一个
+	
+	=== "Before Rename"
+		![[beforerename.png]]
+	=== "After Rename"
+		![[afterrename.png]]
+
 > [我自己写的一个 Tomasulo 模拟小网站](https://tomasulo.nimisora.top/) （其实是 AI 写的）
+
+??? tip "有耐心的同学可以读一下这个"
+	![[tomasuloalgorithm.png]]
 
 ### Advanced Branch Prediction
 
@@ -258,9 +281,12 @@ ADD R7, R8, R9
 **动态预测**基于硬件实现：
 
 - **1 bit 预测器**
-	- 对于每个跳转指令，只用一个位表示是否跳转，上次跳转了则置 1，上次没跳转则置 0；下次又遇到该跳转指令时，为 1 则跳转，为 0 则不跳转
-	- 通过维护分支历史表 Branch History Table，用 PC 的低几位作为索引，来维护各个跳转指令的 1 bit 预测器
+	- 对于*每个*跳转指令，只用一个位表示是否跳转，上次跳转了则置 1，上次没跳转则置 0；下次又遇到该跳转指令时，为 1 则跳转，为 0 则不跳转
+	- 通过维护分支历史表 Branch History Table 和 Branch Target Buffer，用 PC 的低位作为索引，高位作为 Tag，来维护各个跳转指令的 1 bit 预测器
 	- 优点是硬件实现简单
+
+![[1bitpredictor.png]]
+
 - **2 bit 预测器**
 	- 用两位表示分支是否跳转，分为四个状态
 		- 00: strongly not taken
@@ -269,29 +295,45 @@ ADD R7, R8, R9
 		- 11: strongly taken
 	- 每个跳转指令从 00 开始，跳转一次就加一，不跳转一次就减一。
 	- 相比 1 bit 预测器，为决策增加了*滞后性*
-- **Correlating Predictor** 相关预测器
+
+![[2bitpredictorsg.png]]
+
+- **Correlating Predictor** 相关预测器（2-level Predictor 的一种实现）
 	- 许多分支指令的跳转与否依赖于别的分支指令的跳转结果，这时候仅靠自己的跳转历史来预测不够准确
-	- 相关预测器有 2bits:
-		- 如果上一条分支 Not Taken，则看 1st bit
-		- 如果上一条分支 Taken，则看 2nd bit
+	- 二级预测器包含两个层次的结构：
+		- *Level 1* 全局历史寄存器，是一个 $m$ bit 的移位寄存器，记录过去 $m$ 条指令是否跳转，例如 `GHR = 110` 指最近三次是“跳，跳，不跳”
+		- *Level 2* Pattern History Table 模式表，使用 Level 1 作为索引，表项通常是一个 2-bit Predictor(或者称 Counter)
 	- 注意，“上一条分支”也有可能指自己
 	- 对于 (m,n) predictor，其参考最近 $m$ 条指令的跳转结果，每种情况都是一个 $n$ bit predictor
-		- 那么一条指令的分支预测缓冲区大小为 $n*2^m$ bit
-- **Tournament Predictor** 饱和预测器
-	- 前面的预测器中，两条不同跳转指令的 PC 地址的前几位可能相同，导致相互干扰。饱和预测器使用 global 和 local 两个预测器，并根据跳转地址来选择使用哪个 predictor
+		- 那么一条指令的分支预测缓冲区大小为 $n*2^m$ bit，求 History Table 的大小还要乘上 PC 中用于 index 的低位位数 $2^b$ （entries 个数）
+
+![[CorrPredictor.png]]
+
+- **Gshare Predictor** 属于 Correlating Predictor
+	- 将最近 m 条分支指令的历史和 PC 低 m 位进行异或运算来从分支历史表中选择对应预测器，其特点是结合全局历史和本地历史
+
+![[GsharePredictor.png]]
+
+- **Tournament Predictor** 饱和预测器，属于 Hybrid Predictor
+	- 前面的预测器中，两条不同跳转指令的 PC 地址的前几位可能相同，导致相互干扰。饱和预测器使用 global 和 local 两个预测器，并根据**跳转地址**来选择使用哪个 predictor
+	- 选择器也是一个 2 bit counter，当发生两次错误预测时，它会更改首选预测器
 	- global 是全局共有的，local 是自己的
-- **Gshare 预测器**
-	- 将最近 m 条分支指令的历史和 PC 低几位进行异或运算来从分支历史表中选择对应预测器，减少预测器存储开销
+
+![[TourPredictor.png]]
+
+??? warning "注意是使用跳转地址 Branch Address 作为 Index"
+	![[BranchAddressIndex.png]]
+
+剩下两个小透明简单有个印象：
+
 - **Branch Target Buffer, BTB** 分支目标缓冲
 	- 其实不是预测器，但是也是一种技术
 	- 在跳转指令 IF 阶段时，就预先把目标地址存进表中；如果 branch taken，则直接从表中取地址，不用去访存 Instruction Mem 
 	- 由于提前对指令进行预取，对 Memory 的带宽要求更高
 - **Return Address Predictor**
-	- `call`, `return` 也属于一种跳转，只要记住它是针对函数调用设计的就好了
- 
+	- `call`, `return` 也属于一种跳转，只要记住这个预测器是针对函数调用设计的就好了
 
-
-!!! question "(23-24 Final) How many bits are needed to impl (2,2) predictor with 4K entries?"
+??? question "(23-24 Final) How many bits are needed to impl (2,2) predictor with 4K entries?"
 	$$2*2^2*4K=32K\ bit$$
 
 #### Speculation
@@ -307,6 +349,18 @@ ROB 作为循环 FIFO 队列来实现顺序提交，同时也可以替代 Store 
 在指令的 WB 阶段后添加一个 Commit 阶段，并且只有 ROB 的队首指令允许提交。
 
 需要注意的是，如果队首是 branch 或其它跳转指令，但是它预测错误，那么我们需要清空 ROB（Flush）以消除预测失败的影响。
+
+与此同时，我们也为 Register Status 添加一个 Field，用来表示当前寄存器在 ROB 的哪个 Entry：
+
+![[FPRSSpecu.png]]
+
+**【Example】** ROB 只允许队首提交，因此即便第二条指令很早就进入写回阶段，也要等待 `div` 提交。
+
+![[ROBtomasuloEx1.png]]
+
+
+??? info "带有 ROB 的 Tomasulo Hardware"
+	![[ROBTomasuloE.png]]
 
 通过这种方式，实现了乱序执行、乱序完成，但是**顺序发射、顺序提交**，从而能够实现精确中断。
 
@@ -327,6 +381,9 @@ ROB 作为循环 FIFO 队列来实现顺序提交，同时也可以替代 Store 
 
 !!! quote "Conlusion"
 	![[DynamicSchedulingCon.png]]
+
+??? tip "有耐心的同学可以读一下这个"
+	![[tomasuloROBalgorithm.png]]
 
 ### Multi Issue: Superscalar
 
