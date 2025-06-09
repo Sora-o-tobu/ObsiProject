@@ -1,4 +1,4 @@
-	
+
 # A brief introduction of c++
 
 - C++ 向后兼容低级语言，如使用 `asm(...);` 来执行汇编语言
@@ -162,6 +162,15 @@ int main() {
 	}
 	```
 
+**Named Cast** 是 C++ 支持的类型转换，四种分别有不同的用途：
+
+| 转换类型                     | 作用与用途                                   | 是否有运行时检查 | 可进行的转换示例                                                  | 使用场景与注意点                                                         |
+| ------------------------ | --------------------------------------- | -------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
+| `static_cast<T>(…)`      | ✅ 编译期类型检查✅ 用于相关类型之间的安全转换（非多态）           | ❌ 无运行时检查 | 基本类型间（如 `int`→`double`）类层次无多态关系时向上/向下转换                   | 用于非多态的指针/引用转换，或基本类型间。下行转换需谨慎，无法检查目标是否真实对象。喵                      |
+| `dynamic_cast<T>(…)`     | ✅ 支持多态类型安全下行转换（需基类有 `virtual`）✅ 运行时类型检查 | ✅ 有运行时检查 | `Base* b = …; Derived* d = dynamic_cast<Derived*>(b);`    | 多态场景下想从基类指针/引用安全转为派生类。失败返回 `nullptr`（指针）或抛 `std::bad_cast`（引用）。喵 |
+| `const_cast<T>(…)`       | ✅ 去除或添加 `const`/`volatile` 修饰           | ❌ 无运行时检查 | `const int* p = …; int* q = const_cast<int*>(p);`         | 用于修改掉对象的常量属性；若目标本身真为常量，修改会造成未定义行为。喵                              |
+| `reinterpret_cast<T>(…)` | ✅ 进行“最低层”比特重解释转换，不改变比特模式                | ❌ 无运行时检查 | `int* p; char* c = reinterpret_cast<char*>(p);``long→指针`等 | 用于底层指针与整数之间、不同指针类型之间按位重解释。几乎不安全，仅在极端场景（如硬件映射、序列化）下使用。喵           |
+
 ## Structs
 
 A struct is a a group of named variables, each with their own type, that allows programmers to bundle different types together.
@@ -252,6 +261,14 @@ ref = 10;
 cout << num << endl; // Output: 10
 ```
 
+!!! tip "Type Restrictions"
+	- 引用不能绑定引用
+	- 不允许引用的 arrays
+	- 不允许将引用作为指针，但是允许引用绑定指针，即
+		- `int&* p = ...;` 是非法的
+		- `void f(int*& p);` 是合法的
+	- 不允许重新绑定
+
 由于 Reference 本质是和源变量指向同一块堆栈地址，因此修改它也会对源变量的值一同修改。利用这个性质，我们可以将别名作为形参，以实现直接对别的作用域的变量修改：
 
 ```c++
@@ -271,6 +288,14 @@ int main(void) {
 
 !!! info "使用别名作为形参"
 	使用别名作为形参意味着告诉编译器这个函数接收参数时是直接使用参数对应的内存地址，而不是将其值复制进一个临时地址。
+
+!!! warning "非 `const` 引用的只能绑定到左值 lvalue"
+	```c++
+	void func(int&);
+	func(i * 3); // Error!
+	```
+	
+	lvalue 指有名字、可寻址的变量。想要让上述函数编译通过，可选用中间变量来传递 `i*3`，或者改为 `func(const int&);` 来绑定右值
 
 那么注意观察，下面这个函数会修改 `nums` 中的值吗？
 
@@ -296,7 +321,7 @@ void shift(std::vector<std::pair<int, int>> &nums)
 }
 ```
 
-值得注意的是，如果不适用引用时，对于一个对象（在本例中为一个STL容器 pair），这种遍历方式实际上是在进行不断拷贝遍历，这将带来很大的额外开销。而使用引用则减少了不必要的开销。
+值得注意的是，如果不适用引用时，对于一个对象（在本例中为一个STL容器 `pair`），这种遍历方式实际上是在进行不断拷贝遍历，这将带来很大的额外开销。而使用引用则减少了不必要的开销。
 
 !!! tip "如果循环中不需要对元素进行修改，请尽可能加上 `const`"
 
@@ -312,9 +337,67 @@ void shift(std::vector<std::pair<int, int>> &nums)
 
 ```c++
 const std::vector<int> const_vec{1, 2, 3}; // a const vector
-std::vector<int>& bad_ref{ cont_vec };  // bad reference
+std::vector<int>& bad_ref{ const_vec };  // bad reference
 ```
 
+编译以下代码，会发生编译警告：
+
+```c++
+int x;
+std::cin >> x;
+const int size = x;
+double classAverage[size]; // error
+classAverage[x - 1] = x;
+std::cout << classAverage[x-1] << std::endl;
+```
+
+```bash
+➜  code g++ main.cpp -std=c++17 -pedantic -Wall
+main.cpp: In function ‘int main()’:
+main.cpp:20:16: warning: ISO C++ forbids variable length array ‘classAverage’ [-Wvla]
+   20 |         double classAverage[size]; // error
+      |                ^~~~~~~~~~~~
+```
+
+这实际是因为 C++ 不允许使用运行时变量声明数组的大小，即便这个变量被声明为 `const`；即 C++ 要求数组大小在编译时就能确定。
+
+在更好的实践中，我们可以用 `new` 来动态分配数组，或者使用标准 STL：
+
+```c++
+// Method 1
+double* classAverage = new double[x]; // 记得要 delete
+
+// Method 2
+std::vector<double> classAverage(x);
+```
+
+!!! info "实际编译时可以正常运行，因为编译器自动对 C++ 做了非标准扩展，从而支持 VLA 特性"
+
+除此之外，还需要注意指针 `*` 和 `const` 之间的位置关系：
+
+```c++
+int a[] = {53,54,55};
+
+int * const p = a; // p is const
+*p = 20; // OK
+p++;     // ERROR
+
+const int *p = a;  // (*p) is const
+*p = 20; // ERROR!
+p++;     // OK
+
+int const *p = a;  // (*p) is const
+// 与上一个完全等价
+```
+
+一个字符串作为右值，通常自带 `const` 属性，但是编译器允许将字符串常量赋值给一个非 `const` 指针：
+
+```c++
+char* s = "Hello, world!";
+char a[] = "Hello, world!";
+```
+
+但是，使用这个指针去修改值仍然是不允许的，运行时会发生 `segmentation fault`，即试图访问不允许写的内存。
 
 ## Streams
 
@@ -338,6 +421,11 @@ C++的IO库分为三个头文件：
 | `sstream`  | istringstream 从string读取数据<br>ostringstream 向string输出数据<br>stringstream 读写string |
 
 ### iostream
+
+- `cin`: Standard Input
+- `cout`: Standard Output
+- `cerr`: unbuffered error output
+- `clog`: buffered error output
 
 一个基本的 `iostream` 应用如下：
 
@@ -546,6 +634,28 @@ Read from the file: It's open again!
 !!! warning "`ofs.close`"
 	在实际尝试中，我的第二行数据一直读不出来。经过尝试发现是上面那个输出数据到文件的程序在输入第二行数据后并没有关闭文件，所以导致调用这个函数时该文件只有一行数据。但是程序运行完后能够发现第二行数据还是写入的，这是因为程序会在结束前关闭所有打开的文件，而关闭时才将数据写入。
 
+### Define Extractor
+
+可以通过全局函数重载来自定义 Stream Extractor 的工作流程，例如：
+
+```c++
+istream& operator>>(istream& is, T& obj) {
+	// specific code to read obj
+	return is;
+}
+ostream& operator<<(ostream& os, const T& obj) {
+	// specific code to write obj
+	return os;
+}
+
+cin >> a >> b >> c; // ((cin >> a) >> b) >> c;
+cout << a << b << c; // ((cout << a) << b) << c;
+```
+
+!!! note "为什么需要 return？因为要做到 chaining"
+
+
+
 ## Containers
 
 Container is an object that allows us to collect other objects together and interact with them in some way.
@@ -569,7 +679,7 @@ STL 中包含许多类型的容器：
 
 其中 `set` 系列的迭代器只有 `const` 版本，即不能用来修改值，因为集合按照元素的值作了哈希/排序，随意修改会破坏原本的顺序。
 
-`map` 系列虽然由 `mutable` 迭代器，但是只能用来修改 value，并不能修改 key
+`map` 系列虽然有 `mutable` 迭代器，但是只能用来修改 value，并不能修改 key
 
 !!! quote "所谓 Random Access Iterator，指的就是能够在常数时间内移动到任一元素（指针形式）"
 
@@ -686,21 +796,29 @@ int main(void) {
 }
 ```
 
-!!! info "WHY CONST???"
-	迭代器的属性为 `const` ，这意味着我们不能通过迭代器修改容器内的值。不过上述代码中的 `const` 可以不用加，`auto` 会自动为其附加这个属性。
+!!! quote
+	- `begin();` 返回指向容器头的迭代器
+	- `cbegin();` const begin()
+	- `rbegin();` 反向迭代器，返回指向容器最后一个元素的逆序迭代器
+
+
 
 ## Classes
 
+### Basic
+
 Classes are user-defined types that allow a user to encapsulate data and functionality using member variables and member functions.
+
+!!! tip "`class` 默认为 `private`；`struct` 默认为 `public`"
 
 C++属于面向对象的语言，类是其核心特性，通常称为用户定义的类型。它是一种封装了数据和函数的组合，类中数据称为成员变量，函数称为成员函数。可以使用类作为模板创建具有相同属性和行为的多个对象。
 
 ```c++
 class classname
 {
-	Access specifiers:        // private/public/portected...
-		Data members;         // 成员变量
-		Member functions() {} // 方法
+Access specifiers:        // private/public/portected...
+	Data members;         // 成员变量
+	Member functions() {} // 方法
 }; // end of class
 ```
 
@@ -718,26 +836,26 @@ class classname
 #include <string>
 
 class Student {
-    private:
-        std::string name;
-        std::string major;
-        int age;
+private:
+    std::string name;
+    std::string major;
+    int age;
 
-    public:
-        // default constructor
-        Student();
-        // parameterized constructor
-        Student(std::string name, std::string major, int age);
+public:
+    // default constructor
+    Student();
+    // parameterized constructor
+    Student(std::string name, std::string major, int age);
 
-        std::string getName();
-        std::string getMajor();
-        int getAge();
-        std::string setName(std::string name);
-        std::string setMajor(std::string major);
-        int setAge(int age);
+    std::string getName();
+    std::string getMajor();
+    int getAge();
+    std::string setName(std::string name);
+    std::string setMajor(std::string major);
+    int setAge(int age);
 
-        // destructor
-        ~Student();
+    // destructor
+    ~Student();
 };
 
 //lec7.cpp
@@ -794,6 +912,32 @@ int main()
 
 !!! success "All containers in STL are classes!!!"
 
+如果你写过 Python 的话，应该会知道 Python 中类方法的定义的第一个参数常为 `self`。实际上，C++ 中类方法也隐式地将自己作为一个参数传入，即 `this`。例如：
+
+```c++
+void Point::print();
+// can be regarded as
+void Point::print(Point *this);
+
+a.print();
+// can be regarded as
+Point::print(&a);
+```
+
+!!! abstract "`::` 称为 Resolver，为作用域解析符号"
+	- 如果 `::` 前面不加东西，则显式声明调用全局命名空间中的对象或方法
+	- 对于一个命名空间内的对象，默认优先访问局部/类作用域中的变量（如果存在）
+	
+	```c++
+	void S::f() {
+	    ::f();     // ✅ 调用全局函数 f()
+	    ::a++;     // ✅ 访问全局变量 a
+	    a--;       // ❓如果存在，则访问 Class Scope 中的 'a'
+	}
+	```
+
+### Inheritance
+
 作为面向对象，类同样可以继承。 
 
 - **多态 Polymorphism**: Different objects might need to have the same interface
@@ -801,27 +945,128 @@ int main()
 
 ```c++
 class Shape {
-    public:
-        virtual double area() const = 0;
-        // virtual 关键字声明虚函数，可以在派生类中覆盖重写。 const = 0 说明该函数不会修改类的成员变量，该函数无任何实现，是一个纯虚函数，要求所有派生类都要重写该函数。
+public:
+    virtual double area() const = 0;
+    // virtual 关键字声明虚函数，可以在派生类中覆盖重写。 const = 0 说明该函数不会修改类的成员变量，该函数无任何实现，是一个纯虚函数，要求所有派生类都要重写该函数。
 };
 
 class Circle : public Shape {
-    public:
-        // constructor with initialization list
-        Circle(double radius) : _radius(radius) {};
-        // 由于基类虚函数有关键字 const, 所以派生类重写的函数也要有 const 关键字
-        double area() const override {
-            return 3.14159 * _radius * _radius;
-        }
+public:
+    // constructor with initialization list
+    Circle(double radius) : _radius(radius) {};
+    // 由于基类虚函数有关键字 const, 所以派生类重写的函数也要有 const 关键字
+    double area() const override {
+        return 3.14159 * _radius * _radius;
+    }
 
-    private:
-        double _radius;
+private:
+    double _radius;
 };
 ```
 
 !!! info "`const` 用于成员函数时，表明该函数不会修改任何成员变量"
 	对于不修改成员变量的函数，尽量都加上 `const` ，且其在 `cpp` 中的实现也要加上 `const` ，否则编译器有时会因为无法确定该函数是否会修改成员变量而报错。
+
+| Specifiers  | In Same Class | In Derived Class | Outside Class |
+| ----------- | ------------- | ---------------- | ------------- |
+| `private`   | ✅             | ❌                | ❌             |
+| `protected` | ✅             | ✅                | ❌             |
+| `public`    | ✅             | ✅                | ✅             |
+
+其中，Derived Class 虽然可以继承到 `private` 修饰的成员，但是并不能在其函数中直接访问。对此，可以将需要被访问的成员改为 `protected`，或者在父类中添加一个公有接口：
+
+```c++
+class Base {
+private:
+    int secret = 42;
+public:
+    int getSecret() const { return secret; }
+};
+
+class Derived : public Base {
+public:
+    void show() {
+	    // ❌ 编译错误，private 无法访问
+	    // std::cout << secret;
+	    // ✅ OK，通过公有接口访问 private 成员
+        std::cout << getSecret();
+    }
+};
+
+```
+
+!!! info "具体报错信息为"
+	```bash
+	main.cpp: In member function ‘void Derived::show()’:
+	main.cpp:14:22: error: ‘int Base::secret’ is private within this context
+	   14 |         std::cout << secret;
+	      |                      ^~~~~~
+	main.cpp:5:9: note: declared private here
+	    5 |     int secret = 42;
+	      |         ^~~~~~
+	```
+
+此外，对于不同的 **inheritance type**，基类 `A` 中的成员对子类 `B` 的权限表如下：
+
+| Inheritance Type | pulic in A     | protected in A | private in A   |
+| ---------------- | -------------- | -------------- | -------------- |
+| `: private A`    | private in B   | private in B   | not accessible |
+| `: protected A`  | protected in B | protected in B | not accessible |
+| `: public A`     | pulic in B     | protected in B | not accessible |
+
+假定我们有子类 `Circle` 和基类 `Ellipse`，对于下列代码：
+
+```c++
+Ellipse elly(20f, 40f);
+Circle circ(60f);
+elly = circ;
+```
+
+此处调用的是 `Ellipse::operator=`，因此只有 `Circle` 被继承的数据才会被 Copy；
+
+```c++
+Ellipse* elly = new Ellipse(20f, 40f);
+Circle* circ = new Circle(60f);
+elly = circ;
+```
+
+此处原始的 `elly` 就丢失了，`elly` 和 `circ` 都指向了同一个 `Circle` 对象。如果调用 `elly->render();` ，调用的也是 `Circle::render();`。
+
+```c++
+void func(Ellipse& elly) { elly.render(); }
+
+Circle circ(60f);
+func(circ);
+```
+
+在继承中，引用的效果和指针类似，此处调用的函数仍然是 `Circle::render();`。
+
+对于返回值，在 **Type Relaxation** 下，子类可以返回 Return Type 的 Subclass，但是只支持指针和引用：
+
+| 函数签名类型      | 是否支持协变重写 | 注意点            |
+| ----------- | -------- | -------------- |
+| `T* func()` | ✅ 支持     | 子类可返回更具体指针类型   |
+| `T& func()` | ✅ 支持     | 子类可返回更具体引用类型   |
+| `T func()`  | ❌ 不支持    | 子类必须返回完全相同类型的值 |
+
+```c++
+class Expr {
+public:
+    virtual Expr* newExpr();
+    virtual Expr& clone();
+    virtual Expr self();     // ← 返回值是 **值类型**
+};
+
+class BinaryExpr : public Expr {
+public:
+    virtual BinaryExpr* newExpr();   // ✅ OK: 返回类型是 Expr* 的子类型
+    virtual BinaryExpr& clone();     // ✅ OK: 返回类型是 Expr& 的子类型
+    virtual BinaryExpr self();       // ❌ ERROR!
+};
+
+```
+
+### Template
 
 模板是创建泛型类或函数的蓝图或公式。库容器，比如迭代器和算法，都是泛型编程的例子，它们都使用了模板的概念，例如 `vector<int>` 。模板函数在你对其实例化前都不会被编译，当你调用了这个函数的一个版本，编译器会生成一个专属的版本以供后续使用。
 
@@ -856,12 +1101,10 @@ int main()
 	concept Addaptable = requires(T a, T b) {
 	    a + b;
 	}; // if a+b can be compile, then `add` work
-	
 	template <typename T> requires Addaptable<T>
 	T add(T a, T b) {
 	    return a + b;
 	}
-
 	template <Addaptable T> // this shorthand also OK!
 	T add(T a, T b) {
 	    return a + b;
@@ -875,14 +1118,14 @@ int main()
 template <typename T> // also <class T>
 class Container
 {
-    public:
-        Container (T val);
-        T getVal();
+public:
+    Container (T val);
+    T getVal();
 
-    private:
-        T _val;
+private:
+    T _val;
 };
------------------------------------
+// ====================================
 // lec8.cpp
 #include "lec8.hh"
 
@@ -904,22 +1147,24 @@ int main()
 }
 ```
 
+!!! danger "Template 不允许隐式的形式转换，因此请确保调用时参数类型对应"
+
 静态对象只能使用静态接口，所以将变量或对象作为常量传入时需注意其在函数内部是否调用了非静态接口。可能的解决方法：
 
 ```c++
 // .hh
 class arr
 {
-    public:
-        arr(int size);
-        int& findItem(int item);
-        const int& findItem(int item) const;
+public:
+    arr(int size);
+    int& findItem(int item);
+    const int& findItem(int item) const;
 
-    private:
-        std::vector<int> _arr;
-        int _size;
+private:
+    std::vector<int> _arr;
+    int _size;
 };
-----------------------------------------------
+// ====================================
 // .cpp
 int& arr::findItem(int item)
 {
@@ -937,6 +1182,22 @@ const int& arr::findItem(int item) const
 }
 ```
 
+除此之外，template 还可用作 default argument，例如：
+
+```c++
+template <class T, int bounds = 100>
+class FixedVector {
+public:
+	FixedVector();
+	T& operator[](int);
+private:
+	T elements[bounds]; // fixed-size array!
+};
+
+FixedVector<int, 50> v1;
+FixedVector<int, 10*5> v2;
+FixedVector<int> v3; // => FixedVector<int, 100>
+```
 
 ## Operator Overload
 
@@ -946,7 +1207,23 @@ C++ 允许在同一作用域中的某个**函数**和**运算符**指定多个�
 
 当您调用一个**重载函数**或**重载运算符**时，编译器通过把您所使用的参数类型与定义中的参数类型进行比较，决定选用最合适的定义。选择最合适的重载函数或重载运算符的过程，称为**重载决策**。
 
+!!! info "以下运算符不能被重载"
+	```c++
+	.   .*   ::   ?:
+	sizeof   typeid
+	static_cast   dynamic_cast
+	const_cast   reinterpret_cast
+	```
+
 重载的运算符是带有特殊名称的函数，函数名是由关键字 operator 和其后要重载的运算符符号构成的。与其他函数一样，重载运算符有一个返回类型和一个参数列表。
+
+```c++
+Integer operator-() const {
+	return Integer(-i);
+}
+...
+z = -x; // z.operator=(x.operator-());
+```
 
 下面是一个实现通讯录的程序，要求两个 User 相加时，二人的通讯录都互相增加对方。
 
@@ -979,7 +1256,7 @@ private:
     std::set<User> friends;
 
 };
----------------------------------------------------
+// =============================================
 // main.cpp
 #include <iostream>
 #include "User.h"
@@ -1054,20 +1331,52 @@ User& operator+(User& fir, User& sec) {
 }
 /*
 In this case, you can:
-	alice + bob;
+	alice + bob;  // operator+(alice, bob)
 	alice = alice + bob;
 ALl OK!
+
+全局 operator 往往还需要在类中设置为 friend，如：
+friend User& operator+(User& fir, User& sec);
 */
 ```
 
-以下运算符不能被重载：
+!!! note "原因是 Member Function 中 `this` 是作为一个隐式的参数传递的，因此也相当于两个参数"
 
-- `.` 成员访问运算符
-- `.*`, `->*` 成员指针访问运算符
-- `::` 域运算符
-- `sizeof` 长度运算符
-- `? :` 条件运算符
-- `#` 预处理符号
+我们需要注意区分 `++` 和 `--` 的函数重载形式：
+
+```c++
+class Integer {
+public:
+	...
+	Integer& operator++();   //prefix++
+	Integer operator++(int); //postfix++
+	Integer& operator--();   //prefix--
+	Integer operator--(int); //postfix--
+...
+};
+
+Integer x(5);
+++x; // calls x.operator++();
+x++; // calls x.operator++(0);
+--x; // calls x.operator--();
+x--; // calls x.operator--(0);
+```
+
+对于 postfix forms，它的重载函数接收一个 `int` 类型参数，编译器会自动将 `0` 作为一个参数传递进来。
+
+除此之外，还有一种运算符叫做 Conversion Operator，它常用在隐式的形式转换中：
+
+```c++
+class Rational {
+public:
+	operator double() const {
+		return numerator / (double)denominator;
+	}
+}
+
+Rational r(1,3);
+double d = 1.3 * r; // r => double
+```
 
 ## Special Member Functions
 
@@ -1091,6 +1400,8 @@ public:
 	- **初始化:** 例如 `T t = t1;`，`T t(t1);` 等
 	- **函数参数传递:** 例如 `f(t)`，其中 `void f(T t)`
 	- **函数返回:** 例如函数 `T f()` 的返回语句 `return T;`
+	
+	默认的拷贝函数是直接将指针的值复制过来，属于 shallow copy，需要注意。
 
 其中第二条和第三条虽然作用都是复制对象，但是实现方式不同：
 
@@ -1111,7 +1422,7 @@ widgeTwo = widgetOne;
 Wiget& operator= (const Widget& w) = delete;
 ```
 
-`copy constructor` 的行为逻辑是将内部成员值一个一个复制过去，运行速度较慢；而 `mov constructor` 的行为逻辑是将目的对象指向原先的内容，运行速度较快。
+`copy constructor` 的行为逻辑是将内部成员值一个一个复制过去，运行速度较慢；而 `move constructor` 的行为逻辑是将目的对象指向原先的内容，运行速度较快。
 
 定义 `lvalue` 为既可以在等号左边，又可以在等号右边的对象；定义 `rvalue` 为只能出现在等号右边的对象，其不能被 `&` 引用，但是我们可以使用 `&&` 来将其作为临时对象引用它：
 
@@ -1133,6 +1444,8 @@ int main() {
 ```
 
 值得注意的是，当使用 `&&` 引用 `rvalue` 时，并不保证其最终处于合法的状态。
+
+!!! tip "`lvalue` 指有名字、可寻址的变量"
 
 同时，也不一定所有左值都可以出现在等号左边，例如对于 `const char name[] = "Sora";`，`name[0] = "Sana";` 是非法的。尽管 `name[0]` 是个左值，但它的 type 是 `const char`，这样的左值被称为 **non-modifiable lvalues**。
 

@@ -19,7 +19,7 @@ Vector 对标我们之前所说的 Scalar(标量)，它使用单独一条指令�
 
 我们以一个 32 elements 的向量计算 $a*\overrightarrow{X} + \overrightarrow{Y}$ 为例：
 
-```riscv
+```asm
 # RISC-V CODE
 	fld  f0, a           # Load scalar a
 	addi x28, x5, 256    # Last address to load

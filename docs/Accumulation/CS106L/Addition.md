@@ -7,7 +7,7 @@
 
 ### Forward Declaration
 
-如果当前作用域没有名为 `identifier` 的类，那么形如 `class-key attr identifier ;` 的声明是一个 forward declaration[class.name#2](https://timsong-cpp.github.io/cppwp/n4868/class.name#2)。
+如果当前作用域没有名为 `identifier` 的类，那么形如 `class-key attr identifier;` 的声明是一个 forward declaration [class.name#2](https://timsong-cpp.github.io/cppwp/n4868/class.name#2)。
 
 例如 `class Foo;`，它声明了一个叫 `Foo` 的类；但直到这个类被定义之前，它的类型是不完整的[basic.types.general#5](https://timsong-cpp.github.io/cppwp/n4868/basic.types.general#5)。
 
@@ -30,7 +30,7 @@ struct X {
 
 这时第 1 行是必须的，否则第 3 行的 `X` 就是一个未知的类型。
 
-当然，你也可以声明 struct X 为静态结构体。
+当然，你也可以声明 `struct X` 为静态结构体。
 
 ### Using
 
@@ -149,6 +149,9 @@ int main()
 
 ### 生命周期
 
+!!! quote "C++ Memory Model"
+	![[C++MemoryModel.png]]
+
 对于一个类对象，它的生命周期(lifetime)从它的构造函数完成开始，到它的析构函数被调用时结束。
 
 任何一个对象都会占用存储，这部分存储的最小生命周期称为这个对象的 **storage duration**。对象的 lifetime 小于等于 storage duration。
@@ -158,11 +161,13 @@ int main()
 
 在 C++11 前，任何对象的 storage duration 的分类有：
 
-- <1> **automatic storage duration：** 非 `static` 的局部对象
-- <2> **static storage duration：** non-local 对象、`static` 局部对象、`static` 类成员对象
-- <3> **dynamic storage duration：** `new` 出来的对象
+- <1> **automatic storage duration：** 非 `static` 的局部对象，位于 `STACK`
+- <2> **static storage duration：** 全局对象、`static` 局部对象、`static` 类成员对象，位于 `CODE AND DATA`
+- <3> **dynamic storage duration：** `new` 出来的对象，位于 `HEAP`
 
 !!! tip "程序退出时，析构函数的调用顺序与构造函数相反，除了 dynamic 的对象，它们只有 `delete` 时才会析构"
+
+!!! note "`Global` 对象可以被其它文件以 `extern` 关键字声明引入；如果该全局对象是 `static` 的则不行"
 
 成员变量的构造函数会比自己的构造函数更先调用。对于带有基类的对象，则首先会先调用基类的构造函数：
 
@@ -213,6 +218,65 @@ int main() {
 ```
 
 尝试思考一下输出结果是什么吧。
+
+另外，构造函数的 Initializer List 中的顺序并不会影响初始化的顺序，这个顺序由传入的参数顺序决定：
+
+```c++
+#include <map>
+#include <iostream>
+
+class axis
+{
+public:
+    axis(int as_)
+    {
+        as = as_;
+        std::cout << "axis::axis() is called with as = " << as << std::endl;
+    }
+	axis(const axis& w)
+    {
+        as = w.GetAxis();
+        std::cout << "axis::CopyCtor is called with as = " << as << std::endl;
+    }
+    int GetAxis() const { return as; }
+private:
+    int as;
+};
+
+class point
+{
+public:
+    point(axis xa, axis ya)
+        : y(ya), x(xa) {}
+private:
+    axis x;
+    axis y;
+};
+
+int main()
+{
+    axis x(1), y(2);
+    point p(x,y);
+}
+
+// ================= OUTPUT =======================
+// default ctors
+axis::axis() is called with as = 1
+axis::axis() is called with as = 2
+
+// copy ctors
+/*
+* 参数传参导致拷贝发生，由于入栈顺序，右侧 ya 的拷贝先一步发生
+* 因此这里会出现先 2 后 1
+* 更推荐的方式是这里使用引用，避免拷贝发生
+*/
+axis::CopyCtor is called with as = 2
+axis::CopyCtor is called with as = 1
+
+// 尽管 Initializer List 的顺序是先 ya 再 xa，但是实际执行仍然是先 xa 再 ya
+axis::CopyCtor is called with as = 1
+axis::CopyCtor is called with as = 2
+```
 
 #### 运算符重载 return 的临时变量声明周期
 
@@ -275,6 +339,11 @@ struct Foo {
     inline static int i = 1; // OK since C++17
 }
 ```
+
+!!! quote "`inline`"
+	`inline` 本身用作 `macro` 更安全的替代使用，它以增大 code size 作为代价减少了函数调用的 cost。通常，我们对那些只有 2-3 行的小函数、调用频繁的函数添加 `inline` 关键字。注意不要对递归函数添加。
+	
+	不过现在编译器会自动判断某些函数是否要 inline，就算你添加了 `inline` 也不一定接受你的要求。`inline` 关键字被更多地用于指示 "Multiple Definitions are permitted"。
 
 ## Template
 
@@ -388,6 +457,79 @@ Partitioned vector: 0 8 2 6 4 * 5 3 7 1 9
 */
 ```
 
+## Exceptions
+
+C++ 程序在编译时通过静态类型和编译检查能够发现大部分语法或类型错误，但是运行时仍然会发生各种不可预见的错误。为了避免程序把所有潜在错误都写成多分支返回的错误码形式，C++引入了异常机制，将错误处理和正常逻辑分离，提升代码可读性和可维护性。
+
+接下来，我们尝试为一个自定义的 Vector 类设计 Exception。首先需要定义一个表示 ERROR 的类：
+
+```c++
+class VectorIndexError {
+public:
+	VectorIndexError(int v) : m_badValue(v) { }
+	~VectorIndexError() { }
+	void diagnostic() {
+	cerr << "index " << m_badValue
+		 << "out of range!";
+}
+private:
+	int m_badValue;
+};
+
+template <class T>
+	T& Vector<T>::operator[](int idx){
+		if (idx < 0 || idx >= m_size) {
+			throw VectorIndexError(idx); // the data object
+		}
+	return m_elements[idx];
+}
+```
+
+在 Caller 处，我们通过 `try {...} catch {...}` 块来捕获这个异常，并对其进行特殊处理：
+
+```c++
+void outer() {
+	try {
+		func();
+		func2();
+	} catch (VectorIndexError& e) {
+		e.diagnostic();
+		// This exception does not propagate
+	} catch (...) {
+		// all other exception
+		// handler code
+	}
+	cout << "Control is here after exception";
+}
+```
+
+一种更优秀的设计是利用继承，设计多层次的 Exception Type：
+
+```c++
+class MathErr {
+	...
+	virtual void diagnostic();
+};
+
+class OverflowErr : public MathErr { ... }
+class UnderflowErr : public MathErr { ... }
+class ZeroDivideErr : public MathErr { ... }
+
+try {
+	...
+} catch (MathErr& m) {
+	m.diagnostic();
+}
+```
+
+!!! tip "`noexcept`"
+	对于一些函数，我们不希望其能够抛出异常，以使其更高效地运行，例如 dtor、move ctor 等。此时，我们需要为其添加 `noexcept` 修饰符，当异常被抛出时，程序直接 `std::terminate` 终止：
+	
+	```c++
+	void abc(int a) noexcept { ... }
+	```
+
+!!! info "如果抛出的异常没有被 Catch，也会直接调用 `std::terminate`"
 
 ## NEW 和 MALLOC 的区别
 
@@ -396,10 +538,11 @@ Partitioned vector: 0 8 2 6 4 * 5 3 7 1 9
 	- 自由存储区可以是堆、全局/静态存储区等
 - `new` 操作符返回类型与对象严格匹配；`malloc` 返回 `void*` ，需要手动强制转换
 - `new` 分配失败返回异常；`malloc` 分配失败返回 `NULL`
-
+- `new` 和 `delete` 会正确调用对象的 `Ctor` 或 `Dtor`
 
 !!! info "`new` 操作符的底层通常也是用 `malloc` 实现的"
 
+!!! danger "不要对同一块内存 `delete` 两次；但是对 `nullptr` `delete` 是安全的"
 
 ## 一些 STL 用法
 
