@@ -126,3 +126,89 @@ Database Buffer 可以在 Real Main Memory 或者 Virtual Memory 中执行，它
 	- 理想情况下，当 OS 打算回收某个 Page 时，它应该先通知 DBMS，如果这个 Page 不是 Dirty 的，那么可以直接释放；如果是 Dirty 的，那么先写入相关日志，再把该数据页写入数据库文件，之后也可以直接释放，不需要放入临时的 Swap Space，从而避开 Dual Paging Problem
 		- 可惜一般 OS 不支持这个功能
 
+## ARIES 算法
+
+### Data Structure
+
+我们之前提到的恢复算法其实都是基于 ARIES 算法简化的，它们去除了 Optimization 部分。跟它们相比，ARIES 算法有如下特征：
+
+- <1> 使用 **Log Sequence Number(LSN)** 来标志 Log Records
+	- LSNs 以 Page 的形式存储
+- <2> Physiological Redo
+	- 是介于物理和逻辑 Redo 中的策略，它以物理的方式定位受影响的 Page，以逻辑的方式记录业内的操作
+	- 相比于物理 Redo 需要记录整个 Page 的字节变化，Physiological Redo 只需要记录页内编号 + slot 操作，节省大量空间
+	- *Warning:* 要求 Page 的写回是原子操作 
+- <3> 维护 Dirty Page Table 来避免不必要的 Redo 操作
+- <4> 使用 Fuzzy Checkpoint，在检查点只记录脏页的相关信息，不要求脏页写回
+
+!!! info "Log Sequence Number"
+	LSN 作为 Log 的标识符，要求顺序递增。为了加快访问速度，通常直接取 Log 在业内的偏移作为 LSN。
+
+我们在 Page 的首部中还需额外维护 **PageLSN**，用来存储最后一条影响该 Page 的日志的 LSN。在恢复阶段，LSN 值不超过 PageLSN 的日志记录不会在该页上执行，从而避免重复的 Redo。
+
+一个普通的 Log Record 的格式如下：
+
+```
++-----+---------+---------+----------+----------+
+| LSN | TransID | PrevLSN | RedoInfo | UndoInfo |
++-----+---------+---------+----------+----------+
+```
+
+在之前的恢复算法中，Undo 阶段时我们需要为所有被 Undo 的日志写入对应的 Undo Log。在 ARIES 中，该日志称为 **Compensation Log Record(CLR)**，是一个 Read-Only 的日志记录，并且有一个特殊的字段 `UndoNextLSN`，用于指向下一个需要执行 Undo 操作的日志：
+
+```
++-----+---------+-------------+----------+
+| LSN | TransID | UndoNextLSN | RedoInfo |
++-----+---------+-------------+----------+
+```
+
+!!! tip "在该 CLR 和其 `UndoNextLSN` 之间的所有日志都已经被 Undo 了，从而避免了重复的 Undo 操作"
+	![[CLRStructure.png]]
+
+Dirty Page Table 记录仍在 Buffer 中、已经被更新过的 Page 的信息，包括：
+
+- **PageLSN**
+- **RecLSN** LSN 小于 RecLSN 的日志都已经生效且写回磁盘中了
+	- 当一个 Page 被插入脏页表中时，设置 RecLSN = PageLSN（更新前一刻的）
+
+只要一个 Dirty Page 被写入磁盘，则从脏页表中移除该页。
+
+!!! example "ARIES Data Structure"
+	![[ARIESDS.png]]
+	
+	- `4894.1` 表示 Page 4894 的第一个数据
+	- `RecLSN = 7564` 表示从 LSN 7564 开始的 Log 就没有对 Stable Data 中的表生效了（尽管它们已经进入 Stable Log 中）
+
+
+在 CheckPoint，记录当前 Dirty Page Table 和当前正在活跃的事务。对于每一个活跃事务，记录它们写入的最后一个 Log Record 的 LSN，记为 **LastLSN**。
+
+脏页不必在 CheckPoint 写回，它们在后台持续写回，因此 CheckPoint 的消耗较小，可以相对更频繁的设置。
+
+### Recovery Algorithm
+
+ARIES 的恢复算法分为三个阶段：分析阶段、Redo阶段、Undo阶段。
+
+- **<1> Analysis pass**
+    - 从最后一个 CheckPoint 开始
+    - 读取 Dirty Page Table
+	    - 设置 `RedoLSN = min RecLSN`（脏页表中的最小 RecLSN），如果脏页表为空，则设置为 CheckPoint 的 LSN
+	    - 初始化 Undo List 为 CheckPoint 中记录的活跃事务
+	    - 读取 Undo List 中每一个事务的最后一条 Log 的 LSN
+	- 从 CheckPoint 开始正向扫描
+		- 如果发现了不在 Undo List 中的事务则加入 Undo List
+		- 如果发现了 Update Log Record，如果对应 Page 不在脏页表中，则将其加入脏页表中（设置其 RecLSN 为该日志的 LSN），==用于 Redo==
+		- 如果发现了事务的 End Log，则将其从 Undo List 中移除
+		- 扫描过程中记得记录每一个事务的最后一条日志的 LSN，==用于 Undo==
+- **<2> Redo pass**
+	- 从 RedoLSN 开始正向扫描 ，当发现更新记录的时候
+		- 如果对应 Page 不在脏页表中。或者这一条记录的 LSN 小于页面的 RecLSN 就忽略这一条
+		- 否则从磁盘中读取这一页，如果磁盘中得到的这一页的 PageLSN 小于该 Log，就 redo，否则就忽略这一条记录
+- **<3> Undo pass**
+	- 从分析阶段获得的每个事务最后一条日志的 LSN 开始，接下来每一步都选取这之中 LSN 最大的日志开始 Undo
+	- 在 undo 一条记录之后
+		- 对于普通的记录，将 NextLSN 设置为 PrevLSN
+		- 对于CLR记录，将 NextLSN 设置为 UndoNextLSN
+			- 这之间的日志将被跳过，不会执行 Undo
+
+!!! question
+	![[ARIESRecoveryEx1.png]]

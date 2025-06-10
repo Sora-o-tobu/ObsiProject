@@ -177,7 +177,7 @@ for each tuple t_r in r do begin
 end
 ```
 
-!!! info "外层每选择一个 Record，内层遍历整个 File。遍历整个 File 只用一次 Seek"
+外层每选择一个 Record，内层遍历整个 File。遍历整个内层 File 只用一次 Seek。
 
 - 在最坏情况，即 Memory 中 Buffer 只能刚好放下各个 Relation 的一个 Block
 	- **Block Transfers:** $n_r *b_s + b_r$
@@ -201,6 +201,8 @@ for each block B_r of r do begin
 end
 ```
 
+外层先取一个 Block，内层也取一个 Block，然后再在外层取的 Block 中选取一个 Record，遍历内层取的 Block 中的 Record。这样外层在更换 Record 时不需要重新 Seek。这里要求内存起码能放得下 3 个 Block。
+
 - Worst Case
 	- **Block Transfers:** $b_r *b_s +b_r$
 	- **Seeks:** $2b_r$
@@ -212,6 +214,7 @@ end
 	- **Seeks:** $2\lceil b_r / (M-2) \rceil$
 
 !!! note "对于 LRU 策略的 Buffer，扫描内层循环时可以选择前后交替进行，以使 Blocks 留在 Buffer 中"
+	即第 N 轮扫描内层从前往后，第 N+1 轮扫描内层从后往前。
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Indexed Nested-Loop Join</font>
 
@@ -263,7 +266,7 @@ $$
 ![[HashJoinCost.png]]
 
 !!! danger "What is $n_h$ and $b_b$?"
-	$n_h$ 是写 Partial Filled Blocks 造成的额外 Cost，写题时一般不考虑；$b_b$ 指磁盘 I/O 一次 Seeks 能顺序读写的连续块个数。
+	$n_h$ 是写 Partial Filled Blocks 造成的额外 Cost，写题时一般不考虑，即 $n_h =0$；$b_b$ 指磁盘 I/O 一次 Seeks 能顺序读写的连续块个数。
 
 ??? example
 	![[HashJoinEx1.png]]
