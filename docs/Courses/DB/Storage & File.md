@@ -241,6 +241,8 @@ B+ Tree Indices 是 Index-Sequential Files 的一个替代方案，也是数据�
 
 对于一个 Order $n$，有 $K$ 个 Search Key 的 File，其 B+ Tree Indices 的高度**小于等于** $\lceil \log_{\lceil \frac{n}{2}\rceil} K\rceil$。
 
+!!! abstract "$\lceil \log_N (K) \le h \le \lfloor \log_{\lceil \frac{n}{2}\rceil} K\rfloor + 1$"
+
 通常，我们希望 B+ Tree 的一个 Node 的大小刚好是一个 Block，一个 Block 一般为 4KB。一种实践是设置 $n=100$，则一个 index entry 大小为 40B。
 
 !!! example "考虑 1 million Search Key，n = 100"

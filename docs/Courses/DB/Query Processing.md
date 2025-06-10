@@ -71,13 +71,14 @@ Index Scan 的算法的 Selection Condition 必须是 index 的 search-key。
 	- 与 A3 的区别在于可能有很多 records 符合条件，但是它们仍在连续的 Blocks 中
 	- **Cost Estimate:** cost = $h_i *(t_T +t_S) +t_S +t_T*b$
 		- $b$ 为包含符合条件 Records 的 Block 个数，约等于 $\lceil sc(A,r)/f_r\rceil$
+		- 如果 B+ 树索引叶节点存储了整个 Tuple，则可以节省最后一次 Seek 时间
 
 !!! quote ""
 	<font style="font-weight: 1000;font-size: 24px">【Algorithm 5】 Secondary Key & Equality On NonKey</font>
 	
 	- 如果 Search-Key 是 Candidate Key，则为单个 Record
 		- **Cost Estimate:** cost = $(h_i +1)*(t_T+ t_S)$
-	- 如果 Search-Key 非 Candidate Key，则为分布在不连续 Blocks 上的多个 Records
+	- 如果 Search-Key 非 Candidate Key，则为分布在不连续 Blocks 上的 $n$ 个 Records
 		- **Cost Estimate:** cost = $(h_i +n)*(t_T+ t_S)$
 		- 性能有可能弱于 Linear Search !!!
 
@@ -92,13 +93,16 @@ $\sigma_{A\le V} (r)$, $\sigma_{A\ge V}(r)$ 等比较 Selection，可以采用�
 !!! quote ""
 	<font style="font-weight: 1000;font-size: 24px">【Algorithm 6】 Primary Key & Comparisons</font>
 	
-	- 对于 $\sigma_{A\ge V} (r)$，使用索引找到第一个满足条件的 Records，随后从该位置开始顺序扫描
+	- 对于 $\sigma_{A\ge V} (r)$，使用索引找到第一个满足条件的 Records，随后从该位置开始顺序扫描。此时同 A4
+		- **Cost Estimate:** cost = $h_i *(t_T +t_S) +t_S +t_T*b$
 	- 对于 $\sigma_{A\le V} (r)$，从第一个 Records 开始顺序扫描，不使用索引
+		- 考试似乎不考虑这种情况
 
 !!! quote ""
 	<font style="font-weight: 1000;font-size: 24px">【Algorithm 7】 Secondary Key & Comparisons</font>
 	
-	- 对于 $\sigma_{A\ge V} (r)$，使用索引找到第一个满足条件的 Index Entry，然后顺序扫描 Index，取出对应指针
+	- 对于 $\sigma_{A\ge V} (r)$，使用索引找到第一个满足条件的 Index Entry，然后顺序扫描 Index，取出对应指针，此时同 A5
+		- **Cost Estimate:** cost = $(h_i +n)*(t_T+ t_S)$
 	- 对于 $\sigma_{A\le V} (r)$，从第一个叶节点开始顺序扫描取出指针
 	- 这种情况下 Linear Search 有可能更优
 
@@ -140,6 +144,13 @@ $\sigma_{A\le V} (r)$, $\sigma_{A\ge V}(r)$ 等比较 Selection，可以采用�
 - <2> 使 `JOIN` 操作执行更快
 
 如果待排序数据能够全放进 Memory，则可以使用快速排序等算法；如果不能，则使用外部归并排序。
+
+对于 $M$ 大小的内存、$b_r$ 个待排序 Block：
+
+- Total Number of **runs**: $\lceil b_r / M \rceil$
+- Total Number of merge **passes** required: $\lceil \log_{M-1} (b_r  / M) \rceil$
+- Total Number of **Transfer**: $b_r (2 \lceil \log_{M-1} (b_r  / M) \rceil +1)$
+- Total Number of **Seeks**: $2\lceil b_r / M \rceil + b_r ( 2 \lceil \log_{M-1} (b_r  / M) \rceil -1)$
 
 ### JOIN
 
@@ -210,7 +221,7 @@ end
 
 该算法流程复杂多变，因此只能粗略给出一个估计：
 
-$$
+$$\
 b_r( t_T +t_S) + n_r *c
 $$
 

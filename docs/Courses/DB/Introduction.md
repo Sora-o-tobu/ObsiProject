@@ -117,4 +117,4 @@ Storage Manager 包括 Transaction Manager、Authorization and Integrity Manager
 具体实现以后应该会讲（或者你做了 `minisql` 应该知道）。
 
 !!! quote "[执行一条 SQL 语句的流程](https://xiaolincoding.com/)"
-	![[sqloverview.png]]
+	![[ObsiProject/docs/Courses/DB/image/sqloverview.png]]

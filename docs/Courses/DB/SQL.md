@@ -35,6 +35,8 @@ SQL(Sequel)是一个语言规范，最初由 IBM 设计。不过很多 DBMS 并�
 	- 数据控制语言，关于安全和类似内容的规范
 	- `grant`, `revoke`
 
+![[SQLOverview1.png]]
+
 ## Data Definition Language
 
 一个典型的 DDL 语句如下：
