@@ -63,6 +63,11 @@
 
 !!! info "Weak Entity Set 一定是多对一、全参与的，因此上图采用箭头与双横线"
 
+!!! question "E-R Design 例题"
+	为外卖平台绘制 E-R 图（具体要求省略）：
+	
+	![[EREx1.png]]
+
 ## Extended E-R features
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Specialization 特殊化、具体化</font>

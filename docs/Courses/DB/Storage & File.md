@@ -241,7 +241,16 @@ B+ Tree Indices 是 Index-Sequential Files 的一个替代方案，也是数据�
 
 对于一个 Order $n$，有 $K$ 个 Search Key 的 File，其 B+ Tree Indices 的高度**小于等于** $\lceil \log_{\lceil \frac{n}{2}\rceil} K\rceil$。
 
-!!! abstract "$\lceil \log_N (K) \le h \le \lfloor \log_{\lceil \frac{n}{2}\rceil} K\rfloor + 1$"
+!!! tip "$\lceil \log_n \left( \frac{m}{n-1} \right) \rceil + 1 \le h \le \lceil \log_{\lceil \frac{n}{2}\rceil} \left ( \frac{m}{\lceil (n-1) / 2 \rceil} \right)\rceil+1$"
+	问你 B+ 树节点的数量怎么求？利用最后一层叶节点的数量倒推回去，最小情况是所有叶节点全满（$n-1$）；最大情况是所有叶节点半满（$\lceil (n-1) / 2 \rceil$）。
+	
+	或者你也可以像这么算，将每种 height 的最小、最大能包含的 Search-Key 数量都算出来，然后进行比较：
+	
+	=== "Height Estimate"
+		![[B+TreeHeightCal.png]]
+	=== "Size Estimate"
+		![[B+TreeSizeCal.png]]
+
 
 通常，我们希望 B+ Tree 的一个 Node 的大小刚好是一个 Block，一个 Block 一般为 4KB。一种实践是设置 $n=100$，则一个 index entry 大小为 40B。
 
@@ -249,6 +258,8 @@ B+ Tree Indices 是 Index-Sequential Files 的一个替代方案，也是数据�
 	最多搜索 $\log_{50} (1,000,000)=4$ 个 Nodes。
 
 插入、删除的例子，请去 PPT 上看。
+
+- 某一节点少于 min\_size 时，优先看能否与邻居合并，如果合并会导致溢出，即大于 max\_size，才选择“借”一个值过来
 
 提高空间利用率，B+ Tree File Organization：
 
@@ -289,4 +300,5 @@ LSM Tree 的核心思想是不直接修改磁盘上的 Index File，而是先将
     - Reduced number of I/O operations per record inserted as compared to normal B+-tree (up to some size)
 - Drawback of LSM approach
     - Queries have to search multiple trees
+	    - 即牺牲部分读性能
     - Entire content of each level copied multiple times

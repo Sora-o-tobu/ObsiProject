@@ -46,7 +46,7 @@ Relation 有两个相关概念：
 | Operator                   | Notation                       | Addition                                         |
 | -------------------------- | ------------------------------ | ------------------------------------------------ |
 | **Select** 选择              | $\sigma_p(r)$                  | $\sigma_p(r)=\{ t \| t\in r \land p(t)\}$        |
-| **Project** 投影             | $\Pi _{A1, A2, ...,Ak}(r)$     | $A_1, ...,A_k$ 是关系 r 的 attribute                 |
+| **Project** 投影             | $\Pi _{A1, A2, ...,Ak}(r)$     | $A_1, ...,A_k$ 是 $r$ 的 attribute，，默认剔除重复         |
 | **Union** 并                | $r\cup s$                      | $r\cup s =\{t\| t\in r \lor t\in s\}$            |
 | **Set Difference** 集合差     | $r-s$                          | $r-s=\{t\| t\in r\land t\notin s\}$              |
 | **Cartesian Product** 笛卡尔积 | $r\times s$                    | $r\times s = \{\{t\ q\}\| t\in r \land q\in s\}$ |

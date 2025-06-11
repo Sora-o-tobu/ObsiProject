@@ -222,13 +222,13 @@ GROUP BY A.branch_name
 HAVING avg(balance) > 1200;
 ```
 
-除了 `COUNT` 的聚合函数默认忽略 Null Values，除非该值全部为 `null`，此时也会返回 `null`。
+除了 `COUNT(*)` 的聚合函数默认忽略 Null Values，除非该值全部为 `null`，此时也会返回 `null`。
 
 !!! note "Null Values"
 	任意带 `null` 的算术计算结果都是 `null`，任意带 `null` 的逻辑比较结果都是 `unknown`。此外，三种带 `unknown` 的逻辑计算结果为：
 	![[unknownoperations.png]]
 	
-	同时，作为 `WHERE` 子句中的谓词，需要使用 `WHERE amount is not null` 的形式来判断 null values，而不能直接用等于号
+	同时，作为 `WHERE` 子句中的谓词，需要使用 `WHERE amount is not null` 的形式来判断 null values，而不能直接用等于号。`WHERE` 最终结果如果为 `unknown`，也当作 `false` 处理。
 
 !!! question "关键字 `rollup`"
 	`group by rollup(A,B,C)` 能够自动生成多级别的汇总数据：
@@ -339,6 +339,9 @@ set attribute = case
     else ...
 end
 ```
+
+!!! example "使用聚合函数和 `CASE` 实现行列互换"
+	![[advancecase.png]]
 
 ## Join Operation
 

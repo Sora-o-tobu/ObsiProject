@@ -196,7 +196,7 @@ ARIES 的恢复算法分为三个阶段：分析阶段、Redo阶段、Undo阶段
 	    - 读取 Undo List 中每一个事务的最后一条 Log 的 LSN
 	- 从 CheckPoint 开始正向扫描
 		- 如果发现了不在 Undo List 中的事务则加入 Undo List
-		- 如果发现了 Update Log Record，如果对应 Page 不在脏页表中，则将其加入脏页表中（设置其 RecLSN 为该日志的 LSN），==用于 Redo==
+		- 如果发现了 Update Log Record，（如果其修改的 PageID 不在里面，则先将其加入脏页表中），设置其 RecLSN 为该日志的 LSN，==用于 Redo==
 		- 如果发现了事务的 End Log，则将其从 Undo List 中移除
 		- 扫描过程中记得记录每一个事务的最后一条日志的 LSN，==用于 Undo==
 - **<2> Redo pass**
@@ -212,3 +212,9 @@ ARIES 的恢复算法分为三个阶段：分析阶段、Redo阶段、Undo阶段
 
 !!! question
 	![[ARIESRecoveryEx1.png]]
+
+!!! example "例题"
+	=== "题面"
+		![[ARIESEx1Q.png]]
+	=== "解答"
+		![[ARIESEx1A.png]]

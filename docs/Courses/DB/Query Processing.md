@@ -11,11 +11,11 @@ Cost 通常通过时间来衡量，受到很多因素影响：
 
 - Disk Access
 - CPU
-	- 本课程简单考虑
+	- 本课程不考虑，但随着内存计算和 CPU 密集型操作的增多，CPU 代价在现代系统中也越发重要
 - Network Communication
 	- 在分布式中受到影响
 
-一般来说， Disk Access 是 Cost 的主要部分，并且相对容易估计：
+**Disk Access** 通常是 Query Cost 的主要性能瓶颈，并且相对更容易估计：
 
 $$
 b*t_T + S*t_S
@@ -54,6 +54,7 @@ File Scan 的算法在不使用 Index 的条件下进行搜索。
 	- 仅查找 File 排序依据的属性时可用，要求 Blocks 连续
 	- **Cost Estimate:** cost = $\lceil \log_2 b_r\rceil$ transfers + $\lceil \log_2 b_r \rceil$ seeks
 		- 找到第一个满足条件的 tuple 的 cost，如果该属性不是 Key Attribute，则要乘以包含满足查询条件的 Records 的 Block 的个数
+	- 二分查找在普通文件上意义不大，且需要更多的寻道次数，通常不如索引搜索
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Index Scan & Equality</font>
 
@@ -228,9 +229,34 @@ $$\
 b_r( t_T +t_S) + n_r *c
 $$
 
-其中 $c$ 指对 $s$ 单次查询的平均开销。
+其中 $c$ 指对内层表 $s$ 单次索引查询的平均开销。
 
 !!! info "如果 $r$ 和 $s$ 都有对应 Index，则选取 Tuple 数量更少的作为外层"
+
+**【Example】** 假定有表：
+
+```sql
+Movie([title], type, director);
+Comment([title, user_name], grade);
+```
+
+- Number of Tuples, movie: 5,000; comment: 1,000,000;
+- Blocking Factor, movie: 50; comment: 100;
+- Number of Distinct Values, V(director, movie) = 500; V(grade, comment) = 5;
+- Block Size: 4KB
+- Movie has a B+ Tree Index on title, and each index block contains 60 entries.
+
+Suppose that the *index nested-loop join* is used to implement $\sigma_{director = "sora"}(movie) \bowtie comment$, please estimate cost.(assume worst case of memory)
+
+只有 Movie 有索引，因此只能由表 Movie 作为内层。
+
+- 表 comment 的 Blocks 数量为 $1,000,000/100=10,000$ 个；
+- B+ 树索引的高度计算为 $\log_{60}(5000) = 3 \le h \le 3= \log_{30}(5000)$
+- 因此对内层表 Movie 的单次查询 title，所需要的 cost $c=3 (Transfer+Seek)$
+- Transfer: $10,000 + 1,000,000*3$
+- Seek: $10,000 + 1,000,000 *3$
+
+!!! bug "参考答案中对 $n_r$ 除以 500 了，但我觉得不应该"
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Merge Join</font>
 
@@ -408,3 +434,11 @@ Optimizer 做什么？
 	- size of $r\cap s$ = min (size of r + size of s)
 	- size of $r-s$ = size of r
 	- 上述三个都是按照上限估计
+
+
+???+ example "例题"
+	=== "题面"
+		![[QueryOptiEx1.png]]
+	=== "解答"
+		![[QueryQptiEx2.png]]
+
