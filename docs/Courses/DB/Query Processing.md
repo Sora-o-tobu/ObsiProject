@@ -258,6 +258,40 @@ Suppose that the *index nested-loop join* is used to implement $\sigma_{director
 
 !!! bug "参考答案中对 $n_r$ 除以 500 了，但我觉得不应该"
 
+**【Example】** 假定有表：
+
+```sql
+card([cno], name, depart, balance);
+detail([cno, pno, cdate, ctime], amount, remark);
+```
+
+- $n_{card}=10,000, \ n_{detail}=10,000,000$
+- $l_{card}=25,\ l_{detail}=29$ 
+- V(name, card) = 5000
+- Block Size = 4KB
+- **card** and **detail** tables are stored as sequential files based on search-key `cno`, there is a B+-Tree Index on `detail(cno)`
+
+估计 $\sigma_{name='sora'}(card) \bowtie detail$ 的代价，其中 $\sigma$ 使用 file scan，$\bowtie$ 使用 indexed-loop join。
+
+做这题不要这么死板，要有自己的思考。
+
+- card 中，一个 Block 可以装入 $4096 / 25= 163$ 个 records。那么 Blocks of card = $10,000 / 163=62$；同理得到 detail 的 Block 可以装入 141 个 records。
+- 计算索引相关参数
+	- Fan-out Rate n = $(4096-4) / (5+4)+1 = 455$
+	- $\log_{455} (10,000) = 2 \le height \le 2 = \log_{288} (10,000 / 2)+1$
+		- 这里 search-key 数量取了 10,000，因为 `cno` 不是 detail 的 candidate key，但是是 card 的，即这里是稀疏索引
+- 计算 $\sigma$ 消耗
+	- Transfer = $62t_T$, Seek = $1t_S$
+	- 此时外层 $\sigma_{name=...} (card)$ 中的参数：
+		- $n_r = 10,000 / 5,000 = 2$
+- 计算 $\bowtie$ 消耗
+	- 这里不能套入上面的公式，因为外层只有两个 Record，我们分别对它们都进行一次索引查询即可，一次索引查询找到所有相同 `cno` 的消耗为：$2(t_T +t_S) + t_S +8t_T$
+		- 这里的 8 来自于一个 `cno` 对应了 detail 中 $10,000,000 / 10,000 / 141=8$ 个 Blocks
+	- 外层总共查询两次，所以消耗为 $2 * (10t_T +3t_S)$
+- 将两个加起来，得到 $cost =7t_S +82t_T$
+
+!!! tip "这里相当于 $c=10t_T +3t_S$, $n_r =2$；在执行 $\sigma$ 操作后，外层结果已经位于内存中，不需要再次取出，不用再消耗 $b_r( t_T +t_S)$"
+
 <font style="font-weight: 1000;font-size: 20px" color="orange">Merge Join</font>
 
 对两个表分别按照 Join Attribute 进行排序，然后归并连接两个表。理想情况下，每个 Blocks 只需要读进 Memory 一次，那么其消耗估计为：
@@ -285,16 +319,20 @@ Suppose that the *index nested-loop join* is used to implement $\sigma_{director
 因此，$s$ 称为 *Build Input*，$r$ 称为 *Probe Input*。
 
 !!! warning "根据以上步骤，可知每个 Partition $s_i$ 的大小都要小于 $M$，对于 $r_i$ 则无这个要求"
-	Partition 的个数 $n$ 通常设置为 $n=\lceil \frac{b_s}{M}\rceil* f$，$f$ 称为修正因子(Fudge Factor)，一般为 $1.2$
+	Partition 的个数 $n$ 通常设置为 $n=\lceil \frac{b_s}{M}* f\rceil$，$f$ 称为修正因子(Fudge Factor)，一般为 $1.2$
 	
-	如果内存放不下 $s_i$，则可以对超大分区再做多次哈希分区，直到每个子分区足够小，这种做法称为 Recursive Partition。（不做要求）
+	如果内存放不下 $s_i$，则可以对超大分区再做多次哈希分区，直到每个子分区足够小，这种做法称为 Recursive Partition。写题中，只要 $M > n_h +1$，就不会发生 Recursive Partition。
 
 ![[HashJoinCost.png]]
 
-!!! danger "What is $n_h$ and $b_b$?"
-	$n_h$ 是写 Partial Filled Blocks 造成的额外 Cost，写题时一般不考虑，即 $n_h =0$；$b_b$ 指磁盘 I/O 一次 Seeks 能顺序读写的连续块个数。
+- $n_h \ge \lceil b_s / M\rceil$
+	- 粗略估算分区的数量，$n_h$ 是从 0 开始计数的，所以分区数量实际为 $n_h+1$
+		- 不过我看无论是考试还是课本都没有刻意在意这个点
+	- 要想不发生 Recursive Partition，还需要满足 $M \gt n_h +1$，这也等价于 $M\gt (b_s / M) +1$
+- $b_b = \lfloor M / (n_h +1) \rfloor$
+	- 留一块缓冲区用于输入输出
 
-??? example
+??? example "这里题目说了忽略 Writing Partially Filled Blocks，所以虽然有 $n_h=5$，计算中也不用加上"
 	![[HashJoinEx1.png]]
 
 ## Query Optimization

@@ -126,6 +126,34 @@ Database Buffer 可以在 Real Main Memory 或者 Virtual Memory 中执行，它
 	- 理想情况下，当 OS 打算回收某个 Page 时，它应该先通知 DBMS，如果这个 Page 不是 Dirty 的，那么可以直接释放；如果是 Dirty 的，那么先写入相关日志，再把该数据页写入数据库文件，之后也可以直接释放，不需要放入临时的 Swap Space，从而避开 Dual Paging Problem
 		- 可惜一般 OS 不支持这个功能
 
+## Advanced Recovery Techniques*
+
+对于 update log，我们为其包裹一层逻辑操作日志，其中 $O_j$ 是该操作实例的 unique identifier：
+
+```sql
+<T_i, O_j, operation-begin>
+<T_i, A, 100, 300>
+<T_i, O_j, operation-end, (A, -200)>
+```
+
+在 `operation-end` 里包含了 Logical Undo Information，当 crash 发生，需要 undo 这个事务的时候，如果能够读取到这个日志，则使用 Logical Undo，忽略中间的物理日志；如果只能找到 `operation-begin`，但找不到对应 `operation-end`，则使用 Physical Undo。
+
+Undo 时，书写的 Undo 日志格式为：
+
+```sql
+<T_i, O_j, operation-abort>
+```
+
+=== "题面"
+	![[AdvancedRTEx1.png]]
+=== "解答"
+	![[AdvancedRTEx2.png]]
+
+
+!!! tip "注意的几个点"
+	- Undo 的 end-point 为最后一条日志
+	- 注意 (4) 的 `<T_1, C, 600>` 是怎么得到的
+
 ## ARIES 算法
 
 ### Data Structure
@@ -196,7 +224,7 @@ ARIES 的恢复算法分为三个阶段：分析阶段、Redo阶段、Undo阶段
 	    - 读取 Undo List 中每一个事务的最后一条 Log 的 LSN
 	- 从 CheckPoint 开始正向扫描
 		- 如果发现了不在 Undo List 中的事务则加入 Undo List
-		- 如果发现了 Update Log Record，（如果其修改的 PageID 不在里面，则先将其加入脏页表中），设置其 RecLSN 为该日志的 LSN，==用于 Redo==
+		- 如果发现了 Update Log Record，如果其修改的 PageID 不在里面，则将其加入脏页表中，并设置其 RecLSN 为该日志的 LSN，==用于 Redo==
 		- 如果发现了事务的 End Log，则将其从 Undo List 中移除
 		- 扫描过程中记得记录每一个事务的最后一条日志的 LSN，==用于 Undo==
 - **<2> Redo pass**

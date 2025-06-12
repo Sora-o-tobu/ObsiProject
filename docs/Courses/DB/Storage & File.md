@@ -79,6 +79,7 @@
 	
 	- 当查询语句只涉及部分列时，只需要扫描相关列
 	- 每一列数据的类型相同，彼此相关性更大，对列数据的压缩效率更高
+	- 对现代 Vector Processing CPU 更友好、对 Cache 更友好
 
 
 数据库 File 由一系列 **records** 组成，其可分为定长 records 和变长 records。
@@ -252,7 +253,7 @@ B+ Tree Indices 是 Index-Sequential Files 的一个替代方案，也是数据�
 
 对于一个 Order $n$，有 $K$ 个 Search Key 的 File，其 B+ Tree Indices 的高度**小于等于** $\lceil \log_{\lceil \frac{n}{2}\rceil} K\rceil$。
 
-!!! tip "$\lceil \log_n \left( \frac{m}{n-1} \right) \rceil + 1 \le h \le \lceil \log_{\lceil \frac{n}{2}\rceil} \left ( \frac{m}{\lceil (n-1) / 2 \rceil} \right)\rceil+1$"
+!!! tip "$\lceil \log_n \left( \frac{m}{n-1} \right) \rceil + 1 \le h \le \lfloor \log_{\lceil \frac{n}{2}\rceil} \left ( \frac{m}{2*\lceil (n-1) / 2 \rceil} \right)\rfloor+2$ (看到很多种不同公式，最终决定自己手推)"
 	问你 B+ 树节点的数量怎么求？利用最后一层叶节点的数量倒推回去，最小情况是所有叶节点全满（$n-1$）；最大情况是所有叶节点半满（$\lceil (n-1) / 2 \rceil$）。
 	
 	或者你也可以像这么算，将每种 height 的最小、最大能包含的 Search-Key 数量都算出来，然后进行比较：
@@ -303,7 +304,15 @@ LSM Tree 的核心思想是不直接修改磁盘上的 Index File，而是先将
 
 ![[LSMTree1.png]]
 
-当 Level 0 的数据达到阈值时，则中序遍历 Level 0 树，将数据写入 Level 1 的新 Block 中。然后进行递归 Merge。
+当 Level 0 的数据达到阈值时，则中序遍历 Level 0 树，将数据写入 Level 1 的新 Block 中。然后进行递归 Merge。所有删除、更新等操作都只在 Level 0 实行，等到与下层 Merge 时才将对应操作应用到下层。
+
+!!! warning "不过查询仍然可能需要像下层查询"
+
+**【Deletion】** 使用一个 delete 标记被删除节点，在该层与下层 Merge 时，有 delete 标记的节点会被丢弃。如果被删除节点不在 Level 0，则“插入”一个相同值的 delete 标记，等到其与下层 Merge 时丢弃下层中存在的对应节点。
+
+**【Update】** 通过 Insert + Delete 实现。
+
+!!! info "磁盘中可以用 B+ 树作为数据结构，内存中可用 Skip List、红黑树、二叉树等"
 
 - Benefits of LSM approach
     - Inserts are done using only **sequential I/O** operations
