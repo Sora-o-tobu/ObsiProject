@@ -279,7 +279,7 @@ Suppose that the *index nested-loop join* is used to implement $\sigma_{director
 
 做完哈希后，依次重复进行**构建与探测(Build & Probe)**：
 
-1. 把 $s_i$ 分区的所有数据读入 Memory，用一个新的哈希函数根据 Join Attribute 为其构造 Hash Index
+1. 把一个 $s_i$ 分区的所有数据读入 Memory，用一个新的哈希函数根据 Join Attribute 为其构造 Hash Index
 2. 依次读入相应的 $r_i$ 分区的所有元组 $t_r$，根据 Hash Index 找到其对应位置，将匹配的结果输出
 
 因此，$s$ 称为 *Build Input*，$r$ 称为 *Probe Input*。

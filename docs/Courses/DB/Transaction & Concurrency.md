@@ -147,6 +147,7 @@ Two-Phase Locking 属于 **Pessimistic** 并发控制协议，并且该协议�
 	- 允许将 S 锁升级为 X 锁
 - **Phase 2- Shrinking:** 事务在释放它们的第一个 Lock 时进入 Shrinking 阶段，在此阶段只允许事务释放 Lock，并且不能获取新的锁
 	- 允许将 X 锁降级为 S 锁
+	- 如果事务已经访问完了所有需要访问的数据项，则可以开始释放锁，进入 Shrink 阶段
 
 该控制协议能够确保得到一个 **Conflict Serializable Schedule**，我们可以根据两个阶段的分界线 Lock Point 的时间顺序来得到可串行化的执行顺序。
 
@@ -156,7 +157,16 @@ Two-Phase Locking 属于 **Pessimistic** 并发控制协议，并且该协议�
 	- Two-Phase Locking 不保证没有死锁的发生
 	- Two-Phase Locking 不保证没有 Cascading Rollback 的发生，但是可以通过加强版协议 Strict Two-Phase Locking 来解决
 		- 即一个事务的排他锁只有 `COMMIT` 或 `ABORT` 时才能释放
+		- ```sql
+		R1(A) -- T1 加锁 S(A)
+		W1(A) -- T1 升级为 X(A)，写完后释放锁
+		R2(A) -- T2 加锁 S(A)
+		...
+		T1 Abort -- T1 因为某些错误需要回滚
+		```
 	- Two-Phase Locking 是得到 Conflict Serializable Schedule 的充分条件，而不是必要条件，这也说明存在不能由该协议得到的 Conflict Serializable Schedule
+		- 例如事务 `R1(A),R1(B),W1(B),R2(A),R2(B),W2(A)` 是冲突可串行化的，它的前驱图只有两条 $T_1$ 到 $T_2$ 的边；但是假设使用 2PL 协议来达成该调度，则申请 X 锁时会造成死锁
+
 
 === "`READ(D)`"
 	```python

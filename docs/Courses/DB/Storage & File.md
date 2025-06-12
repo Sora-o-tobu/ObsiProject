@@ -70,6 +70,17 @@
 
 ## File Organization
 
+??? info "以前考试曾考过 Column-Oriented Relation 的优缺点"
+	主流的事务型数据库(OLTP)大多采用行式存储，不过近几年分析型数据库(OLAP)的兴起，**列式存储(Column-Oriented Storage)** 重新变得流行。列式存储将同一列的数据在磁盘中连续存储：
+	
+	![[ColumnOrientedStorage.png]]
+	
+	显然列式存储对 OLTP 不友好，一行数据的写入需要同时修改多个列。但是对 OLAP 场景：
+	
+	- 当查询语句只涉及部分列时，只需要扫描相关列
+	- 每一列数据的类型相同，彼此相关性更大，对列数据的压缩效率更高
+
+
 数据库 File 由一系列 **records** 组成，其可分为定长 records 和变长 records。
 
 !!! note "相比于逻辑关系模型中的 Tuple，Record 还包含事务、版本、空间管理等元信息"
