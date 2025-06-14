@@ -126,6 +126,8 @@ Recoverability 用于评价一个调度对于并行事务失败的可恢复性�
 
 如果一个 Schedule 中，对于任意一组对同一个数据项先写后读的事务 $T_i, T_j$，如果 $T_i$ 的 `COMMIT` 操作在 $T_j$ 的读操作之前，即 $T_j$ 不需要跟着 $T_i$ 一起 `ROLLBACK`，则称该调度为 **Cascadeless Schedules**。
 
+如果仅想维持 Recoverability 的话，只要 $T_i$ 的 `COMMIT` 在 $T_j$ 的 `COMMIT` 前就好了。
+
 ## Lock-Based Protocols
 
 **Serializable Schedule** 是并行控制的基础，DBMS 使用 Locks 为事务动态生成可串行化的调度，这些锁在并发访问下保护数据对象：

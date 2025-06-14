@@ -151,7 +151,7 @@ Undo 时，书写的 Undo 日志格式为：
 
 
 !!! tip "注意的几个点"
-	- Undo 的 end-point 为最后一条日志
+	- Undo 的 start-point 为最后一条日志
 	- 注意 (4) 的 `<T_1, C, 600>` 是怎么得到的
 
 ## ARIES 算法
@@ -225,6 +225,7 @@ ARIES 的恢复算法分为三个阶段：分析阶段、Redo阶段、Undo阶段
 	- 从 CheckPoint 开始正向扫描
 		- 如果发现了不在 Undo List 中的事务则加入 Undo List
 		- 如果发现了 Update Log Record，如果其修改的 PageID 不在里面，则将其加入脏页表中，并设置其 RecLSN 为该日志的 LSN，==用于 Redo==
+			- 无论在不在，都要修改脏页表的 PageID 部分
 		- 如果发现了事务的 End Log，则将其从 Undo List 中移除
 		- 扫描过程中记得记录每一个事务的最后一条日志的 LSN，==用于 Undo==
 - **<2> Redo pass**
