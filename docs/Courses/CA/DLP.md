@@ -8,7 +8,7 @@
 
 ## Vecter Processor
 
-!!! quote "RV64V"
+!!! quote "RV64V: RISC-V + 向量指令扩展"
 	![[RV64V.png]]
 
 Vector 对标我们之前所说的 Scalar(标量)，它使用单独一条指令对一串类数组的向量数据进行操作，节省了 Instruction Fetch 和 Decode 的时间。
@@ -50,12 +50,12 @@ Loop:
 
 向量处理器有两种类型：
 
-- **Memory-Memory**
+- **Memory-Memory Processor**
 	- 直接操作内存中的数据
 	- e.g. CDC Star-100, TI ASC
 	- 内存带宽要求较高
 	- 检查 Memory 的依赖较为复杂
-- **Vector Register**
+- **Vector Register Processor**
 	- 先将数据加载到寄存器中再进行操作
 	- e.g. Cray-1, 以及自 1980s 后的所有 Vector Machines
 	- 我们所说的 Vector Processor 都默认为 Vector Register 类型(包括后面讨论的)
@@ -109,7 +109,7 @@ SV      V4, D
 对于有前后依赖的指令，如果有链接技术，则前一个指令的一个分量完成则可以直接进入下一个指令，并不用等待全部分量计算完成。
 
 - **Convey:** 一组可以一起执行的指令
-	- 要求不包含结构冲突，但是允许 RAW 冲突
+	- 要求不包含结构冲突，但是因为 chain 的存在允许 RAW 冲突
 - **Chimes:** 通过链接技术产生的执行序列，是流水线的调度时间单位
 	- 通常情况下，一个 Convey 对应一个 Chime
 - **Chaining:** 链接技术
@@ -151,8 +151,8 @@ vpne p0, v0, f0   # Set p0(i) = 1 if v0(i) != f0
 
 对于稀疏矩阵，我们访问或存入可以使用 Gather/Scatter 操作：
 
-- 只把需要的元素的索引传输到寄存器中
-- 存入时，只存入需要的元素
+- Gather 运算接受一个索引向量，并通过与基地址相加来组成一个新向量，结果为储存在一个向量寄存器中的稠密向量
+- 在完成对稠密向量的聚集操作后，以 Scatter 的形式进行存储
 
 ```c
 // c code
@@ -170,13 +170,16 @@ SV      VA, RA        # store result
 
 在 RV64V 中，我们通过 `vldx` 和 `vstx` 来通过索引进行 Load/Store 操作。
 
+
+
 <font style="font-weight: 1000;font-size: 20px" color="orange">Multi-Lane Implementation</font>
 
-划分为多个 Lane，同一个向量的不同分量可以在不同的 Lane 上存储和计算：
+划分为多个 Lane，同一个向量的不同分量可以在不同的 Lane 上存储和计算，通道的增加能够提升向量单元的吞吐量峰值：
 
 ![[MultiLaneEx1.png]]
 
 ![[MultiLaneEx2.png]]
+
 
 ## GPU
 
@@ -196,7 +199,7 @@ CUDA 全称为 Compute Unified Device Architecture。
 
 ## Loop-Level Parallelism
 
-基于循环的并行主要看循环的迭代之间是否有数据依赖（loop-carried dependence），例如：
+基于循环的并行主要看循环的迭代之间是否有数据依赖（loop-carried dependence） ，即后续迭代的数据访问是否依赖于先前迭代的输出，例如：
 
 ```c
 // 没有循环间依赖
@@ -224,4 +227,40 @@ B[100] = C[99] + D[99];
 ```
 
 !!! note "改写后不仅解决了循环间依赖，还可以使用向量链接"
+
+另一个例子尝试对如下递归依赖进行改写：
+
+```c
+for (i = 9999; i >= 0; --i)
+	sum += x[i] * y[i];
+```
+
+注意到对于标量 `sum`，它依赖于上一次循环结束时自己的值，因此我们并不能简单将这个循环并行。此时我们可以使用**标量扩展(scalar expansion)**技术来进行转换，使其可以完全并行：
+
+```c
+for (i = 9999; i >= 0; --i)
+	sum[i] = x[i] * y[i];
+
+// 归约
+for (i = 9999; i >= 0; --i)
+	final += sum[i];
+```
+
+其中代码的上半部分可以完全并行执行，而代码的下半部分可以使用专用硬件进行对归约操作的加速：
+
+```c
+for (i = 999; i>= 0; --i)
+	final[0] += sum[i];
+
+for (i = 999; i>= 0; --i)
+	final[1] += sum[i + 1000];
+
+...
+
+for (i = 999; i>= 0; --i)
+	final[9] += sum[i + 9000];
+
+for (i = 0; i < 10; ++i)
+	finalsum += final[i];
+```
 

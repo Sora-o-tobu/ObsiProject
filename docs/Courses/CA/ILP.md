@@ -15,14 +15,6 @@ Pipeline CPI = Ideal Pipeline CPI + Structural Stalls + Data Hazard Stalls + Con
 
 *Ideal Pipeline CPI* 是对能够实现的最佳性能的度量，通过缩短上式的右边三项 Stalls，我们可以降低总流水线 CPI。
 
-在实现方法上，ILP 大体可分为两类：
-
-- **<1> Hardware discover and exploit dynamically**
-- **<2> Software find statically**
-
-!!! quote
-	本章将介绍这两种方法和相关概念，还将讨论 ILP 的局限性。这是这些局限性直接导致了向多核的演变。
-
 !!! note "对于一段程序，我们根据跳转指令将其分隔为一系列 Basic Block，在基本块中的指令 ILP 的机会较少"
 
 ## Data Dependences and Hazards
@@ -45,7 +37,7 @@ Pipeline CPI = Ideal Pipeline CPI + Structural Stalls + Data Hazard Stalls + Con
 	- 属于 Name Dependence 的 antidependence
 	- 如果某些指令在流水线早期写结果，而其它指令在流水线后期读取源位置，或者对指令重排序，就会发生 WAW 冒险
 
-!!! info "这里假设有两条顺序的指令 $i,j$"
+!!! example "这里假设有两条顺序的指令 $i,j$"
 
 ### Data Dependence
 
@@ -70,10 +62,10 @@ Pipeline CPI = Ideal Pipeline CPI + Structural Stalls + Data Hazard Stalls + Con
 当两条指令使用相同的寄存器或存储地址(作为**Name**)，但之间没有数据依赖时，就会发生名称依赖。**Name Dependence** 有两种类型：
 
 - **<1> Antidependence**
-	- 指令 $j$ 尝试对指令 $i$ 要读取的寄存器或地址进行写操作，相当于数据依赖反过来
+	- 指令 $j$ 尝试对指令 $i$ 要读取的寄存器或地址进行写操作，即 WAR 冲突
 	- 为了确保指令 $i$ 能够读到正确的值，必须保持指令原来顺序
 - **<2> Output Dependence**
-	- 指令 $i$ 和 $j$ 尝试对同一个寄存器或地址进行写操作，我们希望最后的值依赖于后一条指令 $j$
+	- 指令 $i$ 和 $j$ 尝试对同一个寄存器或地址进行写操作，我们希望最后的值依赖于后一条指令 $j$，即 WAW 冲突
 
 ```asm
 ; Antidependence
@@ -104,11 +96,16 @@ if p2
 
 对程序正确性至关重要的两个特性是 **Exception Behavior** 和 **Data Flow**，这也是由数据依赖和控制依赖共同维护的。
 
+- 保留**异常行为**，即改动指令执行顺序，但不能改变程序如何产生异常的。
+    - 另外，对指令执行的重新排序不得导致程序中出现新的异常。
+- 分支让**数据流**变得动态，因为不同基本块的数据源不一定相同。通过保留控制依赖，就能够阻止对数据流的非法变化。
+
+
 ## Techniques
 
 这里先对我们计组中学过的 Pipeline 进行一个简单拓展。
 
-在计组中，我们认为流水线各个阶段的耗时均是相同的，都为一个时钟周期。而实际上，在引入浮点计算操作后，EX 阶段的各个操作可能相差巨大，我们有必要将其细分。
+在计组中，我们认为流水线各个阶段的耗时均是相同的，都为一个时钟周期。而实际上，在引入浮点计算操作后，EX 阶段的各个操作的消耗可能相差巨大，我们有必要将其细分，进一步流水线化：
 
 ![[4LevelPipeline.png]]
 
@@ -122,8 +119,8 @@ if p2
 
 ![[LatencyAndInterval.png]]
 
-!!! info ""
-	 === "Integer ALU"
+!!! danger ""
+	=== "Integer ALU"
 		 ![[IntegerALULatency.png]]
 	=== "Data Memory"
 		![[MemoryLatency.png]]
@@ -189,20 +186,23 @@ if p2
 具体例子，可以去网站、PPT、历年卷中查看。需要注意几个要点在于：
 
 - **【issue】** 什么时候一条指令允许发射？
-	- 需要使用的 FU 是空闲的（避免结构冲突）
-	- 该指令的 Rd 和其它正在执行的指令的 Rd 没有重复（查寄存器状态表）
+	- 需要使用的 FU 是空闲的，避免结构冲突
+		- 查功能单元状态表
+	- 该指令的 Rd 和其它正在执行的指令的 Rd 没有重复，避免 WAW 冲突
+		- 查寄存器状态表
 - **【Read Operand】** 什么时候开始读数（读数完下一个时钟周期即为 EX）
 	- 当且仅当两个源寄存器都准备好了才开始读数，即 `Rj`, `Rk` 均为 Yes
 - **【Write Back】**
 	- 写回时需要注意该目的寄存器是否在某个 FU 的 Ready List 中为 Yes
 	- 如果是 Yes，则等该指令读完再写回，避免 WAR 冲突
 
-!!! danger "Scoreboard 的缺陷"
+!!! bug "Scoreboard 的缺陷"
 	- 没有分支预测，即发射窗口只能覆盖一个 Basic Block
 	- FU 的数量、种类和延迟是瓶颈
 	- WAR 和 WAW 冲突需要解决，花费大量时间
 		- 可以通过显式寄存器重命名解决，减少时间
 	- 乱序完成，不能精确中断
+		- 即异常发生时处理器无法确保异常点之前的所有指令均已完成，且异常点之后的指令也存在着部分执行的情况
 
 !!! tip "通过显式寄存器重命名解决 WAR 和 WAW 冲突"
 	ISA 可能没有提供足够的逻辑寄存器，不过我们可以设置更多物理寄存器，对每一条需要写寄存器的指令，都为其分配一个新的物理寄存器。指令完成之后，物理寄存器中的值会被写会逻辑寄存器。
@@ -218,12 +218,12 @@ if p2
 Tamosulo 算法能够解决一些 Scoreboard 不能很好处理的问题，例如：
 
 ```asm
-DIV R1, R2, R3
-DIV R4, R5, R6
-ADD R7, R8, R9
+I1: LOAD R1, 0(R2)
+I2: ADD  R3, R1, R4
+I3: MUL  R1, R5, R6
 ```
 
-在只有一个除法单元的 Scoreboard 中，第二条指令由于结构冲突需要等待第一条指令完成才能发射，而第三条指令与前两条没有任何数据依赖，我们想要将其提前执行。
+Scoreboard 中，指令 I3 会因为其和 I1 的 WAW 冲突而不能发射，而 Tomasulo 算法能够通过保留站允许其先发射，并正确区分哪个写是有效的。
 
 !!! note "Scoreboard 将控制权给三张表；Tomasulo 将控制权交给 FU 自己，它们自行决定是否接收指令"
 	二者一个重要区别在于 IS 阶段，Scoreboard 读的是寄存器的名字，而 Tomasulo 读的是其中的数据，名字允许通过寄存器重命名更改。
@@ -232,8 +232,12 @@ ADD R7, R8, R9
 	- `busy`: FU 是否空闲
 	- `op`: FU 正在执行什么操作
 	- `Vj`, `Vk`: 两个源寄存器对应的值（注意是值）
+		- 进入 EXE 阶段时即可将该项清空
 	- `Qj`, `Qk`: 如果源寄存器没准备好，则要从哪个 FU 读取
+		- CDB 广播时，如果是自己需要的，则获取
 	- `Address`: Load/Store 读写的地址
+		- Load/Store指令可能会访问相同的地址，此时对于该内存地址来讲，有可能出现数据冒险，因此 `Address` 用来检测冲突
+		- 一般来讲，Load/Store 的 EX 第一个时钟周期用来计算 `Address`
 	- 距离 FU 完成该条指令的剩余周期数
 - 内存也有自己的 reserved station，称为 **Load/Store Buffer**
 	- `busy`: 这个位置是否有内存读写请求
@@ -251,9 +255,14 @@ ADD R7, R8, R9
 
 !!! info "相比于 Scoreboard，将 RO 阶段并入 issue 中"
 
+另外，对于 WAW 冲突，Tomasulo 算法中就算寄存器状态表中 `rd` 对应项不为空，仍然允许该条指令发射，并将自己的 `rd` 覆盖掉寄存器状态表对应项。指令写回时，通过 CDB 进行广播，只有当寄存器状态表或者保留站中存在对应为自己的 FU 时才允许写入，否则直接丢弃这个运算结果。
+
+!!! tip "每个时钟周期寄存器状态表中的结果都会被写回到寄存器堆中，但如上所述并不是所有指令结果都会被写回"
+
 - **Advantage**
 	- 分布式冲突检测，不同 FU 有自己的保留站，提高了并行度
 	- 通过隐式的寄存器重命名解决了 WAR 和 WAW 冲突
+		- 指令发射时即将准备好的数据读入保留站，以此消除 WAR 冲突
 - **Disadvantage**
 	- 需要解决同一时刻发射多个指令、同一时刻多个值写入 CDB 的问题(主要对于硬件)
 	- 和 scoreboard 一样为乱序执行，无法实现精确中断
@@ -267,7 +276,11 @@ ADD R7, R8, R9
 	=== "After Rename"
 		![[afterrename.png]]
 
+<!--
 > [我自己写的一个 Tomasulo 模拟小网站](https://tomasulo.nimisora.top/) （其实是 AI 写的）
+-->
+
+> [【计算机体系结构】Tomasulo算法 - 知乎](https://zhuanlan.zhihu.com/p/499978902) 可以看一下这篇文章的案例讲解部分
 
 ??? tip "有耐心的同学可以读一下这个"
 	![[tomasuloalgorithm.png]]
@@ -309,6 +322,9 @@ ADD R7, R8, R9
 
 ![[CorrPredictor.png]]
 
+??? question "(23-24 Final) How many bits are needed to impl (2,2) predictor with 4K entries?"
+	$$2*2^2*4K=32K\ bit$$
+
 - **Gshare Predictor** 属于 Correlating Predictor
 	- 将最近 m 条分支指令的历史和 PC 低 m 位进行异或运算来从分支历史表中选择对应预测器，其特点是结合全局历史和本地历史
 
@@ -333,8 +349,8 @@ ADD R7, R8, R9
 - **Return Address Predictor**
 	- `call`, `return` 也属于一种跳转，只要记住这个预测器是针对函数调用设计的就好了
 
-??? question "(23-24 Final) How many bits are needed to impl (2,2) predictor with 4K entries?"
-	$$2*2^2*4K=32K\ bit$$
+!!! quote "三种不同预测器的 Miss Rate 比较"
+	![[AdvancePredictorComp.png]]
 
 #### Speculation
 
@@ -348,7 +364,11 @@ ROB 作为循环 FIFO 队列来实现顺序提交，同时也可以替代 Store 
 
 在指令的 WB 阶段后添加一个 Commit 阶段，并且只有 ROB 的队首指令允许提交。
 
-需要注意的是，如果队首是 branch 或其它跳转指令，但是它预测错误，那么我们需要清空 ROB（Flush）以消除预测失败的影响。
+指令发射的时候，同时进入保留站和 ROB；当指令需要读取操作数时，也可以请求 ROB 中还未提交的临时结果。
+
+!!! tip "如果保留站或者 ROB 满了，则停止发射指令直到有空位"
+
+需要注意的是，如果队首是 branch 或其它跳转指令，但是它预测错误，那么我们可以清空 ROB（Flush）以消除预测失败的影响，这是因为直到指令提交前其结果都不会真正写入寄存器堆和内存中。
 
 与此同时，我们也为 Register Status 添加一个 Field，用来表示当前寄存器在 ROB 的哪个 Entry：
 
@@ -362,7 +382,7 @@ ROB 作为循环 FIFO 队列来实现顺序提交，同时也可以替代 Store 
 ??? info "带有 ROB 的 Tomasulo Hardware"
 	![[ROBTomasuloE.png]]
 
-通过这种方式，实现了乱序执行、乱序完成，但是**顺序发射、顺序提交**，从而能够实现精确中断。
+通过这种方式，实现了乱序执行、乱序完成，但是**顺序发射、顺序提交**，从而能够实现精确中断。异常相关的信息会被记录到 ROB 中对应项中，直到该条指令要被提交时触发。
 
 !!! question "带 Speculation 的 Tomasulo，在 \_\_ 有空余的情况下可以 Issue，发射后从 \_\_ 读取 operand 值到 \_\_。"
 	- 第一空 C，发射时要同时写入保留站和 ROB
@@ -373,10 +393,10 @@ ROB 作为循环 FIFO 队列来实现顺序提交，同时也可以替代 Store 
 	- 第二空 D，也允许从 ROB 读数
 		- A. ROB
 		- B. Register
-		- **C. ROB & Register**
-		- D. ROB | Register
+		- C. ROB & Register
+		- **D. ROB | Register**
 	- 第三空 A，先读到保留站，所有操作数都 ready 后再进入 FU
-		- A. Reservation Station
+		- **A. Reservation Station**
 		- B. Function Unit
 
 !!! quote "Conlusion"
@@ -437,7 +457,7 @@ loop:
 
 ![[DynSuperscalarEx2.png]]
 
-!!！note "看到有些指令同时写回了，如果硬件上不支持两条 write CDB 的话，可以将写回时间错开"
+!!! note "看到有些指令同时写回了，如果硬件上不支持两条 write CDB 的话，可以将写回时间错开"
 
 接下来我们假设 ALU、Load/Store、Branch 分别使用独立的 integer unit，根据以下例子来观察带有 Speculation 的多发射怎么处理：
 
@@ -504,6 +524,7 @@ loop:
 
 ![[PipelineSchedulingEx1.png]]
 
+!!! info "同时下面这条 `fsd` 指令对应更改为 `fsd f4, 8(x1)`"
 
 在上面这个例子中，每 7 个时钟周期完成一轮循环迭代。但对数组元素进行实际操作的指令只占了 3 个时钟周期，其余 4 个时钟周期包括两次 Stall 和循环开销（`addi` 和 `bne`)。我们希望消除这 4 个时钟周期。
 
@@ -512,6 +533,8 @@ loop:
 对上面这个例子进行循环展开，删除冗余的 `addi` 和 `bne` 计算，并利用**“寄存器重命名”**来进行有效的调度：
 
 ![[LoopUnrollingEx2.png]]
+
+循环展开在每次循环的迭代都是独立时最有效，即没有 loop-carried dependency。它通常在实际编译前就已完成，从而消除冗余的计算。
 
 ### Static Branch Prediction
 
@@ -524,7 +547,7 @@ loop:
 
 ### Multi Issue: VLIW
 
-!!! danger "VLIW 选择题会考"
+!!! danger "VLIW 选择题会考，注意这也是多发射的一种，即可以将 CPI 降至 1 以下"
 
 Very Long Instruction Word 通过编译器将几个指令打包成一个长指令，它确保一个长指令中各个指令之间都是独立的，从而可以并行执行。
 
@@ -535,6 +558,15 @@ Very Long Instruction Word 通过编译器将几个指令打包成一个长指�
 	- 某个功能单元被 Stall 了，则影响整个长指令的延迟
 - 兼容性问题
 	- 需要对不同硬件或不同指令集调整
+
+```c
+for ( ... )
+	x[i] += s;
+```
+
+VLIW 包含多个槽位 slot，每个槽对应一个功能单元。假定我们有一个具有 2 个访存运算、 2 个浮点运算、 1 个整数运算的 VLIW 处理器，尝试对如上简单循环进行展开并进行多发射：
+
+![[VLIWprocessor.png]]
 
 ### 高级编译器优化技术
 

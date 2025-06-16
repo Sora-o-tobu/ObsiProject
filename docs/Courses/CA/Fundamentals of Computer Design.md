@@ -18,11 +18,11 @@
 | Desktop                              | 性价比、能耗、图形性能           | 最大的计算机市场，趋向于寻找最优性价比                                                  |
 | Server                               | 吞吐量、可用性、可扩展性、能耗       | 服务器的三个特征：不间断工作，Availablity 至关重要；需求日益增多，Scalability 很重要；整体性能(吞吐量)很重要。 |
 | Cluster/warehouse-<br>scale computer | 性价比、吞吐量、能耗均衡性         | 集群指一组计算机通过局域网连接，每个节点都有自己的 OS，节点之间使用网络协议通信。非常昂贵。                      |
-| Internet of<br>things/embedded       | 价格、能耗、特殊功能的性能         | 物联网(IoT)通常指以无线方式连接互联网的嵌入式计算机，设备之间处理能力和价格相差极大                         |
+| Internet of<br>things/embedded       | 价格、能耗、特殊功能的性能         | 物联网(IoT)通常指以无线方式连接互联网的嵌入式计算机，设备之间处理能力和价格相差极大。                        |
 
 ### Class of Parallelism
 
-多种级别的并行已成为计算机设计的主要驱动力，能耗和成本是其主要约束。Application 中有以下两种基本并行：
+多种级别的并行已成为计算机设计的主要驱动力，能耗和成本是其主要约束。应用层面中，有以下两种基本并行：
 
 - **<1> Data-Level Parallelism(DLP):** 同时操作多个数据项
 - **<2> Task-Level Parallelism(TLP):** 并行地单独执行多个工作任务
@@ -61,7 +61,7 @@ CA must design the organization and hardware to meet functional requirements as 
 
 ISA 相当于软硬件之间的界限，下面将从七个方面来简要介绍以下 ISA：
 
-- **<1> Class of ISA:** 几乎所有 ISA 都是通用寄存器体系结构，操作数要么是寄存器，要么是存储地址。这一类别又可分为两种主流版本
+- **<1> Class of ISA:** 几乎所有 ISA 都是通用寄存器体系结构，即 Register Machine，操作数要么是寄存器，要么是存储地址。这一类别又可分为两种主流版本
 	- **Register-Memory ISA:** 80x86, 许多指令可以直接访问内存
 	- **Load-Store ISA:** RISC-V, ARMv8, 只有 load, store 能够访问内存
 		- 自 1985 年后发布的 ISA 都是 Load-Store ISA
@@ -75,7 +75,7 @@ ISA 相当于软硬件之间的界限，下面将从七个方面来简要介绍�
 	- ARMv8 和 RISC-V 都是固定 32-bit 长度指令
 	- 80x86 的编码是可变长度，变化范围是 1-18 Bytes
 
-??? info "Class of ISA (据说出过一道题)"
+??? tip "Class of ISA (据说出过一道题)"
 	- **<1> Register Machine** 拥有显式的操作数
 		- Register-Memory ISA，如 x86
 		- Load-Store ISA(Register-Register ISA)，如 RISC-V
@@ -110,14 +110,15 @@ ISA 相当于软硬件之间的界限，下面将从七个方面来简要介绍�
 
 这些快速发展的技术左右着计算机设计的命运。由于计算速度的激增和技术的迅猛发展，一种计算机设计的生存期可能只有 3-5 年。
 
-### Power and Energy
-
-Bandwidth 或 Throughput 指给定时间完成的总工作量，比如磁盘读写的每秒传输兆字节数。相对的，Latency 或 Response Time 指一个时间从开始到完成所经过的时间，比如一次磁盘访问需要的毫秒数。
+Bandwidth 或 Throughput 指给定时间完成的总工作量，比如磁盘读写的每秒传输兆字节数。
+相对的，Latency 或 Response Time 指一个事件从开始到完成所经过的时间，比如一次磁盘访问需要的毫秒数。
 
 !!! info "带宽与延迟的改进里程碑的双对数曲线（直线是 1：1）"
 	![[loglogbandwidthlatency.png]]
+	
+	在技术的发展过程中，Bandwidth 的发展速度超过了 Latency，并且这一趋势很可能会继续持续下去。
 
-在技术的发展过程中，Bandwidth 的发展速度超过了 Latency，并且这一趋势很可能会继续持续下去。
+### Power and Energy
 
 对于 CMOS 芯片来说，传统的主要能耗是开关晶体管，即动态能耗(**Dynamic Energy**)。每个晶体管的能耗跟该晶体管驱动的容性负载与电压平方的乘积平方成正比：
 
@@ -127,7 +128,7 @@ $$
 
 !!! info "上式表示逻辑转换脉冲 0=>1=>0 或 1=>0=>1 所需的能耗，单次转换乘上 $\frac{1}{2}$ 即可"
 
-每个晶体管所需功耗就是一次转换的能耗乘上转换频率：
+每个晶体管所需的**功率**就是一次转换的能耗乘上转换频率：
 
 $$
 Power_{Dynamic} \propto \frac{1}{2}\times Capacity\ Load \times Voltage^2 \times Frequency\ Switched
@@ -135,8 +136,8 @@ $$
 
 对于一项 *Fixed Task* ，降低时钟频率可以降低 $Power$，但不一定能降低 $Energy$。(课本原话)
 
-!!! note "个人认为，降频可以降压，此时 $Energy$ 减少。但是降频意味着性能降低，工作时间也会增加"
-	$$Energy =power \times execution\ time$$
+!!! note "个人认为，只有降压才能减少一个固定工作量的能耗；但是实际上降频和降压往往是相伴出现的"
+	$$Energy =Power \times Execution\ Time \propto Capacity\ Load \times Voltage^2 $$
 
 配电、散热和防热点的难度日益增加，能耗是现在晶体管的主要限制因素。因此，现代微处理器提供了许多技术，试图提高能效（**Energy-Effiency**）：
 
@@ -170,9 +171,10 @@ Cost Trend 的影响因素主要有三点：Time（时间）、Volumn（产量�
 
 !!! info "服务等级协议 SLA 是基础设施供应商为客户提供的保证，当不满足 SLA 时可能需要向客户作补偿"
 
-两种 SLA 状态通过 *failures*(from state 1 to 2) 或者 *restorations*(from state 2 to 1) 进行转换。对这两种转换进行量化，得到 dependability 的两种度量：
+两种 SLA 状态通过 *failures*($1\Rightarrow 2$) 或者 *restorations*($2\Rightarrow 1$) 进行转换。对这两种转换进行量化，得到 dependability 的两种度量：
 
 - **MTTF** mean time to failure 平均无故障时间
+	- 故障率即为 $\frac{1}{MTTF}$
 - **MTTR** mean time to repair 平均修复时间
 - **MTBF** mean time between failures
 	- = MTTF + MTTR

@@ -3,7 +3,7 @@
 
 ## Multi-Processor
 
-单处理器性能优先，现代U基本都为多处理器，它属于 **MIMD** 架构，每个处理器 Fetch 自己的指令，对自己的数据流进行操作。
+单处理器性能有限，现代U基本都为多处理器，它属于 **MIMD** 架构，每个处理器 Fetch 自己的指令，对自己的数据流进行操作。
 
 多处理器根据 Memory Model 的不同可分为 **UMA** 和 **NUMA** 两种：
 
@@ -107,6 +107,7 @@ Coherent Miss 中，根据是否源于处理器之间的数据共享而划分为
 每个处理器都有自己的 Cache，为了保证数据一致性，我们通过一个分布式目录结构 Directory 记录每个内存块当前的缓存状态以及被哪些处理器缓存了。
 
 !!! info "因此不需要像 Snooping 协议一样广播数据变更，从而节省带宽，更适合大规模系统"
+	不是广播，而是目录与请求节点、与一个或多个远程节点之间选择性地进行通信。
 
 为每一块内存记录 **directory**，目录的内容为：
 
@@ -133,6 +134,9 @@ Coherent Miss 中，根据是否源于处理器之间的数据共享而划分为
 	![[DirectoryFromCPU.png]]
 === "From Cache"
 	![[DirectoryFromDirectory.png]]
+	
+	!!! note
+		- 某 Cache 独占一个地址块，但是当这个块因为 Cache 空间不够或者其它原因被 victim，需要 Write-Back 时，会向该块所对应的目录位置发送“数据写回”消息，并转为 Uncached 状态
 
 ### Synchronization
 

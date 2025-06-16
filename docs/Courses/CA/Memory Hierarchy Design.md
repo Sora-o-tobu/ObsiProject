@@ -6,6 +6,7 @@
 !!! quote ""
 	![[MemoryHierarchyQuote.png]]
 
+!!! danger "与计组重合的部分自然略过了"
 
 ## Memory Technology & Optimization
 
@@ -86,11 +87,13 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 === "Unified Cache"
 	- 指令和数据共用一个 cache
 	- 更少的硬件，更低的命中率
+	- 指令和数据访问竞争缓存端口和带宽
 	
 	![[unifiedcache.png]]
 === "Split Cache"
 	- 指令和数据分开存储
 	- 一般是 L1 Cache 分开，L2 Cache 统一
+	- 指令流和数据流独立，互不干扰
 	
 	![[splitcache.png]]
 
@@ -99,24 +102,24 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 
 将缓存优化的十种高级方法分为以下五类：
 
-- <1> **Reducing Hit Time（2+2）**
-	- Small, Simple L1 Cache & Way Prediction
-	- Avoiding Address Translation & Trace Cache
-	- 这两种技术通常还能降低功耗
+- <1> **Reducing Hit Time（2 + 2）**
+	- Small, Simple L1 Cache \\ Way Prediction
+		- 这两种技术通常还能降低功耗
+	- Avoiding Address Translation \\ Trace Cache
 - <2> **Increasing Cache Bandwidth（3）**
-	- Pipelined Cache & Multibanked Caches & Non-Blocking Caches(非阻塞缓存)
-- <3> **Reducing Missing Penalty（3+2）**
-	- Critical Word First(关键字优先) & Merging Write Buffer(合并写缓冲) & Victim Caches
-	- Multi-Level Cache & Read miss prior to writes
-	- 这两种技术对功耗影响很小
+	- Pipelined Cache \\ Multibanked Caches \\ Non-Blocking Caches(非阻塞缓存)
+- <3> **Reducing Missing Penalty（3 + 2）**
+	- Critical Word First(关键字优先) \\ Merging Write Buffer(合并写缓冲) \\ Victim Caches
+		- 这两种技术对功耗影响很小
+	- Multi-Level Cache \\ Read miss prior to writes
 - <4> **Reducing Miss Rate（1 + 3）**
 	- Compiler Optimizations(编译器优化)
-	- Larger Block Size & Larger Cache Size & Higher Associativity
-	- 在编译时进行优化显然能够降低功耗
+		- 在编译时进行优化显然能够降低功耗
+	- Larger Block Size \\ Larger Cache Size \\ Higher Associativity
 - <5> **Parallelism（2）**
-	- Hardware Prefetching & Compiler Prefetching
+	- Hardware Prefetching \\ Compiler Prefetching
+		- 由于提前取出了未使用的数据，这两种技术通常会增加功耗
 	- 通过并行减小 Miss Penalty 或 Miss Rate
-	- 由于提前取出了未使用的数据，这两种技术通常会增加功耗
 
 !!! danger "建议直接抄 A4 上，很有可能出选择题，具体的内容最好简单了解一下"
 
@@ -132,10 +135,12 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Way Prediction</font>
 
-- 组相连时，采用预测器来预测数据所在路
+组相联时，在高速缓存中保留额外 bit 用来进行 Way-Prediction，预测下一次可能被访问的路。
+
 - 如果预测错误，反而会增加 Hit Time
+- 加大了高速缓存访问流水化的难度
 - 关于预测正确率：
-	- > 90% for two-way, > 80% for four-way
+	- (> 90%) for two-way, (> 80%) for four-way
 	- I-Cache > D-Cache
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Avoiding Address Translation</font>
@@ -145,7 +150,7 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 	- **PIPT:** Physically Indexed, Physically Tagged
 		- 即我们之前所讲的 Cache，缺点是不管 Cache 是否命中，都要先经过 TLB 或 PTE 转换地址
 	- **VIVT:** Virtually Indexed, Virtually Tagged，可以称为 Virtual Cache
-		- 歧义 Ambiguity：两个不同的进程的相同虚拟地址，在 Virtual Cache 中对应了同一块（实际应该为不同物理地址）
+		- 歧义 Ambiguity：两个不同的进程使用了相同虚拟地址，在 Virtual Cache 中对应了同一块（实际应该为不同物理地址）
 		- 重名 Aliasing：一个物理地址对应了多个进程不同的虚拟地址，导致 Cache 的命中率较低以及可能存在的 Dirty 问题
 		- 以上两个问题维护成本极高，因此基本没有硬件还在用 VIVT Cache 了。
 	- **VIPT:** Virtually Indexed, Physically Tagged
@@ -158,26 +163,37 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Trace Cache</font>
 
-- 根据程序执行情况动态设计 Cache
+追踪高速缓存是一种特殊的 I-Cache，它不存储物理上连续的指令块，而是存储动态执行的指令序列，称为 Trace。
+
+- 根据程序执行情况动态记录实际指令序列
+- 获取指令时，处理器首先在 Trace Cache 中搜索，如果命中即可一次性获取一个无需担心分支预测等停顿的较长指令序列
 - 由于局部性原理，大部分分支预测都是正确的
 
 ### Increase Cache Bandwidth
 
+L1 Cache 的带宽限制了程序，因此以下三个策略一般都应用于 L1 Cache。
+
 <font style="font-weight: 1000;font-size: 20px" color="red">Pipelined Caches</font>
 
 - 把缓存访问的过程流水线化，提高吞吐量
-- 但是会增加分支预测错误的 Penalty
+- 但是会增加分支预测错误的 Penalty 以及提高了 Latency
+- 同样在 I-Cache 上更容易实现
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Multi-Banked Caches</font>
 
-- 把缓存划分为多个独立的 bank，以支持**顺序访问**
-	- 类似于 DRAM 的设计
-- 当访问序列恰好按照 bank 数量展开时，可以提高带宽
+- 把缓存划分为多个独立的 bank，每个 bank 都可被独立访问，从而增加带宽
+- 当访问序列恰好按照 bank 数量展开时，即在这些 bank 中平均分布，带宽提升最高
+	- 因此设计者要考虑地址怎么分配给各个分区，一种简单策略是 *Sequential Interleaving**
+
+![[SeqInterleaving.png]]
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Nonblocking Caches</font>
 
-- 如果 CPU 支持乱序执行，可以实现 Hit Under Miss，即 Cache Miss 后可以继续执行
+- 如果 CPU 支持乱序执行，可以实现 Hit Under Miss，即 Cache Miss 后可以继续执行，从而发挥出乱序执行的优势
+	- 乱序执行的 CPU 不会因为一个部件失效而停顿，例如在等待 D-Cache Miss 的时候还能继续从 I-Cache 中获取指令
 - 一个 Cache Line 可以同时处理多个请求
+
+!!! note "通常，能够隐藏 L1 失效但是 L2 命中带来的 Penalty，但再往下可能仍然无法完全覆盖延迟"
 
 ```asm
 1: Reg1:=LoadMem(A);
@@ -196,14 +212,14 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 - 一级缓存可以减少 hit time，二级缓存可以减少 miss penalty
 - 一级缓存的 miss penalty 就是二级缓存的 AMAT
 - 区分两个概念
-	- **Local Miss Rate:** 本级缓存的 Miss Rate
+	- **Local Miss Rate:** 本级缓存的 Miss Rate，即本级的 Miss 量除以对本级的总访问量
 	- **Global Miss Rate:** 本级的 Miss 量除以 CPU 的总访问量
 	- Global Miss Rate < Local Miss Rate
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Giving Priority to Read Misses over Writes</font>
 
 - 如果有 Write Buffer，可以暂缓处理写缺失，优先处理读缺失
-- 但是处理独缺失时要检查写缓冲区，确保数据的一致性
+- 但是处理读缺失时要检查写缓冲区，确保数据的一致性
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Critical Word First & Early Restart</font>
 
@@ -212,7 +228,7 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Merging Write Buffer</font>
 
-- 发生 Write Miss 时，如果要写的地址恰好在 Write Buffer 内，则直接在 Write Buffer 内写
+- 发生 Write Miss 时，如果要写的地址恰好在 Write Buffer 内，则直接在 Write Buffer 内写，这一步骤叫做写合并 Write Merging
 - 一定程度缓解了 Write Buffer 装满时造成的 Stall
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Victim Caches</font>
@@ -223,7 +239,7 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 
 ### Reducing Miss Rate
 
-回顾一下我们的 Miss Rate 分类，在体系中我们会设计如下四种：
+回顾一下我们的 Miss Rate 分类，在计算机体系中我们会涉及如下四种：
 
 - **Compulsory Misses:** 冷启动 Miss，第一次访问数据时发生的缺失
 - **Capacity Misses:** 容量 Miss，缓存容量不足导致的缺失
@@ -251,24 +267,23 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 - 指令级别
 	- 指令重排、冲突分析
 - 数据级别
-	- Merging Arrays 数组合并
-	- Loop Interchange 循环交换
-	- Loop Fusion 循环融合
-	- Blocking 数据块化
+	- Merging Arrays 数组合并，以提升空间局部性
+	- Loop Interchange 循环交换，交换内外层循环，改进空间局部性
+	- Loop Fusion 循环融合，合并两个具有相同循环，且部分变量重叠的独立循环
+	- Blocking 数据块化，同时利用了空间局部性和时间局部性
 
 ### Parallelism
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Hardware Prefetching</font>
 
 - 提前把数据和指令放入 Cache 中
-- 能够减少 Compulsory Misses
+- 能够减少 **Compulsory Misses**
 - 由于可能把有用的 Block 的挤出 Cache，也许会增加其它 Miss
 
 <font style="font-weight: 1000;font-size: 20px" color="red">Compiler-controlled Prefetch</font>
 
-- 由编译器控制的 Prefetch，它会插入预取指令
+- 由编译器控制的 Prefetch，真正获取数据之前，插入请求数据的预取指令
 - 需要在预取的开销与其获得的性能之间取得平衡
-
 
 ## Virtual Memory & Virtual Machine
 
