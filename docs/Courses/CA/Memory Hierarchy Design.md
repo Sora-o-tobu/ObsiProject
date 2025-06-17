@@ -161,6 +161,8 @@ Flash Memory 是一种 Electronically Erasable Programmable Read-Only Memory，�
 
 > Reference: [关于Cache的歧义/别名问题和VIVT/VIPT/PIPT架构](https://zhuanlan.zhihu.com/p/577138649)
 
+![[VIPT.png]]
+
 <font style="font-weight: 1000;font-size: 20px" color="red">Trace Cache</font>
 
 追踪高速缓存是一种特殊的 I-Cache，它不存储物理上连续的指令块，而是存储动态执行的指令序列，称为 Trace。

@@ -46,7 +46,7 @@ Loop:
 
 一个向量中的计算都不应该依赖于前面的结果，这个数据依赖是由**编译器**来保证的，硬件无需检查，从而确保较高的 Clock Rate。
 
-向量处理器有大量的存储访问需求，其存储器经过特殊设计高度交错，并且不使用 Data Cache。
+向量处理器有大量的存储访问需求，其存储器经过特殊设计高度交错，并且**不使用** Data Cache。其对内存的带宽具有较高要求。
 
 向量处理器有两种类型：
 
@@ -87,9 +87,9 @@ SV      V4, D
 
 每个机器有自己的最大向量长度 **MVL**，即一条指令最多能处理 MVL 个元素。如果向量长度 VL>MVL，则需要对其拆分，生成 VL/MVL 个长度为 MVL 的向量循环。这一操作叫做 **Strip Mining**。
 
-!!! example "有 $VL=N$, $MVL<N<2*MVL$"
+!!! example "有 $VL=N$, $MVL<N$"
 	- 先处理 $N\mod MVL$ 个元素
-	- 然后处理 $MVL$ 个元素
+	- 然后分批处理 $MVL$ 个元素，共需 $\lfloor N / MVL \rfloor$ 组
 
 ??? question "Additional Reading: Dynamic Register Type"
 	动态寄存器类型指寄存器本身的有效向量长度 **VL(Vector Length)** 在执行时可以动态设置，而不是在编译时写死。VL 存储在 **Vector-Length Register** 中，可以通过指令 `setvl` 设置。动态寄存器类型特点为：
@@ -111,7 +111,7 @@ SV      V4, D
 - **Convey:** 一组可以一起执行的指令
 	- 要求不包含结构冲突，但是因为 chain 的存在允许 RAW 冲突
 - **Chimes:** 通过链接技术产生的执行序列，是流水线的调度时间单位
-	- 通常情况下，一个 Convey 对应一个 Chime
+	- 通常情况下，一个 Convey 对应一个 Chime，一个 Chime 需要 $VL$ 个时钟周期
 - **Chaining:** 链接技术
 - **FLOP:** 浮点运算，，例如一个对 32 element vector 计算的 `vmul` ，其 FLOP = 32
 

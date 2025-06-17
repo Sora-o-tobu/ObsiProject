@@ -177,6 +177,7 @@ if p2
 	- `busy`: FU 是否空闲
 	- `op`: FU 正在执行什么操作
 	- `Fi`, `Fj`, `Fk`: FU 的操作数对应哪个寄存器
+		- `Fi` 是目的寄存器
 	- `Qj`, `Qk`: FU 的操作数如果没准备好，应该从哪个 FU 中读取
 	- `Rj`, `Rk`: FU 的操作数是否准备好，当所有操作数准备好时，FU 操作进入 EX 状态，记得将 `Rj` 和 `Rk` 都改为 NO
 - 寄存器状态表 **Register Status Table**
@@ -211,8 +212,6 @@ if p2
 
 > [Scoreboard 算法模拟网站](https://jasonren0403.github.io/scoreboard/)
 
-!!! danger "Scoreboard 似乎不是考试范围，请记住下面的 Tomasulo 算法"
-
 #### Tomasulo 算法
 
 Tamosulo 算法能够解决一些 Scoreboard 不能很好处理的问题，例如：
@@ -228,7 +227,7 @@ Scoreboard 中，指令 I3 会因为其和 I1 的 WAW 冲突而不能发射，�
 !!! note "Scoreboard 将控制权给三张表；Tomasulo 将控制权交给 FU 自己，它们自行决定是否接收指令"
 	二者一个重要区别在于 IS 阶段，Scoreboard 读的是寄存器的名字，而 Tomasulo 读的是其中的数据，名字允许通过寄存器重命名更改。
 
-- 每个 FU 有一个 buffer，称为**保留站 reserved station**
+- 一个 FU 可以有多个 buffer，称为**保留站 reserved station**
 	- `busy`: FU 是否空闲
 	- `op`: FU 正在执行什么操作
 	- `Vj`, `Vk`: 两个源寄存器对应的值（注意是值）
@@ -284,6 +283,12 @@ Scoreboard 中，指令 I3 会因为其和 I1 的 WAW 冲突而不能发射，�
 
 ??? tip "有耐心的同学可以读一下这个"
 	![[tomasuloalgorithm.png]]
+	
+	- 观察 Load/Store Step，它的 `RS[r].A` 在发射时初始化为指令的 `imm`；EX 阶段的第一个时钟周期将常数与寄存器值相加以计算实际访问地址 `RS[r].Vj + RS[r].A`；此时 Load 和 Store 指令存在执行差异：
+		- 对于 Load 指令，它还需要在 EX 阶段进行内存访问读取
+		- 对于 Store 指令，它需要在 WB 阶段额外判断要写回的数据 `RS[r].Vk` 是否准备好（`RS[r].Qk`）
+			- 即 Store 指令在进入 EX 阶段时不要求 `Vk` 准备好，它只在 EX 阶段计算地址，但是进入 WB 阶段要求
+			- 例如对于 `LD R1, 8(R2)`，这里 `Vj` 指 `R2`，`Vk` 指 `R1`，`A` 初始化为 8
 
 ### Advanced Branch Prediction
 
@@ -417,6 +422,9 @@ ROB 作为循环 FIFO 队列来实现顺序提交，同时也可以替代 Store 
 - 动态调度 Superscalar
 	- 基于 Tomasulo 算法
 	- 乱序执行
+
+!!! abstract "能使 CPI < 1 的技术"
+	![[CPIlt1.png]]
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Static Superscaler</font>
 

@@ -14,7 +14,7 @@
 !!! danger "注意是到 Memory 的 Latency，不是到 Cache。因此上述两种模型对应下面两种多核架构"
 	=== "Symmetric Shared-Memory Multiprocessor, **SMP**"
 		![[SMPCA.png]]
-	=== "Distributed Shared-Memory Multiprocessor, **DMP**"
+	=== "Distributed Shared-Memory Multiprocessor, **DSP**"
 		![[DMPCA.png]]
 
 多处理器核与核之间的编程模型可以分为四种：
@@ -44,7 +44,7 @@
 在 Shared Memory 的情况下，对于同一块内存，可能有不同的处理器在进行读写操作。如果每个处理器都有自己的缓存，当一个处理器修改了内存中的数据，其它处理器的缓存中可能仍然保持着旧数据。我们需要一种方法能够“通知”其它处理器这一修改，主要有以下两种策略：
 
 - 监听策略 snooping，**适用于 SMP**
-- 目录策略 directory-based，**适用于 DMP，但也可以用在组织成 Bank 的 SMP 中**
+- 目录策略 directory-based，**适用于 DSP，但也可以用在组织成 Bank 的 SMP 中**
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Snooping 协议</font>
 
