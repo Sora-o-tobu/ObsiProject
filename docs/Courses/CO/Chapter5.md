@@ -84,7 +84,8 @@ $$
 
 !!! danger "写题时出现的Block Size均指Data段大小，如 two-word block 指 64 bits data"
 
-!!! danger "通常，1 word 的大小要看题目给出的地址位数决定；在 8 位系统中，1 word = 1 byte"
+!!! note "对于直接映射 Cache，Tag 宽度等于物理地址宽度直接减去 Cache 容量位数"
+
 
 ### Cache Hit & Miss
 

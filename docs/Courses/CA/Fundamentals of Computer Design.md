@@ -55,7 +55,7 @@
 
 ### CA Definition
 
-CA must design the organization and hardware to meet functional requirements as well as price, power, performance, and availability goals
+CA must design the organization and hardware to meet functional requirements as well as price, power, performance, and availability goals.
 
 !!! quote "Definition: Instruction Design & Implementation 指令集及其实现"
 
@@ -85,6 +85,12 @@ ISA 相当于软硬件之间的界限，下面将从七个方面来简要介绍�
 		- 有一个临时的累加器，操作数放在累加器内计算
 	
 	![[classofisa.png]]
+
+!!! note "ISA 四个设计原则"
+	- Simplicity favors regularity
+	- Smaller is faster
+	- Make common case fast
+	- Good design demands good compromises
 
 ## Trends
 
@@ -174,7 +180,7 @@ Cost Trend 的影响因素主要有三点：Time（时间）、Volumn（产量�
 两种 SLA 状态通过 *failures*($1\Rightarrow 2$) 或者 *restorations*($2\Rightarrow 1$) 进行转换。对这两种转换进行量化，得到 dependability 的两种度量：
 
 - **MTTF** mean time to failure 平均无故障时间
-	- 故障率即为 $\frac{1}{MTTF}$
+	- 故障率即为 $\frac{1}{MTTF}$，以 10 亿小时为单位
 - **MTTR** mean time to repair 平均修复时间
 - **MTBF** mean time between failures
 	- = MTTF + MTTR
@@ -222,6 +228,7 @@ $$
 
 - **wall-clock time/response time/elapsed time** 完成一项任务的 latency，包括 storage accesses、memory accesses、I/O activities、OS overheading 等所有相关时间
 - **CPU Time** 只指 CPU 执行计算的时间
+	- 还可以进一步划分为 user CPU time 和 system CPU time
 
 此外，用户计算他们的计算机相对性能的方式使用 Benchmark Program
 

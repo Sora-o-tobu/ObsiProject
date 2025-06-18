@@ -141,3 +141,35 @@ Coherent Miss 中，根据是否源于处理器之间的数据共享而划分为
 ### Synchronization
 
 !!! bug "没有啦"
+
+!!! quote "对于大型多处理器系统，同步可能是性能的瓶颈"
+
+- **Hardware Primitive:** 提供一个可以原子性地获取并更改内存值的 Instruction Sequences
+	- 在 User Level Synchronization 上使用
+- **Spin Lock:** 处理器使用一个循环持续尝试获取锁
+
+
+```asm
+# atomic exchange
+		DADDUI R2, R0, 1   # locked value
+lockit: EXCH   R2, 0(R1)   # exchange
+		BNEZ   R2, lockit  # if success, R2 = 0
+
+# test-and-set
+lockit: T&S   R2, 0(R1)
+		BNEZ  R2, lockit
+
+# spin lock using LL & SC
+lockit: LL    x2, 0(x1)     # load linked
+		BNEZ  x2, lockit    # no free => spin
+		ADDUI x2, x0, 1     # locked value
+		SC    x2, 0(x1)     # atomic exchange
+		BNQZ  x2, lockit    # already lock?
+```
+
+如果已经实现了缓存一致性，则 Lock Value 可能会在 Cache 中；否则它一定存储在 Memory 中。
+
+!!! danger "`ll` 和 `sc` 之间只能由 Register-Register Instruction，不能有访存指令"
+	与 `EXCH` 等相比，它们将读取和写入独立，解决了不恰当竞争，例如对 unavailable lock 进行不必要的 write 请求。
+
+![[synchronizationex.png]]

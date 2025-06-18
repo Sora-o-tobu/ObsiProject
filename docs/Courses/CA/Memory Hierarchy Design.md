@@ -289,7 +289,7 @@ L1 Cache 的带宽限制了程序，因此以下三个策略一般都应用于 L
 
 ## Virtual Memory & Virtual Machine
 
-!!! quote "虚拟内存部分在体系结构中涉及较少，可见[计组笔记](https://www.nimisora.top/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/Chapter5/)"
+!!! quote "虚拟内存部分在体系结构中涉及较少，可见[计组笔记](https://www.nimisora.top/Courses/CO/Chapter5/)"
 
 虚拟机最早在 20 世纪 60 年代后期提出，多年以来一直是大型计算机的重要组成部分，并基于以下原因在近年来得到广泛关注：
 
