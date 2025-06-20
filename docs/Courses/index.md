@@ -40,12 +40,12 @@
     - Memory Hierarchy: CO/Chapter5
     - The Hardware/Software Interface: CO/Chapter6
 - 计算机体系结构:
-	- index: CA/
-	- Fundamentals of Computer Design: CA/Fundamentals of Computer Design
-	- Memory Hierarchy Design: CA/Memory Hierarchy Design
-	- Instruction-Level Parallelism: CA/ILP
-	- Data-Level Parallelism: CA/DLP
-	- Thread-Level Parallelism: CA/TLP
+    - index: CA/
+    - Fundamentals of Computer Design: CA/Fundamentals of Computer Design
+    - Memory Hierarchy Design: CA/Memory Hierarchy Design
+    - Instruction-Level Parallelism: CA/ILP
+    - Data-Level Parallelism: CA/DLP
+    - Thread-Level Parallelism: CA/TLP
 - 8086 汇编语言:
     - index: 8086asm/
     - 指令速查: 8086asm/指令速查
