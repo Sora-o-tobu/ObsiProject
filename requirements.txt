@@ -5,3 +5,4 @@ mkdocs-statistics-plugin
 mkdocs-video
 mkdocs-minify-plugin
 mkdocs-glightbox
+mkdocs-toc-plugin@https://github.com/Sora-o-tobu/ObsiProject/releases/download/v0.0.1/mkdocs_toc_plugin-0.0.1-py3-none-any.whl

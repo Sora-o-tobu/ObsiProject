@@ -44,7 +44,7 @@ char ch = 'F';        // 1 byte  = 8 bits  (usually)
 float dVal1 = 5.0;   // 4 bytes = 32 bits
 double dVal2 = 5.0;  // 8 bytes = 64 bits
 bool bVal = true;    // 1 bit
-std::string str = "Nimisora";
+std::string str = "Nimisora"; // C++ 字符串末尾不用 '\0'
 ```
 
 C++ is a statically typed language, 即任何变量、函数在运行前都会获得一个 Types。
@@ -250,6 +250,7 @@ int main() {
 }
 ```
 
+> [std::pair - cppreference.com](https://en.cppreference.com/w/cpp/utility/pair.html) from `#include <utility>`
 
 ## References
 
@@ -264,7 +265,7 @@ cout << num << endl; // Output: 10
 
 !!! tip "Type Restrictions"
 	- 引用不能绑定引用
-	- 不允许引用的 arrays
+	- 不允许引用 arrays
 	- 不允许将引用作为指针，但是允许引用绑定指针，即
 		- `int&* p = ...;` 是非法的
 		- `void f(int*& p);` 是合法的
@@ -325,6 +326,41 @@ void shift(std::vector<std::pair<int, int>> &nums)
 值得注意的是，在不使用引用时，对于一个对象（在本例中为一个STL容器 `pair`），这种拷贝遍历将带来很大的额外开销。而使用引用则减少了不必要的开销。
 
 !!! tip "如果循环中不需要对元素进行修改，请加上 `const`"
+
+C++11 开始引入了右值引用 `T&&` ，它**只能**绑定到右值上，允许我们暂时保留这些临时对象的资源，并且不用付出和拷贝一样大的开销：
+
+```c++
+#include <iostream>
+#include <string>
+
+void printString(const std::string& s) {
+    std::cout << "Lvalue reference: " << s << "\n";
+}
+
+void printString(std::string&& s) {
+    std::cout << "Rvalue reference (moved): " << s << "\n";
+}
+
+int main() {
+    std::string name = "Alice";
+
+    printString(name);           // 调用 const lvalue reference 版本
+    printString(std::string("Bob")); // 调用 rvalue reference 版本
+    printString(std::move(name));    // 强制把 name 转成右值 → 调用 rvalue 版本
+}
+
+/*Output:
+Lvalue reference: Alice
+Rvalue reference (moved): Bob
+Rvalue reference (moved): Alice
+*/
+```
+
+| 表达式                  | 类型       | 绑定方式                     |
+| -------------------- | -------- | ------------------------ |
+| `name`               | 左值（变量）   | 绑定到 `const std::string&` |
+| `std::string("Bob")` | 右值（临时对象） | 绑定到 `std::string&&`      |
+| `std::move(name)`    | 强制右值     | 绑定到 `std::string&&`      |
 
 ## Const
 
@@ -779,6 +815,9 @@ In STL, each container has its own iterator, which can have different behavior.
 !!! note "迭代器使算法更加通用，例如 `sort` 函数支持对数组、vector等容器进行排序"
 	- `sort` 函数传入的迭代器需要满足 Random-Access，因为其中会包含 `it1 - it2`，`it + n` 等操作
 	- 但是 `std::lower_bound`，`std::find` 等函数传入的迭代器只要满足 `forward` 即可，但是如果支持 Random-Access，则时间复杂度可以从 $O(N)$ 降至 $O(\log N)$
+
+??? example "另一张图"
+	![[iteratorclass.png]]
 
 ```c++
 #include <map>
@@ -1468,6 +1507,8 @@ Widget widgetOne;
 Widget widgetTwo;
 widgeTwo = widgetOne;
 ```
+
+即初始化(initialization)的时机是**对象创建时**；赋值(assignment)的时机是**对象已存在后**。
 
 如果我们不希望这些函数运作的话，可以使用关键字 `delete` 手动将其删去：
 

@@ -89,6 +89,7 @@ plugins:
   #- git-revision-date-localized:
   #    locale: zh
   - roamlinks
+  - toc
   - minify:
       minify_html: true
   - glightbox:

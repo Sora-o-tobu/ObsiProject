@@ -387,7 +387,7 @@ int function()
 }
 ```
 
-### static 成员变量
+### Static Member
 
 !!! info "static function"
 	在多文件编程中，`static` 属性一般用来声明该函数的作用域，表示该函数只能在该文件中使用
@@ -688,7 +688,7 @@ try {
 
 !!! info "如果抛出的异常没有被 Catch，也会直接调用 `std::terminate`"
 
-## NEW 和 MALLOC 的区别
+## NEW vs MALLOC
 
 - `new`, `delete` 是C++的关键字；`malloc`, `free` 是库函数，需要引入相应头文件才可使用
 - `new` 分配的空间在自由存储区；`malloc` 分配的空间在堆空间
@@ -699,9 +699,83 @@ try {
 
 !!! info "`new` 操作符的底层通常也是用 `malloc` 实现的"
 
-!!! danger "不要对同一块内存 `delete` 两次；但是对 `nullptr` `delete` 是安全的"
+!!! danger "不要对同一块内存 `delete` 两次；但是对 `nullptr` 使用 `delete` 是安全的"
 
-## 一些 STL 用法
+## Smart Pointers
+
+手动使用 `new` 和 `delete` 常常导致内存泄漏或悬挂指针，智能指针的 `smart` 体现在：
+
+- **自动回收资源:** 在生命周期结束后智能指针自动释放资源
+- **正确调用:** 根据指针类型，自动选择 `delete` 或 `delete[]`
+- **额外限制:** 例如强制要求智能指针不为空
+
+- `std::unique_ptr` 假设自己是对象的唯一所有者，它会在自己析构时自动调用合适的 `delete`
+	- `unique_ptr` 类中拷贝构造和拷贝赋值函数均被标记为 `delete`，即它不能被拷贝或赋值；但是我们可以通过 `std::move` 转移所有权
+	- 如果一个类中含有非静态的不可拷贝成员，这个类也无法被拷贝
+
+```c++
+#include <iostream>
+#include <memory>
+
+struct Foo {
+    Foo() { std::cout << "Foo created\n"; }
+    ~Foo() { std::cout << "Foo destroyed\n"; }
+    void say() { std::cout << "Hello from Foo\n"; }
+};
+
+int main() {
+    std::unique_ptr<Foo> p1 = std::make_unique<Foo>();
+    p1->say();
+
+    // std::unique_ptr<Foo> p2 = p1;      ❌ 错误，不能复制
+    std::unique_ptr<Foo> p2 = std::move(p1);  // ✅ 转移所有权
+
+    if (!p1) std::cout << "p1 is now null\n";
+}
+```
+
+- 多个 `std::shared_ptr` 可以共享同一个对象，其内部会维护引用计数，当最后一个 `shared_ptr` 被销毁时，资源才被释放
+	- 可以被浅拷贝，被拷贝的值指向同一个对象
+	- 接受右值引用 `unique_ptr`，将独占所有权转换为共享所有权
+
+```c++
+#include <iostream>
+#include <memory>
+
+struct MyClass {
+    MyClass()  { std::cout << "MyClass created\n"; }
+    ~MyClass() { std::cout << "MyClass destroyed\n"; }
+};
+
+int main() {
+    std::unique_ptr<MyClass> uptr = std::make_unique<MyClass>();
+
+    std::shared_ptr<MyClass> sptr = std::move(uptr);  // 转移所有权到 shared_ptr
+
+    std::cout << "uptr is " << (uptr ? "not null" : "null") << "\n";
+    std::cout << "sptr use_count: " << sptr.use_count() << "\n";
+}
+```
+
+!!! danger "Double Free"
+	```c++
+	T* p = ...;
+	std::shared_ptr<T> a(p);
+	std::shared_ptr<T> b(p);
+	// runtime error: double free
+	// =============================
+	auto a = std::make_shared<T>();
+	std::shared_ptr<T> b(a.get());
+	// runtime error: double free
+	// =============================
+	auto a = std::make_shared<T>();
+	std::shared_ptr<T> b(a);
+	std::shared_ptr<T> c;
+	c = b;
+	// Good
+	```
+
+## Some STL..
 
 ### STACK
 
