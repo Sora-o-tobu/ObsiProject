@@ -40,7 +40,7 @@ C++ 还引入了命名空间概念作为附加信息以区分不同库中的同�
 #include <string>
 
 int val = 5;         // 4 bytes = 32 bits (usually)
-char ch = 'F'        // 1 byte  = 8 bits  (usually)
+char ch = 'F';        // 1 byte  = 8 bits  (usually)
 float dVal1 = 5.0;   // 4 bytes = 32 bits
 double dVal2 = 5.0;  // 8 bytes = 64 bits
 bool bVal = true;    // 1 bit
@@ -65,7 +65,7 @@ double half(double x)
 	cout << "2" << endl;
 	return x/2;
 }
-int hald(int x, int divisor) // default parameter values
+int half(int x, int divisor) // default parameter values
 {
 	cout << "3" << endl
 	return x/divisor;
@@ -164,12 +164,13 @@ int main() {
 
 **Named Cast** 是 C++ 支持的类型转换，四种分别有不同的用途：
 
-| 转换类型                     | 作用与用途                                   | 是否有运行时检查 | 可进行的转换示例                                                  | 使用场景与注意点                                                         |
-| ------------------------ | --------------------------------------- | -------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
-| `static_cast<T>(…)`      | ✅ 编译期类型检查✅ 用于相关类型之间的安全转换（非多态）           | ❌ 无运行时检查 | 基本类型间（如 `int`→`double`）类层次无多态关系时向上/向下转换                   | 用于非多态的指针/引用转换，或基本类型间。下行转换需谨慎，无法检查目标是否真实对象。喵                      |
-| `dynamic_cast<T>(…)`     | ✅ 支持多态类型安全下行转换（需基类有 `virtual`）✅ 运行时类型检查 | ✅ 有运行时检查 | `Base* b = …; Derived* d = dynamic_cast<Derived*>(b);`    | 多态场景下想从基类指针/引用安全转为派生类。失败返回 `nullptr`（指针）或抛 `std::bad_cast`（引用）。喵 |
-| `const_cast<T>(…)`       | ✅ 去除或添加 `const`/`volatile` 修饰           | ❌ 无运行时检查 | `const int* p = …; int* q = const_cast<int*>(p);`         | 用于修改掉对象的常量属性；若目标本身真为常量，修改会造成未定义行为。喵                              |
-| `reinterpret_cast<T>(…)` | ✅ 进行“最低层”比特重解释转换，不改变比特模式                | ❌ 无运行时检查 | `int* p; char* c = reinterpret_cast<char*>(p);``long→指针`等 | 用于底层指针与整数之间、不同指针类型之间按位重解释。几乎不安全，仅在极端场景（如硬件映射、序列化）下使用。喵           |
+| 转换类型                     | 作用与用途                                   | 是否有运行时检查 | 可进行的转换示例                                                                                    | 使用场景与注意点                                                        |
+| ------------------------ | --------------------------------------- | -------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `static_cast<T>(…)`      | ✅ 编译期类型检查✅ 用于相关类型之间的安全转换（非多态）           | ❌ 无运行时检查 | 基本类型间（如 `int`→`double`）类层次无多态关系时向上/向下转换                                                     | 用于非多态的指针/引用转换，或基本类型间。下行转换需谨慎，无法检查目标是否真实对象。                      |
+| `dynamic_cast<T>(…)`     | ✅ 支持多态类型安全下行转换（需基类有 `virtual`）✅ 运行时类型检查 | ✅ 有运行时检查 | ```c++<br>Base* b = …;<br>Derived* d = dynamic_cast<Derived*>(b);<br>```                    | 多态场景下想从基类指针/引用安全转为派生类。失败返回 `nullptr`（指针）或抛 `std::bad_cast`（引用）。 |
+| `const_cast<T>(…)`       | ✅ 去除或添加 `const`/`volatile` 修饰           | ❌ 无运行时检查 | ```c++<br>const int* p = …; <br>int* q = const_cast<int*>(p);<br>```                        | 用于修改掉对象的常量属性；若目标本身真为常量，修改会造成未定义行为。                              |
+| `reinterpret_cast<T>(…)` | ✅ 进行“最低层”比特重解释转换，不改变比特模式                | ❌ 无运行时检查 | ```c++<br>int* p;<br>char* c = reinterpret_cast<char*>(p);<br>```<br><br>或者从 `long` → 指针 等。 | 用于底层指针与整数之间、不同指针类型之间按位重解释。几乎不安全，仅在极端场景（如硬件映射、序列化）下使用。           |
+
 
 ## Structs
 
@@ -309,7 +310,7 @@ void shift(std::vector<std::pair<int, int>> &nums)
 }
 ```
 
-答案是不会的，因为 `for` 循环的取值也是仅调用其值，而不是在同一内存地址上进行操作，将其修改如下，则可以达到预期效果：
+答案是不会的，因为 `for` 循环的取值也是仅复制其值，而不是在同一内存地址上进行操作，将其修改如下，则可以达到预期效果：
 
 ```c++
 void shift(std::vector<std::pair<int, int>> &nums)
@@ -321,9 +322,9 @@ void shift(std::vector<std::pair<int, int>> &nums)
 }
 ```
 
-值得注意的是，如果不适用引用时，对于一个对象（在本例中为一个STL容器 `pair`），这种遍历方式实际上是在进行不断拷贝遍历，这将带来很大的额外开销。而使用引用则减少了不必要的开销。
+值得注意的是，在不使用引用时，对于一个对象（在本例中为一个STL容器 `pair`），这种拷贝遍历将带来很大的额外开销。而使用引用则减少了不必要的开销。
 
-!!! tip "如果循环中不需要对元素进行修改，请尽可能加上 `const`"
+!!! tip "如果循环中不需要对元素进行修改，请加上 `const`"
 
 ## Const
 
@@ -467,7 +468,7 @@ d2: 0
 name: Miu
 ```
 
-这是因为 `std::cin >> name` 同样是以空格和换行符为分隔。为了解决这个问题，在读取时不以空格为作为字符串分隔，我们应使用 `std::getline()` 函数：
+这是因为 `std::cin >> name` 是以空格和换行符为分隔。为了解决这个问题，在读取时不以空格作为字符串分隔，我们应使用 `std::getline()` 函数：
 
 ```c++
 #include <iostream>
@@ -767,19 +768,17 @@ In STL, each container has its own iterator, which can have different behavior.
 - **forward:** 只能对迭代器对象执行递增一操作 `iter++`
 - **bidirection:** 可以递增，也可以递减 `iter--`
 - **random-access:** 可以手动设置改变的值 `iter += 5`
+	- 从而支持了 `iter1 - iter2` 操作
+
+!!! info "C++17 新增了 Contiguous Iterator，它在 random-access 基础上要求逻辑相邻的元素在内存中物理相邻"
+
+此处再次把上一节的图放在这：
+
+![[containeranditerator.png]]
 
 !!! note "迭代器使算法更加通用，例如 `sort` 函数支持对数组、vector等容器进行排序"
-
-| Container      | Type of iterator |
-| -------------- | ---------------- |
-| Vector         | Random-Access    |
-| Deque          | Random-Access    |
-| List           | Bidirectional    |
-| Map            | Bidirectional    |
-| Set            | Bidirectional    |
-| Stack          | No iterator      |
-| Queue          | No iterator      |
-| Priority Queue | No iterator      |
+	- `sort` 函数传入的迭代器需要满足 Random-Access，因为其中会包含 `it1 - it2`，`it + n` 等操作
+	- 但是 `std::lower_bound`，`std::find` 等函数传入的迭代器只要满足 `forward` 即可，但是如果支持 Random-Access，则时间复杂度可以从 $O(N)$ 降至 $O(\log N)$
 
 ```c++
 #include <map>
@@ -912,7 +911,7 @@ int main()
 
 !!! success "All containers in STL are classes!!!"
 
-如果你写过 Python 的话，应该会知道 Python 中类方法的定义的第一个参数常为 `self`。实际上，C++ 中类方法也隐式地将自己作为一个参数传入，即 `this`。例如：
+如果你写过 Python 的话，应该会知道 Python 中类方法的定义的第一个参数常为 `self`。实际上，C++ 中非 `static` 的成员函数也隐式地将自己作为一个参数传入，即 `this`。例如：
 
 ```c++
 void Point::print();
@@ -924,7 +923,7 @@ a.print();
 Point::print(&a);
 ```
 
-!!! abstract "`::` 称为 Resolver，为作用域解析符号"
+??? abstract "`::` 称为 Resolver，为作用域解析运算符"
 	- 如果 `::` 前面不加东西，则显式声明调用全局命名空间中的对象或方法
 	- 对于一个命名空间内的对象，默认优先访问局部/类作用域中的变量（如果存在）
 	
@@ -935,6 +934,48 @@ Point::print(&a);
 	    a--;       // ❓如果存在，则访问 Class Scope 中的 'a'
 	}
 	```
+
+!!! tip "`static` 成员函数不能直接访问非 `static` 成员，并且不能使用 `this`"
+
+另外，`const` 对象不能调用非 `const` 成员函数，它们都需要保持自身外部可见状态不变：
+
+```c++
+class MyClass {
+public:
+    void normalFunc() {
+        std::cout << "I'm a non-const function\n";
+    }
+    void constFunc() const {
+        std::cout << "I'm a const function\n";
+    }
+};
+
+int main() {
+    const MyClass obj;     // 👈 这是个 const 对象
+
+    obj.constFunc();       // ✅ OK：const 成员函数，可以被 const 对象调用
+    obj.normalFunc();      // ❌ Error：不能对 const 对象调用非 const 成员函数
+}
+```
+
+但是在关键字 `mutable` 修饰下，我们允许 `const` 成员函数在保证外部可见状态不变的情况下，修改内部状态：
+
+```c++
+class S {
+  mutable bool _is_cached = false;
+  mutable int _cache;
+public:
+  int f() const {
+    if (!_is_cached) {
+      /* some very, very expensive operation */
+      _is_cached = true;
+      _cache = 42;
+    }
+    return _cache;
+  }
+};
+```
+
 
 ### Inheritance
 
@@ -1022,7 +1063,7 @@ Circle circ(60f);
 elly = circ;
 ```
 
-此处调用的是 `Ellipse::operator=`，因此只有 `Circle` 被继承的数据才会被 Copy；
+此处调用的是 `Ellipse::operator=`，因此只有被 `Circle` 继承的数据才会被 Copy；
 
 ```c++
 Ellipse* elly = new Ellipse(20f, 40f);
@@ -1030,7 +1071,7 @@ Circle* circ = new Circle(60f);
 elly = circ;
 ```
 
-此处原始的 `elly` 就丢失了，`elly` 和 `circ` 都指向了同一个 `Circle` 对象。如果调用 `elly->render();` ，调用的也是 `Circle::render();`。
+此处原始的 `elly` 就丢失了，`elly` 和 `circ` 都指向了同一个 `Circle` 对象。如果 `Ellipse` 中设置 `render()` 为 `virtual` 的话，调用 `elly->render();` ，会因为多态调用 `Circle::render();`。
 
 ```c++
 void func(Ellipse& elly) { elly.render(); }
@@ -1388,11 +1429,15 @@ public:
 	Widget ();                          // default constructor
 	Widget (const Wiget& w);            // copy constructor
 	Wiget& operator= (const Widget& w); // copy assignment constructor
+	
 	~Widget ();                         // destructor
+	
 	Widget (Widget&& rhs);              // move constructor
 	Widget& operator= (Widget&& rhs);   // move assignment constructor
 };
 ```
+
+!!! tip "默认构造函数并不会对成员变量进行初始化，它们会保持 `uninitialized`"
 
 !!! note "拷贝构造函数传入的同一类型对象只能是引用，因为在按值传参的过程中本身就会调用拷贝构造函数"
 	拷贝构造函数被调用的场合具体发生在：
@@ -1403,7 +1448,15 @@ public:
 	
 	默认的拷贝函数是直接将指针的值复制过来，属于 shallow copy，需要注意。
 
-其中第二条和第三条虽然作用都是复制对象，但是实现方式不同：
+另外，在定义了其它任何构造函数的情况下，编译器不会自动生成默认构造函数：
+
+```c++
+struct S {
+  S(const S &) { std::cout << "copy constructor\n"; }
+} s; // error: no matching constructor for initialization of 'struct S'
+```
+
+SMF 第二条和第三条虽然作用都是复制对象，但是实现方式不同：
 
 ```c++
 // call Copy Constructor
