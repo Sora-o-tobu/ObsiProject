@@ -34,7 +34,7 @@
 - 计算机组成:
     - index: CO/
     - Computer Abstractions and Technology: CO/Chapter1
-    - Instruction: Language of Machine: CO/Chapter2
+    - Instruction: CO/Chapter2
     - Arithmetic for Computer: CO/Chapter3
     - The Processor: CO/Chapter4
     - Memory Hierarchy: CO/Chapter5
