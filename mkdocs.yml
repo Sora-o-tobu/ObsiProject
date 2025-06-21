@@ -131,29 +131,29 @@ nav:
   - 课程笔记:
     - Courses/index.md
     - 微积分甲 II:
-      - Courses/微积分甲II/index.md
-      - 级数: Courses/微积分甲II/级数.md
-      - 直线与平面: Courses/微积分甲II/直线与平面.md
-      - 多元函数微分: Courses/微积分甲II/多元函数微分.md
-      - 多元函数积分: Courses/微积分甲II/积分.md
+      - Courses/calculusII/index.md
+      - 级数: Courses/calculusII/series.md
+      - 直线与平面: Courses/calculusII/Line & Plane.md
+      - 多元函数微分: Courses/calculusII/differential.md
+      - 多元函数积分: Courses/calculusII/integration.md
     - 概率论与数理统计:
-      - Courses/概率论与数理统计/index.md
-      - 错题本: Courses/概率论与数理统计/review.md
-      - 概率论的基本概念: Courses/概率论与数理统计/CH1.md
-      - 随机变量及其分布: Courses/概率论与数理统计/CH2.md
-      - 多维随机变量及其分布: Courses/概率论与数理统计/CH3.md
-      - 随机变量的数字特征: Courses/概率论与数理统计/CH4.md
-      - 大数定律与中心极限定理: Courses/概率论与数理统计/CH5.md
-      - 数理统计的基本概念: Courses/概率论与数理统计/CH6.md
-      - 参数估计: Courses/概率论与数理统计/CH7.md
-      - 假设检验: Courses/概率论与数理统计/CH8.md
+      - Courses/PS/index.md
+      - 错题本: Courses/PS/review.md
+      - 概率论的基本概念: Courses/PS/CH1.md
+      - 随机变量及其分布: Courses/PS/CH2.md
+      - 多维随机变量及其分布: Courses/PS/CH3.md
+      - 随机变量的数字特征: Courses/PS/CH4.md
+      - 大数定律与中心极限定理: Courses/PS/CH5.md
+      - 数理统计的基本概念: Courses/PS/CH6.md
+      - 参数估计: Courses/PS/CH7.md
+      - 假设检验: Courses/PS/CH8.md
     - 大学物理 乙:
       - 大物 乙 I: Courses/Physics/PhysicsI.md
       - 大物 乙 II:
-        - 电学部分: Courses/Physics/PhysicsII/电学部分.md
-        - 电磁学部分: Courses/Physics/PhysicsII/电磁学部分.md
-        - 光学部分: Courses/Physics/PhysicsII/光学部分.md
-        - 量子部分: Courses/Physics/PhysicsII/量子部分.md
+        - 电学部分: Courses/Physics/PhysicsII/electricity.md
+        - 电磁学部分: Courses/Physics/PhysicsII/electromagnetism.md
+        - 光学部分: Courses/Physics/PhysicsII/optics.md
+        - 量子部分: Courses/Physics/PhysicsII/quantum.md
     - 离散数学:
       - Courses/DiscreteMathematics/index.md
       - CH 1. Logic and Proofs: Courses/DiscreteMathematics/note/Chapter1.md
@@ -177,8 +177,8 @@ nav:
         - CH 6. Registers and Register Transfers: Courses/DD/note/Chapter 6 Registers and Register Transfers.md
         - CH 7. Memory Basics: Courses/DD/note/Chapter 7 Memory Basics.md
       - Verilog:
-        - Verilog基础: Courses/DD/Verilog/Verilog基础.md
-        - Verilog补充: Courses/DD/Verilog/Verilog补充.md
+        - Verilog基础: Courses/DD/Verilog/VerilogBasic.md
+        - Verilog补充: Courses/DD/Verilog/VerilogSupplement.md
     - 计算机组成:
       - Courses/CO/index.md
       - CH 1. 计算机概念与技术: Courses/CO/Chapter1.md
@@ -246,13 +246,13 @@ nav:
         - 网络寻址: Courses/无线网络应用/网络寻址.md
     - 网络攻防实践基础 短学期:
       - Courses/ctf/index.md
-      - Web 基础: Courses/ctf/Web基础.md
-      - Misc 基础: Courses/ctf/Misc基础.md
-      - Reverse 基础: Courses/ctf/Reverse基础.md
-      - Pwn 基础: Courses/ctf/Pwn基础.md
-      - Crypto 基础: Courses/ctf/Crypto基础.md
-      - Web 专题: Courses/ctf/Web专题.md
-      - Misc 专题: Courses/ctf/Misc专题.md
+      - Web 基础: Courses/ctf/Web.md
+      - Misc 基础: Courses/ctf/Misc.md
+      - Reverse 基础: Courses/ctf/Reverse.md
+      - Pwn 基础: Courses/ctf/Pwn.md
+      - Crypto 基础: Courses/ctf/Crypto.md
+      - Web 专题: Courses/ctf/WebTopic.md
+      - Misc 专题: Courses/ctf/MiscTopic.md
   - 课外积累:
     - Accumulation/index.md
     - CSAPP:
