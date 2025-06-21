@@ -107,7 +107,7 @@ Matrix operator*(int x, Matrix mat) {
 
 ### Virtual
 
-Virtual 为子类提供了实现的接口。其底层实现方式是一个 8 字节的地址，可以用如下一个简单程序进行验证：
+Virtual 为子类提供了实现的接口。其底层实现方式是一个 8 字节的地址 `vptr` 指向一个表，可以用如下一个简单程序进行验证：
 
 ```c++
 class base {
@@ -146,6 +146,26 @@ int main()
 ```
 
 !!! note "这也能说明 `private` 成员从外部可以通过指针访问，只需要我们摸清内部内存结构"
+
+一个父类的成员函数被声明为 `virtual` 后，它的所有子类同名函数都会被**隐式**地声明为虚函数，因此每个类都有其各自且不同的 `vtpr`。
+
+一个简单的例子：
+
+```c++
+class A {
+public:
+	A() { f(); }
+	virtual void f() { cout << "A::f()"; }
+};
+class B : public A {
+public:
+	B() { f(); }
+	void f() { cout << "B::f()"; }
+};
+B temp;
+
+// A::f()B::f()
+```
 
 虚函数根据运行时**实际对象**的类型来决定最终调用哪个函数，这一过程称为**多态(Polymorphism)**。
 
@@ -428,10 +448,31 @@ struct Foo {
 }
 ```
 
-!!! quote "`inline`"
+??? quote "关键字 `inline`"
 	`inline` 本身用作 `macro` 更安全的替代使用，它以增大 code size 作为代价减少了函数调用的 cost。通常，我们对那些只有 2-3 行的小函数、调用频繁的函数添加 `inline` 关键字。注意不要对递归函数添加。
 	
+	C++ 标准规定，凡是在类内定义直接给出函数题的成员函数，都会隐式带有 `inline` 属性。
+	
 	不过现在编译器会自动判断某些函数是否要 inline，就算你添加了 `inline` 也不一定接受你的要求。`inline` 关键字被更多地用于指示 "Multiple Definitions are permitted"。
+
+- `const` 对象除了可以调用 `const member function`，还可以调用 `static member function`
+- 静态成员函数也会和其它成员函数一起 Overload
+
+```c++
+class A {
+public:
+	static void f(double) { cout << "A" << endl; }
+	void f(int) { cout << "B" << endl; }
+};
+
+int main()
+{
+	const A a;
+	a.f(3);    // A
+	A b;
+	b.f(3.1);  // A
+}
+```
 
 ## Template
 
@@ -694,7 +735,7 @@ try {
 - `new` 分配的空间在自由存储区；`malloc` 分配的空间在堆空间
 	- 自由存储区可以是堆、全局/静态存储区等
 - `new` 操作符返回类型与对象严格匹配；`malloc` 返回 `void*` ，需要手动强制转换
-- `new` 分配失败返回异常；`malloc` 分配失败返回 `NULL`
+- `new` 分配失败返回 `std::bad_alloc` 异常；`malloc` 分配失败返回 `NULL`
 - `new` 和 `delete` 会正确调用对象的 `Ctor` 或 `Dtor`
 
 !!! info "`new` 操作符的底层通常也是用 `malloc` 实现的"

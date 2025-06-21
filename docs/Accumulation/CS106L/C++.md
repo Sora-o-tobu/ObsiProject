@@ -3,6 +3,10 @@
 
 - C++ 向后兼容低级语言，如使用 `asm(...);` 来执行汇编语言
 - C++23 指的是23年
+- C++ 编程范式
+	- Object-Oriented Programming
+	- Procedural Programming
+	- Generic Programming
 
 ## C++ Basics
 
@@ -171,6 +175,66 @@ int main() {
 | `const_cast<T>(…)`       | ✅ 去除或添加 `const`/`volatile` 修饰           | ❌ 无运行时检查 | ```c++<br>const int* p = …; <br>int* q = const_cast<int*>(p);<br>```                        | 用于修改掉对象的常量属性；若目标本身真为常量，修改会造成未定义行为。                              |
 | `reinterpret_cast<T>(…)` | ✅ 进行“最低层”比特重解释转换，不改变比特模式                | ❌ 无运行时检查 | ```c++<br>int* p;<br>char* c = reinterpret_cast<char*>(p);<br>```<br><br>或者从 `long` → 指针 等。 | 用于底层指针与整数之间、不同指针类型之间按位重解释。几乎不安全，仅在极端场景（如硬件映射、序列化）下使用。           |
 
+**【23-24 Final】** 下面哪个代码会编译错误？**D**
+
+```c++
+// A. static_cast 可以用在基类和子类的互相转换，无编译错误，但是实际运行时有可能出错
+struct U {};
+struct V : public U {};
+struct W : public U {};
+int main()
+{
+	U* p = new V;
+	W* q = static_cast<W*>(p);
+	return q == nullptr;
+}
+
+// B. dynamic_cast 只能用在基类和子类是多态的时候，即基类一定要有 virtual 函数。
+// 但是实际上只要 dynamic_cast<target>(expression) 中 expression 是多态类型即可，只不过此例中 W 和 U 无继承关系，会返回空指针
+struct U { virtual void foo() {} };
+struct V : public U {};
+struct W {};
+int main()
+{
+	U* p = new V;
+	W* q = dynamic_cast<W*>(p);
+	return q == nullptr;
+}
+
+// C. 理由同上，但是此例不返回空指针
+struct U { virtual void foo() {} };
+struct V : public U {};
+struct W : public U {};
+int main()
+{
+	U* p = new V;
+	W* q = dynamic_cast<W*>(p);
+	return q == nullptr;
+}
+
+// D. static_cast 不允许用于转换两个不相关的指针（除了 void*）
+struct U {};
+struct V : public U {};
+struct W {};
+int main()
+{
+	U* p = new V;
+	W* q = static_cast<W*>(p);
+	return q == nullptr;
+}
+```
+
+`dynamic_cast<target>(expression)` 在运行时会检查基类指针 `expression` 指向的对象是否是 `target` 或其子类，否则只会返回 `nullptr`。其最常见的用途是多态场景中判断一个基类指针/引用指向哪个派生类型：
+
+```c++
+Base* pb = new Derived();
+if (dynamic_cast<Derived*>(pb))
+	cout << "OK" << endl;
+else
+	cout << "NO" << endl;
+```
+
+也就是说，`expression` 的**动态类型**必须为 `target` 或其派生类。
 
 ## Structs
 
@@ -430,11 +494,11 @@ int const *p = a;  // (*p) is const
 一个字符串作为右值，通常自带 `const` 属性，但是编译器允许将字符串常量赋值给一个非 `const` 指针：
 
 ```c++
-char* s = "Hello, world!";
-char a[] = "Hello, world!";
+char* s = "Hello, world!"; // 可以移动，不能修改，= const char*
+char s[] = "Hello, world!";// 不能移动，可以修改，= *const char
 ```
 
-但是，使用这个指针去修改值仍然是不允许的，运行时会发生 `segmentation fault`，即试图访问不允许写的内存。
+
 
 ## Streams
 
@@ -1148,6 +1212,8 @@ public:
 
 ### Template
 
+**【Theorem】**在有函数重载的时候，优先考虑是否有完全匹配的函数，找不到再考虑模板，还是找不到再考虑隐式类型转换。
+
 模板是创建泛型类或函数的蓝图或公式。库容器，比如迭代器和算法，都是泛型编程的例子，它们都使用了模板的概念，例如 `vector<int>` 。模板函数在你对其实例化前都不会被编译，当你调用了这个函数的一个版本，编译器会生成一个专属的版本以供后续使用。
 
 ```c++
@@ -1420,7 +1486,11 @@ friend User& operator+(User& fir, User& sec);
 */
 ```
 
-!!! note "原因是 Member Function 中 `this` 是作为一个隐式的参数传递的，因此也相当于两个参数"
+??? note "原因是 Member Function 中 `this` 是作为一个隐式的参数传递的，因此也相当于两个参数"
+	```c++
+	// 以下几个运算符依赖 this，因此不能以非成员函数形式重载(就算是 friend)
+	operater=, operator(), operator[], operator->, operator->*
+	```
 
 我们需要注意区分 `++` 和 `--` 的函数重载形式：
 
@@ -1458,6 +1528,34 @@ Rational r(1,3);
 double d = 1.3 * r; // r => double
 ```
 
+**【19-20 Final】** 下列程序的输出是什么？
+
+```c++
+#include <cstring>
+#include <iostream>
+
+using namespace std;
+
+class Str {
+  char m_s[10];
+  char* m_p;
+public:
+  Str(char *s) { strcpy(m_s, s); m_p = m_s; }
+  operator char*() { return m_p; }
+  char* operator++(){ return ++m_p; } 
+  char operator[](int i) { return m_s[i]; }
+};
+
+int main() {
+  Str s("hello");
+  cout << *s << endl;   // prints "h", 这里先将 s 转换为 m_p，再解引用 *s 得到第一个值
+  ++s;
+  cout << s[0] << endl; // prints 'h'
+  cout << *s << endl;   // prints 'e'
+  return 0;
+}
+```
+
 ## Special Member Functions
 
 C++ 中一共有六种 SMF，这些成员函数会在编译的时候默认生成，我们并不需要手动生成它们。
@@ -1482,6 +1580,7 @@ public:
 	拷贝构造函数被调用的场合具体发生在：
 	
 	- **初始化:** 例如 `T t = t1;`，`T t(t1);` 等
+		- 这两种分别叫做拷贝初始化和直接初始化，区别可以再往下看
 	- **函数参数传递:** 例如 `f(t)`，其中 `void f(T t)`
 	- **函数返回:** 例如函数 `T f()` 的返回语句 `return T;`
 	
@@ -1584,3 +1683,22 @@ int main()
 ```
 
 最后只会输出 `A::A(&)`
+
+在语义上，`C c1(7)` 称为**直接初始化(direct initialization)**，编译器直接调用 `C(int)` 来构造 `c1`；`C c2 = 7` 称为**拷贝初始化(copy initialization)**，编译器需要接受一个非 `explicit` 的构造函数来进行**隐式转换**。二者都会调用 Copy Constructor。
+
+```c++
+#include <iostream>
+
+class C {
+public:
+    explicit C(int) { std::cout << "i" << std::endl; }
+    C(double) { std::cout << "d" << std::endl; }
+};
+
+int main() {
+    C c1(7);   // i
+    C c2 = 7;  // d
+}
+```
+
+最后，由于在对象构造过程中虚函数表还未产生，所以构造函数不能被声明为 `virtual`，会发生编译错误；但是我们应该尽可能在多态场景中为析构函数声明 `virtual`，这样当我们通过一个基类指针去 `delete` 一个派生对象时，析构可以按照派生类->...->基类的顺序正确调用，保证销毁。
