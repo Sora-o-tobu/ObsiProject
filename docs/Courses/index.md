@@ -19,7 +19,7 @@
 	- 计算机体系结构[note]: CA/
 - 语言:
 	- x86汇编语言[note]: 8086asm/
-	- CS106L[note]: ../Accumulation/CS106L
+	- CS106L / OOP[note]: ../Accumulation/CS106L
 {{ END_TOC }}
 
 试试翔哥的 Toc 插件唔

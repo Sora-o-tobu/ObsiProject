@@ -269,8 +269,6 @@ struct C : public B {
 - <2> **static storage duration：** 全局对象、`static` 局部对象、`static` 类成员对象，位于 `CODE AND DATA`
 - <3> **dynamic storage duration：** `new` 出来的对象，位于 `HEAP`
 
-!!! tip "程序退出时，析构函数的调用顺序与构造函数相反，除了 dynamic 的对象，它们只有 `delete` 时才会析构"
-
 !!! note "`Global` 对象可以被其它文件以 `extern` 关键字声明引入；如果该全局对象是 `static` 的则不行"
 
 成员变量的构造函数会比自己的构造函数更先调用。对于带有基类的对象，则首先会先调用基类的构造函数：
@@ -451,7 +449,7 @@ struct Foo {
 ??? quote "关键字 `inline`"
 	`inline` 本身用作 `macro` 更安全的替代使用，它以增大 code size 作为代价减少了函数调用的 cost。通常，我们对那些只有 2-3 行的小函数、调用频繁的函数添加 `inline` 关键字。注意不要对递归函数添加。
 	
-	C++ 标准规定，凡是在类内定义直接给出函数题的成员函数，都会隐式带有 `inline` 属性。
+	C++ 标准规定，凡是在类内定义直接给出函数体的成员函数，都会隐式带有 `inline` 属性。
 	
 	不过现在编译器会自动判断某些函数是否要 inline，就算你添加了 `inline` 也不一定接受你的要求。`inline` 关键字被更多地用于指示 "Multiple Definitions are permitted"。
 
@@ -667,18 +665,17 @@ public:
 	VectorIndexError(int v) : m_badValue(v) { }
 	~VectorIndexError() { }
 	void diagnostic() {
-	cerr << "index " << m_badValue
-		 << "out of range!";
-}
+		cerr << "index " << m_badValue
+			 << "out of range!";
+	}
 private:
 	int m_badValue;
 };
 
 template <class T>
-	T& Vector<T>::operator[](int idx){
-		if (idx < 0 || idx >= m_size) {
-			throw VectorIndexError(idx); // the data object
-		}
+T& Vector<T>::operator[](int idx){
+	if (idx < 0 || idx >= m_size)
+		throw VectorIndexError(idx); // the data object
 	return m_elements[idx];
 }
 ```
@@ -749,6 +746,8 @@ try {
 - **自动回收资源:** 在生命周期结束后智能指针自动释放资源
 - **正确调用:** 根据指针类型，自动选择 `delete` 或 `delete[]`
 - **额外限制:** 例如强制要求智能指针不为空
+
+---
 
 - `std::unique_ptr` 假设自己是对象的唯一所有者，它会在自己析构时自动调用合适的 `delete`
 	- `unique_ptr` 类中拷贝构造和拷贝赋值函数均被标记为 `delete`，即它不能被拷贝或赋值；但是我们可以通过 `std::move` 转移所有权

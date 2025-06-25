@@ -44,7 +44,7 @@ C++ 还引入了命名空间概念作为附加信息以区分不同库中的同�
 #include <string>
 
 int val = 5;         // 4 bytes = 32 bits (usually)
-char ch = 'F';        // 1 byte  = 8 bits  (usually)
+char ch = 'F';       // 1 byte  = 8 bits  (usually)
 float dVal1 = 5.0;   // 4 bytes = 32 bits
 double dVal2 = 5.0;  // 8 bytes = 64 bits
 bool bVal = true;    // 1 bit
@@ -69,7 +69,7 @@ double half(double x)
 	cout << "2" << endl;
 	return x/2;
 }
-int half(int x, int divisor) // default parameter values
+int half(int x, int divisor = 2) // default parameter values
 {
 	cout << "3" << endl
 	return x/divisor;
@@ -556,7 +556,9 @@ int main(void) {
     std::cin >> name;
     std::cin >> d2;
 
-    std::cout << "d1: " << d1 << "\n" << "d2: " << d2 << "\n" << "name: " << name << "\n";
+    std::cout << "d1: " << d1 << "\n" 
+	    << "d2: " << d2 << "\n" 
+	    << "name: " << name << "\n";
 }
 ```
 
@@ -580,7 +582,9 @@ int main(void) {
     std::getline(std::cin, name);
     std::cin >> d2;
 
-    std::cout << "d1: " << d1 << "\n" << "d2: " << d2 << "\n" << "name: " << name << "\n";
+    std::cout << "d1: " << d1 << "\n" 
+	    << "d2: " << d2 << "\n" 
+	    << "name: " << name << "\n";
 }
 /*
 Input:
@@ -609,7 +613,9 @@ int main(void) {
     std::getline(std::cin, name);
     std::cin >> d2;
 
-    std::cout << "d1: " << d1 << "\n" << "d2: " << d2 << "\n" << "name: " << name << "\n";
+    std::cout << "d1: " << d1 << "\n" 
+	    << "d2: " << d2 << "\n" 
+	    << "name: " << name << "\n";
 }
 /*
 Input:
@@ -878,7 +884,7 @@ In STL, each container has its own iterator, which can have different behavior.
 
 !!! note "迭代器使算法更加通用，例如 `sort` 函数支持对数组、vector等容器进行排序"
 	- `sort` 函数传入的迭代器需要满足 Random-Access，因为其中会包含 `it1 - it2`，`it + n` 等操作
-	- 但是 `std::lower_bound`，`std::find` 等函数传入的迭代器只要满足 `forward` 即可，但是如果支持 Random-Access，则时间复杂度可以从 $O(N)$ 降至 $O(\log N)$
+	- 但是 `std::lower_bound`，`std::find` 等函数传入的迭代器只要满足 Forward 即可，但是如果支持 Random-Access，则时间复杂度可以从 $O(N)$ 降至 $O(\log N)$
 
 ??? example "另一张图"
 	![[iteratorclass.png]]
@@ -931,86 +937,7 @@ Access specifiers:        // private/public/portected...
 - Public member function/varibles
 - Destructor
 
-其基本思路是将声明和定义放在 `.hpp` 文件中，具体实现放在 `.cpp` 文件中：
-
-```c++
-//lec7.hpp
-#include <string>
-
-class Student {
-private:
-    std::string name;
-    std::string major;
-    int age;
-
-public:
-    // default constructor
-    Student();
-    // parameterized constructor
-    Student(std::string name, std::string major, int age);
-
-    std::string getName();
-    std::string getMajor();
-    int getAge();
-    std::string setName(std::string name);
-    std::string setMajor(std::string major);
-    int setAge(int age);
-
-    // destructor
-    ~Student();
-};
-
-//lec7.cpp
-#include "lec7.hpp"
-#include <string>
-
-Student::Student () {
-    name = "Nimisora";
-    major = "CS";
-    age = 17;
-}
-
-Student::Student(std::string name, std::string major, int age) {
-    this->name = name;
-    this->major = major;
-    if (age > 0)
-        this->age = age;
-}
-
-std::string Student::getName() {
-    return name;
-}
-
-std::string Student::getMajor() {
-    return major;
-}
-
-int Student::getAge() {
-    return age;
-}
-
-std::string Student::setName(std::string name) {
-    this->name = name;
-}
-
-std::string Student::setMajor(std::string major) {
-    this->major = major;
-}
-
-int Student::setAge(int age) {
-    if (age > 0)
-        this->age = age;
-}
-
-Student::~Student() {
-    // destructor
-}
-
-int main()
-{
-    return 0;
-}
-```
+其基本思路是将声明和定义放在 `.hpp` 文件中，具体实现放在 `.cpp` 文件中。
 
 !!! success "All containers in STL are classes!!!"
 
@@ -1091,7 +1018,8 @@ public:
 class Shape {
 public:
     virtual double area() const = 0;
-    // virtual 关键字声明虚函数，可以在派生类中覆盖重写。 const = 0 说明该函数不会修改类的成员变量，该函数无任何实现，是一个纯虚函数，要求所有派生类都要重写该函数。
+    // virtual 关键字声明虚函数，可以在派生类中覆盖重写。
+    // = 0 说明该函数不会修改类的成员变量，该函数无任何实现，是一个纯虚函数，要求所有派生类都要重写该函数。
 };
 
 class Circle : public Shape {
@@ -1185,6 +1113,8 @@ func(circ);
 
 在继承中，引用的效果和指针类似，此处调用的函数仍然是 `Circle::render();`。
 
+> 推荐去看[补充的Virtual部分](../Addition/#virtual)，了解编译器是先做静态的重载决议，再做动态的虚函数绑定
+
 对于返回值，在 **Type Relaxation** 下，子类可以返回 Return Type 的 Subclass，但是只支持指针和引用：
 
 | 函数签名类型      | 是否支持协变重写 | 注意点            |
@@ -1236,6 +1166,8 @@ int main()
     double x = 7.1, y = 42.2;
     std::cout << "max(x, y): " << max(x, y) << std::endl;
 	// or you can call max<double>(x, y)
+
+	// max(a, x); // ERROR!
 
     return 0;
 }
@@ -1347,7 +1279,7 @@ FixedVector<int> v3; // => FixedVector<int, 100>
 
 ## Operator Overload
 
-C++ 允许在同一作用域中的某个**函数**和**运算符**指定多个定义，分别称为**函数重载**和**运算符重载**。
+C++ 允许为同一作用域中的某个**函数**和**运算符**指定多个定义，分别称为**函数重载**和**运算符重载**。
 
 重载声明是指一个与之前已经在该作用域内声明过的函数或方法具有相同名称的声明，但是它们的参数列表和定义（实现）不相同。
 
