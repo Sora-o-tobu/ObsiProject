@@ -14,10 +14,7 @@ home: true
 
 
 !!! note ""
-	<center></center>
-	
-	<div align="center" style="font-size:30px;font-family:'STLiti';">
-    列车一定会驶向下一个站台，那么舞台呢？我们呢？</div>
+	<div class="typing-container" data-text="列车一定会驶向下一个站台，那么舞台呢？我们呢？" data-speed="100"></div>
 
 
 !!! danger ""
@@ -41,3 +38,5 @@ home: true
 	</div>
 	<div class="card__footer"><a>www.nimisora.top</a>&nbsp;&nbsp;&nbsp;<progress id="progress-bar" aria-label="Content loading…"></progress></div>
 </div>
+
+
