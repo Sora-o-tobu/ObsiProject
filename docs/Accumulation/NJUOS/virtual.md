@@ -10,6 +10,11 @@
 
 ### 进程管理 API
 
+!!! "操作系统 API：非必要不提供，避免代码臃肿"
+	- **进程管理:** fork, execve, exit, waitpid
+	- **内存管理:** mmap
+	- **文件(对象)管理:** open, read, write, dup, close, pipe
+
 既然如此，我们就需要操作系统提供进程管理的 API。
 
 一个直观的想法是使用 `spawn(path, argv)` 创建进程(状态机)，用 `_exit()` 销毁进程。这个想法在 Windows 中得到应用，分别对应 API 为 `CreateProcess()` 和 `TerminateProcess()`。
@@ -46,7 +51,7 @@ if (pid == 0) {
 	- jyy 的测试框架中，父进程调用一个完全复制自己状态的子进程来 `run_test`
 	- 父进程等待子进程结束 `waitpid`，根据子进程返回的结果判断测试是否通过
 
-<font style="font-weight: 1000;font-size: 20px" color="orange">int execve(const char *filename, char *const argv[], char *const envp[]);</font>
+<font style="font-weight: 1000;font-size: 20px" color="orange">int execve(const char * filename, char * const argv[], char * const envp[]);</font>
 
 将当前进程**重置**成一个可执行文件描述状态机的初始状态。
 
@@ -189,10 +194,47 @@ int pipe(int pipefd[2]);
 
 ### UNIX Shell
 
+**Session(会话)** 是一组进程的集合，通常由一个登录会话（login, ssh 等）创建。每个 Session 包含一个或多个 **Process Group(进程组)**，并关联到一个 **Controlling Terminal(控制终端)**。
 
+由 `fork` 命令创建出来的进程属于同一个进程组，例如管道命令等。
+
+**Controlling Terminal** 记录当前正在前台的 Process Group ID。用户在 Shell 中输入 `Ctrl+C`(中断)、`Ctrl+Z`(停止)、`Ctrl+\`(退出) 等字符时实际上是发送给 OS，由 OS 向位于前台的进程组中的**所有进程**发送对应 signal：
+
+![[ShellSession.png]]
+
+!!! note "`Ctrl+Z` 相当于最小化，可以通过 `jobs` 查看暂停的程序；通过 `fg` 指令继续执行暂停程序"
 
 ## 可执行文件
 
+### LIBC
 
-## 应用生态
+在操作系统 API 上，为了服务应用程序，有必要设计一套“好用”的库函数。虽然 `libc` 今天已经谈不上“好用”，但它成就了 C 语言今天的地位，以及以 ISO 标准的形式支撑了操作系统生态上的万千应用。
+
+`libc` 大部分代码可以通过 C 语言本身实现，少部分需要一些底层支持，例如体系结构相关的内联汇编语句。
+
+### 链接和加载
+
+!!! danger "链接、虚拟内存部分在别的课学过了，此处不再记录"
+
+
+### 应用生态
+
+操作系统仅有两个机制：**初始状态+系统调用**
+
+UNIX 启动时初始状态：
+
+<1> `initramfs` 中的对象，包括解压并挂载**根文件系统** -> <2> `/dev/console`，是用于 IO 的关键设备 -> <3> 查找并加载 `init` 脚本，此时才会挂载**真实根文件系统**，例如 `/dev/sda1`，通过 `pivot_root` 或 `switch_root` 等系统调用切换到真实根文件系统，然后再执行 `/sbin/init` 全面初始化。
+
+!!! note "现代 Linux 执行 `\sbin\init` 会定向到 `systemd`"
+
+```bash
+Bootloader -> Kernel ->
+initramfs 解压 -> 挂载为 `/` ->
+/dev/console 可用 ->
+执行 `/init` ->
+准备环境、挂载真实根文件系统 ->
+切换到真实根 ->
+执行 `/sbin/init` -> 用户空间全面启动
+
+```
 

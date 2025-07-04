@@ -312,6 +312,7 @@ nav:
     - 南京大学 操作系统原理:
       - Accumulation/NJUOS/index.md
       - 虚拟化: Accumulation/NJUOS/virtual.md
+      - 并发: Accumulation/NJUOS/concurrency.md
     - Vue.js: Accumulation/Vue.js.md
     - Java: Accumulation/JAVA.md
     #- Java反序列化: Accumulation/Java序列化.md
