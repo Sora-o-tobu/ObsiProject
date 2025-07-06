@@ -90,6 +90,7 @@ plugins:
       locale: zh
   - roamlinks
   - toc
+  - inline-svg
   - minify:
       minify_html: true
   - glightbox:
