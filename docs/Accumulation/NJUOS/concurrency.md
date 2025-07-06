@@ -285,3 +285,11 @@ void produce() {
 
 !!! info "计数型资源：停车场只有 n 个位置；餐厅只有 n 个桌子..."
 
+## 并发 BUG
+
+1. 数据竞争
+2. 死锁
+3. 原子性和顺序违反
+
+> [17 - 并发 Bugs 和应对 [2025 南京大学操作系统原理]](https://www.bilibili.com/video/BV1cR5QzBErQ?spm_id_from=333.788.videopod.sections&vd_source=b856d3bdc44aa3fa77a923e6ba628c0f) 有闲情再看
+

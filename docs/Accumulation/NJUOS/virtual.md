@@ -10,7 +10,7 @@
 
 ### 进程管理 API
 
-!!! "操作系统 API：非必要不提供，避免代码臃肿"
+!!! quote "操作系统 API：非必要不提供，避免代码臃肿"
 	- **进程管理:** fork, execve, exit, waitpid
 	- **内存管理:** mmap
 	- **文件(对象)管理:** open, read, write, dup, close, pipe
