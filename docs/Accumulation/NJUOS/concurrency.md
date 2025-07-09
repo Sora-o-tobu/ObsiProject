@@ -293,3 +293,74 @@ void produce() {
 
 > [17 - 并发 Bugs 和应对 [2025 南京大学操作系统原理]](https://www.bilibili.com/video/BV1cR5QzBErQ?spm_id_from=333.788.videopod.sections&vd_source=b856d3bdc44aa3fa77a923e6ba628c0f) 有闲情再看
 
+## 不同应用场景下的并发编程
+
+用条件变量或者信号量会在工程代码中引入众多干扰代码。一些编程语言提供了功能受限的语法，能够避免很多问题，其本质上也是描述计算图。
+
+### 高性能计算
+
+高性能计算源自数值密集型科学计算任务。物理世界具有“空间局部性”，因此模拟物理世界可以很自然地运用到并行计算。
+
+HPC 主流有两个库：
+
+- **MPI, message passing libraries**
+- **OpenMP**
+
+```c
+#ifdef OMP
+#include <omp.h>
+#endif
+
+#pragma omp parallel num_threads(128)
+for (int i; i < 1024; i++) {
+}
+```
+
+!!! note "使用 `omp.h`，编译时要加上 `-fopenmp` 编译选项，不然会忽视 `#pragma`"
+
+### WEB
+
+主要是 Javascript 发展至今各种库使用各种不同的语法设置计算图。现代前端代表作品：
+
+- Angular、React、Vue
+- Express.js、Next.js
+- Bootstrap、Tailwindcss
+- Electron
+- asm.js（包括 WebAssembly）
+
+### 数据中心
+
+数据中心程序以海量分布式数据存储为中心，支持实时的小数据处理以及离线的大数据处理，要求高吞吐、低延迟的多副本分布式存储与计算。
+
+- **多线程/多进程并发模型**：用于节点内高并发处理（如 Java 的线程池、Go 的 goroutine）
+- **事件驱动模型（Reactor 模式）**：如 Nginx、Netty 等用于高并发 I/O 请求的组件
+- **消息队列异步通信**：如 Kafka、RabbitMQ 用于服务解耦与异步处理
+- **数据流模型**：如 Apache Beam 定义统一的数据处理语义，支持有状态流处理并发
+- **MapReduce 及其演进**：通过对数据切分、任务划分，天然支持并行化执行
+
+
+### GPU
+
+GPU 属于 Single Instruction Multiple Threads。
+
+```c
+__device__ int *map;
+
+// row: [1 -> 1080]
+// col: [1 -> 1920]
+void kernel(int row, int col) {
+	color = ...; // 任意 C 代码
+	map[row * 1920 + col] = color;
+}
+```
+
+对于一般 CPU 的想法，我们使用两层循环遍历行列，每次都调用 kernel：
+
+```c
+for (int row = 1; row <= 1080; row++)
+	for (int col = 1; col <= 1920; col++)
+		kernel(row, col);
+```
+
+而对于现代 GPU，我们可以直接启动 1920\*1080 个线程，每个线程都调用 kernel。
+

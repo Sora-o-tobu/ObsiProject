@@ -10,5 +10,6 @@
 	- CMU15-445: CMU15-445/
 	- CS106L: CS106L/
 	- CSAPP: CSAPP/
+	- 南京大学操作系统原理: NJUOS/
 	- Vue.js: Vue.js
 {{ END_TOC }}

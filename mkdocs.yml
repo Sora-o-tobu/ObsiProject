@@ -90,7 +90,7 @@ plugins:
       locale: zh
   - roamlinks
   - toc
-  - inline-svg
+  # - inline-svg
   - minify:
       minify_html: true
   - glightbox:
@@ -314,6 +314,7 @@ nav:
       - Accumulation/NJUOS/index.md
       - 虚拟化: Accumulation/NJUOS/virtual.md
       - 并发: Accumulation/NJUOS/concurrency.md
+      - 持久化存储: Accumulation/NJUOS/persistence.md
     - Vue.js: Accumulation/Vue.js.md
     - Java: Accumulation/JAVA.md
     #- Java反序列化: Accumulation/Java序列化.md
