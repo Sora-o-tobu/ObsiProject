@@ -34,8 +34,6 @@ $$
 
 ### Distance Compute
 
-
-
 `ipc-toolkit` 的所有 distance 相关函数都是距离的平方，因为开方的运算实际是相当 Costly 的。
 
 
@@ -43,9 +41,6 @@ $$
 
 IPC 的约束主要有 边-边 约束 和 点-三角 约束。只有在我们的 $\hat{d}$ 范围内的约束才是“活跃”的，因此在每次发生变化时都要重新计算约束。
 
-
 ### Barrier Potential
 
 出现在 Section 4.2
-
-

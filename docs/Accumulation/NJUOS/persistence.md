@@ -170,5 +170,3 @@ EXT 的可靠性仍然是一个重要问题，因为存储 inode 的数据块损
 
 !!! abstract "Everything is B-Tree: 可以实现 Resize、透明压缩、快照等等"
 
-## 数据库系统
-

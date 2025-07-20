@@ -98,4 +98,3 @@ $$
 
 - $T_G$ 为应用了 Diffused Blendshapes Correctives 的 deformed garment
 - $X$ 为 Garment Deformation in Canonical Space
-- 
