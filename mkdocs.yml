@@ -318,6 +318,7 @@ nav:
     - 论文阅读:
       - Accumulation/paper/index.md
       - Linear subspace design for real-time shape deformation: Accumulation/paper/speedup_1.md
+      - Progressive Shell Quasistatics for Unstructured Meshes: Accumulation/paper/speedup_2.md
     - Vue.js: Accumulation/Vue.js.md
     - Java: Accumulation/JAVA.md
     #- Java反序列化: Accumulation/Java序列化.md

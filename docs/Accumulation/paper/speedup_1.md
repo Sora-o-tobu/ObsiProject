@@ -146,3 +146,7 @@ $$
 
 ## Domain reduction for non-linear optimization
 
+很多几何建模或物理仿真的方法都涉及非线性优化，例如 As-Rigid-As-Possible 形变(ARAP)、弹性模拟等。这类优化在高分辨率网格下十分耗时，**Domain Reduction** 将问题限制在一个低维线性子空间中，从而显著加快计算速度。
+
+关于这些应用，可以看原论文中的 Section 4. Results 部分。
+
