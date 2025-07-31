@@ -8,6 +8,11 @@
 
 ### Introduction
 
+!!! quote "Progressive Cloth Simulation (PCS)"
+	传统布料仿真存在速度和精度的矛盾：粗糙网格虽然计算速度快，但无法反映细网格仿真后的褶皱和卷曲等细节；而高精度网格仿真计算量巨大。
+	
+	PCS首先对极低分辨率的网格进行碰撞含摩擦的准静态仿真（通常基于连续碰撞势能模型C-IPC求解），得到一个粗略的平衡形态；然后将该形态插值到更高分辨率的网格作为初始状态，再进行下一层细化仿真。如此迭代直到达到所需精度时才停止，从而保证每一层的仿真结果都**自洽一致**且无任何交叠，最终细网格结果与真实的完全收敛解高度一致
+
 渐进式模拟通过一系列分辨率不断提升的网格层次生成具有一致性且逐渐改进的解决方案预览，并在最终的高分辨率网格上生成收敛的模拟输出。
 
 每层结构由一组三角形网格和对应的**延拓算子**（prolongation operators）组成，延拓算子将该层的网格映射到下一层更高分辨率的网格上。
@@ -35,6 +40,7 @@ $$E_l(x) \;=\; \Psi_l(x) \;+\; B_l(x) \;+\; D_l(x) \;+\; S_l(x).$$
 直接模拟连续流较为复杂，论文用隐式欧拉（Backward Euler）做时间离散，将梯度流演化为一系列增量的**能量最小化**：
 
 $$x^{t+1} =\arg\min_{x}\; \underbrace{\frac{1}{2h^2}\,\|x - x^t\|_M^2}_{\text{惯性项}} \;+\; E(x,\,\bar x,\,u^{t+1}) \tag{1}$$
+
 - $h$: 时间步长
 - $\frac{1}{2h^2}\,\|x - x^t\|_M^2$: 惯性项，防止新状态偏离太远
 - 当满足梯度范数足够小 $\nabla E(x^*)\|\le\varepsilon$ 时，认为已收敛到平衡态
@@ -62,12 +68,14 @@ $$
     - $D_l$​：摩擦耗散，粗层接触面上的摩擦能量；
     - $S_l$​：应变限制，在粗层上抑制过度拉伸（用粗网格上的单元应变计算）。
     - 这三者合起来保证了解在当前网格拓扑下的**可行性**（feasibility），即没有穿透、没有过伸展。
-- $\Psi_l(P^l(x_l))$（延拓后在最细层评估的壳弹性能量）：
+- $\Psi_l(P^l(x_l))$（延拓后在**最细层**评估的壳弹性能量）：
     - 在最细层上计算壳弹性 Ψ，能够准确捕捉弯曲、扭曲等机制。
 
 这样，代理势能既保留了顶层（最细层）壳弹性对形状质量的严格约束，又只用粗网格上的计算来维持整体可行性。
 
-因此，每层的 Preview 步骤可以表示为如下优化方程：
+!!! tip "最大的创新点在于使用最细层的弹性势能作为粗层的能量项"
+
+每个时间步的准静态解需再加上隐式时间积分的惯性项，因此每层的 Preview 步骤可以表示为如下优化方程：
 
 $$
 x^{t+1}_l =\arg\min_{ x_l}\; {\frac{1}{2h^2}\,\|x_l - x^t_l \|_{M _l}^2} \;+\; F_l (x_l) \tag{3}
@@ -94,6 +102,12 @@ $$
 	- **内在形变**（in-plane，主要是拉伸）和**外在形变**（extrinsic，主要是弯曲）都能被模拟出来，且符合物理壳体模型；
     - 模型在层级中的**每一层都保留未变形的参考形状**（rest shape），防止因下采样或插值导致“幽灵力”或不真实的形变反应。
 
+!!! quote "Progressive Shell Quasistatics(PSQ)"
+	它在 PCS 基础上，将渐进式模拟引入到了**任意薄壳／板几何**的仿真中，支持非结构化三角网格（包括曲面和复杂边界），核心贡献：
+	
+	- **通用网格层次结构**：针对任意三角网格，PSQ设计了一个新的“从粗到细”层级构建方法。论文提出了一种**非线性延拓（prolongation）算子**，用于将粗网格的形变映射到细网格上，同时保持壳体原始的静态形状不变（rest-shape preserving）。这个延拓算子考虑了表面曲率和曲面内在几何，能够在网格细化时重构细节曲面。
+	- **安全的上采样方法**：PSQ还提出了一种**形状保持的安全上采样**机制，以避免细化过程中产生几何自穿插或过度拉伸。具体而言，在将粗网格形变插值到细网格后，PSQ对新生成的顶点位置进行校正，使其严格位于对应曲面上，并对可能的重叠进行检测和修正，同时约束局部应变不超过阈值（strain limiting）。这样在每一层级都保证碰撞几何无交互且形变合理。
+
 ### Decimation
 
 我们将初始 Mesh 设置为 $M_L$，即 finest level，并通过一系列 Edge-Collapse Decimation 建立 $M_{L-1},...,M_0$，从而得到各个层初始的 rest positions $\bar{x}_l$。
@@ -119,15 +133,20 @@ $$
 
 我们使用 Intrinsic Prolongation 中的 Self-Parameterization 方法去定义内在坐标（Intrinsic Coordinates），从而锚定 $l+1$ 层两个分裂的新节点的位置 $\bar v_{l+1}^i, \bar v_{l+1}^j$。
 
+!!! abstract "Intrinsic uv，本质即插值重心坐标"
+	$$\bar v_{l+1}^i = u_i \bar x_0 + v_i \bar x_1 + (1- u_i - v_i)\bar x_2$$
+
 接下来我们还要记录 $l$ 层和 $l+1$ 层之间的 Extrinsic Difference $\bar d^i = \bar x_{l+1}^i - \bar v_{l+1}^i$，其中 $\bar v_{l+1}^i$ 是从 $l$ 层精细化映射后的位置，$\bar x_{l+1}^i$ 是对应点在 $l+1$ 层的 rest shape 中的位置。
 
 !!! note "Extrinsic Difference 只记录一次，记录其在 3D 空间中偏移了多少"
 
 对于包含 vertex $i$ 的三角形，它的三个顶点的静止位置表示为 $\bar x_0, \bar x_1, \bar x_2$，我们将 Extrinsic Difference 分解为法向贡献（out-of-plane）和切平面内贡献（in-plane）：
 
-- **out-of-plane:** $\gamma^i = \bar{n}^T \bar{d}^i$
-- **in-plane**：$t^i \in \mathbb{R}^2$
+- **out-of-plane:** $\gamma^i = \bar{n}^T \bar{d}^i\in \mathbb{R}$
+- **in-plane**：$t^i = \left [ \bar e^T \bar d^i, (\bar n \times \bar e )^T\bar d^i  \right ]^T \in \mathbb{R}^2$
 	- 是一个二维“向量” $(a,b)$
+
+其中 $\bar n$ 为三角形的单位法向量，$\bar n^T \bar d^i$ 表示偏移向量 $\bar d^i$ 在法向量上的投影，这种表示方式在矩阵乘法中等价于向量点乘。
 
 那么 $\bar d^i$ 可以表示为两个贡献的线性组合：
 
@@ -136,6 +155,8 @@ $$\begin{array}l
 \\ with &  \bar e = (\bar x_1 -\bar x_0) / ||\bar x_1 -\bar x_0 ||
 \end{array}
 $$
+
+!!! info "$\{\bar n, \bar e, \bar n \times \bar e\}$ 构成了一组正交基，覆盖了整个 3D 空间，因此可以用来表示 $\bar d$"
 
 在模拟过程中，Shell Deformation 导致如上两个组成部分相应改变：
 
@@ -148,7 +169,7 @@ $$
 
 其中 $(\gamma^i, t^i)\in \mathbb{R}^3$ 只用计算一次。
 
-#### Common Case
+#### General Case
 
 在一般例子中，Edge-Collapse 可能会进行多次（通常嵌套进行），但是我们仍然能够使用 Linear Operation 来计算 *anchor location*：$v_{l+1} = U_{l+1}^l x_l$。
 
@@ -213,6 +234,7 @@ $$
 - 如果没有交叉，就停止，采样成功。
 
 !!! danger "为什么对 j 随机选取扰动方向尝试？还没搞懂"
+	问了 GPT，一般对 j 施加随机扰动后，i 也要相应调整。常见做法是让 i 落在对称位置，或者仅保持变长约束，保证 $||x_i - x_j||$ 在合理范围内，防止形状畸形。
 
 #### CCD-filtered Geometric Expansion
 
@@ -243,7 +265,62 @@ $$
 
 #### Safe Parallel Expansion
 
-TODO
+实际层级构建中，需要一次展开成千上万条边，如果逐条顺序处理，不仅运行缓慢，还可能产生次序依赖。Safe Parallel Expansion 的核心思想是：
+
+- **局部独立性 (locality assumption)**
+    - 多个 expansion 操作如果对应的 **patch 不重叠**，它们就可以在几何上并行展开。
+    - 也就是说，只要确保不同 expansion 的 affected triangles 不相交，就可以同时做。
+- **批处理调度 (batch scheduling)**
+    - 把所有 expansion 分成若干组（batch）。
+	    - 通过 **coloring** 进行处理
+    - 每一组里的 expansion 互不干扰，可以并行展开。
+    - 组与组之间串行，保证安全性。
+- **每组内部的 Safe Expansion**
+    - 在 batch 内，每个 expansion 用单边的 safe initialization 算法（randomized stratified sampling + CCD filter）保证合法性；
+    - 因为它们 patch 不重叠，所以 CCD 检测只需要考虑局部，不需要全局。
+
+算法步骤：
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">1. 批处理分组 —— Graph Coloring</font>
+
+- **独立性约束**：同一 batch 内，两个 expansion 的顶点不能是拓扑邻居。
+    - 这样避免 nested expansion。
+- **如何分组？**
+    - 根据 decimation 的依赖关系建图（dependency graph）；
+    - 对这个图做 **greedy coloring**，得到若干组；
+    - 每组 expansion 就能安全并行。
+- **优势**：这个 coloring 在 decimation 后可以预处理一次，后续 progressive simulation 都能复用。
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">2. 单批次内部的并行 Expansion 流程</font>
+
+进入一个 batch 之后，步骤如下：
+
+(a) Safe perturbation initialization
+
+- 对 batch 内的所有 expanding vertices **并行应用**随机采样的 safe perturbation（和前文里 single safe expansion 一致）。
+
+(b) ACCD additive advancement
+
+1. 每个 expanding vertex xix_ixi​ 有一个剩余 displacement：
+    $$\delta_i = x_i^{\text{target}} - x_i^{\text{init}}$$
+2. 执行 ACCD 循环：
+    - **碰撞裁剪**：对 candidate pairs 做 broad-phase culling，得到可能接触的对。
+    - **ACCD 查询**：为每对候选对计算安全步长上界 α\alphaα。
+    - **取最小值**：全局安全步长 = 所有对中最小 $\alpha$。
+    - **推进所有顶点**：
+        $$x_i \leftarrow x_i + \alpha \delta_i$$
+    - **冻结碰撞顶点**：如果某些顶点 jjj 出现在触发 α\alphaα 的 pair stencil，则它们的 displacement 被置零（停止）。
+    - **更新其余顶点**：
+        $$\delta_k \leftarrow (1-\alpha)\delta_k$$
+    - **重复**，直到返回 $\alpha =1$，即没有新的碰撞阻碍。
+3. **好处**：
+    - 避免“最小 $\alpha$”卡死所有顶点的进度；
+    - 让不同顶点能 **分阶段逐步到达 target**，并行高效。
+
+(c) Patch-based relaxation
+
+- 如果最后某些 primitive pair 的距离 < safe gap $g$，说明快“贴上了”；
+- 就在局部 patch 上解一个带 elastic + IPC barrier 的局部优化，把间隙恢复到安全距离。
 
 #### Stain Limiting Feasibility
 
@@ -276,7 +353,79 @@ $$
 
 这一阶段并不需要精确解，我们可以为其设置最大牛顿迭代次数，目标是快速收敛 + 稳定过渡 + 中间状态可视化。最后一层我们才需要完整迭代至收敛，要求最后一次迭代步长小于容差。
 
+## Pseudo Code
 
+> GPT 总结
 
-### Progressive Collision Objects
+```c
+# Algorithm: Progressive Quasistatics (PSQ)
 
+Input:
+    - Mesh hierarchy { M^0, M^1, ..., M^L } from edge-collapse decimation
+    - Time steps T, step size h
+    - External forces f_ext
+    - Collision objects (treated as additional mesh domains)
+Output:
+    - Sequence of simulated states { x^l_t }
+
+--------------------------------------------------
+Preprocessing:
+1. Build hierarchy via decimation:
+       Record intrinsic UV for collapsed vertices,
+       Record extrinsic offsets (γ_i, t_i) for prolongation.
+2. Precompute graph coloring for expansions:
+       - Build dependency graph of edge collapses.
+       - Apply greedy coloring → batches { C^1, C^2, ... }.
+3. Initialize collision objects:
+       - Prolongation & coloring same as for shells.
+
+--------------------------------------------------
+Main Simulation Loop:
+for each timestep t = 0,...,T-1 do
+    # Progressive refinement through levels
+    for l = 0,...,L-1 do
+        # Solve quasistatics at current level
+        x^{l}_{t+1} ← argmin_x {
+            (1/2h^2) || x - x^l_t ||^2_{M^l} + F^l(x)
+        }
+        where
+            F^l(x) = B^l(x) + D^l(x) + S^l(x)   # barrier/contact + strain limit
+                      + Ψ^l P^l(x)              # prolongated fine-scale shell energy
+
+        # Expand to next finer level
+        SafeParallelExpansion(M^l → M^{l+1})
+    end for
+end for
+
+--------------------------------------------------
+Subroutine: SafeParallelExpansion(M^l → M^{l+1})
+for each batch C in coloring {C^1, C^2, ...} do
+    parallel for each edge expansion e in C do
+        # Step 1: Safe perturbation initialization
+        Apply sampling-based safe initial displacement
+        Ensure local non-intersection
+    end parallel
+
+    # Step 2: ACCD additive advancement
+    For all expanding vertices, define target displacement δ_i
+    repeat
+        - Broad-phase culling on candidate pairs
+        - Compute per-pair CCD ratio bounds → α
+        - Advance all vertices: x_i ← x_i + α δ_i
+        - Freeze vertices that triggered α: δ_j ← 0
+        - Update remaining displacements: δ_k ← (1-α) δ_k
+    until α = 1
+
+    # Step 3: Patch relaxation
+    If any primitive pair distance < safe gap g:
+        Solve local elastic + IPC barrier relaxation
+end for
+
+--------------------------------------------------
+Subroutine: Prolongation (Shell Prolongation)
+for each expanded vertex i:
+    anchor = U_{l,l+1} x^l           # intrinsic prolongation
+    offset = n_i(x^l) γ_i + R_i(F_i) t_i
+    x^{l+1}_i = anchor + offset
+end for
+```
