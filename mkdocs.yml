@@ -273,6 +273,12 @@ nav:
       - Accumulation/Physics-Based Simulation/index.md
       - Simulation with Optimization: Accumulation/Physics-Based Simulation/Simulation with Optimization.md
       - Boundary Treatments: Accumulation/Physics-Based Simulation/Boundary Treatments.md
+    - Shape Analysis:
+      - Accumulation/ShapeAnalysis/index.md
+      - Introduction: Accumulation/ShapeAnalysis/CH1.md
+      - Mathmatical Background: Accumulation/ShapeAnalysis/CH2.md
+      - Curves: Accumulation/ShapeAnalysis/CH3.md
+      - Surfaces: Accumulation/ShapeAnalysis/CH4.md
     - Games101:
       - Accumulation/Games101/index.md
       - 作业框架: Accumulation/Games101/作业框架.md
