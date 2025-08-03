@@ -14,7 +14,6 @@
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Differential Geometry</font>
 
-
 - 微分几何通过无穷小来理解形状，专注于几何结构的局部分析
 - 微分几何的基本研究对象是**流形（manifold）**，即局部 k 维对象。
 - 微分几何中，很多内在量（intrinsic）只依赖于形状本身，而不依赖于坐标系或者某些参数化形式，例如曲率、切向量、测地线等
