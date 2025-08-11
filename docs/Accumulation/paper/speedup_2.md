@@ -134,7 +134,7 @@ $$
 我们使用 Intrinsic Prolongation 中的 Self-Parameterization 方法去定义内在坐标（Intrinsic Coordinates），从而锚定 $l+1$ 层两个分裂的新节点的位置 $\bar v_{l+1}^i, \bar v_{l+1}^j$。
 
 !!! abstract "Intrinsic uv，本质即插值重心坐标"
-	$$\bar v_{l+1}^i = u_i \bar x_0 + v_i \bar x_1 + (1- u_i - v_i)\bar x_2$$
+	$$\bar v_{l+1}^i = \mathbf u_i \bar x_0 + \mathbf v_i \bar x_1 + (1- \mathbf u_i - \mathbf v_i)\bar x_2$$
 
 接下来我们还要记录 $l$ 层和 $l+1$ 层之间的 Extrinsic Difference $\bar d^i = \bar x_{l+1}^i - \bar v_{l+1}^i$，其中 $\bar v_{l+1}^i$ 是从 $l$ 层精细化映射后的位置，$\bar x_{l+1}^i$ 是对应点在 $l+1$ 层的 rest shape 中的位置。
 

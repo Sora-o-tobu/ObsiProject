@@ -5,6 +5,7 @@
 	- Games101: Games101/
 	- Games103: Games103/
 	- Physics-Based Simulation: Physics-Based Simulation/
+	- Shape Analysis: ShapeAnalysis/
 	- LearnOpenGL: LearnOpenGL/
 - 其它:
 	- CMU15-445: CMU15-445/

@@ -260,6 +260,7 @@ nav:
   - 课外积累:
     - Accumulation/index.md
     - CSAPP:
+      - Accumulation/CSAPP/index.md
       - CH 1. 计算机系统漫游: Accumulation/CSAPP/Chapter1.md
       - CH 2. 信息的表示与处理: Accumulation/CSAPP/Chapter2.md
       - CH 3. 程序的机器级表示: Accumulation/CSAPP/Chapter3.md
