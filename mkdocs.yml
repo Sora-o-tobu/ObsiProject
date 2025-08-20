@@ -280,6 +280,7 @@ nav:
       - Mathmatical Background: Accumulation/ShapeAnalysis/CH2.md
       - Curves: Accumulation/ShapeAnalysis/CH3.md
       - Surfaces: Accumulation/ShapeAnalysis/CH4.md
+      - Curvatures: Accumulation/ShapeAnalysis/CH5.md
     - Games101:
       - Accumulation/Games101/index.md
       - 作业框架: Accumulation/Games101/作业框架.md
@@ -326,6 +327,7 @@ nav:
       - Accumulation/paper/index.md
       - Linear subspace design for real-time shape deformation: Accumulation/paper/speedup_1.md
       - Progressive Shell Quasistatics for Unstructured Meshes: Accumulation/paper/speedup_2.md
+      - Surface Multigrid via Intrinsic Prolongation: Accumulation/paper/speedup_3.md
     - Vue.js: Accumulation/Vue.js.md
     - Java: Accumulation/JAVA.md
     #- Java反序列化: Accumulation/Java序列化.md

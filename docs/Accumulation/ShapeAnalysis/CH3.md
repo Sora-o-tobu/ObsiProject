@@ -231,7 +231,7 @@ Bezier 曲线是工程中常用的一种曲线形式，我们通过一系列控�
 
 折线在顶点处的转角 $\theta$ 等于曲率在 dual cell 上的积分。
 
-!!! abstract "离散化表示曲线时，我们有一套原始单元(Primal Cell)，例如顶点、边等，Dual Cell 是定义它们上的对偶结构"
+!!! abstract "离散化表示曲线时，我们有一套原始单元(Primal Cell)，例如顶点、边等，Dual Cell 是定义在它们上的对偶结构"
 
 ![[SA_3_8.png]]
 
