@@ -257,6 +257,11 @@ nav:
       - Crypto 基础: Courses/ctf/Crypto.md
       - Web 专题: Courses/ctf/WebTopic.md
       - Misc 专题: Courses/ctf/MiscTopic.md
+    - 区块链技术应用实践 短学期:
+      - Courses/Blockchain/index.md
+      - 比特币: Courses/Blockchain/btc.md
+      - 以太坊: Courses/Blockchain/eth.md
+      - 超级账本: Courses/Blockchain/fabric.md
   - 课外积累:
     - Accumulation/index.md
     - CSAPP:
@@ -337,7 +342,6 @@ nav:
     - Techniques/index.md
     - 建立在线笔记: Techniques/建立在线笔记.md
     - 正则表达式: Techniques/正则表达式.md
-    - 虚拟机: Techniques/虚拟机.md
     - Reveal-md: Techniques/Reveal-md.md
     - 杂项: Techniques/杂项.md
   - 兴趣:

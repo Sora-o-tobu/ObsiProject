@@ -13,6 +13,7 @@
 	- 高级数据结构与算法[note]: DS/ADS/
 	- 数据库系统[note]: DB/
 	- CTF[note]: ctf/
+	- 区块链技术应用实践[note]: Blockchain/
 - 计算机系统:
 	- 数字逻辑设计[note]: DD/
 	- 计算机组成[note]: CO/

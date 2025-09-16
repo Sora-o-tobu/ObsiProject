@@ -214,7 +214,7 @@ $$
 
 #### Safe Initial Expansion
 
-在 Initial Expansion 的过程中，我们对初始要分开为 vertex $i,j$ 的节点 $k$ 做一个初始扰动，从而确保不会影响到 CCD 的碰撞检测。遗憾的是，在 3D 空间中，即便是一个微小的扰动也有可能造成严重的 self-intersection 或者 global intersection。
+在 Initial Expansion 的过程中，我们对初始要分开为 vertex $i,j$ 的节点 $k$ 做一个初始扰动，使其边长非零（$\gt dhat$），从而确保不会影响到 CCD 的碰撞检测。遗憾的是，在 3D 空间中，即便是一个微小的扰动也有可能造成严重的 self-intersection 或者 global intersection。
 
 为了获得一个 initial safe perturbation per expansion，作者采用随机分层采样法（randomized stratified sampling）：
 
@@ -250,7 +250,7 @@ $$
 
 - 在正式 CCD 前，会用普通的空间哈希 + CCD 粗略阶段（broad-phase）来提前筛除相距很远的元素对。
 - Additive-CCD 接受一个参数 $r$，用来控制“允许靠近程度”。对于留下的不同距离碰撞候选对，我们为其采取不同策略：
-	- 初始距离 $d_0$，新得到的距离 $d_1$，ACCD 保证 $d_0 \ge rd_0$，即 $r$ 越接近于 1 则对步长限制得更多
+	- 初始距离 $d_0$，新得到的距离 $d_1$，ACCD 保证 $d_1 \ge rd_0$，即 $r$ 越接近于 1 则对步长限制得更多
 
 | 初始距离 $d_0$                    | 对应 r 值​   | 原因                 |
 | ----------------------------- | --------- | ------------------ |
@@ -301,15 +301,15 @@ $$
 
 (b) ACCD additive advancement
 
-1. 每个 expanding vertex xix_ixi​ 有一个剩余 displacement：
+1. 每个 expanding vertex $x_i$​ 有一个剩余 displacement：
     $$\delta_i = x_i^{\text{target}} - x_i^{\text{init}}$$
 2. 执行 ACCD 循环：
     - **碰撞裁剪**：对 candidate pairs 做 broad-phase culling，得到可能接触的对。
-    - **ACCD 查询**：为每对候选对计算安全步长上界 α\alphaα。
+    - **ACCD 查询**：为每对候选对计算安全步长上界 $\alpha$。
     - **取最小值**：全局安全步长 = 所有对中最小 $\alpha$。
     - **推进所有顶点**：
         $$x_i \leftarrow x_i + \alpha \delta_i$$
-    - **冻结碰撞顶点**：如果某些顶点 jjj 出现在触发 α\alphaα 的 pair stencil，则它们的 displacement 被置零（停止）。
+    - **冻结碰撞顶点**：如果某些顶点 $j$ 出现在触发 $\alpha$ 的 pair stencil，则它们的 displacement 被置零（停止）。
     - **更新其余顶点**：
         $$\delta_k \leftarrow (1-\alpha)\delta_k$$
     - **重复**，直到返回 $\alpha =1$，即没有新的碰撞阻碍。
