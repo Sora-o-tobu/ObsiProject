@@ -170,6 +170,9 @@ nav:
       - CH 9. Relations: Courses/DiscreteMathematics/note/Chapter9.md
       - CH 10. Graphs: Courses/DiscreteMathematics/note/Chapter10.md
       - CH 11. Trees: Courses/DiscreteMathematics/note/Chapter11.md
+    - 计算理论:
+      - Courses/tcs/index.md
+      - Basics: Courses/tcs/Topic1.md
     - 数字逻辑设计:
       - Courses/DD/index.md
       - 理论课笔记:
@@ -198,6 +201,8 @@ nav:
       - Instruction-Level Parallelism: Courses/CA/ILP.md
       - Data-Level Parallelism: Courses/CA/DLP.md
       - Thread-Level Parallelism: Courses/CA/TLP.md
+    - 操作系统:
+      - Courses/OS/index.md
     - 数据结构:
       - 数据结构基础:
         - Courses/DS/FDS/index.md 
@@ -225,6 +230,11 @@ nav:
         - Randomized Algorithms: Courses/DS/ADS/Randomized Algorithms.md
         - Parallel Algorithms: Courses/DS/ADS/Parallel Algorithms.md
         - External Sort: Courses/DS/ADS/External Sort.md
+    - Java 程序设计:
+      - Courses/Java/index.md
+      - Basics: Courses/Java/basic.md
+      - Concurrent: Courses/Java/concurrent.md
+      - Web: Courses/Java/web.md
     - 数据库系统:
       - Courses/DB/index.md
       - Introduction: Courses/DB/Introduction.md
@@ -242,12 +252,17 @@ nav:
       - 什么是汇编语言: Courses/8086asm/什么是汇编语言.md
       - CPU、内存和端口: Courses/8086asm/CPU、内存和端口.md
       - 汇编语言源程序格式: Courses/8086asm/汇编语言源程序格式.md
+    - 汇编与接口:
+      - Courses/asm/index.md
+      - The Microprocessor and its Architecture: Courses/asm/ch2.md
     - 网络相关:
       - 无线网络应用 通识课:
         - Courses/无线网络应用/index.md
         - 当今网络: Courses/无线网络应用/当今网络.md
         - 协议与模型: Courses/无线网络应用/协议与模型.md
         - 网络寻址: Courses/无线网络应用/网络寻址.md
+      - 计算机网络:
+        - Courses/CN/index.md
     - 网络攻防实践基础 短学期:
       - Courses/ctf/index.md
       - Web 基础: Courses/ctf/Web.md

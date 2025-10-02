@@ -1,6 +1,8 @@
 
 # 计算理论
 
+!!! quote "Problem => Sets of Symbols => Languages => Computational Models"
+
 ## 分数构成
 
 - **10%** 作业

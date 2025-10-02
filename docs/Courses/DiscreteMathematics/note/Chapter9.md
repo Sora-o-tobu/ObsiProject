@@ -52,55 +52,53 @@ A relation of set A is a relation from A to A.
 - **Antisymmetric** 反对称性
 - **Transitive** 传递性
 
-[Definition](#) A relation R on a set A is ==reflexive== if
+**【Definition】** A relation R on a set A is ==reflexive== if
 
 $$
 \forall x(x\in A\to (x,x)\in R)
 $$
 
-对于任意A中元素，(x,x)都在R中
+即对于任意 $A$ 中元素，$(x,x)$ 都在 $R$ 中。
 
-因此，若用矩阵表示，矩阵正对角线应当全部为1；若用有向图表示，每个vertex都应该有个loop指向自己
+因此，若用矩阵表示，矩阵正对角线应当全部为1；若用有向图表示，每个vertex都应该有个loop指向自己。
 
-自反关系个数为 $2^{n ^2-n}$
+!!! note "自反关系个数为 $2^{n ^2-n}$"
 
---- 
-[Definition](#) A relation R on a set A is ==irreflexive== if
+
+**【Definition】** A relation R on a set A is ==irreflexive== if
 
 $$
 \forall x(x\in A \to (x,x)\notin R)
 $$
 
-对于任意A中元素，(x,x)都不在R中
+对于任意 $A$ 中元素，$(x,x)$ 都不在 $R$ 中。
 
 因此，若用矩阵表示，矩阵正对角线应当全部为0；
 
-存在relation既不是reflexive也不是irreflexive:
-![[既不自反也不反自反的relation.png]]
+??? warning "存在relation既不是reflexive也不是irreflexive"
+	![[既不自反也不反自反的relation.png]]
 
-反自反关系个数为$2^{ n^2-n}$
+!!! note "反自反关系个数为$2^{ n^2-n}$"
+	因此既不是自反，也不是反自反的 relation 共有$2^{n ^2} - 2*2^{ n^2-n}$ 个
 
-因此既不是自反，也不是反自反的relation共有$2^{n ^2} - 2*2^{ n^2-n}$ 个
-
---- 
-[Definition](#) A relation R on a set A is ==symmetric== if
+**【Definition】** A relation R on a set A is ==symmetric== if
 
 $$
 \forall x\forall y((x,y)\in R\to(y,x)\in R)
 $$
 
-用矩阵表示，则矩阵关于对角线对称
+用矩阵表示，则矩阵关于对角线对称。
 
-对称关系的个数为$2^n \cdot 2^{\frac{ n^2-n}{2}} = 2^{\frac{ n^2+n}{2}}$
+!!! note "对称关系的个数为$2^n \cdot 2^{\frac{ n^2-n}{2}} = 2^{\frac{ n^2+n}{2}}$"
 
---- 
-[Definition](#) A relation R on a set A is ==antisymmetric== if
+
+**【Definition】** A relation R on a set A is ==antisymmetric== if
 
 $$
 \forall x\forall y((x,y)\in R \land (y,x)\in R \to x=y)
 $$
 
-注意，只是关于对角线不存在两个都为1的情况，(0,1)是允许的
+注意，只是关于对角线不存在两个都为 1 的情况，$(0,1)$ 是允许的
 
 因此，也可以这样表示关系:
 
@@ -110,16 +108,15 @@ $$
 
 ![[Antisymmetric的矩阵表示.png]]
 
-反对称关系的个数为 $2^ n\cdot 3^{\frac{ n^2-n}{2}}$
+!!! note "反对称关系的个数为 $2^ n\cdot 3^{\frac{ n^2-n}{2}}$"
 
----
-[Definition](#) A relation R on a set A is ==transitive== if
+**【Definition】** A relation R on a set A is ==transitive== if
 
 $$
 \forall x\forall y\forall z((x,y)\in R\land (y,z)\in R\to (x,z)\in R)
 $$
 
-用 $m_{ij}$ 表示矩阵第i行第j列的值，则有 $\overline{m_{ij}\land m_{jk}}\lor m_{ik}=1$
+用 $m_{ij}$ 表示矩阵第 i 行第 j 列的值，则有 $\overline{m_{ij}\land m_{jk}}\lor m_{ik}=1$
 
 !!! note "判别特征的例子"
 	![[判别特征的例子1.png]]
