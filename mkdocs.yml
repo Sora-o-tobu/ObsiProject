@@ -203,6 +203,9 @@ nav:
       - Thread-Level Parallelism: Courses/CA/TLP.md
     - 操作系统:
       - Courses/OS/index.md
+      - Overview: Courses/OS/Topic1.md
+      - Operating-System Structures: Courses/OS/Topic2.md
+      - Processes: Courses/OS/Topic3.md
     - 数据结构:
       - 数据结构基础:
         - Courses/DS/FDS/index.md 
