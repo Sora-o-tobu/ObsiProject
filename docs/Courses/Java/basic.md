@@ -82,6 +82,8 @@ Java 中的基本类型（primitive types）共有 8 种，它们并不是对象
 
 !!! note "像我们熟知的 `Integer`, `Double`, `Boolean` 都是包装类，属于对象，不属于基本类型"
 
+!!! warning "像 `2.0` 这种默认是 double 型常量，要赋值给 `float` 类型变量，必须显式加上后缀 `2.0f`"
+
 !!! abstract "Some Special Number Format"
 	```java
 	145_345.23_12 // 分隔符 _ 可以加在任意数字之间，除了开头/结尾或小数点旁边

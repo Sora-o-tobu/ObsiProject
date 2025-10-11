@@ -123,3 +123,221 @@ Long Mode（在 Intel 中对应 *IA-32e*）是 Legacy Protected Mode 的拓展�
 
 !!! warning "Long Mode 并不支持 Legacy Real Mode 和 Legacy Virtual-8086 Mode，因此不能简单抛弃 Legacy Mode"
 
+除此之外，还有一个特殊的模式 **System management mode（SMM）**，它最初是用来适配平台的固件以及特定的底层硬件驱动的。在 AMD64 架构下，不同 Operating Mode 的切换如下：
+
+![[ch2_10.png]]
+
+!!! note "`RSM` 表示退出 SMM，从哪里进入 SMM 的就会退回到哪个模式"
+
+### Memory Management
+
+Memory Mangement 通常需要满足 *Relocation*，*Protection*，*Sharing* 三个要求：
+
+|要求|含义|
+|---|---|
+|**重定位（Relocation）**|程序可以在内存中任何位置装入和执行，需要地址映射机制。|
+|**保护（Protection）**|防止一个进程访问或修改另一个进程的内存空间。|
+|**共享（Sharing）**|允许多个进程安全地共享相同的代码或数据。|
+
+其中，**Segmentation** 和 **Paging** 是最主流的两种 Memory Management Schemes，这里简要对二者进行一些对比：
+
+|对比项目|**分段（Segmentation）**|**分页（Paging）**|
+|---|---|---|
+|**大小（Size）**|段的大小**可变**，由用户或编译器决定（例如：代码段、数据段、堆栈段）。|页的大小**固定**（例如 4KB、8KB），由硬件决定。|
+|**碎片（Fragmentation）**|容易产生**外部碎片**（因为不同段大小不一，内存分配不连续）。|容易产生**内部碎片**（因为最后一页可能没被完全用完）。|
+|**表结构（Tables）**|使用**段表（Segment Table）**，记录每个段的基址和长度，查找速度较快。|使用**页表（Page Table）**，记录页号对应的物理块号。查找相对较慢，但**TLB（Translation Lookaside Buffer）**可加速。|
+
+=== "Legacy-Mode Memory Management"
+	![[ch2_11.png]]
+=== "Long-Mode Memory Management"
+	![[ch2_12.png]]
+
+接下来，我们会使用如下几个 terms 来指代各种不同地址：
+
+- **Effective Addresses** or **Segment Offsets**
+	- 段内偏移地址
+- **Logical Addresses**
+	- 逻辑地址，表示形式类似 `Seg:Offset`
+- **Linear Addresses**
+	- 线性地址，相当于逻辑地址的转译，是连续的地址
+	- 如果启用了 Paging，Linear Addresses 相当于虚拟地址 Virtual Addresses
+- **Physical Addresses**
+	- 物理地址，在 Memory 中的真实内存布局
+
+#### Real Mode Memory Addressing
+
+Real Mode 的地址空间只有 1MB 大小，即 $2^{20}$ byte。它的 Linear Address 的计算为：
+
+$$
+\text{Seg} \times 10h + \text{Offset}
+$$
+
+!!! tip "乘上 $10h$，等价于左移 4 位"
+	Real Mode 中，段寄存器和偏移寄存器都是 16-bit 的，因此偏移后相加得到的地址是 20-bit 的
+
+1 MB Address **Wrap-Around** 是这个设计很经典的问题。当 Linear Address 计算最高位进位时，物理地址发生 overflow，反而变得很小，这也被称为回环。可以考虑如下左右两个例子：
+
+![[ch2_13.png]]
+
+
+由于有相当数量的商业软件特意使用了这个特性，后续的 8086/8088/80186 CPU 都保留了这点。
+
+#### Protected Mode Memory Addressing
+
+在保护模式下，段寄存器不再单纯存储段地址，而是存储指向 **Descriptor Table** 中的某一描述符的 **Selector**。
+
+例如对于指令 `MOV [BX], AX`，它的访存流程如下：
+
+![[ch2_17.png]]
+
+**Descriptor** 描述了一个内存段的地址，长度以及访问权限，它的结构随着架构的升级变更如下：
+
+![[ch2_14.png]]
+
+
+其中 **Base** 部分指定了这个段的起始位置，**Limit** 部分指定了这个段的长度（也可以说是结束部分）。**G** 代表了 Granularity Bit，它决定了该段 Limit 的缩放程度：
+
+- 当 **G=0**，段的长度为 $(\text{limit}+1)\ \text{bytes}$
+	- 此时 limit 的范围为 0 - $2^{20}-1$
+- 当 **G=1**，段的长度为$(\text{limit}+1)\times 4K\ \text{bytes}$
+	- 也可以认为将 limit 替换为 $\text{limit}<<12 + 0xFFF$
+	- 此时 limit 的范围为 0FFFH - $2^{32}-1$
+
+**【Example】** 有一个描述符，base address = 1000,0000H, limit = 01FFH，求 G 分别为 0 和 1 时的段起始位置和结束位置：
+
+- 当 **G=0**
+	- Starting Location = 1000,0000H
+	- Ending Location = 1000,0000H + 01FFH = 1000,01FFH
+- 当 **G=1**
+	- Starting Location = 1000,0000H
+	- Ending Location = 1000,0000H + 01F,FFFFH = 101F,FFFFH
+
+1 Byte 大小的 **Access Rights** 指定了这个段的权限控制：
+
+![[ch2_15.png]]
+
+其中 *DPL* 字段共 2-bit，指定了该段的 Priviledge-Level。特权等级共分 4 级，按照数字大小权限依次降低：
+
+![[ch2_16.png]]
+
+Descriptor Tables 分为 **Global-Descriptor Table（GDT）**、**Local-Descriptor Table（LDT）**、**Interrupt-Descriptor Table（IDT）** 三类，其中 LDT 需要通过访问 GDT 中的 entry 来间接访问，这一点我们会在稍后谈及。
+
+**Selector** 存储在 16-bit 的段寄存器中，它的结构如下：
+
+![[ch2_18.png]]
+
+**TI** 指定了是要访问 GDT 还是 LDT；**RPL** 指定了此次请求的特权阶级。
+
+除此之外，段寄存器 `CS` 中最低两位不为 RPL，为 **Current Privilege-Level（CPL）**，CPL 的值永远为 CPU 当前的特权阶级。综合下来，关于 Descriptor 和 Selector 中的三种特权阶级表示位的关系与区别如下：
+
+![[ch2_19.png]]
+
+在进行数据访问的时候，我们会对权限进行检查：
+
+=== "Accessing Data Segments"
+	当访问数据段时，我们要求 CPL 和 RPL 的权限都**高于**该段的 DPL：
+	
+	![[ch2_20.png]]
+=== "Accessing Stack Segments"
+	当访问栈段时，我们要求 CPL 和 RPL 的权限都**等于**该段的 DPL：
+	
+	![[ch2_21.png]]
+
+为了存储 Descriptor Tables 的基地址，处理器中有 4 种用户不可见的寄存器：
+
+- **GDTP** and **IDTR**：存储 GDT 和 IDT 的 Base 和 Limit，在进入保护模式之前就被加载
+- **LDTR** and **TR**：指向 GDT 中特殊的描述符
+	- 例如 LDTR 指向 GDT 中的指向 LDT 的描述符
+
+!!! note "还有一些不可见的寄存器用作 Descriptor Cache"
+
+当需要发生进程切换时，LDTR 会加载新任务对应的 selector 值，从而利用 LDT 实现扩展内存空间。
+
+![[ch2_22.png]]
+
+!!! info "左下角对 index 乘 8 是因为 Descriptor Table 中一个 entry 是 8 Byte"
+
+??? note "图中 *gdtr or ldtr* 部分的具体实现如图"
+	![[ch2_23.png]]
+
+在保护模式下，分段内存模型 Segmented-Memory Models 有两种：
+
+|模型|说明|特点|
+|---|---|---|
+|**多段模型 (Multi-Segmented Model)**|把内存分成多个独立的段，比如代码段、数据段、堆栈段等。每个段有自己的基址和界限。|✅ 每个段可以独立管理、保护与共享。❌ 地址转换更复杂，软件需要管理多个段寄存器。|
+|**平坦模型 (Flat-Memory Model)**|把所有段的基址都设为 0，界限设为整个地址空间长度（例如 4GB）。这样所有内存都连续可寻。|✅ 看起来就像“没有分段”，只有一个连续的线性地址空间。✅ 编程更简单，现代 OS（如 Linux、Windows）大多采用这种方式。|
+
+![[ch2_24.png]]
+
+
+#### Memory Paging
+
+Paging 将内存划分为统一大小的 Page，通常：
+
+- 在 **long mode**, physical pages 长度可为 4-KByte, 2-MByte, 1-GByte
+- 在 **legacy mode**，physical pages 长度可为 4-KByte, 2-MByte, 4-MByte
+
+与计组中学到的分页稍有区别的是，现实 CPU 通常会采用 Multi-level Paging，而不是只通过一个 Page Table 就能转换虚拟地址和物理地址。这是因为 Single-level 往往占用太多内存。
+
+例如，对于 64-bit computer，假定我们设置 4KB page size, 4GB physical memory, 4Byte per page table entry，那么 $\text{Page Offset}= \log_2 4K=12\ bits$，那么 $\text{Virtual Page Number} = 64-12=52\ bits$，一个 entry 有 4B，那么整个 Page Table 占用内存 $2^{52}\times 4= 2^{54}\ bytes$，这已经是物理内存 4GB（$2^{32}$） 的不知道多少倍了。
+
+现在我们使用 Multi-level Paging 技术。通常，我们设置一个 Page Table 的大小等同于一个 Page 的大小，对于该例即为 4KB。此时一个 Page Table 共有 4KB / 4B = 1024 个 entries。
+
+1024 个 entries 意味着我们只需要 10-bit 就能对一个 Page Table 进行索引，那么层数计算则为 $\#\text{ of Level}= \frac{52}{10}\ \text{ceiled is } 6$，即共需要 6 层，其索引结构类似如下：
+
+![[ch2_25.png]]
+
+!!! abstract "Key Points"
+	- 所有 Page Table 的 entry size 均需相同
+	- Page Table 由内到外分别称为
+		- Page Table, PT
+		- Page Directory, PD
+		- Page Directory Pointer Table, PDPT
+
+|🌟 **类别**|🟢 **优点 (Pros)**|🔴 **缺点 (Cons)**|
+|---|---|---|
+|**内存占用**|仅为**实际使用的虚拟地址空间**分配页表，节省大量内存|页表结构本身更复杂，需要额外的目录页表，占用少量额外空间|
+|**稀疏地址空间支持**|对于**稀疏内存使用的进程**非常高效，不会为空洞地址范围浪费页表项|若进程使用地址空间非常密集，多级页表节省的空间优势不明显|
+|**可扩展性**|适用于大型虚拟地址空间（如 32 位、64 位系统）|随层数增加，页表查找过程更长、更慢|
+|**访问速度**|——|每增加一级页表，就需要**多一次内存访问**才能完成地址转换|
+|**性能优化**|可与 **TLB（Translation Lookaside Buffer）** 配合使用，显著减少查找延迟|若 TLB 命中率低，会出现明显性能下降|
+
+Paging 为 OS 提供了将虚拟地址转换为物理地址（**Relocation**）的抽象层，因此不同应用可以使用各自隔离的虚拟地址空间（**Protection**），多个应用还可以通过 Shared Mapping 共享同一个物理页（**Sharing**）。
+
+与分段模式相同，Paging 也需要做一些权限保护，这些用于维护权限的位处于页表的 Entry 中。例如，Page-Directory Entry 的结构如下：
+
+![[ch2_26.png]]
+
+!!! note "都是 0 表示高权限等级，1 表示低权限等级（这块能 Write，说明这块权限等级低）"
+
+在 Multi-Paging 下，一个物理页的最终权限是导向它的 PDE 和 PTE 权限位的 **AND**：
+
+$$
+\text{Page Attribute = PDE Attribute \& PTE Attribute}
+$$
+
+Paging 使用 CR0-CR4 几个 Control Registers 来对分页进行控制，它们的结构如下：
+
+![[ch2_27.png]]
+
+- **Control Register 0:** 主要包括分页相关控制位
+	- PE(bit 0) 是否启用保护模式。当 PE = 1 时会从 Real Mode 进入 Protected Mode
+	- PG(bit 31) 是否启用分页。该位在进出 Long Mode 时被设置
+- **Control Register 2:** 保存发生 Page Fault 时的 Linear Address
+	- Handler 通过读取 CR2 来确定哪个地址导致了错误，从而执行缺页调入、权限检查、进程终止等操作
+- **Control Register 3:** 存储页目录的 Physical Address
+	- Page-Directory Base: 页目录基地址
+- **Control Register 4:** Pentium 开始新增的控制寄存器，拓展了原有的分页架构控制
+	- PSE(bit 4) 是否启用大页拓展。开启后*允许* PDE 直接映射 4MB 的大页
+		- 当 `CR4.PSE=1` and `PDE.PS=1` 时，该 PDE 映射到一个 4MB Page
+		- 当 `CR4.PSE=1` and `PDE.PS=0` 时，该 PDE 映射到一个 4KB Page
+	- PAE(bit 5) 是否启用物理地址拓展。开启后允许物理地址空间超过 4GB
+		- 例如 36-bit 物理地址，可寻址 64GB 内存；此时 Linear Address 还是 32-bit
+		- PAE 启用的条件下允许映射 2MB Page，此时 PSE 位被忽略，大页达不到 4MB
+
+=== "PSE"
+	![[ch2_28.png]]
+=== "PAE"
+	![[ch2_29.png]]
+
+

@@ -23,12 +23,12 @@
                </div>
             </div>
             <div class="card">
-               <img class="ava" src="https://mms2.baidu.com/it/u=2334055062,411239629&fm=253&app=138&f=JPEG?w=500&h=500"/>
+               <img class="ava" src="https://raw.githubusercontent.com/inuEbisu/HuntersNotes/refs/heads/main/docs/assets/favicon.ico"/>
                <div class="card-header">
                   <div>
-                     <a href="https://oneko.zone/zju/dm" target=“_blank”>Oneko Zone</a>
+                     <a href="https://note.inuebisu.cn/" target=“_blank”>猎人笔记</a>
                   </div>
-                  <div class="info">一个软工学长的离散笔记</div>
+                  <div class="info">可爱犬戎</div>
                </div>
             </div>
 	        <div class="card">
