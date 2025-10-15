@@ -517,7 +517,7 @@ abstract class Animal {
 
 子类继承抽象类后，要么实现所有抽象方法，要么把自己也定义为抽象类。
 
-**Interface** 是 totally abstract class，它的所有方法都默认是 `public abstract` 的，所有成员变量都默认是 `public static final` 的：
+totally abstract class 被称为 **Interface**，它的所有方法都默认是 `public abstract` 的，所有成员变量都默认是 `public static final` 的：
 
 ```java
 // 定义接口
@@ -586,8 +586,9 @@ public class MusicalCarriage implements Carriage, Jukebox {
 !!! tip "Staic Methods in Interface"
 	接口中的静态方法属于接口本身，不能被实现类继承，也不能被实现类覆盖，只能通过接口名调用。
 
+### ENUM
 
-
+枚举 `enum` 其实也是一种类，也可以有成员变量、成员函数以及构造函数等。
 
 
 

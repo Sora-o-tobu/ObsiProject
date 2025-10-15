@@ -26,6 +26,10 @@
 
 System Calls 是 OS 提供的编程接口服务，大部分用户都通过打包后的高层 Application Program Interface（API） 来间接调用。
 
+实现上，CPU 的运行模式被分为用户态（User Mode）和内核态（Kernel Mode）。当 CPU 处于用户态时，CPU 只能执行非特权指令。通常，我们的应用程序运行在用户态，而操作系统内核运行在内核态。
+
+虽然我们可以在用户态调用相关的 Syscall 指令，但是执行系统调用时会发生特权级的切换，因此它属于**特权相关指令（privilege-sensitive）**。
+
 !!! info "三个最普遍的 API"
 	- Win32 API for Windows
 	- POSIX API for POSIX-based Systems
@@ -82,7 +86,11 @@ System Programs 本身并不是 kernel 的一部分，但是它们依赖系统�
 
 ## OS Structure
 
-操作系统被划分为多个层次，每个层次都只使用它的下层提供的 functions 和 services。
+随着操作系统功能的不断增多和代码规模的不断扩大，提供合理的结构，对降低操作系统复杂度、提升操作系统安全与可靠性来说变得尤为重要。
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">分层法</font>
+
+**分层法**将操作系统被划分为多个层次，每个层次都**只能使用**它的下一层提供的 functions 和 services，这是一个单向依赖。
 
 !!! note "最底层（layer 0）为硬件，最高层（layer N）为 User Interface"
 
@@ -90,14 +98,20 @@ System Programs 本身并不是 kernel 的一部分，但是它们依赖系统�
 
 ![[Topic2_3.png]]
 
+分层法简化了系统的设计与调试，易于扩充维护，但是会导致依赖关系固定后显得不灵活，并且执行每个功能都需要自上而下穿越多层，效率较差。
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">Microkernel</font>
+
+按照操作系统的内核架构来划分，可以分为宏内核和微内核两种。
+
 **Microkernel** 的思想希望把本来放在内核里的功能尽量移动到用户态（User Space）中运行，不同模块之间通过 Message Passing 进行交流。这一思想的优点包括：
 
 - **可扩展性 (Easier to extend)**：新功能可以作为用户态服务加进来，不必改内核。
 - **可移植性 (Easier to port)**：只要把小小的微内核移植到新硬件，其余用户态服务几乎不用大改。
-- **可靠性 (More reliable)**：出 bug 的代码大部分跑在用户态，崩溃不会导致整个系统崩溃。
+- **可靠性 (More reliable)**：出 bug 的代码大部分跑在用户态，崩溃不会导致整个系统崩溃，只需要重启对应模块即可。
 - **安全性 (More secure)**：内核态代码少，攻击面更小。
 
-缺点是 User Space 和 Kernel Space 之间存在频繁通信，带来一定开销。
+微内核需要频繁地在用户态和内核态进行切换，操作系统的执行开销较大，从而导致了明显的性能问题。
 
 一个经典的微内核架构如下：
 
@@ -105,8 +119,12 @@ System Programs 本身并不是 kernel 的一部分，但是它们依赖系统�
 
 ??? tip "MacOS 属于混合型架构"
 	![[topic2_5.png]]
+	
+	!!! quote "目前的主流操作系统虽然都是宏内核架构，但也吸收很多微内核架构的优点"
 
-而大多数现代 OS 都采用**内核模块化设计（Kernel Modules）**，它采用面向对象设计，将各个核心功能都做成独立模块。不同模块之间不使用 Message Passing，而是直接调用彼此的接口函数，因此效率更高。
+<font style="font-weight: 1000;font-size: 20px" color="orange">模块化</font>
+
+大多数现代 OS 都采用了**内核模块化设计（Kernel Modules）**，它采用面向对象设计，将各个核心功能都做成独立模块。不同模块之间不使用 Message Passing，而是直接调用彼此的**接口函数**，因此效率更高。
 
 例如，Solaris 的 Modular Approach 设计如下：
 
