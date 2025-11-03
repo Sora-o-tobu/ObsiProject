@@ -259,14 +259,20 @@ nav:
     - 汇编与接口:
       - Courses/asm/index.md
       - The Microprocessor and its Architecture: Courses/asm/ch2.md
-    - 网络相关:
-      - 无线网络应用 通识课:
-        - Courses/无线网络应用/index.md
-        - 当今网络: Courses/无线网络应用/当今网络.md
-        - 协议与模型: Courses/无线网络应用/协议与模型.md
-        - 网络寻址: Courses/无线网络应用/网络寻址.md
-      - 计算机网络:
-        - Courses/CN/index.md
+      - Data Movement Instructions: Courses/asm/ch4.md
+    # - 网络相关:
+    #   - 无线网络应用 通识课:
+    #     - Courses/无线网络应用/index.md
+    #     - 当今网络: Courses/无线网络应用/当今网络.md
+    #     - 协议与模型: Courses/无线网络应用/协议与模型.md
+    #     - 网络寻址: Courses/无线网络应用/网络寻址.md
+    #   - 计算机网络:
+    #     - Courses/CN/index.md
+    - 计算机网络:
+      - Courses/CN/index.md
+      - 网络体系结构: Courses/CN/Topic0.md
+      - 物理层: Courses/CN/Topic1.md
+      - 数据链路层: Courses/CN/Topic2.md
     - 网络攻防实践基础 短学期:
       - Courses/ctf/index.md
       - Web 基础: Courses/ctf/Web.md

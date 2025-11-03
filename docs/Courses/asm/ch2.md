@@ -1,9 +1,7 @@
 
 # The Microprocessor and its Architecture
 
-## Internal Mircroprocessor Architecture
-
-### Registers
+## Registers
 
 Intel IA-32 的基础执行环境有如下寄存器：
 
@@ -111,7 +109,7 @@ Intel，AMD，VIA 的 CPU 都不支持重命名 partial register，因为它会�
 
 !!! note "早期 CPU 可以通过观察 RFLAGS 中哪些位可以被修改来判断 CPU 属于哪一代"
 
-### Operating Mode
+## Operating Mode
 
 !!! quote ""
 	![[ch2_9.png]]
@@ -129,7 +127,7 @@ Long Mode（在 Intel 中对应 *IA-32e*）是 Legacy Protected Mode 的拓展�
 
 !!! note "`RSM` 表示退出 SMM，从哪里进入 SMM 的就会退回到哪个模式"
 
-### Memory Management
+## Memory Management
 
 Memory Mangement 通常需要满足 *Relocation*，*Protection*，*Sharing* 三个要求：
 
@@ -164,7 +162,7 @@ Memory Mangement 通常需要满足 *Relocation*，*Protection*，*Sharing* 三�
 - **Physical Addresses**
 	- 物理地址，在 Memory 中的真实内存布局
 
-#### Real Mode Memory Addressing
+### Real Mode Memory Addressing
 
 Real Mode 的地址空间只有 1MB 大小，即 $2^{20}$ byte。它的 Linear Address 的计算为：
 
@@ -182,7 +180,7 @@ $$
 
 由于有相当数量的商业软件特意使用了这个特性，后续的 8086/8088/80186 CPU 都保留了这点。
 
-#### Protected Mode Memory Addressing
+### Protected Mode Memory Addressing
 
 在保护模式下，段寄存器不再单纯存储段地址，而是存储指向 **Descriptor Table** 中的某一描述符的 **Selector**。
 
@@ -270,7 +268,7 @@ Descriptor Tables 分为 **Global-Descriptor Table（GDT）**、**Local-Descript
 ![[ch2_24.png]]
 
 
-#### Memory Paging
+### Memory Paging
 
 Paging 将内存划分为统一大小的 Page，通常：
 
@@ -340,4 +338,195 @@ Paging 使用 CR0-CR4 几个 Control Registers 来对分页进行控制，它们
 === "PAE"
 	![[ch2_29.png]]
 
+假定我们要对一个 Page Table 进行访问，由于我们只能通过虚拟内存来与 Memory 交互，我们该如何得到 Page Table 上一个 entry 的虚拟内存？
+
+为了解决这个问题，OS 为 Page Table 设置了一个 **self-reference table entry**，这个 entry 存储了指向自己所处的 Table 的基地址。Windows 32 bit 将 `0x300` entry 作为 self-reference table entry，我们接下来也将以此为例作为讲解。
+
+在 10-10-12 模型下给出一个虚拟地址 $VA$，我们希望得到对该虚拟地址进行映射时经过的 entry 的虚拟地址，可以通过如下公式计算：
+
+$$\begin{array}l
+\text{GetPteVaAddress: } 0xc0000000 + [(va>>12)<<2]\\
+\text{GetPdeVaAddress: } 0xc0300000 + [(va>>22)<<2]
+\end{array}
+$$
+
+具体原理可见以下示例，其中最后的 `0x321` 要乘以 4（左移两位）是因为最后的 offset 是直接加在基地址上的，所以要乘上一个 entry 的大小 4B：
+
+![[ch2_30.png]]
+
+
+!!! question "Total Meltdown"
+	Windows 64 本来选用固定位置 `0x1ED` 作为 self-reference entry，但是曾经有人将这个 entry 的权限设置成 User 从而获得了整个物理内存的权限，因此从 Windows 10 开始将该值设置为系统启动时随机选择。
+
+
+## Addressing Modes
+
+对于三种不同的 Operation Modes，它们默认的 Address Size 和 Operand Size 如下：
+
+- **16-bit Modes**
+	- 16-bit address & 16-bit operand
+- **32-bit Protected Modes**
+	- 32-bit address & 32-bit operand
+- **64-bit Modes**
+	- 64-bit address & 32-bit operand
+
+例如，在 64-bit 下，指令 `MOV EAX, [RBX]` 中 `EAX` 是 32-bit 操作数，`RBX` 用来 64-bit 寻址。
+
+![[ch2_32.png]]
+
+### 数据寻址
+
+在 x86 寻址中，一个偏移地址可能由如下四个部分组成：
+
+$$
+\text{Effective Address} = \text{Base} + \text{Scale}\times\text{Index} + \text{Displacement}
+$$
+
+这些部分不是必须出现，根据组合，我们将 Addressing Mode 划分为以下六种：
+
+- **Direct Data Addressing (Disp)**
+	- 与 A 系列寄存器相关的 `MOV` 指令被称为 *Direct Addressing*，特征是译码得到的字节码长度更短
+		- `MOV AL, [1234H] ; A0 34 12`
+	- 除此之外的指令被称为 *Displacement Addressing*
+		- `MOV CL, [1234H] ; 8A 0E 34 12`
+- **Register Indirect Addressing (Base)**
+- **Base-Plus-Index Addressing (Base + Index)**
+- **Register Relative Addressing (Base/Index + Disp)**
+- **Base Relative-Plus-Index Addressing (Base + Index + Disp)**
+- **Scaled-Index Addressing (Base+Scale×Index+Disp)**
+
+下面我们以一些编译器的实例来说明：
+
+```c
+int var;        |  f:
+                |    mov eax, [esp+4] ; index + disp
+void f(int x)   |    mov var, eax     ; disp(Direct Addressing)
+{ var = x; }    |    ret
+```
+
+```c
+int foo(char *buf, int index)  |  foo:
+{                              |    mov eax, [esp+4] ; eax = buf
+	return buf[index];         |    mov edx, [esp+8] ; edx = index
+}                              |    movsx eax, BYTE PTR [edx+eax]
+							   |       ; base + index
+```
+
+```c
+struct foo {              |  bar:
+	int a;                |    mov eax, [esp+4] ; eax = f
+	int b;                |    mov eax, [eax+4] ; eax = *(f+4) \
+};                        |                           = f->b
+                          |    ret
+int bar(struct foo *f) {  |
+	return f->b;          |
+}                         |
+```
+
+```c
+struct foo {                         |  query:
+	int a;                           |    mov eax, [esp+4]
+	int b;                           |    mov ecx, [esp+8]
+	int c;                           |    shl ecx, 4 ; ecx = 16 * i
+	int d;                           |    mov eax, [eax+ecx+12]
+};                                   |       ; [fs+16*i+12]=fs[i].d
+                                     |    ret
+int query(struct foo fs[], int i) {  |
+	struct foo x = fs[i];            |
+	return x.d;                      |
+}                                    |
+```
+
+在 8086-80286 间接寻址中，`base` 可选 `BX` 和 `BP`，`index` 可选 `SI` 和 `DI`，`scale` 可选 1,2,4,8。
+
+当方括号中选用寄存器 `BP`/`EBP`/`ESP` 作为 `base` 时，则缺省段址默认为 `SS`；否则，均为 `DS`。
+
+!!! note "从 80386（32-bit）开始，所有 32-bit 寄存器都可以作为 `base` 和 `index`"
+
+!!! question "Which addressing mode in the following instruction is invalid ?"
+	- A.
+	- B.
+	- C.
+	- D. 
+		- `ESP` 不能作为 `index`
+
+在 x86-64 系统上，Linear Address 的逻辑长度为 64-bit。但是我们做分页时所用的 Effective Address 通常是 48-bit 或 57-bit 的，我们通常使用符号扩展来增大地址空间，这被称为 **canonical address**，例如：
+
+![[ch2_31.png]]
+
+
+### 代码寻址
+
+代码寻址通常与指令 `JMP`, `CALL` 相关，dst operand 指定了指令即将跳转到的地址。
+
+根据 jump offset 的类型，可分类为以下两种：
+
+- **relative offset**
+	- 通常指定为跳转到一个 label，编译时会被编码为相对当前指令 IP 的符号偏移
+- **absolute offset**
+	- 指定一个 General-Purpose Register 或 Memory Location，将这个值直接加载到 PC
+	- 绝对偏移以 code segment 作为基
+
+!!! example "前一个 jump 是相对偏移，后一个 jump 是绝对偏移"
+	![[ch2_33.png]]
+
+根据 jumps 的类型，可分类为以下四种：
+
+- **短跳(short jump)** ：跳转距离用一个字节（1 Byte）表示，机器码以 `EB` 开头
+	- jump range 范围为 -128 to +127
+    - 短跳后面只能接目标偏移地址或标号；而近跳还可以接 16 位寄存器或 16 位变量
+    - 短跳机器码的 idata 为一个字节，对应大小为目标地址减去*下条指令*的偏移地址($+2)
+- **近跳(near jump)** ：跳转距离或目标地址用一个字（2 Byte）表示，机器码以 `E9` 开头
+    - 机器码 `E9FD1E` 对应指令 `1D3E:0100: jmp 2000h` 即跳转到地址 `1D3E:2000`
+    - 其中 `FD1E` 含义为 `1EFD = 2000h - 0103h`，即目标地址减去下条指令的偏移地址
+    - 偏移地址在机器码中也是小端存储
+- **远跳(far jump)** ：目标地址用一个远指针表示(段地址：偏移地址)，机器码以 `EA` 开头
+    - 机器码 `EA0000FFFF` 对应指令 `jmp 0FFFFh:0000h` 。但是实际上远跳不能直接接常数地址。
+    - 如果要跳转到不同段，一定是使用远跳；例如不同模式切换时
+- **Task Switch** ：跳转到不同 task 中的指令处，只存在于 protection mode
+
+### 栈寻址
+
+与栈内存交互通常使用 `PUSH`, `POP` 进行，这两个指令总共有六种形式：
+
+- register, memory, immediate（立即数只能入栈，不能出栈）
+- segment register, flags, all registers
+
+!!! info "The `PUSH` and `POP` immediate & `PUSHA` and `POPA` (all registers) available 80286 - Core2."
+
+栈寻址相关的操作基地址均为 `SS`，偏移均为 `SP`(或 `ESP`)。
+
+由于是小端寻址，在多字节数据入栈时，高位字节先入栈，低位字节后入栈。
+
+汇编代码中，堆栈端只能创建一次，创建时，`SS:[SP]` 指向栈顶，`SP` 指向堆栈段的末尾：
+
+```asm
+stk segment stack ; 开辟一段堆栈空间，里面的'S'只是用来占位的
+a db 200h dup('S')
+stk ends
+
+----
+
++-------------+ <- ss:[sp], sp = 堆栈长度
+|stack segment|
++-------------+ <- ss:[sp - 200h] or ss
+|code  segment|
++-------------+ <- cs:[ip], ip = offset main
+|data  segment|
++-------------+ <- ds
+```
+
+在 8086 - 80286 中，`PUSH` 指令只能传递 2 Bytes 大小的数据；而 80386 开始，视 `PUSH` 后接的操作数大小，可以传递 2 Bytes, 4 Bytes, 8 Bytes 大小的数据。
+
+除此之外，还有 `PUSHA`, `PUSHAD`, `PUSHF` 等特殊的 push 指令：
+
+- `PUSHA` push all
+	- 按照 `AX`, `CX`, `DX`, `BX`, `SP`, `BP`, `SI`, `DI` 顺序入栈
+	- 操作数大小为 2 Bytes
+- `PUSHAD` push all double
+	- 操作数大小为 4 Bytes
+- `PUSHF` push flags
+	- 将 FLAG 入栈
+
+`POP` 相关的同理，此处不再书写。
 
