@@ -142,7 +142,7 @@ $$
 与 Strings 类似，我们也为 Language 定义 Concatenation 运算：
 
 $$
-L_1 L_2 = \{w_1 w_2 | w_1 \in L_1\land 2_2 \in L_2\}
+L_1 L_2 = \{w_1 w_2 | w_1 \in L_1\land w_2 \in L_2\}
 $$
 
 **【Example】**
@@ -163,11 +163,11 @@ $$
 那么此时 $L^+$ 即为 $L$ 关于函数 *Concatenation* 的 Closure。
 
 !!! question
-	- Can $e\in L^+$ for some $\Sigma$ ?
+	- <1> Can $e\in L^+$ for some $\Sigma$ ?
 		- $L^+$ = $L\cup L^2\cup...$，而 $L^0=\{e\}$ 被从 $L^*$ 中剔除，因此 $e\in L^+$ 的充要条件是 $e\in L$
-	- When we have $L^+= L^*$
-		- 同上，我们知道 $L^* = \{e\} \cup L^+$, 以你 $L^+= L^*$ 的充要条件也是 $e\in L$
-	- Can $L^*$ or $\emptyset^*$ equal to $\emptyset$ ?
+	- <2> When we have $L^+= L^*$
+		- 同上，我们知道 $L^* = \{e\} \cup L^+$, 因此 $L^+= L^*$ 的充要条件也是 $e\in L$
+	- <3> Can $L^*$ or $\emptyset^*$ equal to $\emptyset$ ?
 		- 由于 $L^*=\{e\} \cup L^+$，一定包含 $e$，所以它不可能等于空集
 		- $\emptyset ^*=\{e\} \cup \emptyset \cup \emptyset \cup ... = \{e\}$
 

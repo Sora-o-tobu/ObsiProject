@@ -691,3 +691,10 @@ TODO：直接书写一个 create stream 的表格
 
 
 短路 eager，不跑完所有元素
+
+
+## IO
+
+> nio 和 nio2.0 不考
+
+
