@@ -298,7 +298,7 @@ CPU 调度可能出现在任意一个进程上，但是需要请求调度的事�
 - Minimize **Waiting Time** : 等待时间，在 ready queue 中（或在 Ready 状态下）等待所花的时间之和
 - Minimize **Response Time** : 响应时间，交互系统从进程创立到第一次产生响应的时间
 
-这些要求有时甚至是冲突的。例如，较多的 context switch 会减少 throughput，因为 context switch 过程中并没有有用的工作；而较少的 context switch 会增加 response time。
+!!! abstract "计算题中，周转时间等于完成时间减去到达时间，等待时间为周转时间减去 CPU burst time"
 
 基于上述不同目的，多种调度算法被设计出来。
 
@@ -332,6 +332,8 @@ RR 算法是适用于分时系统的**抢占式**调度算法。
 
 RR 算法定义了一个较小的固定时间单元**时间片（time slice / quantum）**，保证任何一个进程都不会连续运行超过一个时间片的时间（除非这是 Ready Queue 的唯一进程）。
 
+!!! note "如果一个进程在时间片未用完前就结束，系统也会立即进行进程调度"
+
 它将所有就绪进程按照 FCFS 策略排成 Ready Queue，每隔一个时间片便产生一次时钟中断激活调度程序，将 CPU 分配给就绪队列的队首进程。被剥夺的进程回到就绪队列的末尾重新排队，等候再次运行。
 
 相比 SJF 算法而言，RR 算法的平均等待时间更长，但是响应时间更短。
@@ -339,6 +341,9 @@ RR 算法定义了一个较小的固定时间单元**时间片（time slice / qu
 Quantum 的选择对 RR 算法的性能影响很大。如果时间片足够大，以至于所有进程都能在一个时间片内执行完毕，则 RR 算法退化为 FCFS 算法；如果时间片非常小，则 CPU 将在进程间频繁切换，真正用于运行用户进程的时间将减小。
 
 ​在实践中，时间片大约 10~100ms，每次 context-switch 约 10μs。即 context-switch 的时间花费是比较小的。
+
+!!! question "如果一个进程时间片用完的同时有新进程到达，怎么处理 Ready Queue 顺序？"
+	先将时间片用完的进程放入 Ready Queue 的队尾，再将同一时刻到达的新进程依次加入队尾。
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Priority Scheduling</font>
 
@@ -367,4 +372,583 @@ Quantum 的选择对 RR 算法的性能影响很大。如果时间片足够大�
 
 ![[topic3_9.png]]
 
+
+## Process Synchronization
+
+### Critical Section
+
+虽然多个进程可以共享系统中的各种资源，但其中许多资源一次只能为一个进程所用，我们将一次仅允许一个进程使用的资源成为 **Critical Resource**，包括打印机等物理设备，以及可被若干进程共享的变量、数据等。
+
+对 Critical Resource 的访问必须互斥地进行，在每个进程中，访问 Critical Resource 的那段代码称为 **Critical Section**。我们将临界资源的访问过程分为四个部分：
+
+```c
+while (true) {
+	entry section;      // 进入区 检查进程是否可以进入临界区
+	critical section;   // 临界区 访问临界资源
+	exit section;       // 退出区 清除正在访问临界区的标志
+	remainder section;  // 剩余区 剩余代码
+}
+```
+
+### Mutual Exclusion (Mutex)
+
+互斥也被称为间接制约关系，当一个进程进入 Critical Section 使用临界资源时，另一个进程必须等待。
+
+实现互斥的基本方法包括软硬件方法、互斥锁、信号量等。同步与互斥应尽可能遵循以下原则：
+
+- <1> 空闲让进：临界区空闲，则允许请求进入的进程立即进入
+- <2> 忙则等待：已有进程进入临界区时，其它试图进入的进程必须等待
+- <3> 有限等待：保证等待时间有限
+- <4> 让权等待：当进程不能进入临界区时，应立即释放处理器，防止忙等待
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">软件实现方法</font>
+
+```c
+/// P0                       P1
+while (true)                 while (true)
+{                            {
+	while (turn!=0);             while (turn!=1);    // 进入区
+	critical section;            critical section;   // 临界区
+	turn = 1;                    turn = 0;           // 退出区
+	remainder section;           remainder section;  // 剩余区
+}                            }
+```
+
+该算法设置了一个公用整型变量 `turn`，表示允许进入临界区的进程编号。当 `turn=0` 时，表示允许进程 $P_0$ 进入临界区；当 `turn=1` 时，表示允许进程 $P_1$ 进入临界区。进程退出临界区时会将使用权赋予另一个进程。
+
+但是该算法要求两个进程必须交替使用临界资源，如果进程 $P_0$ 离开外层循环，那么变量 `turn` 永远不会被设置为 1，此时 $P_1$ 无法再次进入临界区，违背了“空闲让进”的原则。
+
+作为改进，我们有如下*双标志先检查法*：
+
+```c
+/// P0                       P1
+while (true)                 while (true)
+{                            {
+	while (flag[1]);             while (flag[0]);    // 进入区
+	flag[0] = true;              flag[1] = true;
+	critical section;            critical section;   // 临界区
+	flag[0] = false;             flag[1] = false;    // 退出区
+	remainder section;           remainder section;  // 剩余区
+}                            }
+```
+
+这样既不会发生上述的情况，也允许进程连续使用临界资源。但是因为对 `flag` 的检查和设置不是原子性的，可能存在以下情况：
+
+进程 $P_0$ 和 $P_1$ 同时想要访问临界资源，在 entry section 对 `flag` 检查都通过，导致双方同时进入临界区，违背“忙则等待”原则。
+
+此时若将*检查*放在*设置*后面，虽然不会出现双方同时进入的情况，但是会出现双方同时对自己的 `flag` 进行了设置，导致检查都不通过的**饥饿**现象。
+
+**Peterson** 算法结合了以上算法的思想，利用 `flag[]` 解决互斥访问问题，利用 `turn` 解决饥饿问题，其核心思想是，若双方都想要进入临界区，则将进入的机会“谦让”给对方：
+
+```c
+/// P0                       P1
+while (true)                 while (true)
+{                            {
+	flag[0] = true;              flag[1] = true;     // 进入区
+	turn = 1;                    turn = 0;
+	while (flag[1]&&turn==1);    while (flag[0]&&turn==0);
+	critical section;            critical section;   // 临界区
+	flag[0] = false;             flag[1] = false;    // 退出区
+	remainder section;           remainder section;  // 剩余区
+}                            }
+```
+
+!!! abstract "Peterson 算法很好地遵循了空闲让进、忙则等待、有限等待三个原则，但仍未实现让权等待"
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">硬件实现方法 1：中断屏蔽</font>
+
+CPU 只会在发生中断时切换进程，因此屏蔽中断能够保证当前运行的进程让临界区的代码顺利执行完，其典型模式为：
+
+```text
+...
+关中断
+临界区
+开中断
+...
+```
+
+该方法的缺点也显而易见：
+
+- <1> 限制了 CPU 交替执行程序的能力，系统效率明显降低
+- <2> 将开关中断的权限交给用户不明智
+- <3> 不适用于多处理器系统
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">硬件实现方法 2：TestAndSet</font>
+
+TS 指令是一个原子操作，其功能是读出指定标志并将其设置为 `true`：
+
+```c
+bool TestAndSet(bool *lock) {
+	bool old = *lock; // 存放 lock 旧值
+	*lock = true;     // 无论之前是否加锁，都将 lock 设置为 true
+	return old;       // 返回旧值
+}
+```
+
+我们用 `true` 表示资源正被占用（加锁），用 `false` 表示空闲（未加锁）。进程在进入临界区之前，先用 TS 指令检查 lock 值：
+
+- 若为 `false`，表示没有进程在临界区，可以进入，并将 lock 设置未 `true`
+	- 此时临界资源被加锁，其它进程不能进入
+- 若为 `true`，表示有进程在临界区，进入循环等待，直到当前访问临界区的进程退出时解锁
+
+```c
+while TestAndSet(&lock); // 加锁并检查
+critical section;
+lock = false;            // 解锁
+remainder section;
+```
+
+!!! tip "TS 指令就是保证了检查和设置这两个操作是原子性的"
+
+暂时无法进入临界区的进程会占用 CPU 循环执行 TS 指令，因此没有实现“让权等待”原则。
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">硬件实现方法 3：Swap</font>
+
+Swap 指令也是一个原子操作，它的功能是交换两个字节的内容：
+
+```c
+void Swap(bool *a, bool *b) {
+	bool temp = *a;
+	*a = *b;
+	*b = temp;
+}
+```
+
+此时每个临界资源都有一个共享布尔变量 lock，初值为 false；每个进程都有一个局部布尔变量 key，初值为 true。
+
+其原理和 TS 指令实现互斥区别不大，过程描述如下：
+
+```c
+bool key = true;
+while (key != false) Swap(&lock, &key);
+critical section;
+lock = false;
+remainder section;
+```
+
+!!! quote "硬件指令方法实现互斥的优缺点"
+	- **Advantage**
+		- 简单、容易验证正确性
+		- 适用于任意数量的进程，支持多处理器
+		- 支持系统中有多个临界区
+	- **Disadvantage**
+		- 等待进入临界区的进程会占用 CPU 执行 while 循环，没能实现“让权等待”
+		- 从等待进程中随机选择一个进程进入临界区，有的进程可能一直选不上，从而导致饥饿现象
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">互斥锁 Mutex Lock</font>
+
+互斥锁是解决临界区最简单的工具。一个进程在进入临界区时要调用 `acquire()` 来获得锁；在退出临界区时要调用 `release()` 来释放锁。
+
+每个互斥锁有一个布尔变量 `available` 表示锁是否可用。只有锁可用才能成功调用 `acquire()`；当一个进程试图获取不可用的锁时会被阻塞，知道该锁被释放。其过程描述如下：
+
+```c
+acquire() {
+	while (!available);  // 忙等待
+	available = false;   // 获得锁
+}
+release() {
+	available = true;    // 释放锁
+}
+```
+
+!!! note "`acquire()` 和 `release()` 两个操作自然也是原子操作，因此通常用硬件机制实现"
+
+上面描述的互斥锁也称**自旋锁 Spin Lock**，它的缺点是需要忙等待，当有一个进程在临界区时，任何其它进程在进入临界区前都需要连续循环调用 `acquire()`，这种连续循环显然浪费了 CPU 周期。因此，互斥锁通常用于多处理器系统，一个线程在一个处理器上旋转，而不影响其它线程的执行。
+
+自旋锁的优点是进程在等待锁期间没有发生上下文切换，并且等待的代价不高。
+
+!!! success "不需要忙等待的互斥锁称为 Sleep Lock"
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">信号量 Semaphore</font>
+
+信号量用来解决互斥和同步问题的功能较强的机制，它只能被两个标准原语 `wait()` 和 `signal()` 访问，也可简写为 `P()` P 操作和 `V()` V 操作。
+
+**整型信号量**被定义为一个用于表示资源数量的整型量 `S`，相比于普通整型变量，整型信号量只有三种操作：初始化、P 操作、V 操作：
+
+```c
+wait(S) {            // 相当于进入区
+	while (S <= 0);  // 若资源数不够，忙等待
+	S = S - 1;       // 若资源数够，则占用一个资源
+}
+signal(S) {          // 相当于退出区
+	S = S + 1;       // 释放一个资源
+}
+```
+
+整型信号量的使用方式基本与互斥锁相似，因此它也有忙等待的缺点。而**记录型信号量**是一种不存在忙等现象的进程同步机制，它除了需要一个用于表示资源数量的整型变量 `value` 外，还增加了一个进程链表 `L`，用于链接所有等待该资源的进程：
+
+```c
+typedef struct {
+	int value;
+	struct process *L;
+} semaphore;
+```
+
+此时对应的 P 操作和 V 操作描述如下：
+
+```c
+void wait(semaphore S) {
+	S.value--;
+	if (S.value < 0) {
+		add this process to S.L;
+		block(S.L);   // running - > waiting
+	}
+}
+
+void signal(semaphore S) {
+	S.value++;
+	if (S.value <= 0) {
+		// 仍有进程在等待该资源
+		remove a process P from S.L;
+		wakeup(P);   // waiting -> ready
+	}
+}
+```
+
+此时，为了使多个进程能够互斥地访问某个临界资源，需要为该资源设置一个互斥信号量 `S`，其初值为 1，对应可用资源数为 1，然后将各个进程访问该资源的临界区过程置于 `P(S)` 和 `V(S)` 之间：
+
+```c
+semaphore S = 1;
+P1() {
+	...
+	P(S);
+	critical section;
+	V(S);
+	...
+}
+```
+
+### Classical Synchronization Problems
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">Bounded-Buffer Problem</font>
+
+也称为*生产者-消费者问题*。有一个生产者，一个消费者，共享 Buffer 大小为 $N$；生产者每生产一个产品并放入缓冲区，消费者每次都缓冲区中取出一个产品并消费，因此缓冲区即为临界资源。
+
+我们对该问题设置三个信号量：
+
+- `mutex`: 初始化为 1，用于控制互斥访问 Buffer
+- `full`: 初始化为 0，用于记录当前 Buffer “满”缓冲区数
+- `empty`: 初始化为 $N$，用于记录当前 Buffer “空”缓冲区数
+
+```c
+semaphore mutex = 1;  // 临界区互斥信号量
+semaphore empty = n;  // 空闲缓冲区
+semaphore full  = 0;  // 缓冲区初始化为空
+
+producer() {
+	while (1) {
+		produce a item;
+		wait(empty);   // 获取空缓冲区单元
+		wait(mutex);   // 进入临界区
+		add the item to the buffer;
+		signal(mutex); // 退出临界区
+		signal(full);  // 满缓冲区数 +1
+	}
+}
+
+consumer() {
+	while (1) {
+		wait(full);    // 获取满缓冲区单元
+		wait(mutex);   // 进入临界区
+		remove an item from buffer;
+		signal(mutex); // 退出临界区
+		signal(empty); // 空缓冲区数 +1
+		consume the removed item;
+	}
+}
+```
+
+
+**【Exercise】** 三个进程 P1，P2，P3 互斥使用一个包含 $N$ 个单元的缓冲区，请设计信号量机制：
+
+- P1 每次用 `produce()` 生成一个正整数并用 `put()` 送入缓冲区某个空单元中
+- P2 每次用 `getodd()` 从该缓冲区中取出一个奇数并用 `countodd()` 统计奇数个数
+- P3 每次用 `geteven()` 从该缓冲区中取出一个偶数并用 `counteven()` 统计偶数个数
+
+??? success "Answer"
+	```c
+	semaphore mutex = 1;  // 临界区互斥信号量
+	semaphore empty = n;  // 空闲缓冲区
+	semaphore odd   = 0;  // 缓冲区初始化为空
+	semaphore even  = 0;
+	// Process 1
+	P1() {
+		while (1) {
+			produce a item;
+			wait(empty);   // 获取空缓冲区单元
+			wait(mutex);   // 进入临界区
+			add the item to the buffer;
+			signal(mutex); // 退出临界区
+			if the item is odd:
+				signal(odd);
+			else:
+				signal(even);
+		}
+	}
+	// Process 2
+	P2() {
+		while (1) {
+			wait(odd);    // 获取满缓冲区单元
+			wait(mutex);   // 进入临界区
+			remove an item from buffer;
+			signal(mutex); // 退出临界区
+			signal(empty); // 空缓冲区数 +1
+			consume the removed item;
+		}
+	}
+	// Process 3
+	P3() {
+		while (1) {
+			wait(even);    // 获取满缓冲区单元
+			wait(mutex);   // 进入临界区
+			remove an item from buffer;
+			signal(mutex); // 退出临界区
+			signal(empty); // 空缓冲区数 +1
+			consume the removed item;
+		}
+	}
+	```
+
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">Readers & Writer Problem</font>
+
+有读者和写者两组并发进程，共享一个文件，当两个或以上的读进程同时访问数据时不会产生副作用，但若某个写进程和其它进程同时访问共享数据时则可能导致数据一致性问题，因此要求：
+
+- 允许多个 Reader 同时对文件执行读操作
+- 只允许一个 Writer 往文件中写信息
+- 任意一个 Writer 在完成写操作之前不允许其它 Reader 或 Writer 工作
+- Writer 执行写操作前应让已有的进程全部退出
+
+简单的一个 P 操作、V 操作无法解决该问题，需要额外用到一个计数器来判断当前是否有 Reader 在读取文件。同时，不同 Reader 对计数器的访问也应该是互斥的，因此信号量设置为：
+
+- `count`: 初始化为 0，用于记录当前 Reader 数量
+- `mutex`: 初始化为 1，用于保护更新 count 变量时的互斥
+- `rw`: 初始化为 1，用于保证 Reader 和 Writer 的互斥访问
+
+```c
+int count = 0;   // 整型信号量
+semaphore mutex = 1;
+semaphore rw    = 1;
+
+writer() {
+	while (1) {
+		P(rw);          // 互斥访问共享文件
+		write sth...
+		V(rw);          // 释放共享文件
+	}
+}
+
+reader() {
+	while (1) {
+		P(mutex);       // 互斥访问 count 变量
+		if (count == 0) // 当第一个 Reader 读共享文件时
+			P(rw);      // 阻止 Writer 访问共享文件
+		count++;        
+		V(mutex);       // 释放 count
+		read sth...
+		P(mutex)        // 互斥访问 count 变量
+		count--;
+		if (count == 0) // 当最后一个 Reader 离开
+			V(rw);      // 允许写进程写
+		V(mutex);       // 释放 count
+	}
+}
+```
+
+!!! abstract "该算法中 Reader 优先级大于 Writer，也存在 Writer 优先级更高的实现方式"
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">Dining-Philosophers Problem</font>
+
+一张圆桌围坐了 5 名哲学家，每名哲学家前有一碗饭，每两名哲学家之间有一根筷子。当哲学家饥饿时，会尝试拿起左、右两根筷子（允许一根一根拿起），若筷子已在他人手上，则需要等待。
+
+很显然，这里的五根筷子属于临界资源，我们为其定义信号量数组 `chostick[5] = {1,1,1,1,1}`。并且，我们对哲学家 $i$ 左边的筷子编号为 $i$，右边的筷子编号为 $(i+1)\%5$。
+
+```c
+semaphore chopstick[5] = {1,1,1,1,1};
+
+// Process i
+Pi() {
+	do {
+		P(chopstick[i]);       // 取左边筷子
+		P(chopstick[(i+1)%5]); // 取右边筷子
+		Dining...
+		V(chopstick[i]);       // 放回左边筷子
+		V(chopstick[(i+1)%5]); // 放回右边筷子
+	} while(1);
+}
+```
+
+上述贪心算法虽然浅显易懂，但是当所有哲学家同时想要进食，并且同时取到左边筷子时，此时想要取右边筷子就会进程阻塞，发生*死锁*。
+
+!!! success "为防止死锁发生，可制定的一些限制条件"
+	- <1> 至多允许 4 名哲学家同时进食，以保证至少有一名哲学家能拿到左右两边的筷子
+	- <2> 要求奇数号哲学家先拿左边筷子，偶数号哲学家先拿右边筷子，以保证相邻哲学家都想进食时，只有一名哲学家可以取到筷子，而另一名阻塞等待
+	- <3> 仅当哲学家两边筷子都可用时，才允许他拿起筷子
+
+这里我们采用方案 3，仅需定义一个访问 `chopstick[]` 资源的互斥信号量 `mutex` 即可：
+
+```c
+semaphore chopstick[5] = {1,1,1,1,1};
+semaphore mutex = 1;           // 临界区互斥信号量
+
+// Process i
+Pi() {
+	do {
+		P(mutex);
+		P(chopstick[i]);       // 取左边筷子
+		P(chopstick[(i+1)%5]); // 取右边筷子
+		V(mutex);
+		Dining...
+		V(chopstick[i]);       // 放回左边筷子
+		V(chopstick[(i+1)%5]); // 放回右边筷子
+	} while(1);
+}
+```
+
+
+## Deadlock
+
+**死锁**指多个进程因竞争资源而造成的一种僵局，各个进程互相等待对方手里的资源而阻塞。
+
+死锁和饥饿都是进程无法顺利向前推进的现象，但是他们有如下差别：
+
+- <1> 发生饥饿的进程可以只有一个；而死锁是因循环等待对方手里的资源导致的，因此发生死锁的进程必然大于等于两个
+- <2> 发生饥饿的进程可能处于 Ready 状态（长期得不到 CPU），也可能处于 Waiting 状态（长期得不到 I/O 设备）；而发生死锁的进程只能处于 Waiting 状态
+
+产生死锁必须同时满足以下四个条件：
+
+- **<1> 互斥条件 Mutual Exclusion:** 进程要求对所分配的资源进行排他性使用，即一段时间内某资源只能为一个进程占用，此时其它请求该资源的进程只能等待
+- **<2> 不可剥夺条件 No Preemption:** 进程所获得资源使用完前，不能被其它进程夺走，只能主动释放
+	- 只有对不可剥夺资源（如打印机）的竞争才会产生死锁，对可剥夺资源（如 CPU 和 Memory）竞争不产生死锁
+- **<3> 请求并保持条件 Hold And Wait:** 进程已经保持了至少一个资源，但又提出了新的资源请求，而该资源已被其它进程占用，此时请求进程被阻塞，但自己已获得的资源保持不变
+- **<4> 循环等待条件 Circular Wait:** 存在资源循环等待链，链中每个进程已获得的资源同时被链中下一个进程所请求
+	- 即存在一个处于等待态的进程集合 $\{P_1, P_2, ..., P_n\}$，其中 $P_i$ 等待的资源被 $P_{i+1}$ 所占有，$P_n$ 等待的资源被 $P_0$ 占有
+
+![[topic3_11.png]]
+
+对于右图，假设系统中共有两个该类资源，并且其中一个资源被 $P_K$ 占用，而另一个资源处于循环等待圈中（例如被 $P_0$）占有。那么虽然满足了上述所说的条件四，但是如果此时 $P_K$ 将资源释放，$P_n$ 就能获得该资源，循环等待就会被打破。
+
+因此，我们说循环等待只是死锁的**必要条件**；但若系统中每类资源都只有一个资源，则资源分配图中含圈就变成了系统出现死锁的**充分必要条件**。
+
+为使系统不发生死锁，必须设法破坏产生死锁的四个条件之一；或者允许死锁的发生，但当死锁发生时能够检测到，并且有能力恢复。
+
+|          | 实现方案                              | 资源分配策略             | 主要优点            | 主要缺点                               |
+| -------- | --------------------------------- | ------------------ | --------------- | ---------------------------------- |
+| **死锁预防** | 设置限制条件，破环产生死锁的 4 个必要条件            | 保守，宁可资源闲置          | 适用于突发式处理，不必进行剥夺 | 效率低，初始化时间长；<br>剥夺次数多；<br>不便灵活申请新资源 |
+| **死锁避免** | 资源动态分配过程中，寻找可能的安全允许顺序，防止系统进入不安全状态 | 预防和检测的折中，运行时判断是否死锁 | 不必进行剥夺          | 必须知道将来的资源需求；<br>进程不能被长时间阻塞         |
+| **死锁检测** | 允许死锁，定期检查死锁是否已经发生，通过剥夺等措施解除死锁     | 宽松，只要允许就分配资源       | 不延长进程初始化时间      | 通过剥夺解除死锁，造成损失                      |
+
+### Deadlock Prevention
+
+死锁预防需要破坏死锁产生的 4 个必要条件之一。
+
+- <1> 破坏互斥条件
+	- 若将只能互斥使用的资源改造为允许共享使用，则系统不会进入死锁状态
+	- 但很多临界资源只能互斥使用，因此该方法不太可行
+- <2> 破坏不可剥夺条件
+	- 当一个已经保持了某些不可剥夺资源的进程，请求新的资源而得不到满足时，它必须释放已经保持的所有资源
+	- 这意味着，进程已占有的资源会被暂时释放，或者称被剥夺了
+	- 该方法实现复杂，且可能会导致前一阶段工作失效
+- <3> 破坏请求并保持条件
+	- 要求进程在请求资源时不能持有不可剥夺资源，具体有以下两种实现方式
+		- 1. 要求进程在能够获取所需的所有资源前不能运行。进程运行期间不会再申请资源，从而破坏“请求”；在等待获取期间，进程不占有任何资源，从而破坏“保持”
+		- 2. 允许进程·获得运行所需的部分资源后就运行，运行过程中逐步释放，只有全部释放后才能请求新的资源
+	- 方法一实现简单，但会造成资源浪费，也会导致饥饿现象；相对来讲，方法二更加优秀
+- <4> 破坏循环等待条件
+	- 采用*顺序资源分配法*，给系统中各类资源编号，只允许进程按照编号递增的顺序请求资源
+	- 一个进程只有在已经保持小编号资源时，才能申请更大编号资源，因此已持有大编号资源的进程不能再逆向申请小编号资源，因此不会产生循环等待条件
+	- 缺点在于，编号时只能考虑大多数资源使用这些资源的顺序，实际使用顺序可能与编号不一致，从而导致编程困难和资源浪费
+
+
+### Deadlock Avoidance
+
+死锁避免同样属于事先预防策略。对于每次资源申请操作，只有在不产生死锁的情况下，系统才会为其分配资源。
+
+当系统能够按照某种顺序为每个进程分配其所需的资源，并且不会导致死锁，此时该顺序就被称为*安全序列*（可能有多个）。若系统能找到这么一个安全序列，则此时为 Safe State；若不能，则称系统处于 Unsafe State。
+
+只有当系统处于 Unsafe State 时，才有可能出现死锁，因此我们需要保证系统不会进入 Unsafe State。
+
+**银行家算法**是最著名的死锁避免算法。该算法将操作系统视为银行家，管理的资源视为资金，进程请求资源相当于向银行家贷款。进程运行前需要声明对各种资源的最大需求量，其数量不超过系统的资源总量。
+
+假定我们有 $n$ 个进程，$m$ 类资源，我们定于如下数据结构：
+
+- 可利用向量资源 `Available[m]`: 含有 $m$ 个元素的数组，`Available[j]=K` 表示此时系统中有 $K$ 个 $R_j$ 类资源可用
+- 最大需求矩阵 `Max[n][m]`: 定义系统中 $n$ 个进程中每个进程对 $m$ 类资源的最大需求，`Max[i][j]=K` 表示进程 $P_i$ 需要 $R_j$ 类资源的最大数量为 $K$
+- 分配矩阵 `Allocation[n][m]`: 定义系统中每类资源当前已分配的资源数，`Allocation[i][j]=K` 表示进程 $P_i$ 已获得 $R_j$ 类资源的数量为 $K$
+- 需求矩阵 `Need[n][m]`: 表示每个进程接下来最多还需要多少个资源，`Need[i][j]=K` 表示进程 $P_i$ 还需要 $R_j$ 类资源的数量为 $K$
+
+!!! tip "通常矩阵 `Need` 不是已知的，而是在解题过程中计算得到: `Need[i,j]=Max[i,j]-Allocation[i,j]`"
+
+假定我们将所有进程的请求向量存储在矩阵 `Request[n][m]` 中，那么银行家算法的伪代码可以展示为：
+
+```c
+// 当进程 P_i 发出资源请求 Request[i]：
+if Request[i] > Need[i]:
+	error;           // 所需资源超出宣布的最大值
+if Request[i] > Available:
+	P_i Wait;            // 尚无足够资源，等待
+
+// 全部条件满足，试探性分配资源并更新数据结构
+Available[j]     -= Request[j];
+Allocation[i][j] += Request[j];
+Need[i][j]       -= Request[j];
+
+// 执行 Safety Algorithm，若通过才正式分配资源给 P_i
+if Safety():
+	// 分配后为 Safe State，正式分配
+	grant request;
+else:
+	// 回滚
+    Available     += Request[i]
+    Allocation[i] -= Request[i]
+    Need[i]       += Request[i]
+    P_i Wait;
+```
+
+其中使用的安全性算法伪代码可以理解为：
+
+```c
+bool Safety() {
+	Work = Available;
+	Finish[n] = {0};   // 初始化为 0
+	while exists p such that
+			Finish[p] == 0           // 该进程还未运行结束
+			&& Need[p] <= Work:      // 该进程所需资源小于可用资源
+		Work = Work + Allocation[p]; // 假定该进程释放资源
+		Finish[p] = 1;               // 假定该进程运行结束
+	
+	if all(Finish == 1):
+		return true;   // Safe State
+	else:
+		return false;  // Unsafe State
+}
+```
+
+实际上，各个进程进入向量 `Finish` 的顺序即为一个可行的**安全序列**，若运行结束后安全序列中包含了所有进程（即所有均为 1），此时系统就处于安全状态；否则为不安全状态。
+
+### Deadlock Detection
+
+在*资源分配图*中，我们用圆圈表示一个进程，用框表示一类资源，框内每个圆表示该类资源中的一个资源。从进程到资源的有向边称为*请求边*，表示该进程申请一个单位的该类资源；从资源到进程的有向边称为*分配边*，表示该类资源已有一个资源分配给了该进程。
+
+![[topic3_12.png]]
+
+例如上图(a)中，进程 $P_1$ 已分得两个资源 $R_1$，并正在请求一个资源 $R_2$；进程 $P_2$ 已分得一个资源 $R_1$ 和一个资源 $R_2$，并正在请求一个资源 $R_1$。
+
+我们可以通过“简化”资源分配图来检测当前系统状态 $S$ 是否为死锁状态，$S$ 为死锁的条件是当且仅当资源分配图是不可完全简化的。简化的具体方法如下：
+
+- <1> 找到所有既不阻塞也不孤立的进程释放，消去该进程的所有有向边
+	- 即找到一个存在有向边与它相连的进程，且该有向边对应的资源的*申请数量*小于该资源的*空闲数量*；若所有连接该进程的边都满足该条件，则说明这个进程可以运行完成，消去它的所有请求边和分配边
+	- 空闲数量即该资源的数量减去它在资源分配图中的出度，例如上图资源 $R_1$ 空闲数量为 $3-3=0$，而资源 $R_2$ 的空闲数量为 $2-1=1$
+- <2> 第一步中释放的资源可能可以唤醒某些因等待这些资源而被阻塞的进程，重复步骤一进行简化
+	- 如果能消去图中所有的边，则称该图是可完全简化的
+
+一旦检测出死锁，就可以通过某些措施来解除死锁。此处简略讲述几种措施：
+
+- **<1> 资源剥夺法:** 挂起某些死锁进程，并抢占它的资源，将这些资源分配给其它死锁进程
+	- 简化后的资源分配图中，还有边相连的那些进程就是死锁进程
+- **<2> 撤销进程法:** 强制撤销部分甚至全部死锁进程，并剥夺这些进程的资源
+	- 该方法实现简单，但可能会付出较大的代价
+- **<3> 进程回退法:** 让一个或多个死锁进程回到足以回避死锁的状态，进程回退时资源释放资源
+	- 该方法需要系统保持进程的历史信息，并设置还原点
+	- 我们在数据库大作业中就使用了该方法
 

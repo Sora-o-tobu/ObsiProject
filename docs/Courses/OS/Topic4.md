@@ -276,3 +276,4 @@ Memory-Mapped File I/O 的核心思想是，把磁盘上的文件内容映射到
 实际上，共享内存的方式就是通过 Memory-Mapped Files 实现的，它将同一份文件映射到两个进程的虚拟地址空间：
 
 ![[topic4_6.png]]
+

@@ -175,6 +175,7 @@ nav:
       - Basics: Courses/tcs/Topic1.md
       - Simple Model: Courses/tcs/Topic2.md
       - Turing Machine: Courses/tcs/Topic3.md
+      - Undecidability: Courses/tcs/Topic4.md
     - 数字逻辑设计:
       - Courses/DD/index.md
       - 理论课笔记:

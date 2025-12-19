@@ -39,15 +39,16 @@ x86 中，指令长度范围为 1 Byte - 15 Bytes。我们尝试分析指令编�
 - **Opcode**
 	- 如果 Direction Bit = 1，数据流从 R/M field 流向 REG field，即 `MOV REG, R/M` （Register or Memory）
 	- 如果 Direction Bit = 0，数据流从 REG field 流向 R/M field，即 `MOV R/M, REG`
+- **MOD-REG-R/M**
+	- ...
 
 !!! warning "为什么不像 RISC-V 一样指定 rs 和 rd 呢？"
 	这是因为 x86 中寻址不仅仅是寄存器寻址，还有内存寻址。所以 x86 选择固定寻址的两个域以及数据流的方向。
 
-
-
 ![[ch4_3.png]]
 
-`8A5501H`，`MOV DL, [DI+1]`，MOD 变了，加了 disp
+!!! example "对于指令 `MOV DL, [DI+1]`，它的机器码为 `8A5501H`"
+	相比于上图，`MOD` 部分从 `00` 变为了 `01`，表示存在 displacement；末尾加了一个 `disp` 段，数值为 `01H`。
 
 
 

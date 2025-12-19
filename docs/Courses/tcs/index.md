@@ -2,6 +2,7 @@
 # 计算理论
 
 !!! quote "Problem => Sets of Symbols => Languages => Computational Models"
+	![[t0_1.png]]
 
 ## 分数构成
 
