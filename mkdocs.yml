@@ -210,6 +210,7 @@ nav:
       - Operating-System Structures: Courses/OS/Topic2.md
       - Processes: Courses/OS/Topic3.md
       - Main Memory: Courses/OS/Topic4.md
+      - File System: Courses/OS/Topic5.md
     - 数据结构:
       - 数据结构基础:
         - Courses/DS/FDS/index.md 
@@ -265,6 +266,7 @@ nav:
       - Data Movement Instructions: Courses/asm/ch4.md
       - Arithmetic & Logic Instructions: Courses/asm/ch5.md
       - Program Control Instructions: Courses/asm/ch6.md
+      - Basic I/O Interface: Courses/asm/ch11.md
     # - 网络相关:
     #   - 无线网络应用 通识课:
     #     - Courses/无线网络应用/index.md
