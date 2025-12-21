@@ -54,6 +54,34 @@ A string $w\in \Sigma^*$ is said to be *accepted* by M **iff** there is a state 
 
 所有被 DFA $M$ 接受的 string 集合表示为 $L(M)$，它是被 $M$ 接受的 Language。
 
+??? success "DFA 最小化问题"
+	- <1> 删除所有不可达状态
+	- <2> 合并等价状态
+		- <2.1> 初始状态分为*接受组*和*非接受组*，因为接收状态和非接受状态不等价
+		- <2.2> 考察接收到某一输入符号后，某组内的不同状态是否会转移到不同等价组
+			- 如果不等价，则将它们分开建为新组
+		- <2.3> 重复 2.2，直到无法细分
+	
+	??? example
+		![[t2_19.png]]
+		
+		根据规则：“接受状态与非接受状态不等价”。我们将所有状态分成两组：
+		
+		- **接受状态组 (Final)**： $\{q_5\}$ (双圈状态)
+		- **非接受状态组 (Non-Final)**： $\{q_0, q_1, q_2, q_3, q_4\}$
+		
+		检查大组 $\{q_0, q_1, q_2, q_3, q_4\}$ 内部是否还能拆分，例如考察输入 **1**：
+		
+		- **$q_0$** 输入 1 $\to$ $q_2$ (在非接受组)
+		- **$q_1$** 输入 1 $\to$ $q_3$ (在非接受组)
+		- **$q_2$** 输入 1 $\to$ $q_5$ (**在接受组**)
+		- **$q_3$** 输入 1 $\to$ $q_5$ (**在接受组**)
+		- **$q_4$** 输入 1 $\to$ $q_5$ (**在接受组**)
+		
+		$q_0, q_1$ 在输入 1 后仍然留在非接受组，而 $q_2, q_3, q_4$ 在输入 1 后跳到了接受组 ($q_5$)。因此，$\{q_0, q_1\}$ 和 $\{q_2, q_3, q_4\}$ 必须分开。现在的划分变成了三组：$P_1 = \{ \{q_0, q_1\}, \{q_2, q_3, q_4\}, \{q_5\} \}$
+		
+		后续细分步骤以此类推
+
 ### Nondeterministic Finite Automata
 
 NFA 不同于 DFA，它在某些状态下读到一个符号时，可能有多个去向，甚至可以不读入输入就跳转。这种不确定性让它同时尝试多条路径，只要有一条成功就接受输入。
@@ -102,6 +130,8 @@ $$
 为了解决以上两点 Difference，我们可以从初始状态开始思考，计算转换后的 DFA 有什么状态。我自己思考总结得到的计算方法如下：
 
 ![[t2_7.png]]
+
+
 
 !!! danger "zq 老师的 PPT 上的方法我没太理解，且绿色部分 PPT 上没有"
 	按照定义，一个 DFA 要求**每个状态对于每个输入符号都必须有且只有一个转移**，否则意味着自动机在这个输入上是不确定的。
@@ -263,14 +293,14 @@ $$
     - $L = \{1^n\}$ where $n$ is prime: 选 $1^k$ where $k > p$ and $k$ is prime，若 $y = 1^s$ where $0 < s \le p$，则 $\forall n \ge 0, k + (n - 1)s$ is prime。但取 $n = k + 1$ 得到 $k + ks = k(1 + s)$ is not prime，矛盾
     - $L \in \{0, 1\}^*$ where numbers of 0's and 1's are equal: 假设 regular，则 $L \cup 0^*1^* = \{0^n1^n\}$ is regular，矛盾
 
-!!! quote "判断是否是正则语言"
+!!! quote "不存在判断任意语言是否为 Regular 的算法"
 	- 证明语言**正则**
 	    - 该语言有限
 	    - 构造一个接受该语言的 FA
 	    - 构造一个生成该语言的正则表达式
 	    - 正则语言的闭包性质
 	- 证明语言**非正则**
-	    - 泵定理
+	    - Pumping Theorem
 	    - 反证
 	        - 不存在接受该语言的 FA
 	        - 正则语言的闭包性质
@@ -337,7 +367,7 @@ $$
 - $S\rightarrow aSa,\; S\rightarrow bSb$
 	- 可以简写为 $S\rightarrow e \;|\; a \;|\; b \;|\; aSa \;|\; bSb$
 
-同 Regular Language 一样，CFL 也关于操作 Union, Concatenation, Kleene Star 闭包，但对 Intersection 和 Complementation 不闭包。
+同 Regular Language 一样，CFL 也关于操作 Union, Concatenation, Kleene Star 闭包，但对 Intersection 和 Complementation 不闭包：
 
 | 运算             | 正则语言 | 上下文无关语言 |
 | -------------- | ---- | ------- |
@@ -348,6 +378,8 @@ $$
 | Kleene 星 ($*$) | ✅    | ✅       |
 
 !!! warning "但是 CFL 和正则语言的交运算是封闭的，即 $\text{CFL} \cap \text{Regular}=\text{CFL}$，常用来证明语言不是 CFL"
+
+
 
 ### Parse Tree
 
@@ -431,6 +463,9 @@ $$
 	??? question "Is c necessary?"
 		$c$ 被用作栈底标志，可以简化 PDA 的设计，但并不是必要的。
 
+??? example "More Example"
+	![[t2_20.png]]
+
 
 事实上，对于 $L(G)=\{wcw^R\; : \; w\in \{a,b\}^*\}$ 这种拥有形如 $R=\{S\rightarrow aSa\;|\; bSb\;|\;c\}$ 的规则的 CFG，可以分如下三步构造 PDA 的转移方程：
 
@@ -450,11 +485,31 @@ $$
 
 若 $L$ 是一个 Context-Free Language，则存在一个常数 pump length $p\in \mathbb{Z}^*$ 使得 $\forall w\in L$ with $|w|\ge p$ 可被分为 5 个部分 $w=uvxyz$，满足：
 
-- $\forall i \ge 0, uv^i xy^iz\in L$
-- $|v|+|y| > 0$
+- $\forall i \ge 0,\; uv^i xy^iz\in L$
+	- 无论我们将 $v$ 和 $y$ 重复多少次（包括0次，即删除），生成的字符串仍然属于 $L$。
+- $|v|+|y| > 0$ 或 $|vy|\ge 1$
 	- 被 pump 的字段非空
+	- $v$ 和 $y$ 不能同时为空
 - $|vxy| \le p$
 	- $y$ 出现在 String 的前 $p$ 个字符内
 
 泵定理是 Context-Free Language 的一个必要**不**充分条件，因此我们可以通过证明泵定理不成立来证明该语言不是一个 Context-Free Language。
 
+**【Example】**
+
+证明 $L=\{a^i b^j c^i d^j\}$ 不是 CFL：
+
+- 对于任意 $p\ge 1$，取 $w=a^p b^p c^p d^p$，则 $|w|=4p\ge p$
+- 任意划分 $w = uvxyz, |vxy| \le p, |vy| \ge 1$，则 $vxy$ 最多包含两种字符
+- 此时取 $i=0$，则有 $u v^0 x y^0 z = uxz \notin L$
+
+产生矛盾，因此 $L$ 不是上下文无关语言。
+
+!!! quote "不存在判断任意语言是否为 CFL 的算法"
+	- 证明语言**上下文无关**
+		- 有限
+		- 构造 CFG 或 PDA
+		- 运算性质
+	- 证明语言**非上下文无关**
+		- Pumping Theorem
+		- 运算性质

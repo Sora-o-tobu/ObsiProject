@@ -64,9 +64,17 @@ PDA 的局限性在于我们只可对栈顶的元素进行操作，而图灵机�
 
 如果一台图灵机对输入 $w\in L$ 时必停机接受，但对 $w\notin L$ 时则可能永不停机（既不接受也不明确拒绝），那么称该机**半判定**（semidecide）语言 $L$。能被图灵机半判定的语言称为**可识别语言**或**递归可枚举语言（Recursive Enumerable, RE）**。
 
-!!! note "If $L$ is a recursive language, the it is R.E"
+| 运算             | 递归语言 | 递归可枚举语言 |
+| -------------- | ---- | ------- |
+| 并 ($\cup$)     | ✅    | ✅       |
+| 交 ($\cap$)     | ✅    | ✅       |
+| 连接 ($\circ$)   | ✅    | ✅       |
+| 补 ($\bar{A}$)  | ✅    | ❌       |
+| Kleene 星 ($*$) | ✅    | ✅       |
 
-!!! note
+!!! note "If $L$ is a recursive language, then it is R.E"
+
+!!! tip
 	直观地说，图灵机可以“枚举”出语言中的所有字符串，但对于不在语言中的输入，它可能陷入无限循环。图灵可识别语言也称为类型-0语言，与任意**文法**生成的语言等价。
 
 ## Nondeterministic Turing Machine

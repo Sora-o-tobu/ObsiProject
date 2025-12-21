@@ -180,3 +180,20 @@ $$
         - ($\Leftarrow$) 若能按序枚举，对于输入 $w$，只需等待枚举器。若打印出 $w$，则接受；若打印出比 $w$ 字典序更大的串，说明 $w$ 被跳过，则拒绝（因为是按序的，后面不可能再出现 $w$）。这就构成了判定器。
         - ($\Rightarrow$) 若 $L$ 可判定，枚举器只需按字典序遍历所有串，对每个串调用判定器，若接受则打印。这样打印出来的自然是有序的。
 
+
+
+!!! quote "不存在证明递归 / RE的通解"
+	- 证明 $recursive(A)$
+		- 构造判定 $A$ 的图灵机
+		- $\exists B,\; recursive(B) \land (A\le B)$
+		- $RE(A)\land RE(\overline{A})\; \Rightarrow \; recursive(A)$
+	- 证明 not $recursive(A)$
+		- 对角化构造
+		- $\exists B,\; not\ recursive(B) \land (B\le A)$
+	- 证明 $RE(A)$
+		- 构造半判定 $A$ 的图灵机
+		- $\exists B,\; RE(B) \land (A\le B)$
+	- 证明 not $RE(A)$
+		- $\exists B,\; not\ RE(B) \land (B\le A)$
+		- $not\ recursive(A) \land \ not\ RE(\overline{A}) \; \Rightarrow \; not\ RE(A)$
+
