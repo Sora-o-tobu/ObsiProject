@@ -281,6 +281,7 @@ nav:
       - 物理层: Courses/CN/Topic1.md
       - 数据链路层: Courses/CN/Topic2.md
       - 网络层: Courses/CN/Topic3.md
+      - 传输层: Courses/CN/Topic4.md
     - 网络攻防实践基础 短学期:
       - Courses/ctf/index.md
       - Web 基础: Courses/ctf/Web.md
