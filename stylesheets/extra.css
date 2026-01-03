@@ -82,6 +82,12 @@ h2::before, h3::before, h4::before, h5::before {
 }
 */
 
+/* italic -> underline */
+em {
+  text-decoration: underline wavy pink;
+}
+
+
 /* img Constraint */
 img {
   max-width: 100%;
