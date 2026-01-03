@@ -7,7 +7,7 @@
 
 - **User Interface:** 包括 Command-Line(CLI), Graphics User Interface(GUI) 和 Batch 等
 - **Program Execution:** 提供将程序加载进内存执行的能力
-- **I/O Operations:** 一个正在运行的程序可能需要 I/O，设计 File 和 I/O Device 的管理
+- **I/O Operations:** 一个正在运行的程序可能需要 I/O，涉及 File 和 I/O Device 的管理
 - **File System Manipulation:** 文件的增删改查，以及权限管理等
 - **Communications:** 进程之间有时需要交换信息，这一交换也有可能是通过网络的不同主机之间的
 	- 交流可以通过 Shared Memory 或 Message Passing 等方式实现
@@ -94,7 +94,7 @@ System Programs 本身并不是 kernel 的一部分，但是它们依赖系统�
 
 !!! note "最底层（layer 0）为硬件，最高层（layer N）为 User Interface"
 
-最原始的 UNIX OS 只包含 System Programs 和 Kernel 两个部分，属于 **Monolithic Structure**：
+最原始的 UNIX OS 只包含 System Programs 和 Kernel 两个层次，它在一定程度上分层，属于 **单体结构 Monolithic Structure**：
 
 ![[Topic2_3.png]]
 
@@ -111,7 +111,7 @@ System Programs 本身并不是 kernel 的一部分，但是它们依赖系统�
 - **可靠性 (More reliable)**：出 bug 的代码大部分跑在用户态，崩溃不会导致整个系统崩溃，只需要重启对应模块即可。
 - **安全性 (More secure)**：内核态代码少，攻击面更小。
 
-微内核需要频繁地在用户态和内核态进行切换，操作系统的执行开销较大，从而导致了明显的性能问题。
+为了提供应用程序与同样运行在用户空间中的各种服务的通信，微内核需要频繁地在用户态和内核态进行切换，操作系统的执行开销较大，从而导致了明显的性能问题。
 
 一个经典的微内核架构如下：
 
@@ -125,6 +125,8 @@ System Programs 本身并不是 kernel 的一部分，但是它们依赖系统�
 <font style="font-weight: 1000;font-size: 20px" color="orange">模块化</font>
 
 大多数现代 OS 都采用了**内核模块化设计（Kernel Modules）**，它采用面向对象设计，将各个核心功能都做成独立模块。不同模块之间不使用 Message Passing，而是直接调用彼此的**接口函数**，因此效率更高。
+
+上面提到的分层法就是实现系统模块化的一种方式。而**可加载内核模块 loadable kernel modules, LKM**在实现上更加优秀，相比于分层法，它允许任何模块都能直接调用其它模块的接口。在启动时，内核的核心模块会被加载；而运行时需要用到其它模块功能时才会加载对应模块。
 
 例如，Solaris 的 Modular Approach 设计如下：
 
@@ -140,4 +142,18 @@ System Programs 本身并不是 kernel 的一部分，但是它们依赖系统�
 
 每台具体机器的硬件环境并不相同，操作系统使用程序 `SYSGEN` 收集硬件配置信息，从而针对该机器生成适配版本。
 
-计算机启动时，需要把 Kernel 装进内存中并开始执行，这个过程称为 Booting。**Bootstrap Program** 是存于 ROM 里的一小段代码，它负责定位操作系统内核，把它加载到内存中，并启动运行。
+计算机启动时，需要把 Kernel 装进内存中并开始执行，这个过程称为 Booting。
+
+CPU 被硬编码为通电后立即跳转到内存地址空间中的一个特定位置，即 **Bootstrap Program**。它是存于 ROM 里的一小段代码，负责定位操作系统内核，把它加载到内存中，并启动运行。
+
+!!! warning "Bootstrap & Bootloader"
+	- **Bootstrap Program (引导程序/固件)**
+	    - **位置**：它是**硬件**的一部分。存放在主板的 ROM/Flash 芯片中（即 BIOS 或 UEFI）。
+	    - **本质**：它是**固件 (Firmware)**。即使你的电脑硬盘被拆掉了，里面没有安装任何操作系统，这段代码依然存在且可以运行（比如你能进入 BIOS 设置界面）。
+	    - **职责**：负责“叫醒”电脑硬件（自检），它的最后一项工作是**找到**硬盘上的 Bootloader。
+	    - Bootstrap Program 不属于操作系统
+	- **Bootloader (引导加载器)**
+	    - **位置**：它是**软件**。存放在你的硬盘（MBR、ESP分区）或 USB 启动盘上。
+	    - **本质**：它是**以文件形式存在的程序**。如果你格式化硬盘，它就会消失。
+	    - **职责**：负责“搬运”。它的核心工作是把操作系统内核（Kernel）从硬盘搬到内存里，然后把接力棒交给内核。
+	    - Bootloader 通常也不属于操作系统，但是它通常随操作系统配套安装

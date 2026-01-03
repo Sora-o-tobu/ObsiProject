@@ -106,27 +106,40 @@ File System 提供了高效和便捷的磁盘访问，以便允许存储、定�
 
 文件系统的状态维护分为**磁盘上 (On-Disk)** 和 **内存中 (In-Memory)** 两部分：
 
-- **磁盘结构 (需持久化):**
+- **磁盘结构 (需持久化):** 磁盘被划分为多个分区(卷)，每个分区中有一个独立的文件系统
     - **Boot Control Block:** 引导块（Windows 的分区引导记录, Unix 的 Boot Block）
 	    - 通常是卷中第一个块，包含 OS 启动所需的信息
     - **Volume Control Block:** 卷控制块。在 Unix/Linux 中称为 **Superblock（超级块）**
-	    - 记录分区的总大小、块大小、空闲块数量等全局信息 。
-    - **FCB (File Control Block):** 在 Unix/Linux 中对应 **inode**。它包含文件的所有元数据（权限、所有者、时间戳、大小、数据块指针），唯独**不包含文件名**（文件名在目录里）。
-- **内存结构 (运行时缓存):**
-    - **Mount Table:** 记录挂载点信息 。
-    - **Directory Structure Cache (dentry cache):** 保存最近访问过的目录信息，加速路径查找，避免频繁读盘。
+	    - 记录分区的总数量、块大小、空闲块数量和指针、空闲的 FCB 数量和指针等信息
+    - **FCB (File Control Block):** 在 Unix/Linux 中对应 **inode**。它包含文件的所有元数据（权限、所有者、时间戳、大小、数据块指针），唯独**不包含文件名**（文件名在目录里）
+- **内存结构:** 内存中信息用于管理文件系统并通过缓存提高性能，在 mount 时加载
+    - **Mount Table:** 记录挂载点信息
+    - **Directory Structure Cache (dentry cache):** 保存最近访问过的目录信息，加速路径查找，避免频繁读盘
     - **Open-file Tables (打开文件表):**
-        - **System-wide (系统级):** 整个 OS 只有一张。记录打开文件的 inode 信息和引用计数 。
-        - **Per-process (进程级):** 每个进程 PCB 中有一个。记录当前读写指针（Offset）和指向系统表的指针 。
+        - **System-wide (系统级):** 整个 OS 只有一张。记录打开文件的 inode 信息和引用计数
+        - **Per-process (进程级):** 每个进程 PCB 中有一个。记录当前读写指针（Offset）和指向系统表的指针
+
+??? quote "File System on Disk"
+	![[topic5_8.png]]
 
 虚拟文件系统 VFS 是 Linux 内核最核心的设计之一，它提供了一个面向对象的抽象层接口 API，上层应用可以只使用 `write()` 系统调用，而不用关心其底层是 ext4、NTFS 还是 NFS。
 
+![[topic5_12.png]]
+
 VFS 的四个主要对象种类如下：
 
-- **Superblock object:** 代表一个已挂载的文件系统。
+- **Superblock object:** 代表一个已挂载的文件系统，对应磁盘分区的超级块
 - **Inode object:** 代表一个具体文件，对应了 FCB
-- **Dentry object (Directory Entry):** 代表路径中的一项（如 `/home/user` 中的 `home`、`user` 都是 dentry）。**注意：** Dentry 是内存对象，用于加速路径解析，建立文件名到 inode 的映射。
-- **File object:** 代表一个**被进程打开的文件**。它包含当前的读写位置（offset）。因为不同进程可以打开同一个文件且读写位置不同，所以 File object 属于进程，而 Inode object 属于文件系统唯一。
+	- 只有文件被访问时，才在内存中创建 Inode Object
+- **Dentry object (Directory Entry):** 代表路径中的一项（如 `/home/user` 中的 `home`、`user` 都是 dentry）
+	- Dentry 是内存对象，在磁盘上没有对应的数据结构
+	- 包含指向关联 Inode Object 的指针，也包含指向父目录和子目录的指针
+- **File object:** 代表一个**被进程打开的文件**。它包含当前的读写位置（offset）
+	- 因为不同进程可以打开同一个文件且读写位置不同，所以 File Object 属于进程，而 Inode Object 属于文件系统唯一。
+
+!!! tip "VFS 只存在于内存中，它在系统启动时建立，在系统关闭时消亡"
+
+文件存储设备分成许多大小相同的物理块，并以*块*为单位交换信息。因此文件存储设备的管理实质上是对块的组织和管理。
 
 磁盘将 blocks 分配给文件有多种不同的算法，算法也决定了文件系统的性能和空间利用率。
 
@@ -163,7 +176,14 @@ VFS 的四个主要对象种类如下：
     - _优点:_ 不浪费额外空间
     - _缺点:_ 遍历很慢，且很难找到连续空间
 - **成组链接 (Grouping):** 在第一个空闲块里存下 n 个空闲块的地址，类似索引分配的思路
-	- 这 n 个块中前 n-1 块实际上是空闲的，而最后一块又包含了另外 n 个空闲块的地址
-- **计数 (Counting):** 保存连续空闲块中，第一个空闲块地址以及连续空闲块数量 n
+	- 每组的第一个块又记录下一组的空闲盘块总数和空闲盘块号，构成一条链
+	- 目前 UNIX 采用的方式，适合大型计算机
+- **计数 (Counting):** 也称*空闲表法*；保存连续空闲块中，第一个空闲块地址以及连续空闲块数量 n
 	- 该方法通常与连续分配算法或基于 Cluster 的链表分配算法配合使用
 
+=== "Bit Map"
+	![[topic5_10.png]]
+=== "Grouping"
+	![[topic5_11.png]]
+=== "Counting"
+	![[topic5_9.png]]

@@ -19,11 +19,12 @@
 
 事实上，操作系统并没有一个统一的定义，大家都认可的部分是**内核（Kernel）**，它是始终在运行的部分，其余的则包括 System Program 和 Application Program，所以 OS 的范围差异很大。
 
-在计算机刚启动时，**bootstrap program** 被加载，它通常存储在 ROM 或 EPROM 中，也被称为 firmware。
-
-bootstrap program 会初始化硬件，加载操作系统内核并跳转到内核的入口。
-
-!!! note "现代 PC 把 bootstrap 程序称作 BIOS 或 UEFI 固件"
+!!! abstract
+	在计算机刚启动时，**bootstrap program** 被加载，它通常存储在 ROM 或 EPROM 中，也被称为 firmware。
+	
+	bootstrap program 会初始化硬件，加载操作系统内核并跳转到内核的入口。
+	
+	!!! note "现代 PC 把 bootstrap 程序称作 BIOS 或 UEFI 固件"
 
 在计算机中，I/O 设备可以和 CPU 并行执行，每一个 Device Controller 都负责管理一个特定的 Device，CPU 并不会直接操控设备，而是通过 Controller 下令。
 
@@ -31,7 +32,7 @@ bootstrap program 会初始化硬件，加载操作系统内核并跳转到内�
 
 操作系统其实就是**中断驱动**的，中断会让 CPU 的控制权转移到 **Interrupt Service Route(ISR)**，为了让中断结束后能够恢复执行，CPU 必须保存被打断的上下文，这样 ISR 处理完毕后，CPU 就能回到原来被打断的程序继续执行，就好像什么都没发生过。
 
-!!! info "上下文包括寄存器的值以及 PC"
+!!! info "上下文包括寄存器的值以及 PC，即进程的 PCB"
 
 在处理中断时，通常会暂时屏蔽新的中断，否则可能会造成丢失中断的问题。有些系统还允许有*中断优先级*，高优先级的 ISR 可以打断低优先级的 ISR。
 
@@ -49,7 +50,7 @@ bootstrap program 会初始化硬件，加载操作系统内核并跳转到内�
 |These are **normal events** and shouldn’t interfere with the normal running of a computer.|These are **abnormal events** and often result in the termination of a program|
 
 ??? info "Synchronous I/O Methods"
-	早期 I/O 其实同步、阻塞式的，程序发起 I/O 后，必须等到 I/O 完成才能继续执行。CPU 在等待期间，要么会执行一条特殊的 `WAIT` 指令，什么也不干直到收到设备的中断；要么轮询检查设备状态，但这种方式不仅浪费 CPU 时间，还有可能和正常程序抢占内存带宽。
+	早期 I/O 其实是同步、阻塞式的，程序发起 I/O 后，必须等到 I/O 完成才能继续执行。CPU 在等待期间，要么会执行一条特殊的 `WAIT` 指令，什么也不干直到收到设备的中断；要么轮询检查设备状态，但这种方式不仅浪费 CPU 时间，还有可能和正常程序抢占内存带宽。
 	
 	![[topic1_1.png]]
 
