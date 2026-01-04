@@ -5,15 +5,19 @@
 
 根据跳转距离的远近，`jmp` 分为三类：
 
-- **短跳(short jump)** ：跳转距离用一个字节表示，机器码以 `EB` 开头
-	- 短跳后面只能接目标偏移地址或标号；而近跳还可以接 16 位寄存器或 16 位变量
-	- 短跳机器码的 idata 为一个字节，对应大小为目标地址减去下条指令的偏移地址($+2)
-- **近跳(near jump)** ：跳转距离或目标地址用一个字表示，机器码以 `E9` 开头
-	- 机器码 `E9FD1E` 对应指令 `1D3E:0100: jmp 2000h` 即跳转到地址 `1D3E:2000`
-	- 其中 `FD1E` 含义为 `1EFD = 2000h - 0103h`，即目标地址减去下条指令的偏移地址
-	- 偏移地址在机器码中也是小端存储
-- **远跳(far jump)** ：目标地址用一个远指针表示(段地址：偏移地址)，机器码以 `EA` 开头
-	- 机器码 `EA0000FFFF` 对应指令 `jmp 0FFFFh:0000h` 。但是实际上远跳不能直接接常数地址，下面两种方式可以实现相同效果：
+- **短跳(short jump)** ：跳转距离用一个字节（1 Byte）表示，机器码以 `EB` 开头
+	- jump range 范围为 -128 to +127
+    - 短跳后面只能接目标偏移地址或标号；而近跳还可以接 16 位寄存器或 16 位变量
+    - 短跳机器码的 idata 为一个字节，对应大小为目标地址减去*下条指令*的偏移地址($+2)
+- **近跳(near jump)** ：跳转距离或目标地址用一个字（2 Byte）表示，机器码以 `E9` 开头
+    - 指令 `1D3E:0100: jmp 2000h` 对应机器码 `E9FD1E`，即跳转到地址 `1D3E:2000`
+    - 其中 `FD1E` 含义为 `1EFD = 2000h - 0103h`，即目标地址减去下条指令的偏移地址
+    - 偏移地址在机器码中也是小端存储
+    - 也被称为段内跳转
+- **远跳(far jump)** ：目标地址用一个远指针表示(段地址：偏移地址)，机器码以 `EA` 开头
+    - 机器码 `EA0000FFFF` 对应指令 `jmp 0FFFFh:0000h` 。但是实际上远跳不能直接接常数地址。
+    - 如果要跳转到不同段，一定是使用远跳；例如不同模式切换时
+- **任务切换(Task Switch)** ：跳转到不同 task 中的指令处，只存在于 protection mode
 
 ```asm
 data segment
@@ -99,6 +103,8 @@ end main
 	=== "For"
 		![[ch6_4.png]]
 
+另外，在书写汇编代码时我们可以通过伪指令 `.IF`, `.ELSE`, `.ELSEIF`, `.ENDIF`, `.WHILE`, `.ENDW`, `.REPEAT`, `.UNTIL` 等实现更简单的控制流。
+
 ## 条件设置指令
 
 !!! quote ""
@@ -112,7 +118,6 @@ end main
 	![[ch6_1.png]]
 
 ## 过程调用
-
 
 通过堆栈传递参数，在 `call` 指令前将参数按照从右到左的顺序压入栈(对应的栈从上到下)，然后先在函数开头执行 `push bp`, `mov bp, sp` 获取当前状态栈顶地址存入 `bp` 。由于 `call` 指令执行过程中会将返回地址也压入堆栈，因此实际调用参数要从 `[bp+4]` 开始(also `ss:[bp+4]`)：
 
@@ -163,12 +168,24 @@ end main
 
 有三种方法可以在 `CALL` 中变更特权阶级：
 
-- <1> defines conforming code segments to share libraries (e.g., math) for various privilege levels
-- <2> through special segment descriptors called Gates
-- <3> utilizes fast system call instructions
+- <1> 定义符合规范的代码段
+- <2> 通过特殊描述符 Gate 中转
+- <3> 利用系统调用指令
 	- (`SYSCALL/SYSRET` or `SYSENTER /SYSEXIT`) to access ring 0 from ring 3
 
 !!! tip "跨权限的 `CALL` 一定是 Far Call"
+
+`PROC` 和 `ENDP` 是用来表示一个过程的开始与结束的伪指令，它的使用方法如下：
+
+```asm
+.code
+main PROC
+	; some STATEMENTS
+	RET
+main ENDP
+```
+
+
 
 ## 中断与异常
 

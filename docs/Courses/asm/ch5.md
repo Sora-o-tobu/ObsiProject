@@ -42,7 +42,7 @@
 	
 	- **指令格式：** xadd dest, src
 	- **指令效果：** src = dest; dest += src
-		- 例如 xadd ah(1000h), bh(2000h)，执行完后 ah = 3000h, bh = 1000h
+		- 例如 xadd ax(1000h), bx(2000h)，执行完后 ax = 3000h, bx = 1000h
 	- **注意：** exchange and add
 
 ### 减法指令
@@ -84,7 +84,7 @@
 !!! quote ""
 	<font style="font-weight: 1000;font-size: 24px">CMPXCHG</font>
 	
-	- **指令格式：** cmpxhg dest, src
+	- **指令格式：** cmpxchg dest, src
 	- **指令效果：**
 		- 如果 dest == accu，那么 dest = src，ZF = 1
 		- 如果 dest <> accu，那么 accu = dest，ZF = 0
@@ -109,6 +109,7 @@
 		- src 为 8 位时，ax = al * src
 		- src 为 16 位时，dx:ax = ax * src
 		- src 为 32 位时，edx:eax = eax * src
+		- src 为 64 位时，rdx:rax = rax * src
 	- **Example:** DX:AX=`123400h` ➡ DX=`0012h`, AX=`3400h` 
 
 !!! quote ""
@@ -119,6 +120,7 @@
 		- src 为 8 位时，ax = al * src
 		- src 为 16 位时，dx:ax = ax * src
 		- src 为 32 位时，edx:eax = eax * src
+		- src 为 64 位时，rdx:rax = rax * src
 
 !!! info "IMUL 的第二类用法"
 	Intel 第二代CPU为`IMUL`新增了用法，支持两个或三个操作数。以下四组指令都实现对`eax`乘10，不同的是，`lea`和`imul`指令并不能处理乘法的溢出：
@@ -130,7 +132,7 @@
 	mov ebx, 10
 	imul eax, ebx         ; eax = eax * ebx
 	
-	imul eax, eax, 10     ; eax = eax * Imm
+	imul eax, eax, 10     ; eax = eax * Imm，并且立即数被符号扩展
 	
 	add eax, eax
 	lea eax, [eax+eax*4]  ; eax = eax*2 + eax*8
