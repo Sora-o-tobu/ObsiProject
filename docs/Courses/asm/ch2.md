@@ -539,6 +539,12 @@ code segment
 code ends
 ```
 
+!!! abstract
+	对于如下间接跳转，处理器会按照远地址进行处理，即包含 CS:IP 共 32 位
+	
+	- `JMP FAT PTR [SI]`
+	- `JMP TABLE [SI]`，并且 `TABLE` 数据格式为 `DD`
+
 ### 栈寻址
 
 与栈内存交互通常使用 `PUSH`, `POP` 进行，这两个指令总共有六种形式：
