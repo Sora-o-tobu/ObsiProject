@@ -96,6 +96,39 @@ OVERFLOW? (overflow test)
 SUB AL, 30H    ; -48
 ```
 
+除了以上控制流相关的伪指令外，还有这些伪指令：
+
+```asm
+BYTE PTR, WORD PTR ...
+
+DB, DW, DD, DQ, DT(10 B)
+
+DUP
+
+STRUCT, RECORD
+
+name PROC
+	; SOME STATEMENTS
+	RET
+name ENDP
+
+MACRO
+	; SOME STATEMENTS
+ENDM
+
+SEGMENT, ENDS, ASSUME
+
+ALIGN, ORG
+
+EQU
+
+INCLUDE
+
+.386, .486, .586
+
+.CODE, .DATA, .STACK, .MODEL, .EXIT
+```
+
 ## 条件设置指令
 
 !!! quote ""
