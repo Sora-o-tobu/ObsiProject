@@ -112,7 +112,7 @@ name PROC
 	RET
 name ENDP
 
-MACRO
+name MACRO
 	; SOME STATEMENTS
 ENDM
 
@@ -128,6 +128,8 @@ INCLUDE
 
 .CODE, .DATA, .STACK, .MODEL, .EXIT
 ```
+
+> 具体可参考大神的 https://note.noughtq.top/sys/aai/4#assembler-details
 
 ## 条件设置指令
 
