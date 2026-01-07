@@ -271,6 +271,10 @@ if (pid == 0) {
 ![[topic3_8.png]]
 
 
+!!! success "多线程模型中的 `fork()` 和 `exec()`"
+	- 在一个多线程进程中，如果一个线程调用 `fork()`，是会复制所有线程还是只复制调用者呢？一些 UNIX 系统为两者都提供了对应版本的 `fork()`，具体使用哪种视开发者的目的而选择
+	- 一个线程使用 `exec()` 系统调用，则整个进程都会被替换
+
 ## CPU Scheduling
 
 ### Concept
@@ -380,7 +384,9 @@ Quantum 的选择对 RR 算法的性能影响很大。如果时间片足够大�
 ​在实践中，时间片大约 10~100ms，每次 context-switch 约 10μs。即 context-switch 的时间花费是比较小的。
 
 !!! question "如果一个进程时间片用完的同时有新进程到达，怎么处理 Ready Queue 顺序？"
-	先将时间片用完的进程放入 Ready Queue 的队尾，再将同一时刻到达的新进程依次加入队尾。
+	先将同一时刻到达的新进程依次加入队尾，再将时间片用完的进程放入 Ready Queue 的队尾（新进程优先）
+	
+	实际写题过程中也有可能反过来，具体看题目要求。
 
 <font style="font-weight: 1000;font-size: 20px" color="orange">Priority Scheduling</font>
 

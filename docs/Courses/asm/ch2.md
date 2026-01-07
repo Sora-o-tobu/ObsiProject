@@ -257,7 +257,7 @@ Descriptor Tables 分为 **Global-Descriptor Table（GDT）**、**Local-Descript
 
 为了存储 Descriptor Tables 的基地址，处理器中有 4 种用户不可见的寄存器：
 
-- **GDTP** & **IDTR**: 存储 GDT 和 IDT 的 Base 和 Limit，在进入保护模式之前就被加载
+- **GDTR** & **IDTR**: 存储 GDT 和 IDT 的 Base 和 Limit，在进入保护模式之前就被加载
 - **LDTR** & **TR**:   存储 Selector，指向 GDT 中特殊的描述符
 	- LDTR 指向 GDT 中的指向 LDT 的描述符
 	- TR 指向 GDT 中的 Task-State Segment 描述符，TSS 保存了一个任务执行时的所有关键信息
@@ -483,6 +483,7 @@ int query(struct foo fs[], int i) {  |
 	- C. `MOV EAX, [ESP + 2 * EBX + 2]`
 	- **D.** `MOV EAX, [2 * ESP + EBX + 2]`
 		- `ESP` 不能作为 `index`，因此选 D
+		- 但是将 `ESP` 替换为 `EBP`，结果又是对的了（尽管 `BP` 也是一个指针）
 
 在 x86-64 系统上，Linear Address 的逻辑长度为 64-bit。但是我们做分页时所用的 Effective Address 通常是 48-bit 或 57-bit 的，我们通常使用符号扩展来增大地址空间，这被称为 **canonical address**，例如：
 

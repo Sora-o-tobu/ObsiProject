@@ -187,3 +187,130 @@ VFS 的四个主要对象种类如下：
 	![[topic5_11.png]]
 === "Counting"
 	![[topic5_9.png]]
+
+## Mass-Storage System
+
+### Concept
+
+现代计算机的二级存储基本选用 **Hard Disk Drives, HDDs** 或 **Non-Valatile Memory, NVM**，在这里我们主要关注 HDD 的结构与相关访问时间量化。
+
+![[topic5_13.png]]
+
+- **Transfer Time:** 从磁盘向计算机传输数据所需的时间
+	- 计算题中直接通过读写头转过数据位置的全部扇区时间来得到
+- **Positioning Time:** 将读写头移动到对应起始扇区所需的时间，分为两部分
+	- **Seek Time:** 寻道时间，读写头移动到对应 Track 的时间
+	- **Rotation Time:** 旋转时延，旋转读写头到其实扇区的时间，平均为半圈
+
+### Disk Scheduling Algorithms
+
+对 HDD 的访问相当耗时，为此，我们需要定义一个良好的 Disk Scheduling Algorithm 来对所有磁盘 I/O 请求进行调度。
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">FCFS</font>
+
+- **优点**
+	- 所有请求平等
+	- 不会无限期推迟处理
+- **缺点**
+	- 效率低
+
+![[topic5_14.png]]
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">SSTF</font>
+
+**Shortest-Seek-Time-First**，即最短寻道时间优先算法，与 SJF 类似，选择离当前位置最近的请求。
+
+- **优点**
+	- 平均响应时间短
+	- 吞吐量高
+- **缺点**
+	- 存在饥饿现象，因此对于磁盘调度不能说是 Optimal Algorithm
+
+![[topic5_15.png]]
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">SCAN</font>
+
+也叫做**电梯算法**，来回扫描磁盘，扫到对应请求则处理。
+
+- **优点**
+	- 平均响应时间短
+	- 吞吐量高
+	- 响应时间方差低
+- **缺点**
+	- 对于刚刚才访问过的位置，可能要经过很久才能再次访问
+
+![[topic5_16.png]]
+
+<font style="font-weight: 1000;font-size: 20px" color="orange">Circular-SCAN</font>
+
+沿同一方向循环扫描磁盘，基于假设：当扫描到磁盘一端时，磁盘另一端的请求密度更高。
+
+- **优点**
+	- 相比于 SCAN，提供更均匀的等待时间
+
+![[topic5_17.png]]
+
+??? tip "存在变体 C-LOOK 算法，扫描到最靠近边界的请求时就回头，而不是到底"
+	![[topic5_18.png]]
+	
+	!!! success "当然也有对应 LOOK 算法。写题时注意前面有没有前缀 `C-`"
+
+另外，由于 NVM（如 Solid-State Disks, SSD）并不使用物理读写头结构，并且支持随机访问，因此 NVM 的调度算法通常选用 FCFS。
+
+### RAID
+
+> 以下内容是原封不动地从我计组笔记中复制过来的，在 OS 课中应该也只是仅需了解的程度
+
+- **MTTF** mean time to failure 平均无故障时间
+- **MTTR** mean time to repair 平均修复时间
+- **MTBF** mean time between failures
+	- = MTTF + MTTR
+- **Dependability** 可靠性
+	- 从参照点至出现故障经过时间的量度，即通常通过 MTTF 作为量度
+- **Availability** 可用性
+	- $= \frac{MTTF}{MTTF+MTTR}= \frac{MTTF}{MTBF}$
+
+如何提高 Availability ？？？可以尝试使用磁盘阵列，利用冗余来增加磁盘存储的可用性，例如 Redundant Arrays of Inexpensive Disks(**RAID**):
+
+| RAID Level                                        | 允许几个盘损坏 | 数据盘个数 | 校验盘个数 | 注释                       |
+| ------------------------------------------------- | ------- | ----- | ----- | ------------------------ |
+| **0 Non-redundant striped**                       | 0       | 8     | 0     | 仅把数据分散到多个磁盘上             |
+| **1 Mirrored**                                    | 1       | 8     | 8     | 每一个盘对应一个校验盘，即镜像          |
+| **2 Memory-style ECC**                            | 1       | 8     | 4     | 路边也够，无人问津                |
+| **3 Bit-interleaved parity**                      | 1       | 8     | 1     | 位交叉奇偶校验                  |
+| **4 Block-interleaved parity**                    | 1       | 8     | 1     | 块交叉奇偶校验                  |
+| **5 Block-interleaved parity distributed parity** | 1       | 8     | 1     | 分布式块交叉奇偶校验，校验块分布于各个数据盘之中 |
+| **6 P+Q redundancy**                              | 2       | 8     | 2     | 二次校验块技术，需要多一倍校验盘         |
+
+!!! info "目前最常用的是 RAID 0 和 RAID 5"
+
+!!! example "RAID 3 位交叉奇偶校验"
+	![[raid3ex1.png]]
+	
+	校验位等于所有数据盘对应位的奇函数。当有一个盘损坏时，通过其它几个数据盘以及校验盘的数据，可以恢复损坏的数据。
+	
+	缺点在于对校验盘的读写是最频繁的，因此校验盘才是最容易损坏的，这个问题在 RAID 5中有所改善。
+
+!!! example "RAID 5 分布式块交叉奇偶校验"
+	![[raid5ex1.png]]
+	
+	相比于 RAID 3,4，其优点还有可以同时写两个磁盘，小数据写效率更高。
+
+**课本题目：** Which of the following are true about RAID levels 1,3,4,5 and 6?
+
+- **(True)** RAID systems rely on redundancy to achieve high availability
+- **(True)** RAID 1 (mirroring) has the highest check disk overhead
+- **(True)** For small writes, RAID 3 has the worst throughput
+- **(True)** For large writes, RAID 3,4 and 5 have the same throughput
+
+由于可以同时读写多个磁盘，即便是 RAID 0 也增加了数据大规模访问的性能。
+
+## I/O
+
+Interrupt
+
+Blocking/Nonblocking I/O
+
+device status table / schedule
+
+!!! bug "会考吗！？"
