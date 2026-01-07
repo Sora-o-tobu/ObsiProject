@@ -216,7 +216,7 @@ main ENDP
 
 ## 中断与异常
 
-中断的调用其实相当于内置函数的调用，中断函数的地址存储在*中断向量表*或*中断描述符表*中。
+中断的调用其实相当于内置函数的调用，中断函数的地址存储在*中断向量表*（IVT）或*中断描述符表*（IDT）中。
 
 对于 8086 实模式，中断向量表位于内存 `0000:0000` 后，每四个字节对应一个 ISP 的地址。例如，对于如下所示的一段内存：
 
@@ -250,7 +250,7 @@ main ENDP
 
 !!! note "`IRET` 可以等价于一个 `far RET` + `POPF`；保护模式则使用 `IRETD`（`far RET` + `POPFD`）"
 
-保护模式使用中断描述符表，该表每个 entry 是一个 8B 的中断描述符。
+保护模式使用中断描述符表，该表每个 entry 是一个 8B 的中断描述符（门描述符）。
 
 
 ## MISCELLANEOUS
@@ -285,7 +285,7 @@ main ENDP
 
 `BOUND` 指令用于检测某个 array index 是否在 bounds operand 表示范围内，语法格式为 `BOUND REG, MEM`。其中 `MEM` 是一个内存地址，其指向的内容即为我们指示的上下界，通常是 2 个 words 或 1 个 doubleword 的内存位置。
 
-如果操作数 `REG` 不位于 `MEM` 指示的上下界内，则会发出 BOUND range exceeded exception；如果在，则继续执行下一条指令。
+如果操作数 `REG` 不位于 `MEM` 指示的上下界内（闭区间），则会发出 BOUND range exceeded exception；如果在，则继续执行下一条指令。
 
 ```asm
 .data
@@ -294,7 +294,7 @@ main ENDP
 .code
 ...
 	mov ax, 5
-	bound ax, start  ; 0 < 5 < 10, continue
+	bound ax, start  ; 0 <= 5 <= 10, continue
 	mov ax, 11
 	bound ax, start  ; 11 > 10, raises exception
 ...
