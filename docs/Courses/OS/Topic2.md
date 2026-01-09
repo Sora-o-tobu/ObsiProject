@@ -26,7 +26,7 @@
 
 System Calls 是 OS 提供的编程接口服务，大部分用户都通过打包后的高层 Application Program Interface（API） 来间接调用。
 
-实现上，CPU 的运行模式被分为用户态（User Mode）和内核态（Kernel Mode）。当 CPU 处于用户态时，CPU 只能执行非特权指令。通常，我们的应用程序运行在用户态，而操作系统内核运行在内核态。
+实现上，CPU 的运行模式被分为用户态（**User Mode**）和内核态（**Kernel Mode**）。当 CPU 处于用户态时，CPU 只能执行非特权指令。通常，我们的应用程序运行在用户态，而操作系统内核运行在内核态。
 
 虽然我们可以在用户态调用相关的 Syscall 指令，但是执行系统调用时会发生特权级的切换，因此它属于**特权相关指令（privilege-sensitive）**。
 
@@ -36,7 +36,7 @@ System Calls 是 OS 提供的编程接口服务，大部分用户都通过打包
 		- 几乎所有的 UNIX, 以及 Linux 和 MacOS
 	- Java API for JVM
 
-按照功能，System Calls 可以分为以下几类：
+凡是与资源相关的操作，都必须通过系统调用向操作系统提出服务请求。按照功能，System Calls 可以分为以下几类：
 
 - Process Control
 - File Management
@@ -96,7 +96,7 @@ System Programs 本身并不是 kernel 的一部分，但是它们依赖系统�
 
 最原始的 UNIX OS 只包含 System Programs 和 Kernel 两个层次，它在一定程度上分层，属于 **单体结构 Monolithic Structure**：
 
-![[Topic2_3.png]]
+![[topic2_3.png]]
 
 分层法简化了系统的设计与调试，易于扩充维护，但是会导致依赖关系固定后显得不灵活，并且执行每个功能都需要自上而下穿越多层，效率较差。
 

@@ -9,7 +9,7 @@
 
 我们知道，TMs 的个数是可数的，而 Problems 或 Language 是不可数的，因此一定存在不可被图灵机计算的问题，也称一定存在 Nonrecursive Language。
 
-!!! tip "Every Recursive Language is *decided* by a TM"
+!!! tip "回忆：Every Recursive Language is *decided* by a TM"
 
 ## Universal Turing Machines
 
@@ -65,7 +65,9 @@ diagonal(X):
 不能被算法解决的问题被称为 **Undecidable Problems** 或 **Unsolvable Problems**。
 
 **【Definition】**
-若存在可计算函数 $\tau:\Sigma^* \to\Sigma^*$，使得对于任意字符串 $x$，如果 $x\in L_1$ 当且仅当 $\tau(x)\in L_2$，则称 $L_1$ 可归约（reduce）到 $L_2$，用 $L_1 \le _P L_2$ 表示。
+若存在可计算函数 $\tau:\Sigma^* \to\Sigma^*$，使得对于任意字符串 $x$，如果 $x\in L_1$ 当且仅当 $\tau(x)\in L_2$，则称 $L_1$ 可归约（reduce）到 $L_2$，用 $L_1 \le _P L_2$ 表示。并且，该表达式等价于 $\overline{L_1} \le_P \overline{L_2}$。
+
+
 
 !!! abstract "归约是计算理论中核心技巧，常用于比较问题难度及证明 NP-完全性 或不可判定性"
 
@@ -98,6 +100,23 @@ diagonal(X):
 
 因为 $H$ 是不可递归的，因此 $L$ 也不可递归。
 
+!!! note "图灵机 $M_w$ 的行为逻辑"
+	```python
+	          输入 x
+	             │
+	      ┌──────┴──────┐
+	      │             │
+	   x ≠ e          x = e   # x 是该图灵机本身的输入
+	      │             │
+	   reject       运行 M(w)
+	                      │
+	              ┌───────┴────────┐
+	              │                │
+	          M 停机             M 不停
+	              │                │
+	           accept            无限循环
+	```
+
 ??? example "对于其它例子所构造的可计算函数 $f$"
 	- **(c)** 从 (b) 归约至 (c)：$f(M)=\text{the encoding of } M_e = \{\text{1. Erase the input } x \text{; 2. run M on } e \text{; 3. if } M\text{ halts, accept}\}$
 		- 这样，对于任何不在空串上停机的图灵机 $M$，$f(M)$ 一定会被拒绝
@@ -110,19 +129,32 @@ diagonal(X):
 - **有穷自动机语言包含性:** 给定有限自动机 FA $M_1,M_2$，判断是否 $L(M_1)\subseteq L(M_2)$。这可化为“$L(M_1)\cap (Σ^*-L(M_2))=\emptyset$”的空语言测试问题，通过遍历检查是否存在可达终止状态来解决。因此自动机包含性是可判定的。
 - **机器语言计数性:** 语言 $L(M)$ 总是可列（countable），因此判断 $L(M)$ 是否可列或不可列是平凡的可判定问题。其他类似的性质如“是否存在一个输入使得 $M$ 在 $|M|$ 步内停机”等，也可通过枚举有限输入并模拟解决。
 
+!!! success "除此之外，还有 '*if halts, then reject*' 这样反其道而行之的证明方法"
+	![[t4_2.png]]
+
 例如，令  
 
 $$L_{even}=\{⟨M⟩∣M 的语言 L(M) 中至少包含一个含有偶数个 b 的字符串\}$$
 
 可以证明 $L_{\text{even}}$ 是递归可枚举而不可递归的。其可枚举性通过交错模拟 $M$ 在所有字符串上的行为得到；其不可判定性则通过停机问题归约：构造新机 $M'$ 使得 $L(M')={\varepsilon}$ 当且仅当原机 $M$ 在空串上停机（$\varepsilon$ 含 0 个 $b$，0 为偶数），从而将 $H$ 归约到 $L_{\text{even}}$。
 
+!!! info "实际构造的函数 $f(⟨M⟩) = ⟨M'⟩$ 中，新机 $M'$ 为"
+	1. 检查输入 $x$ 是否为空串 $\varepsilon$
+		- 实际上选择其它“含有偶数个b的特定字符串也行”，例如 bb
+	2. 如果 $x\ne \varepsilon$，直接拒绝
+	3. 如果 $x= \varepsilon$:
+		- 在内部模拟运行 $M$ 在空带 $e$ 上的过程
+		- 如果模拟 $M$ 停机，则接受
+	
+	$$f(⟨M⟩)=\text{the encoding of } M'= \{\text{if }x\ne \varepsilon,\text{ reject; else run } M \text{ on } e\text{; if }M \text{ halts, accept}\}$$
+
 实际上，该语言也可以通过 Rice 定理来证明是不可判定的：
 
 - **指标集（Index Set）**：设 $C$ 是 R.E. 语言类的一个子集（即一类语言的集合）。定义指标集 $\mathcal{F}(C) = \{ \langle M \rangle \mid L(M) \in C \}$。这代表了所有识别属于 $C$ 类语言的图灵机的编码集合。
 - **非平凡属性（Non-trivial Property）**：属性 $C$ 被称为非平凡的，如果：
-    - 1. $C \neq \emptyset$（至少有一个 R.E. 语言满足该属性）。
-    - 2. $C \neq \text{所有 R.E. 语言}$（至少有一个 R.E. 语言不满足该属性）。
-	    - 或者简单地说，存在 $M_1, M_2$ 使得 $L(M_1) \in C$ 且 $L(M_2) \notin C$。
+    - a. $C \neq \emptyset$（至少有一个 R.E. 语言满足该属性）。
+    - b. $C \neq \text{所有 R.E. 语言}$（至少有一个 R.E. 语言不满足该属性）。
+	- 或者简单地说，存在 $M_1, M_2$ 使得 $L(M_1) \in C$ 且 $L(M_2) \notin C$。
 
 **Rice 定理**声明，对于任何非平凡属性 $C$，语言 $\mathcal{F}(C)$ 是不可判定的。
 
@@ -170,6 +202,9 @@ $$
     - $D$ 总是停机，故 $L$ 是递归的。
 
 !!! note "该定理有推论：R.E. 语言 $H$ 的补集 $\bar{H}$ 甚至不是 R.E. 的"
+
+!!! success "这种交替执行的证明方法也可见如下，并且 $M^*$ 可能永不停机，所以是 R.E."
+	![[t4_3.png]]
 
 **枚举器**是一个带有打印机的图灵机，它不接受输入，而是运行并打印出字符串列表。
 
