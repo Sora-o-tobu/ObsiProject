@@ -345,11 +345,9 @@ CPU 调度可能出现在任意一个进程上，但是需要请求调度的事�
 - Minimize **Turnaround Time** : 周转时间，从进程创立到进程完成的时间，是等待进入内存、在 ready queue 中等待、在 CPU 上执行、I/O 执行等时间的总和
 	- 等于进程的完成时间减去到达时间
 - Minimize **Waiting Time** : 等待时间，在 ready queue 中（或在 Ready 状态下）等待所花的时间之和
-	- 等于进程的周转时间减去 CPU Burst Time（不用减 I/O Burst Time）
+	- 等于进程的周转时间减去 CPU Burst Time 和 I/O Burst Time
 - Minimize **Response Time** : 响应时间，交互系统从进程创立到第一次产生响应的时间
 	- 等于进程第一次获得 CPU 的时间减去到达时间
-
-
 
 基于上述不同目的，多种调度算法被设计出来。
 

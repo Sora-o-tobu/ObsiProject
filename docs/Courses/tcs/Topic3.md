@@ -115,3 +115,105 @@ S &\to A B C S \mid T_c,\\ BA &\to AB,\quad CA\to AC,\quad CB\to BC,\\ C T_c &\t
 
 Grammer 和图灵机的等价关系表现为，一个 Language 可以被某个 Grammer 生成当且仅当它是一个 R.E Language，即可以被图灵机半判定。
 
+## Primitive Recursive Functions
+
+**原始递归函数**是一类基础的、必定停机的函数。它由如下三个基本函数通过任意次的组合(Composition)和递归(Recursive)定义而成：
+
+- **零函数 Zero Function** $Z(x)=0$
+	- k 元零函数 $Z_k ( n_1,..., n_k)=0$
+- **后继函数 Successor Function** $S(n)=n+1$
+- **投影函数 Projection Function** $P_i^k (x_1,..., x_k) = x_i$
+
+常见的原始递归函数有：
+
+- $sgn(x)\; \Rightarrow \; \left \{\begin{array}l sgn(0)=0 \\ sgn(n+1) =1 \end{array}\right.$
+	- 其中 $n$ 指的是递归次数，原始递归构造的一般步骤为：
+		- **基例**：$f(0)=m$
+		- **递归步**：$f(n+1)= h(...,[f(..)])$，其中 $h()$ 也是原始递归函数
+- $plus2(n)=n+2= S(S(n))$
+- $plus(m,n)= m+n \; \Rightarrow\; \left \{\begin{array}l plus(m,0)=m \\ plus(m,n+1) = S(plus(m,n)) \end{array} \right .$
+	- 通常简写为 $m+n$
+- $mult(m,n)\;\Rightarrow \; \left \{\begin{array}l mult(m,0)=0 \\ mult(m,n+1) = plus(m,mult(m,n)) \end{array} \right .$
+	- 通常简写为 $m\cdot n$
+- $exp(m,n) \;\Rightarrow \; \left \{\begin{array}l exp(m,0)=1\\ exp(m,n+1)=mult(m, exp(m,n)) \end{array} \right .$
+	- 通常简写为 $m\uparrow n$
+- $f(n_1, ...,n_k)=m \; \Rightarrow \; S(...S(Z_k( n_1,..., n_k)))$
+	- 即常数函数是原始递归的
+- $pred(x) \;\Rightarrow \; \left \{\begin{array}l pred(0) =0 \\ pred(n+1) = n \end{array} \right .$
+- $m\sim n = max\{m-n, 0\} \; \Rightarrow \; \left \{\begin{array}l m\sim 0 =m \\ m\sim (n+1) = m\sim n -1 =pred( m\sim n) \end{array} \right .$
+
+
+**原始递归谓词 Primitive Recursive Predicate** 是只能取值为 0 或 1 的原始递归函数，它们将逻辑判断转化为了更加数学的形式，例如：
+
+- $iszero(x)\;\Rightarrow \;\left \{ \begin{array}l iszero(0)=1 \\ iszero(n+1)=0\end{array} \right.$
+	- 同时 $iszero(x) = 1\sim sgn(x) = \neg sgn(x)$
+- $positive(x)=sgn(x)$
+- $greater-than-or-equal(m,n) = iszero(n\sim m)$
+	- 即 $m\ge n = iszero( max\{n-m,0\})$
+- $less-than(m,n) = 1\sim greater-than-or-equal(m,n)$
+
+!!! tip "原始递归谓词之间的 negation、disjunction、conjunction 操作也是原始递归谓词"
+	- $\neg p(m)= 1\sim p(m)$
+	- $p(m,n)\lor q(m,n) = 1\sim iszero(p(m,n)+ q(m,n))$
+	- $p(m,n)\land q(m,n) = 1\sim iszero(p(m,n)\cdot q(m,n))$
+	- $\exists t\le m,\; p(n_1,..., n_k, t) \;\Leftrightarrow \; \neg iszero(\sum_{t=0}^m p(n_1,..., n_k, t))$
+	- $\forall t \le m, \; p(n_1,..., n_k, t) \;\Leftrightarrow \; \neg iszero(\prod_{t=0}^m p(n_1,..., n_k, t))$
+
+有了谓词之后，我们即可声明如下**按情况定义**的函数也是原始递归的：
+
+$$
+f(n_1,..., n_k) = \left \{\begin{array}l g(n_1, ..., n_k), & \text{if } p(n_1,..., n_k) \\ h(n_1,..., n_k), & \text{otherwise}  \end{array}\right .
+$$
+
+其中 $g(), h()$ 都是原始递归函数，$p()$ 是原始递归谓词，上述函数等价于：
+
+$$
+f()= p()\cdot g() + (1\sim p())\cdot h()
+$$
+
+给定 k+1 元函数 $g(n_1,..., n_k, m)$，我们关心其中一个参数 $m$ 的取值能否使得 $g()=1$。为此，我们定义一个新的 k 元函数 $f()$：
+
+$$
+f(n_1,..., n_k) = \left \{ \begin{array}l
+\text{the least }m \text{ such that } g(...,m)=1 \\
+0 \text{  if no such } m \text{ exists}
+\end{array}\right .
+$$
+
+该函数记作：
+
+$$
+f = \mu m [g(...,m)=1]
+$$
+
+直观上来看，该函数试图找到能够使得 $g()=1$ 的最小 $m$ 值并返回，因此它被称为 $g$ 的 **Minimalization**。不幸的是，函数 $f$ 并不是 Recursive 的，它完成功能如下述伪代码所示，可能找不到成立的 $m$ 值而永不停机：
+
+```c
+m := 0;
+while g(n_1,...,n_k,m) != 1
+	do m := m+1;
+output m;
+```
+
+!!! note "该伪代码自然也不属于*algorithm*"
+
+如果对于函数 $g()$，上述代码能够正常停机，我们就称其为 **minimalizable** 的，这也意味着其具有如下性质：
+
+$$
+\forall n_1,..., n_k \in N,\; \exists m\in N\; \text{such that } g(...,m)=1
+$$
+
+**【Theorem】**
+可以通过基础函数的 *composition*, *recursive definition* 以及可最小化函数的 *minimalization* 得到的函数，是 **$\mu$-recursive** 的。
+
+!!! example
+	证明 $g(m,n,p)=greater-than-or-equal((m+2)\uparrow p, n+1)$ 是 $\mu$-recursive 的。
+	
+	实际上直接证明该函数是 minimizable 的即可。$\mu p [greater-than-or-equal((m+1)\uparrow p, n+1)]= \lceil \log_{m+2} (n+1)\rceil$。
+
+**【Theorm】**
+一个函数 $f: N^k \rightarrow N$ 是 $\mu$-recursive 的，当且仅当它是 recursive 的，亦即 TM Computable。
+
+!!! bug "Primitive Recursive $\subseteq$ $\mu$-Recursive =? Recursive"
+	是否等于？
+
