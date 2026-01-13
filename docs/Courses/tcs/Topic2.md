@@ -366,6 +366,12 @@ $$
 - $S\rightarrow aSa,\; S\rightarrow bSb$
 	- 可以简写为 $S\rightarrow e \;|\; a \;|\; b \;|\; aSa \;|\; bSb$
 
+??? success "一个 CFG 处于 Chomsky Normal Form (CNF)，当且仅当所有产生式满足下列形式"
+	- **二元变量产生式:** $A\rightarrow BC$
+	- **终结符产生式:** $A\rightarrow a$
+	- **唯一空产生式:** $S\rightarrow e$
+		- 可选，且 $S$ 不出现在任何产生式右部
+
 同 Regular Language 一样，CFL 也关于操作 Union, Concatenation, Kleene Star 闭包，但对 Intersection 和 Complementation 不闭包：
 
 | 运算             | 正则语言 | 上下文无关语言 |

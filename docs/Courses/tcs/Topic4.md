@@ -7,7 +7,7 @@
 
 !!! note "即当且仅当可以用图灵机实现时称为算法，该论题不能严格证明，但它是计算理论的基础假设"
 
-我们知道，TMs 的个数是可数的，而 Problems 或 Language 是不可数的，因此一定存在不可被图灵机计算的问题，也称一定存在 Nonrecursive Language。
+我们知道，TMs 的个数是可数的，因此可以被图灵机 Decide 的语言是可数的。而 Problems 或 Language 是不可数的，因此一定存在**不可数**个不可被图灵机计算的问题，也称一定存在 Uncountable Non-Recursive Language。
 
 !!! tip "回忆：Every Recursive Language is *decided* by a TM"
 
@@ -67,8 +67,6 @@ diagonal(X):
 **【Definition】**
 若存在可计算函数 $\tau:\Sigma^* \to\Sigma^*$，使得对于任意字符串 $x$，如果 $x\in L_1$ 当且仅当 $\tau(x)\in L_2$，则称 $L_1$ 可归约（reduce）到 $L_2$，用 $L_1 \le _P L_2$ 表示。并且，该表达式等价于 $\overline{L_1} \le_P \overline{L_2}$。
 
-
-
 !!! abstract "归约是计算理论中核心技巧，常用于比较问题难度及证明 NP-完全性 或不可判定性"
 
 若可判定（递归）问题 $L_2$ 可用算法解决，则通过 Recursive Function $\tau$ 可构造算法解决 $L_1$；反之若 $L_1$ 不可判定且 $L_1\leq_P L_2$ 则 $L_2$ 也不可判定。类似地，递归可枚举的性质也可通过归约得出：若 $L_2$ 可枚举，则 $L_1$ 可枚举；若 $L_1$ 不可枚举，则 $L_2$ 也不可枚举。
@@ -78,6 +76,9 @@ diagonal(X):
 	- 如果 $L_1$ not r.e.，则 $L_2$ not r.e.
 	- 如果 $L_2$ recursive，则 $L_1$ recursive
 	- 如果 $L_2$ r.e.，则 $L_1$ r.e.
+
+??? question "判断：Given $A \le_P \overline{A}$ and $A$ is R.E, then $A$ and $\overline{A}$ is recursive"
+	T，因为 $A \le_P \overline{A}$ 等价于 $\overline{A}\le_P A$，所以 $\overline{A}$ 也是 R.E. 的，因此 $A$ Recursive
 
 通过归约可证明下列问题是**不可判定**的：
 
