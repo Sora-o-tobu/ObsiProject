@@ -283,6 +283,7 @@ nav:
       - 网络层: Courses/CN/Topic3.md
       - 传输层: Courses/CN/Topic4.md
       - 应用层: Courses/CN/Topic5.md
+      - 网络安全: Courses/CN/Topic6.md
       - review: Courses/CN/review.md
     - 网络攻防实践基础 短学期:
       - Courses/ctf/index.md
