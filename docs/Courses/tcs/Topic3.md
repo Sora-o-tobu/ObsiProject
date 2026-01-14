@@ -65,6 +65,9 @@ PDA 的局限性在于我们只可对栈顶的元素进行操作，而图灵机�
 
 如果一台图灵机对输入 $w\in L$ 时必停机接受，但对 $w\notin L$ 时则可能永不停机（既不接受也不明确拒绝），那么称该机**半判定**（semidecide）语言 $L$。能被图灵机半判定的语言称为**可识别语言**或**递归可枚举语言（Recursive Enumerable, RE）**。
 
+!!! warning "判断：$L$ is a language, there is a TM halts on every $x \in L$, then $L$ is decidable"
+	F，核心重点在于 $x\notin L$ 也要停机拒绝。
+
 | 运算             | 正则语言 | 上下文无关语言 | 递归语言 | 递归可枚举语言 |
 | -------------- | ---- | ------- | ---- | ------- |
 | 并 ($\cup$)     | ✅    | ✅       | ✅    | ✅       |

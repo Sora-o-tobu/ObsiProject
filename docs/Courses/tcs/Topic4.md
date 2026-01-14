@@ -128,6 +128,7 @@ diagonal(X):
 **可判定问题示例**：并非所有看似复杂的问题都是不可判定的。例如：
 
 - **有穷自动机语言包含性:** 给定有限自动机 FA $M_1,M_2$，判断是否 $L(M_1)\subseteq L(M_2)$。这可化为“$L(M_1)\cap (Σ^*-L(M_2))=\emptyset$”的空语言测试问题，通过遍历检查是否存在可达终止状态来解决。因此自动机包含性是可判定的。
+	- 有限自动机的 *Emptiness Problem*，*Finiteness Problem*，*Equivalence Problem* 都是可判定的（Decidable）
 - **机器语言计数性:** 语言 $L(M)$ 总是可列（countable），因此判断 $L(M)$ 是否可列或不可列是平凡的可判定问题。其他类似的性质如“是否存在一个输入使得 $M$ 在 $|M|$ 步内停机”等，也可通过枚举有限输入并模拟解决。
 
 !!! success "除此之外，还有 '*if halts, then reject*' 这样反其道而行之的证明方法"

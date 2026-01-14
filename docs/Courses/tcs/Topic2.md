@@ -290,7 +290,7 @@ $$
         - 根据上面两个例子可以看出，union of 2 non-regular languages 不一定是 non-regular 的，例如 $m > n$ 和 $m \le n$ 的 union 是 $0^*1^*$
     - $L = \{0^m1^n\}$ where $m \neq n$: 假设 regular，则 $(\{0^*1^*\} - L) \cap \{0^*1^*\} = \{0^n1^n\}$ is regular，矛盾
     - $L = \{1^n\}$ where $n$ is prime: 选 $1^k$ where $k > p$ and $k$ is prime，若 $y = 1^s$ where $0 < s \le p$，则 $\forall n \ge 0, k + (n - 1)s$ is prime。但取 $n = k + 1$ 得到 $k + ks = k(1 + s)$ is not prime，矛盾
-    - $L \in \{0, 1\}^*$ where numbers of 0's and 1's are equal: 假设 regular，则 $L \cup 0^*1^* = \{0^n1^n\}$ is regular，矛盾
+    - $L \in \{0, 1\}^*$ where numbers of 0's and 1's are equal: 假设 regular，则 $L \cap 0^*1^* = \{0^n1^n\}$ is regular，矛盾
 
 !!! quote "不存在判断任意语言是否为 Regular 的算法"
 	- 证明语言**正则**
@@ -354,6 +354,9 @@ $$
 
 !!! info "这里的开始符 $S$ 只是生成规则中的“变量”，最终要在推导生成中被替换为结束符"
 
+!!! danger "$\{a^m b^n: m,n \ge 0 \text{ and } m\ne n \text{ mod } 2024\}$ 是 Regular 的，因为它可以维护 2024 个余数状态（有限）"
+	类似的还有 $m+n=2024$. $|m-n | \text{ mod }5 =0$ 等
+
 **【More Example】**
 
 $$
@@ -384,7 +387,11 @@ $$
 
 !!! warning "但是 CFL 和正则语言的交运算是封闭的，即 $\text{CFL} \cap \text{Regular}=\text{CFL}$，常用来证明语言不是 CFL"
 
+!!! danger "无限个 Regular Language 的并集可能不是 Regular 的，例如"
+	$$\{ab\}\cup \{aabb\}\cup \{aaabbb\}... = \{a^nb^n\}$$
 
+??? question "判断：$L_1 \circ L_2$ is regular, then either $L_1$ or $L_2$ is regular"
+	F，对于 Non-RL $L_1$，取 $L_2=\overline{L_1}$ 也是 Non-RL。但是 $(L_1\cup \{e\}) \circ (L_2 \cup \{e\})= \sigma^*$ 为 Regular。
 
 ### Parse Tree
 
