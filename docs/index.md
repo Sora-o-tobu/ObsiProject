@@ -30,9 +30,6 @@ home: true
 <div class="card__box">
 	<div class="card__title">有兴趣但还没学的东西！</div>
 	<div class="card__content">
-	<p>- Vue.js, Node.js, Spring</p>
-	<p>- make & cmake 细节</p>
-	<p>- OS</p>
 	<p>- 机器学习</p>
 	</div>
 	<div class="card__footer"><a>www.nimisora.top</a>&nbsp;&nbsp;&nbsp;<progress id="progress-bar" aria-label="Content loading…"></progress></div>
