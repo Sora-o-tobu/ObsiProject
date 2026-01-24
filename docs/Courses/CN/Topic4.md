@@ -48,6 +48,7 @@ $$
 | 远程终端接入  | TELNET       | TCP          | 23            |
 | 电子邮件    | SMTP         | TCP          | 25            |
 | 超文本传输   | HTTP         | TCP          | 80            |
+| 邮局协议    | POP3         | TCP          | 110           |
 | 边界网关协议  | BGP          | TCP          | 179           |
 | 超文本传输安全 | HTTPS        | TCP          | 443           |
 

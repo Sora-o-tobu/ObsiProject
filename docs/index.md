@@ -31,6 +31,7 @@ home: true
 	<div class="card__title">有兴趣但还没学的东西！</div>
 	<div class="card__content">
 	<p>- 机器学习</p>
+	<p>- 逆向分析</p>
 	</div>
 	<div class="card__footer"><a>www.nimisora.top</a>&nbsp;&nbsp;&nbsp;<progress id="progress-bar" aria-label="Content loading…"></progress></div>
 </div>
