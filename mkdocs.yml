@@ -365,6 +365,10 @@ nav:
       - 虚拟化: Accumulation/NJUOS/virtual.md
       - 并发: Accumulation/NJUOS/concurrency.md
       - 持久化存储: Accumulation/NJUOS/persistence.md
+    - 逆向工程核心原理:
+      - Accumulation/RE/index.md
+      - 逆向技术基础: Accumulation/RE/topic1.md
+      - PE 文件格式: Accumulation/RE/topic2.md
     - 论文阅读:
       - Accumulation/paper/index.md
       - Linear subspace design for real-time shape deformation: Accumulation/paper/speedup_1.md
