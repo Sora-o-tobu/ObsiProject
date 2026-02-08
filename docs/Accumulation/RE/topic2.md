@@ -485,3 +485,191 @@ API `GetProcAddress()` 用于从库的 EAT 中获取指定 API 地址，其具�
 
 !!! info "经保护器处理后的代码可能比原始文件还大一些，调试起来非常困难"
 
+接下来我们使用压缩器 [upx](https://github.com/upx/upx/releases) 进行测试，对 hello.exe 进行压缩：
+
+![[re_topic2_22.png]]
+
+!!! note "可以看见文件大小从 105239 变为了 57623，节区数从 18 变为 3"
+	三个节区名分别为 `UPX0`, `UPX1`, `.rsrc`，并且第一个节区 `UPX0` 的 `SizeOfRawData` 的值为 0，即为空节区。该空节区用来存放解压后的代码，而解压缩程序和压缩的源代码都位于第二个节区 `UPX1` 中。
+
+使用 OllyDbg 调试压缩后的 PE 程序，其 EntryPoint 处代码为：
+
+```c
+// 实际上 EP 位于 UPX1 的末端部分
+000B0AA0 > $  60            pushad
+000B0AA1   .  BE 15A00A00   mov     esi, 000AA015
+000B0AA6   .  8DBE EB6FFEFF lea     edi, [esi+0xFFFE6FEB]
+```
+
+其首先将所有 32-bit 寄存器保存到栈中，然后分别为 `esi` 和 `edi` 赋值 `UPX1` 的起始地址和 `UPX0` 的起始地址。
+
+!!! quote
+	我们知道，`si` 意为 source index, `di` 意为 destination index，因此后面的操作实际上是将 `esi` 处的数据（解压并）复制到 `edi` 处。
+	
+	![[re_topic2_23.png]]
+
+略过中间的解压步骤，我们最终可以看见接近末尾有段代码从栈中弹出了所有保存的寄存器，然后无条件跳转到了 OEP 处：
+
+```c
+000B0C66   .  61            popad
+000B0C67   .  8D4424 80     lea     eax, [esp-0x80]
+000B0C6B   >  6A 00         push    0x0
+000B0C6D   .  39C4          cmp     esp, eax
+000B0C6F   .^ 75 FA         jnz     short 000B0C6B
+000B0C71   .  83EC 80       sub     esp, -0x80
+000B0C74   .- E9 7707FEFF   jmp     000913F0       // JUMP TO OEP
+```
+
+!!! danger "解压涉及解压缩代码、恢复源代码 `call/jmp` 类指令的跳转地址、设置 IAT 等循环"
+
+事实上，UPX 的解压缩代码始终位于 `pushad` 和 `popad` 之间，为了更快找到程序的 OEP，我们可以在开头执行完 `pushad` 后观察栈顶的地址，并在该地址设置硬件断点。
+
+OllyDbg 中，具体的设置方法为在左下角的 Dump 界面中跳转到栈顶地址，右键菜单中选择“*断点->硬件访问->Byte*”，然后继续运行程序即可。
+
+!!! abstract "硬件断点会停在访问该地址的指令的*下一条指令*"
+
+
+
+## 基址重定位
+
+通常对于 DLL、SYS 文件，若其被加载时 `ImageBase` 处已经被占据，那么 PE Loader 会将其加载到其它未被占用的空间，这就是 PE 文件重定位。
+
+Windows Vista 版本后引入了 *ASLR* 机制，每次运行 EXE 文件时，其也会被加载到随机地址，从而增强了系统安全性。
+
+PE Loader 装载时的重定位主要是对应用程序中硬编码的地址进行修正，具体修正公式即为：
+
+$$
+\text{Address}-\text{ImageBase} + \text{实际 Base}
+$$
+
+其中最关键的是找到哪些地址是被硬编码的，查找过程会使用内部的 **Relocation Table**，它通常在编译/链接过程中就被提供。
+
+我们能看到 PE Header 中的 `DataDirectory[5]` 即为重定位表的 RVA 和 Size。继续以我的 hello.exe 为例，它的基址重定位的 `VirtualAddress` 为 `B000h`，`Size` 为 `248h`。
+
+查找 Section Header，找到该 RVA 位于节区 `.reloc` 中，该节区的 `VirtualAddress` 为 `B000h`，`PointerToRawData` 为 `4000h`。计算可得重定位表的 RAW 为 `4000h`。
+
+基址重定位表每个表项的结构 `IMAGE_BASE_RELOCATION` 如下：
+
+```c
+typedef struct _IMAGE_BASE_RELOCATION
+{   
+    DWORD   VirtualAddress;                      // 需重定位数据的起始RVA   
+    DWORD   SizeOfBlock;                         // 本结构与TypeOffset总大小 
+    WORD    TypeOffset[1];                       // 原则上不属于本结构 
+} IMAGE_BASE_RELOCATION; typedef  IMAGE_BASE_RELOCATION UNALIGNED IMAGE_BASE_RELOCATION;
+```
+
+
+![[re_topic2_24.png]]
+
+| RVA   | 数据         | 注释               |
+| ----- | ---------- | ---------------- |
+| 4000h | `00001000` | `VirtualAddress` |
+| 4004h | `00000154` | `SizeOfBlock`    |
+| 4008h | `3018`     | `TypeOffset`     |
+| 400Ah | `3020`     | `TypeOffset`     |
+| 400Ch | `302A`     | `TypeOffset`     |
+| 400Eh | `3034`     | `TypeOffset`     |
+|       | ...        |                  |
+| 4152h | `3FF2`     | `TypeOffset`     |
+| 4154h | `00002000` | `VirtualAddress` |
+|       | ...        |                  |
+
+其中 `TypeOffset` 字段，前 4 位表示 `Type`，后 12 位表示 `Offset`。对于 PE，`Type` 通常为 3（`IMAGE_REL_BASED_HIGHLOW`）；对于 PE+，`Type` 值通常为 A（`IMAGE_REL_BASED_DIR64`）。
+
+我们以该表项的第一个 `TypeOffset` 为例，其真实 RVA 为 `1000h` + `18h` = `1018h`，我们在 OllyDbg 中查看 RVA `1018h` 处是否存在一个硬编码的地址：
+
+```text
+Executable modules, 条目 0
+ 基址=00790000
+ 大小=0001F000 (126976.)
+ 入口=007913F0 hello.<ModuleEntryPoint>
+ 名称=hello
+ 路径=\RE\hello.exe
+```
+
+那么 RVA `1018h` 就相当于地址 `791018h`，查看该地址处的汇编指令：
+
+![[re_topic2_25.png]]
+
+由于指向的是地址，而不是指令，因此 `791018h` 处就是指令 `cmp word ptr [0x790000], 0x5A4D` 中的 `0x7900`，验证正确。
+
+!!! info "重定位表也以一个 NULL 结构体结束"
+
+## 内嵌补丁
+
+对于加密文件、运行时解压缩文件等难以直接修改指定代码的文件，常常通过**内嵌补丁**（**Inline Code Patch**）的方式打补丁，其中插入并运行的代码被称为**洞穴代码**（**Code Cave**）
+
+![[re_topic2_26.png]]
+
+下载示例文件[unpackme#1.aC.exe](https://github.com/reversecore/book/blob/master/%EC%8B%A4%EC%8A%B5%EC%98%88%EC%A0%9C/02_PE_File_Format/20_%EC%9D%B8%EB%9D%BC%EC%9D%B8_%ED%8C%A8%EC%B9%98_%EC%8B%A4%EC%8A%B5/bin/unpackme%231.aC.exe)，我们的任务要求是更改第一个对话框中的文字。
+
+用调试器运行该文件，其直接在 EP 处调用解密函数（`004010E9`）：
+
+```asm
+00401000   .  60            pushad
+00401001   .  E8 E3000000   call    004010E9
+```
+
+我们进入解密函数，发现其传入一个参数 `004010F5` 给下一层解密函数（`0040109B`）并嵌套调用：
+
+```asm
+004010E9  /$  B8 F5104000   mov     eax, 004010F5
+004010EE  |.  50            push    eax
+004010EF  |.  E8 A7FFFFFF   call    0040109B
+004010F4  \.  C3            retn
+```
+
+接着进入该解密函数，可以看到开头有段解密循环，对 `004010F5` 处的数据进行与 `0x44` 的异或运算，总共执行 `0x154` 次，即该循环操作的对象是 `004010F5` - `00401248` 处的数据。
+
+![[re_topic2_27.png]]
+
+完成该操作后，继续将 `004010F5` 作为参数调用下一层解密函数（`004010BD`），我们接着进入该函数：
+
+![[re_topic2_28.png]]
+
+该函数一眼即可见有两处解密循环。其中第一处循环对 `00401007` - `00401085` 处的数据进行了与 `0x7` 的异或运算；第二处循环对 `004010F5` - `00401248` 处的数据进行了与 `0x11` 的异或运算。最后恢复 `eax` 并返回。
+
+返回后，继续将 `004010F5` 作为参数调用下一层解密函数（`00401039`）：
+
+![[re_topic2_29.png]]
+
+不过该函数并没有对数据部分进行操作，而是对解压出来的数据进行 CrC 冗余校验，如果校验不通过则会报错。
+
+最后，来到解压后的主函数附近，看到程序传递给 MessageBox 和 Dialog 的两个参数的地址分别为 `0040110A` 和 `00401123`，这也是我们想要修改的数据：
+
+![[re_topic2_30.png]]
+
+根据之前的分析，这两个数据都位于二次加密的区域，我们很难直接对加密后的数据进行修改，因此采用内嵌补丁的方式。
+
+综合来看，该程序的运行方式如下：
+
+![[re_topic2_31.png]]
+
+其中只有 `[B]` 会被校验，我们可以尝试修改 `[A]` 中的 `JMP 40121E` 为跳转到我们自己的补丁代码处。
+
+为此，我们需要寻找一个空白区域作为我们的洞穴代码书写出。观察 Section Header，可以看到第一个节区 `.text` 占据了 RVA `1000` - `2000`，占据了 RAW  `400` - `800`，但是实际使用的 `VirtualSize` 只有 280。因此，文件中 `680` - `800` 这一段是空白的，我们就选择在这里书写。
+
+我们现在调试器中对该段进行书写，观察得程序被加载到基址 `400000`，因此我们希望书写的空白段位于 `401280` - `401400` 处。
+
+![[re_topic2_32.png]]
+
+然后，我们要修改 `401083` 处的 `jmp 40121E` 为 `jmp 401280`：
+
+```asm
+00401083     E9 F8010000   jmp     00401280
+```
+
+由于区域 `[A]` 需要经过异或 7 的加密解密处理，我们也对其进行处理后得到加密后的机器码 `EE FF 06`：
+
+![[re_topic2_33.png]]
+
+!!! note "后面的 `0000` 并不在加密范围内，只加密到 `401085`"
+
+完成上述修改后，在右键菜单中选择“复制到可执行文件->所有修改”即可得到补丁完的可执行文件，执行效果如下：
+
+<p align="center">
+  <img src="image/re_topic2_34.png" width="45%" />
+  <img src="image/re_topic2_35.png" width="45%" />
+</p>
+
