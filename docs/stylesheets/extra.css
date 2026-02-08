@@ -82,6 +82,11 @@ h2::before, h3::before, h4::before, h5::before {
 }
 */
 
+/* code, kbd, pre -> deeppink */
+.md-typeset code, .md-typeset kbd, .md-typeset pre {
+    color: deeppink;
+}
+
 /* italic -> underline */
 em {
   text-decoration: underline wavy pink;

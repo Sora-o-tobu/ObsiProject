@@ -71,7 +71,7 @@ hello.exe: PE32 executable (console) Intel 80386, for MS Windows, 18 sections
 
 !!! info "启动函数是不同编译器根据自身特点添加的"
 
-对于初学者来说，一个笨拙的方法是在启动函数种的每个 `call` 调用时都使用 step into 进入，然后检查代码中是否调用了我们的 MessageBox API，如果没有，则 Execute till Return 快速退出。
+对于初学者来说，一个笨拙的方法是在启动函数中的每个 `call` 调用时都使用 step into 进入，然后检查代码中是否调用了我们的 MessageBox API，如果没有，则 Execute till Return 快速退出。
 
 经过一番搜索后，我们成功在 `C712E9` 处找到正确的 `main` 函数入口。
 
@@ -104,7 +104,7 @@ hello.exe: PE32 executable (console) Intel 80386, for MS Windows, 18 sections
 - **标签**
 	- 通过快捷键 *:* 设置指定地址为标签，此后该地址会被替换为该标签，更加直观
 
-事实上，我们直到 `hello.exe` 程序会弹出一个标题为 "Hello"，内容为 "Hello, World!" 的消息框，使用了 MessageBox API，因此我们可以使用一些更直接的方法来寻找 `main` 函数的地址。
+事实上，我们知道 `hello.exe` 程序会弹出一个标题为 "Hello"，内容为 "Hello, World!" 的消息框，使用了 MessageBox API，因此我们可以使用一些更直接的方法来寻找 `main` 函数的地址。
 
 === "字符串检索法"
 	第一种方式是在右键菜单中的“查找->所有参考文本字串”中找到对应的字符串，通过双击即可定位到对应位置。

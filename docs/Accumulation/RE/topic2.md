@@ -3,7 +3,7 @@
 
 ## PE 文件格式
 
-PE 文件（Portable Executable）是 Windows 操作系统下使用的可执行文件格式。其中，32 位可执行文件称 PE32，64 位的可执行文件称 PE+ 或 PE32+。
+**PE 文件**（**Portable Executable**）是 Windows 操作系统下使用的可执行文件格式。其中，32 位可执行文件称 PE32，64 位的可执行文件称 PE+ 或 PE32+。
 
 | 种类         | 主拓展名               |
 | ---------- | ------------------ |
@@ -244,7 +244,7 @@ DataDirectory[8] =   GLOBALPTR Directory        // 全局指针寄存器 RVA
 DataDirectory[9] =   TLS Directory              // 线程私有存储表 RVA 和大小
 DataDirectory[10] =  LOAD CONFIG Directory      // 加载配置表 RVA 和大小
 DataDirectory[11] =  BOUND IMPORT Directory     // 绑定导入表 RVA 和大小
-DataDirectory[12] =  `IAT` Directory              // 导入地址表 RVA 和大小
+DataDirectory[12] =  IAT Directory              // 导入地址表 RVA 和大小
 DataDirectory[13] =  DELAY IMPORT Directory     // 延迟导入描述符 RVA 和大小
 DataDirectory[14] =  CLR Directory              // CLR数据 RVA 和大小
 DataDirectory[15] =  Reserverd                  // 保留
