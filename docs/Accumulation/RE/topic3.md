@@ -82,3 +82,98 @@ EXPORTS
    HookProcess  @2 NONAME
 ```
 
+
+## DLL Injection
+
+### `CreateRemoteThread()`
+
+
+```c
+// InjectDll.cpp
+// i686-w64-mingw32-gcc .\InjectDll.cpp -o InjectDll
+
+#include "windows.h"
+#include "tchar.h"
+#include "stdio.h"
+
+bool InjectDll(DWORD dwPID, LPCTSTR szDllPath)
+{
+    HANDLE hProcess = NULL, hThread = NULL;
+    HMODULE hMod = NULL;
+    LPVOID pRemoteBuf = NULL;
+    DWORD dwBufSize = (DWORD)(_tcslen(szDllPath) + 1) * sizeof(TCHAR);
+    LPTHREAD_START_ROUTINE pThreadProc = NULL;
+
+    // Open the target process with all access rights
+    if (!(hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPID)))
+    {
+        _tprintf(_T("OpenProcess(%d) failed. GetLastError = %d\n"), dwPID, GetLastError());
+        return false;
+    }
+
+    // Allocate memory in the target process for the DLL path
+    pRemoteBuf = VirtualAllocEx(hProcess, NULL, dwBufSize, MEM_COMMIT, PAGE_READWRITE);
+
+    // Write the DLL path to the allocated memory in the target process
+    WriteProcessMemory(hProcess, pRemoteBuf, (LPVOID)szDllPath, dwBufSize, NULL);
+
+    // Get the address of LoadLibraryW in Kernel32.dll
+    hMod = GetModuleHandle(_T("Kernel32"));
+    pThreadProc = (LPTHREAD_START_ROUTINE)GetProcAddress(hMod, "LoadLibraryA"); // LoadLibraryA for ANSI, LoadLibraryW for Unicode
+                                                                                // 教本中用的是 LoadLibraryW，但我只能使用 LoadLibraryA
+                                                                                // 此处获取到 Kernel32.dll 被加载到 InjectDll.exe 进程中的地址，不是被注入进程中的地址
+                                                                                // 但是由于 Kernel32.dll 在所有进程中的基地址都是一样的，所以这个地址在被注入进程中也是正确的
+
+    // Create a remote thread in the target process to load the DLL
+    hThread = CreateRemoteThread(hProcess,    // hProcess
+                                NULL,         // lpThreadAttributes
+                                0,            // dwStackSize
+                                pThreadProc,  // lpStartAddress
+                                pRemoteBuf,   // lpParameter
+                                0,            // dwCreationFlags
+                                NULL);        // lpThreadId
+    WaitForSingleObject(hThread, INFINITE);
+    CloseHandle(hThread);
+    CloseHandle(hProcess);
+
+    return true;
+}
+
+int _tmain(int argc, _TCHAR *argv[])
+{
+    if (argc != 3)
+    {
+        _tprintf(_T("Usage: %s <PID> <DLL Path>\n"), argv[0]);
+        return 1;
+    }
+
+    DWORD dwPID = _tstol(argv[1]);
+    LPCTSTR szDllPath = argv[2];
+
+    if (InjectDll(dwPID, szDllPath))
+    {
+        _tprintf(_T("Successfully injected DLL into process %d with dll path %s\n"), dwPID, szDllPath);
+    }
+    else
+    {
+        _tprintf(_T("Failed to inject DLL into process %d\n"), dwPID);
+    }
+
+    return 0;
+}
+```
+
+!!! abstract
+	系统的类型、语言、版本等不同，系统库被映射到的地址就不同；此外 ASLR 功能虽然会在每次系统启动时改变系统库加载地址，但在一个系统运行过程中加载地址不会被改变。
+	
+	因此 Windows 中，只有 DLL 第一次进入内存时需要 Loading，以后其它进程可以直接映射该地址，从而提高内存使用效率。
+	
+	Windows 核心 DLL 文件的 ImageBase 值设置通常会保证加载区域不重合，避免了 DLL 重定位。
+
+
+
+### AppInit_DLLs
+
+
+### `SetWindowsHookEx()`
+

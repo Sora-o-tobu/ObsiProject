@@ -211,6 +211,9 @@ nav:
       - Processes: Courses/OS/Topic3.md
       - Main Memory: Courses/OS/Topic4.md
       - File System: Courses/OS/Topic5.md
+    - 编译原理:
+      - Courses/CP/index.md
+      - Overview: Courses/CP/Topic1.md
     - 数据结构:
       - 数据结构基础:
         - Courses/DS/FDS/index.md 
@@ -285,6 +288,11 @@ nav:
       - 应用层: Courses/CN/Topic5.md
       - 网络安全: Courses/CN/Topic6.md
       - review: Courses/CN/review.md
+    - 多媒体安全:
+      - Courses/多媒体安全/index.md
+      - Introduction: Courses/多媒体安全/topic1.md
+      - Watermark: Courses/多媒体安全/topic2.md
+      - Steganography: Courses/多媒体安全/topic3.md
     - 网络攻防实践基础 短学期:
       - Courses/ctf/index.md
       - Web 基础: Courses/ctf/Web.md
