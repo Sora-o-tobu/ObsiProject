@@ -2,6 +2,7 @@
 # Surface Multigrid via Intrinsic Prolongation
 
 > [Surface Multigrid via Intrinsic Prolongation](https://www.dgp.toronto.edu/projects/intrinsic-prolongation/)
+> [Intersection-free Garment Retargeting](https://huangzizhou.github.io/research/cloth.html)
 >
 > 传统 Linear Solver 经常成为几何处理算法的瓶颈。特别是在每次迭代线性系统都会改变的场景中，direct solvers 都需要昂贵的 re-factorization。对于结构化场景上的问题，可以使用 **geometric multigrid** 方法，它的求解器只根据网格几何进行预处理，而不关心线性系统的改变，从而保证了线性处理时间。
 >
