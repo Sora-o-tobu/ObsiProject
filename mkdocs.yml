@@ -214,6 +214,19 @@ nav:
     - 编译原理:
       - Courses/CP/index.md
       - Overview: Courses/CP/Topic1.md
+      - 词法分析: Courses/CP/Topic2.md
+      - 语法分析: Courses/CP/Topic3.md
+      - 抽象语法: Courses/CP/Topic4.md
+      - 语义分析: Courses/CP/Topic5.md
+      - 活动记录: Courses/CP/Topic6.md
+      - 中间代码: Courses/CP/Topic7.md
+      - 基本块与轨迹: Courses/CP/Topic8.md
+      - 指令选择: Courses/CP/Topic9.md
+      - 活跃性分析: Courses/CP/Topic10.md
+      - 寄存器分配: Courses/CP/Topic11.md
+      - 垃圾回收: Courses/CP/Topic13.md
+      - 面向对象语言: Courses/CP/Topic14.md
+      - 循环优化: Courses/CP/Topic18.md
     - 数据结构:
       - 数据结构基础:
         - Courses/DS/FDS/index.md 

@@ -275,6 +275,7 @@ $$\begin{array}l
 \\ |\mathcal{V}'| = |\mathcal{V}|(1-q/2) + |\mathcal{X}|q/2
 \\ |\mathcal{W}'| = |\mathcal{W}|(1-q+q^2/2) + |\mathcal{Z}|q(1-q/2)
 \end{array}$$
+
 为了分析求解得到 $q$，我们做如下变换，从而得到关于 $q$ 的一元二次方程：
 
 ![[mt_topic3_19.png]]
