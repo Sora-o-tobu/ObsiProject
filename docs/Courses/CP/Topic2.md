@@ -13,7 +13,7 @@
 	- 例如 `#include <stdio.h>`
 - `macro`
 	- 例如 `#define NUMS 5,6`
-- `blanks, tabs, new-lines`
+- `blanks`, `tabs`, `new-lines`
 
 因此，我们需要定义合适的 Lexical Rules 来描述编程语言的 Token。一个 Simple, General Purpose, Readable 的分析器使用**正则表达式**进行实现。
 
@@ -40,7 +40,7 @@ $$
 
 ![[cp_topic2_2.png]]
 
-但作为 Lexical Analyzer，我们还需要将所有的 FA 组装成一个大的自动机。此处省略细节直接给出最终的 Combined Finite Automation：
+但作为 Lexical Analyzer，我们还需要将所有的 FA 组装成一个大的自动机。此处省略细节直接给出最终的 *Combined Finite Automation*：
 
 ![[cp_topic2_3.png]]
 
@@ -56,7 +56,7 @@ $$
 
 ![[cp_topic2_5.png]]
 
-!!! info "由于我们要求注释必须要以 white space 结尾，且中间不能再出现 `-`，该输入的后半部分会进入 error 的最终状态"
+!!! info "由于我们要求注释必须要以 `\n` 结尾，且中间不能再出现 `-`，该输入的后半部分会进入 error 的最终状态"
 
 当然，实际上我们更可能是先将正则表达式转换为 NFA，再将其转换为 DFA 及其对应的转换矩阵，这样的构造顺序通常更高效。
 

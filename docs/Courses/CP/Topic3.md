@@ -9,7 +9,7 @@
 
 ![[cp_topic3_1.png]]
 
-??? note "词法分析并不会在意不同 token 之间的关系"
+??? note "词法分析并不会在意不同 token 之间的关系，因此我们需要语法分析"
 	![[cp_topic3_2.png]]
 
 
@@ -17,7 +17,7 @@
 
 **上下文无关语言**（**CFG**）用于判断一个 token 序列（or String）是否合法。
 
-!!! info
+!!! info "Context-Free Grammer"
 	相比于词法分析使用的正则语言，CFG 拥有一定的记忆功能，从而能够完成一些更高级的任务（例如递归括号匹配），我们称上下文无关语言的*表达能力更强大*。
 
 正如我们之前学习过的一样，我们称能够用多个不同的 parse trees 构造出同一个 string 的文法是 **ambiguous** 的，这一特性会对编译器在语义上的理解带来歧义，因此需要尽可能避免。
@@ -32,6 +32,8 @@
 为此，我们使用额外的非终结符来确保高优先级的 `*` 两侧的符号不会出现 `+`，除非使用小括号进行递归：
 
 ![[cp_topic3_3.png]]
+
+上述修改强制让 $T$ 相关的产生式晚于 $E$ 出现，从而确保了在语法分析树中不会出现二义性；并且，该修改还满足左递归（产生式右侧的第一个符号与左侧的符号相同），从而实现运算规则的左结合。
 
 ??? warning "Ambiguous Parse Tree"
 	![[cp_topic3_4.png]]
@@ -106,7 +108,11 @@ void E(void) { eat(NUM); eat(EQ); eat(NUM); }
 !!! example "对左右括号进行匹配的例子"
 	![[cp_topic3_7.png]]
 
-当 grammar 不满足 LL(1) 时，可以存在重复项的式子进行改写。一种通用的改写方法如下：
+假如产生式中同时存在 $E\rightarrow E+T$ 和 $E\rightarrow T$（左递归），那么构建的 Tables 中必定存在重复项，不满足 LL(1) 要求：
+
+对于每个 $t\in FIRST(T)$，都一定存在 $t\in FIRST(E+T)$，此时 $E\rightarrow E+T$ 和 $E\rightarrow T$ 都会被放置在 row $E$, col $t$ 这一栏内。
+
+为此，我们可以对存在重复项的式子进行改写。一种通用的改写方法如下：
 
 $$
 \begin{array}l
@@ -133,7 +139,7 @@ E' \rightarrow
 \end{array}
 $$
 
-!!! warning "另外，还存在着同一个非终结符推导出来的产生式中，前几个符号完全相同的情况"
+!!! warning "若同一个非终结符推导出来的产生式中，前几个符号完全相同，此时使用 Left Factoring"
 	$$\begin{array}l S\rightarrow \text{if } E \text{ then } S \text{ else } S \\ S\rightarrow \text{if } E \text{ then } S\end{array} \Rightarrow \begin{array}l S\rightarrow \text{if } E \text{ then } S\ X \\  X \rightarrow \text{else } S \\ X\rightarrow \end{array}$$
 
 
@@ -143,7 +149,7 @@ $$
 
 LL(k) Grammar 虽然很容易实现成一个 C 程序，但是它的表达能力有限，需要对某些表达式进行合适的处理，以消除歧义。
 
-**LR(k) Parsing** 是一种表达能力更强的文法类，它将 LL(k) 中间的 L 替换为 R，对应于 *Rightmost Derivation*，即最右推导。该方法的核心操作为*移入*和*规约*，因此也被称为**Shift-Reduce Parsing**。
+**LR(k) Parsing** 是一种表达能力更强的文法类，它将 LL(k) 中间的 L 替换为 R，对应于 *Rightmost Derivation*，即最右推导。该方法的核心操作为*移入*和*规约*，因此也被称为 **Shift-Reduce Parsing**。
 
 ??? info "简单来讲，LR(k) 的思想就是从输入串开始，根据产生式逐步将其规约至起始符号"
 	![[cp_topic3_8.png]]

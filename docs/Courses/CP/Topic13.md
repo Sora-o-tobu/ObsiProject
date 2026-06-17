@@ -36,7 +36,7 @@ $$
 
 **【一个贯穿全章的例子】**
 
-```text
+```c
 let
   type list = {link: list, key: int}
   type tree = {key: int, left: tree, right: tree}
@@ -263,7 +263,7 @@ p.count ← c
 - **初始化**：把指针 `next` 指向 to-space 起点。
 - **转发**：给定一个指向 from-space 的指针 `p`，让 `p` 指向它在 to-space 中的副本。
 
-```text
+```c
 function Forward(p)
   if p points to from-space
     if p.f1 points to to-space        // 情况 1：已经复制过
@@ -285,7 +285,7 @@ function Forward(p)
 !!! info "Cheney's Algorithm"
 	用广度优先搜索（BFS）遍历可达数据，**巧妙之处是直接用 to-space 本身充当 BFS 的队列**，无需额外的队列存储，也无需指针反转。
 
-```text
+```c
 scan ← next ← beginning of to-space
 for each root r
   r ← Forward(r)
@@ -313,7 +313,7 @@ while scan < next
 !!! note "部分深度优先 + 部分广度优先"
 	**基本思想**：以广度优先复制为主，但**每复制一个对象，就顺便看看能不能把它的某个孩子复制到它旁边**，从而兼顾局部性。
 
-```text
+```c
 function Forward(p)
   if p points to from-space
     if p.f1 points to to-space

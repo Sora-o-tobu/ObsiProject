@@ -175,8 +175,6 @@ until in'[n] = in[n] and out'[n] = out[n] for all n   // 不动点
 
 !!! success "寄存器分配 = 给干涉图**着色**：相邻节点不同色，颜色数 ≤ 寄存器数（详见下一章）"
 
-### Special Treatment of MOVE Instructions
-
 MOVE 指令需要特殊处理——**不要**在 MOVE 的源和目的之间制造人为的干涉。考虑：
 
 ```c

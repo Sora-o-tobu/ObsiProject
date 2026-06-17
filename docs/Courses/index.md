@@ -14,6 +14,7 @@
 	- 高级数据结构与算法[note]: DS/ADS/
 	- 数据库系统[note]: DB/
 	- 计算机网络[note]: CN/
+	- 多媒体安全[note]: 多媒体安全/
 	- CTF[note]: ctf/
 	- 区块链技术应用实践[note]: Blockchain/
 - 计算机系统:
@@ -21,6 +22,7 @@
 	- 计算机组成[note]: CO/
 	- 计算机体系结构[note]: CA/
 	- 操作系统[note]: OS/
+	- 编译原理[note]: CP/
 	- 汇编与接口[note]: asm/
 - 语言:
 	- x86汇编语言[note]: 8086asm/
