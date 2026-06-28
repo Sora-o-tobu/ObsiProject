@@ -74,7 +74,7 @@ end
 
 用一次图搜索（如**深度优先搜索 DFS**）标记所有可达节点：
 
-```text
+```c
 function DFS(x)
   if x is a pointer into the heap
     if record x is not marked

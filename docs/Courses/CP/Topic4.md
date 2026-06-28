@@ -23,7 +23,8 @@ return a * b;
 	}
 	int T'(int a) { switch(tok) ...
 		case TIMES: eat(TIMES); return T'(a*F());
-	}```
+	}
+	```
 
 在 Yacc-Generated Parsers 中，语义动作就是 rules 的 `{...}` 中的部分。
 

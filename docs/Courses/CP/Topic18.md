@@ -135,7 +135,7 @@ $$
 !!! warning "外提 $d:\ t \leftarrow a \oplus b$ 到 preheader 末尾的判据（三条须**同时**满足）"
 	1. **$d$ 支配所有"$t$ 在其出口 live-out"的循环出口**；
 	2. **且** 循环中**只有一个** $t$ 的定义；
-	3. **且** $t **不是** preheader 的 live-out（即外提前 $t$ 在 preheader 处不活跃）。
+	3. **且** $t$ **不是** preheader 的 live-out（即外提前 $t$ 在 preheader 处不活跃）。
 
 对照上图：
 

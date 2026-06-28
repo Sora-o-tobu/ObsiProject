@@ -125,6 +125,7 @@ A' \rightarrow \alpha A' \\
 A' \rightarrow 
 \end{array}
 $$
+
 这种方法被称为 **Right-Recursion**，一个应用示例如下：
 
 $$

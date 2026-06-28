@@ -54,7 +54,7 @@ exp → new class-id
 
 ### 一个面向对象程序
 
-```text
+```c
 let start := 10
     class Vehicle extends Object {
       var position := start
@@ -110,7 +110,7 @@ end
 !!! success "前缀法（Prefixing）"
 	当 B 扩展 A 时，B 记录中**从 A 继承来的字段**排在**开头**，顺序与它们在 A 记录中的顺序**完全相同**；B 自己**新增**的字段排在其后。
 
-```text
+```c
 class A extends Object { var a := 0 }
 class B extends A { var b := 0; var c := 0 }
 class C extends A { var d := 0 }
@@ -136,7 +136,7 @@ class D extends B { var e := 0 }
 3. 到 C 的父类 B 中查找，依此类推；
 4. 若在某个祖先类 A 中找到了 `static` 方法 `f`，则直接编译成一个到标号 `A_f` 的**函数调用**。
 
-```text
+```c
 Class A extends Object { var x := 0  static method f() }
 Class B extends A { method g() }
 Class C extends B { method g() }
@@ -147,7 +147,7 @@ Class C extends B { method g() }
 
 如果 A 中的 `f` 是**动态方法**呢？它可能在 C 的某个子类 D 中被**重写**。编译期**无法判断** `c` 指向的是 D 的对象（该调 `D_f`）还是 C 的对象（该调 `A_f`）。
 
-```text
+```c
 Class A extends Object { var x := 0  method f() }
 Class B extends A { method g() }
 Class C extends B { method g() }
@@ -185,7 +185,7 @@ Class D extends C { var y := 0  method f() }
 	- **边**：两个字段在某个类中**共存**（coexist）；
 	- **颜色**：偏移（0, 1, 2, …）。
 
-```text
+```c
 class A extends Object { var a := 0 }
 class B extends Object { var b := 0; var c := 0 }
 class C extends A { var d := 0 }
@@ -254,7 +254,7 @@ class D extends A,B,C { var e := 0 }
 
 假设没有多继承，`x instanceof C` 可以在运行时跑一个循环：
 
-```text
+```asm
    t1 ← x.descriptor
 L1: if t1 = C goto true
     t1 ← t1.super          // t1.super 是类 t1 的超类（父类）
@@ -303,7 +303,7 @@ c.some_field_of_C_but_not_B    // 不可预测的行为
 
 因此 Modula-3、Java 等会给"超类 → 子类"的转换**附带一次运行时类型检查**，除非运行时值确实是子类实例，否则**抛出异常**：
 
-```text
+```c
 Modula-3:                 Java:
 IF ISTYPE(b, C)           if (b instanceof C)
   THEN f(NARROW(b, C))        f((C) b)
